@@ -1,0 +1,41 @@
+{
+  "name": "@jose-conchello/cms-api",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "cms-api",
+    "targets": {
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "cms-api:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "cms-api:build:development"
+          },
+          "production": {
+            "buildTarget": "cms-api:build:production"
+          }
+        }
+      },
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      },
+      "docker-build": {
+        "dependsOn": [
+          "build"
+        ],
+        "command": "docker build -f apps/cms-api/Dockerfile . -t cms-api"
+      }
+    }
+  }
+}

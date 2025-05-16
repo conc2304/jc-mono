@@ -8,6 +8,15 @@
     },
     {
       "path": "./apps/cms-admin"
+    },
+    {
+      "path": "./apps/cms-api"
+    },
+    {
+      "path": "./apps/cms-admin-e2e"
+    },
+    {
+      "path": "./apps/cms-admin-e2e"
     }
   ]
 }
