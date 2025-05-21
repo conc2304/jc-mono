@@ -17,6 +17,12 @@
     },
     {
       "path": "./apps/cms-admin-e2e"
+    },
+    {
+      "path": "./apps/games-e2e"
+    },
+    {
+      "path": "./apps/games"
     }
   ]
 }
