@@ -165,11 +165,6 @@ export const ConnectFour = ({
                 : `Player ${playerTurn} Wins!`
               : `Player ${playerTurn} Turn`}
           </h3>
-          {/*
-          <div className="grid grid-cols-2 gap-8">
-
-
-          </div> */}
         </div>
         <div
           id="game-wrapper"
@@ -181,6 +176,7 @@ export const ConnectFour = ({
             onColorChange={setPlayerOneColor}
             playerType={playerOneType}
             onPlayerTypeChange={(value) => setPlayerOneType(value)}
+            // onAiConfigChange={() => {}} TODO
           />
 
           <div
@@ -236,6 +232,7 @@ export const ConnectFour = ({
             onColorChange={setPlayerTwoColor}
             playerType={playerTwoType}
             onPlayerTypeChange={(value) => setPlayerTwoType(value)}
+            // onAiConfigChange={() => {}} // TODO
           />
         </div>
         <button

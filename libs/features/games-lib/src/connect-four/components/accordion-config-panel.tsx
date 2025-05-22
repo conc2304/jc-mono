@@ -7,7 +7,6 @@ import { Difficulty } from '../types';
 import { EvaluationConfig } from '../utils/evaluation-config';
 import { DIFFICULTY_CONFIGS } from '../utils/evaluation-config';
 
-// AI Difficulty Panel Component
 interface AIDifficultyPanelProps {
   onConfigChange?: (config: EvaluationConfig, difficulty: Difficulty) => void;
 }

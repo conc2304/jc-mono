@@ -1,6 +1,5 @@
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
-// Accordion Component
 interface AccordionProps {
   title: string;
   children: React.ReactNode;
