@@ -13,16 +13,13 @@
       "path": "./apps/cms-api"
     },
     {
-      "path": "./apps/cms-admin-e2e"
+      "path": "./libs/shared/components"
     },
     {
-      "path": "./apps/cms-admin-e2e"
+      "path": "./libs/shared/utils"
     },
     {
-      "path": "./apps/games-e2e"
-    },
-    {
-      "path": "./apps/games"
+      "path": "./libs/features/games-lib"
     }
   ]
 }

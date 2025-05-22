@@ -1,5 +1,5 @@
 {
-  "name": "@jose-conchello/cms-api",
+  "name": "@jc/cms-api",
   "version": "0.0.1",
   "private": true,
   "nx": {

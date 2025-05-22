@@ -1,3 +1,5 @@
+import { ConnectFour } from '@jc/games-lib';
+
 export function App() {
   return (
     <div>
@@ -5,6 +7,7 @@ export function App() {
         <span> Hello there, </span>
         Welcome cms-admin 👋
       </h1>
+      <ConnectFour />
     </div>
   );
 }
