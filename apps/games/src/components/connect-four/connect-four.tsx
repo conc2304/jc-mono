@@ -180,11 +180,14 @@ export const ConnectFour = () => {
               onChange={(e) => setPlayerTwoColor(e.target.value)}
             />
           </div>
-          <ButtonGroup
-            value={aiPlayer}
-            options={aiPlayerOptions}
-            onChange={(value) => setAiPlayer(value as Player | null)}
-          />
+          <div className="flex justify-start items-center">
+            <strong>Select AI Player: </strong>
+            <ButtonGroup
+              value={aiPlayer}
+              options={aiPlayerOptions}
+              onChange={(value) => setAiPlayer(value as Player | null)}
+            />
+          </div>
         </div>
 
         <div

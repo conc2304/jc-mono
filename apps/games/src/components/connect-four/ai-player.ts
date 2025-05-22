@@ -1,7 +1,7 @@
-import { DEFAULT_EVAL_CONFIG, EvaluationConfig } from './evaluation-config';
+import { DEFAULT_EVAL_CONFIG } from './evaluation-config';
 import { evaluateBoard } from './evaluations';
 import { BestMove, BoardState, GameState, MovePosition, Player } from './types';
-import { getRandomInt, isGameTied, makeMove, validateGameState } from './utils';
+import { isGameTied, makeMove } from './utils';
 
 export const calculateAiMove = ({
   boardState,
@@ -137,49 +137,3 @@ export const miniMax = (
     return bestScore;
   }
 };
-
-// export const evaluateBoard = ({
-//   boardState,
-//   depth,
-//   playerMove,
-//   playerTurn,
-//   opponent,
-//   matchesNeeded,
-//   config,
-// }: EvaluateBoardProps & {
-//   config: EvaluationConfig;
-// }): number => {
-//   console.log('evaluateBoard');
-//   const gameState = { boardState, playerTurn, playerMove, matchesNeeded };
-//   const winner = validateGameState(gameState) === null ? null : playerTurn;
-
-//   console.log({ winner });
-//   // Check terminal states
-//   if (winner === playerTurn) {
-//     return config.terminal.win - depth;
-//   } else if (winner === opponent) {
-//     return depth - config.terminal.loss;
-//   }
-//   // Check scenarios
-//   // 1. 3 in a row (highest priority)
-//   // 1.1. Both ends open
-//   // 1.2. One end open
-//   // 1.3. Block opponent both ends
-//   // 1.4. Block opponent one end
-//   // 2. 2 in a row (medium priority)
-//   // 2.1. Both ends open
-//   // 2.2. One end open
-//   // 2.3. Block opponent both ends
-//   // 2.4. Block opponent one end
-//   // 2.5. Center columns
-//   // 3. 1 in a row (low priority)
-//   // 3.1. Center columns
-//   // 3.2. Edge columns
-//   // 3.3. Adjacent to pieces
-//   // 4. 0 in a row (lowest priority)
-//   // 4.1. Center columns
-//   // 4.2. Edge columns
-//   // 4.3. Adjacent to pieces
-
-//   return 0;
-// };
