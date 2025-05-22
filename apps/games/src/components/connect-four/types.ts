@@ -9,3 +9,5 @@ export type GameState = {
   playerTurn: Player;
   matchesNeeded: number;
 };
+
+export type BestMove = { move: MovePosition; score: number };

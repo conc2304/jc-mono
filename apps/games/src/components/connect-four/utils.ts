@@ -1,4 +1,14 @@
-import { BoardState, GameState, MovePosition } from './types';
+import { BoardState, GameState, MovePosition, Player } from './types';
+
+export const makeMove = (
+  boardState: BoardState,
+  playerMove: MovePosition,
+  playerTurn: Player
+) => {
+  const newBoardState = boardState.map((row) => [...row]);
+  newBoardState[playerMove.row][playerMove.col] = playerTurn;
+  return newBoardState;
+};
 
 export const validateVertical = ({
   boardState,
@@ -13,7 +23,7 @@ export const validateVertical = ({
 
   let matchPos: MovePosition[] = [];
   let matchCount = 0;
-  //  Traverse up the column starting from 4 moves away
+  //  Traverse up the column starting from the number of matchesNeeded moves away
   for (let rowIndex = startRowPos; rowIndex >= 0; rowIndex--) {
     if (boardState[rowIndex][playerMove.col] === playerTurn) {
       matchCount++;
@@ -112,6 +122,20 @@ export const validateDiagonal = ({
   return null;
 };
 
+export const validateGameState = ({
+  boardState,
+  playerMove,
+  playerTurn,
+  matchesNeeded,
+}: GameState): MovePosition[] | null => {
+  const gameState = { boardState, playerMove, playerTurn, matchesNeeded };
+  return (
+    validateVertical(gameState) ||
+    validateHorizontal(gameState) ||
+    validateDiagonal(gameState)
+  );
+};
+
 const getDiagonalStartPos = (
   boardState: BoardState,
   playerMove: MovePosition
@@ -166,4 +190,8 @@ export const getDropPosition = (
     }
   }
   return returnVal;
+};
+
+export const getRandomInt = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
