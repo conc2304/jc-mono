@@ -101,7 +101,7 @@ export const AIDifficultyPanel = ({
         </div>
       </div>
 
-      <div className="space-y-0">
+      <div>
         {Object.entries(config).map(([sectionKey, sectionConfig]) => (
           <ConfigSection
             key={sectionKey}

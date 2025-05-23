@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { clsx } from 'clsx';
 
 import { PlayerConfig } from './player-config';
 import { PLAYER_TYPE } from '../constants';
@@ -10,8 +9,14 @@ import {
   MovePosition,
   GameState,
   PlayerType,
+  Difficulty,
 } from '../types';
+import { Board } from './board';
 import { calculateAiMove } from '../utils/ai-player';
+import {
+  DEFAULT_EVAL_CONFIG,
+  EvaluationConfig,
+} from '../utils/evaluation-config';
 import {
   getDropPosition,
   isGameTied,
@@ -42,6 +47,7 @@ export const ConnectFour = ({
   const [isGameOver, setIsGameOver] = useState(false);
   const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
   const [winningMatch, setWinningMatch] = useState<MovePosition[] | null>(null);
+  const [gameIsPaused, setGameIsPaused] = useState(false);
   const [playerOneType, setPlayerOneType] = useState<PlayerType>(
     PLAYER_TYPE.HUMAN
   );
@@ -49,19 +55,18 @@ export const ConnectFour = ({
     PLAYER_TYPE.HUMAN
   );
 
+  const [playerOneConfig, setPlayerOneConfig] =
+    useState<EvaluationConfig>(DEFAULT_EVAL_CONFIG);
+  const [playerTwoConfig, setPlayerTwoConfig] =
+    useState<EvaluationConfig>(DEFAULT_EVAL_CONFIG);
+
   const pieceIsDropping = useRef(false);
   const lastMove = useRef<MovePosition>({ row: -1, col: -1 });
-
-  const debugBoard = true;
-
-  const playerColorMap = {
-    1: playerOneColor,
-    2: playerTwoColor,
-  };
 
   useEffect(() => {
     if (playerTurn === 1 && playerOneType === PLAYER_TYPE.HUMAN) return;
     if (playerTurn === 2 && playerTwoType === PLAYER_TYPE.HUMAN) return;
+    if (gameIsPaused) return;
 
     const gameState: GameState = {
       boardState,
@@ -69,13 +74,13 @@ export const ConnectFour = ({
       playerTurn,
       matchesNeeded,
     };
-    console.log('UseEffect');
-    const aiMove = calculateAiMove(gameState);
 
+    const playerConfig = playerTurn === 1 ? playerOneConfig : playerTwoConfig;
+    const aiMove = calculateAiMove({ ...gameState, config: playerConfig });
     makeMove(boardState, aiMove, playerTurn);
-  }, [playerOneType, playerTwoType, playerTurn]);
+  }, [playerOneType, playerTwoType, playerTurn, gameIsPaused]);
 
-  const handleClick = (row: number, col: number): void => {
+  const handlePieceDrop = (row: number, col: number): void => {
     if (pieceIsDropping.current) return;
     if (isGameOver) return;
     if (!isMoveValid(boardState, { row, col })) {
@@ -150,6 +155,10 @@ export const ConnectFour = ({
     setPlayerTurn(1);
     setWinningMatch(null);
     setIsGameOver(false);
+    setPlayerOneConfig(DEFAULT_EVAL_CONFIG);
+    setPlayerTwoConfig(DEFAULT_EVAL_CONFIG);
+    setPlayerOneType(PLAYER_TYPE.HUMAN);
+    setPlayerTwoType(PLAYER_TYPE.HUMAN);
     pieceIsDropping.current = false;
   };
 
@@ -176,55 +185,17 @@ export const ConnectFour = ({
             onColorChange={setPlayerOneColor}
             playerType={playerOneType}
             onPlayerTypeChange={(value) => setPlayerOneType(value)}
-            // onAiConfigChange={() => {}} TODO
+            onAiConfigChange={(config) => setPlayerOneConfig(config)}
+            onPauseChange={(value) => setGameIsPaused(value)}
           />
 
-          <div
-            id="board"
-            className="border-slate-500 border-2 bg-white rounded-md"
-          >
-            {boardState.map((row, rowIndex) => (
-              <div key={rowIndex} className="flex" data-row={rowIndex}>
-                {row.map((_, colIndex) => (
-                  // Cell Slot
-                  <div
-                    key={colIndex}
-                    className="w-20 h-20 bg-slate-200 border-slate-100 border p-2 cursor-pointer"
-                    onClick={() => handleClick(rowIndex, colIndex)}
-                    data-value={boardState[rowIndex][colIndex]}
-                    data-col={colIndex}
-                  >
-                    {/* Game Piece Slot */}
-                    <div
-                      className={clsx(
-                        'rounded-full size-full relative flex justify-center items-center',
-                        winningMatch !== null &&
-                          winningMatch.some(
-                            (piece) =>
-                              piece.row === rowIndex && piece.col === colIndex
-                          )
-                          ? 'border-4 bor border-green-400'
-                          : ''
-                      )}
-                      style={{
-                        backgroundColor:
-                          boardState[rowIndex][colIndex] !== null
-                            ? playerColorMap[boardState[rowIndex][colIndex]]
-                            : 'white',
-                      }}
-                    >
-                      {debugBoard && (
-                        <p className="text-xs text-slate-300 text-center">
-                          R: {rowIndex}, C: {colIndex}
-                          {/* {boardState[rowIndex][colIndex]} */}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+          <Board
+            boardState={boardState}
+            winningMatch={winningMatch}
+            onPieceDrop={handlePieceDrop}
+            playerOneColor={playerOneColor}
+            playerTwoColor={playerTwoColor}
+          />
 
           <PlayerConfig
             playerNumber={2}
@@ -232,7 +203,8 @@ export const ConnectFour = ({
             onColorChange={setPlayerTwoColor}
             playerType={playerTwoType}
             onPlayerTypeChange={(value) => setPlayerTwoType(value)}
-            // onAiConfigChange={() => {}} // TODO
+            onAiConfigChange={(config) => setPlayerTwoConfig(config)}
+            onPauseChange={(value) => setGameIsPaused(value)}
           />
         </div>
         <button
@@ -241,6 +213,15 @@ export const ConnectFour = ({
         >
           Restart Game
         </button>
+
+        {[playerOneType, playerTwoType].includes(PLAYER_TYPE.COMPUTER) && (
+          <button
+            className="bg-orange-400 rounded-md p-2 mt-4 hover:bg-orange-300 transition-all duration-1500"
+            onClick={() => setGameIsPaused(!gameIsPaused)}
+          >
+            {gameIsPaused ? 'Play' : 'Pause'}
+          </button>
+        )}
       </div>
     </div>
   );

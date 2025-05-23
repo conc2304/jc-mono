@@ -1,4 +1,4 @@
-import { DEFAULT_EVAL_CONFIG } from './evaluation-config';
+import { EvaluationConfig } from './evaluation-config';
 import { evaluateBoard } from './evaluations';
 import { isGameTied, makeMove } from './game-logic';
 import {
@@ -14,10 +14,11 @@ export const calculateAiMove = ({
   playerMove,
   playerTurn,
   matchesNeeded,
-}: GameState): MovePosition => {
+  config,
+}: GameState & { config: EvaluationConfig }): MovePosition => {
   console.log('calculateAiMove');
   const aiPlayer = playerTurn;
-  const bestMoves = findBestMoves(boardState, aiPlayer, matchesNeeded);
+  const bestMoves = findBestMoves(boardState, aiPlayer, matchesNeeded, config);
 
   console.log({ ...bestMoves });
   const bestMove = bestMoves.reduce((best, current) => {
@@ -48,7 +49,8 @@ export const getAvailablePositions = (boardState: BoardState) => {
 export const findBestMoves = (
   boardState: BoardState,
   playerTurn: Player,
-  matchesNeeded: number
+  matchesNeeded: number,
+  config: EvaluationConfig
 ): BestMove[] => {
   //
   console.log('findBestMoves');
@@ -59,15 +61,16 @@ export const findBestMoves = (
   // for each available position, check if it is a winning move
   for (const position of availablePositions) {
     const newBoardState = makeMove(boardState, position, playerTurn);
-    const moveScore = miniMax(
-      newBoardState,
-      0,
-      false,
-      playerTurn,
+    const moveScore = miniMax({
+      boardState: newBoardState,
+      depth: 0,
+      isMax: false,
+      aiPlayer: playerTurn,
       opponent,
-      position,
-      matchesNeeded
-    );
+      playerMove: position,
+      matchesNeeded,
+      config,
+    });
     bestMoves.push({ move: position, score: moveScore });
   }
 
@@ -76,16 +79,29 @@ export const findBestMoves = (
   return bestMoves;
 };
 
-export const miniMax = (
-  boardState: BoardState,
-  depth: number,
-  isMax: boolean,
-  aiPlayer: Player,
-  opponent: Player, // opponent is the player that is not the ai player
-  playerMove: MovePosition,
-  matchesNeeded: number,
-  depthLimit = 3
-): number => {
+interface MiniMaxProps {
+  boardState: BoardState;
+  depth: number;
+  isMax: boolean;
+  aiPlayer: Player;
+  opponent: Player;
+  playerMove: MovePosition;
+  matchesNeeded: number;
+  config: EvaluationConfig;
+  depthLimit?: number;
+}
+
+export const miniMax = ({
+  boardState,
+  depth,
+  isMax,
+  aiPlayer,
+  opponent,
+  playerMove,
+  matchesNeeded,
+  depthLimit = 3,
+  config,
+}: MiniMaxProps): number => {
   // if the game is over, return the score
   console.log('miniMax');
   const score = evaluateBoard({
@@ -95,7 +111,7 @@ export const miniMax = (
     playerMove,
     matchesNeeded,
     opponent,
-    config: DEFAULT_EVAL_CONFIG,
+    config,
   });
 
   console.log('MM @ evaluateBoard', { score });
@@ -109,15 +125,18 @@ export const miniMax = (
     let bestScore = -1000;
     for (const position of getAvailablePositions(boardState)) {
       const newBoardState = makeMove(boardState, position, aiPlayer);
-      const moveValue = miniMax(
-        newBoardState,
-        depth + 1,
-        !isMax,
+      const moveValue = miniMax({
+        boardState: newBoardState,
+        depth: depth + 1,
+        isMax: false,
         aiPlayer,
         opponent,
-        position,
-        matchesNeeded
-      );
+        playerMove: position,
+        matchesNeeded,
+        depthLimit,
+        config,
+      });
+
       bestScore = Math.max(bestScore, moveValue);
     }
     console.log('MM @ isMax @ return', { bestScore });
@@ -127,15 +146,17 @@ export const miniMax = (
     let bestScore = 1000;
     for (const position of getAvailablePositions(boardState)) {
       const newBoardState = makeMove(boardState, position, opponent);
-      const moveValue = miniMax(
-        newBoardState,
-        depth + 1,
-        !isMax,
+      const moveValue = miniMax({
+        boardState: newBoardState,
+        depth: depth + 1,
+        isMax: false,
         aiPlayer,
         opponent,
-        position,
-        matchesNeeded
-      );
+        playerMove: position,
+        matchesNeeded,
+        depthLimit,
+        config,
+      });
 
       bestScore = Math.min(bestScore, moveValue);
     }
