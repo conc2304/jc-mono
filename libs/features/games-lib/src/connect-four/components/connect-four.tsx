@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PlayerConfig } from './player-config';
 import { PLAYER_TYPE } from '../constants';
@@ -9,9 +9,9 @@ import {
   MovePosition,
   GameState,
   PlayerType,
-  Difficulty,
 } from '../types';
 import { Board } from './board';
+import connectFourLogo from '../assets/connect-four-logo.webp';
 import { calculateAiMove } from '../utils/ai-player';
 import {
   DEFAULT_EVAL_CONFIG,
@@ -43,7 +43,7 @@ export const ConnectFour = ({
 
   const [playerTurn, setPlayerTurn] = useState<Player>(1);
   const [playerOneColor, setPlayerOneColor] = useState<Color>('#ff0000'); // red
-  const [playerTwoColor, setPlayerTwoColor] = useState<Color>('#0000ff'); // blue
+  const [playerTwoColor, setPlayerTwoColor] = useState<Color>('#ffea00'); // yellow
   const [isGameOver, setIsGameOver] = useState(false);
   const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
   const [winningMatch, setWinningMatch] = useState<MovePosition[] | null>(null);
@@ -84,7 +84,6 @@ export const ConnectFour = ({
     if (pieceIsDropping.current) return;
     if (isGameOver) return;
     if (!isMoveValid(boardState, { row, col })) {
-      console.log('invalid move');
       return;
     }
     lastMove.current = { row, col };
@@ -150,6 +149,36 @@ export const ConnectFour = ({
     return tempBoard;
   };
 
+  const handlePlayerOneTypeChange = useCallback((value: PlayerType) => {
+    setPlayerOneType(value);
+  }, []);
+
+  const handlePlayerOneConfigChange = useCallback(
+    (config: EvaluationConfig) => {
+      setPlayerOneConfig(config);
+    },
+    []
+  );
+
+  const handlePlayerOneColorChange = useCallback((color: Color) => {
+    setPlayerOneColor(color);
+  }, []);
+
+  const handlePlayerTwoTypeChange = useCallback((value: PlayerType) => {
+    setPlayerTwoType(value);
+  }, []);
+
+  const handlePlayerTwoConfigChange = useCallback(
+    (config: EvaluationConfig) => {
+      setPlayerTwoConfig(config);
+    },
+    []
+  );
+
+  const handlePlayerTwoColorChange = useCallback((color: Color) => {
+    setPlayerTwoColor(color);
+  }, []);
+
   const resetBoard = () => {
     setBoardState(initialBoardState);
     setPlayerTurn(1);
@@ -162,19 +191,18 @@ export const ConnectFour = ({
     pieceIsDropping.current = false;
   };
 
+  const handlePauseChange = useCallback((value: boolean) => {
+    setGameIsPaused(value);
+  }, []);
+
   return (
     <div>
-      <h1 className="text-center text-xl mb-4">Connect 4</h1>
+      <img
+        src={connectFourLogo}
+        alt="Connect Four Logo"
+        className="w-1/2 mx-auto max-w-sm m-4"
+      />
       <div id="game-container" className="flex flex-col items-center">
-        <div id="game-info" className="flex flex-col items-center mb-4">
-          <h3>
-            {isGameOver
-              ? winningMatch == null
-                ? 'Tied Game'
-                : `Player ${playerTurn} Wins!`
-              : `Player ${playerTurn} Turn`}
-          </h3>
-        </div>
         <div
           id="game-wrapper"
           className="flex justify-around items-center w-full"
@@ -182,11 +210,11 @@ export const ConnectFour = ({
           <PlayerConfig
             playerNumber={1}
             color={playerOneColor}
-            onColorChange={setPlayerOneColor}
+            onColorChange={handlePlayerOneColorChange}
             playerType={playerOneType}
-            onPlayerTypeChange={(value) => setPlayerOneType(value)}
-            onAiConfigChange={(config) => setPlayerOneConfig(config)}
-            onPauseChange={(value) => setGameIsPaused(value)}
+            onPlayerTypeChange={handlePlayerOneTypeChange}
+            onAiConfigChange={handlePlayerOneConfigChange}
+            onPauseChange={handlePauseChange}
           />
 
           <Board
@@ -200,12 +228,21 @@ export const ConnectFour = ({
           <PlayerConfig
             playerNumber={2}
             color={playerTwoColor}
-            onColorChange={setPlayerTwoColor}
+            onColorChange={handlePlayerTwoColorChange}
             playerType={playerTwoType}
-            onPlayerTypeChange={(value) => setPlayerTwoType(value)}
-            onAiConfigChange={(config) => setPlayerTwoConfig(config)}
-            onPauseChange={(value) => setGameIsPaused(value)}
+            onPlayerTypeChange={handlePlayerTwoTypeChange}
+            onAiConfigChange={handlePlayerTwoConfigChange}
+            onPauseChange={handlePauseChange}
           />
+        </div>
+        <div id="game-info" className="flex flex-col items-center m-4">
+          <h3>
+            {isGameOver
+              ? winningMatch == null
+                ? 'Tied Game'
+                : `Player ${playerTurn} Wins!`
+              : `Player ${playerTurn} Turn`}
+          </h3>
         </div>
         <button
           className="bg-orange-400 rounded-md p-2 mt-4 hover:bg-orange-300 transition-all duration-1500"

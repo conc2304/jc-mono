@@ -2,11 +2,7 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -36,6 +32,9 @@
   "references": [
     {
       "path": "../../shared/components/tsconfig.lib.json"
+    },
+    {
+      "path": "../../shared/utils/tsconfig.lib.json"
     }
   ]
 }

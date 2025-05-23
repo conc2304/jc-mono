@@ -15,7 +15,7 @@ export const ButtonGroup = <T extends string | number | boolean>({
   value: currentValue,
 }: ButtonGroupProps<T>) => {
   return (
-    <div className="m-2">
+    <div className="m-2 border border-black rounded overflow-hidden">
       {options.map(({ value, label }, i) => {
         console.log(value, currentValue, value === currentValue);
 
@@ -24,11 +24,9 @@ export const ButtonGroup = <T extends string | number | boolean>({
             key={label + value?.toString()}
             onClick={() => onChange(value)}
             className={clsx(
-              'p-2 bg-blue-500 hover:bg-blue-600 transition-colors duration-300 text-white border-black border',
-              i !== options.length - 1 ? 'border-r-0' : '',
-              value === currentValue ? 'bg-cyan-400' : '', // selected value
-              i === 0 ? 'rounded-l-md' : '', // first
-              i === options.length - 1 ? 'rounded-r-md' : '' // last
+              'p-2 bg-blue-500 hover:bg-blue-600 transition-colors duration-300 text-white',
+              i !== options.length - 1 ? 'border-r border-black' : '',
+              value === currentValue ? 'bg-cyan-400' : '' // selected value
             )}
           >
             {label}

@@ -16,7 +16,7 @@ export const Board = ({
   playerOneColor,
   playerTwoColor,
 }: BoardProps) => {
-  const debugBoard = true;
+  const debugBoard = false;
 
   const playerColorMap = {
     1: playerOneColor,
@@ -24,14 +24,17 @@ export const Board = ({
   };
 
   return (
-    <div id="board" className="border-slate-500 border-2 bg-white rounded-md">
+    <div
+      id="board"
+      className="border-slate-500 border-2 bg-white rounded-md overflow-hidden"
+    >
       {boardState.map((row, rowIndex) => (
         <div key={rowIndex} className="flex" data-row={rowIndex}>
           {row.map((_, colIndex) => (
             // Cell Slot
             <div
               key={colIndex}
-              className="w-20 h-20 bg-slate-200 border-slate-100 border p-2 cursor-pointer"
+              className="w-20 h-20 bg-blue-200  p-2 cursor-pointer"
               onClick={() => onPieceDrop(rowIndex, colIndex)}
               data-value={boardState[rowIndex][colIndex]}
               data-col={colIndex}
