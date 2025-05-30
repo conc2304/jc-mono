@@ -20,6 +20,15 @@
     },
     {
       "path": "./libs/features/games-lib"
+    },
+    {
+      "path": "./apps/client-side-portfolio-e2e"
+    },
+    {
+      "path": "./apps/client-side-portfolio"
+    },
+    {
+      "path": "./libs/shared/ui-hooks"
     }
   ]
 }
