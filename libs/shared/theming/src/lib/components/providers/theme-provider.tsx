@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ThemeName } from '../../themes';
-import { themeManager } from '../../utils/theme-manager';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createGlobalStyles } from '../../stitches/globals';
 
 interface ThemeContextValue {
   currentTheme: ThemeName;
@@ -30,17 +30,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(defaultTheme);
 
   useEffect(() => {
-    themeManager.setTheme(defaultTheme);
+    // Apply theme class to document
+    document.documentElement.className = currentTheme;
 
-    const unsubscribe = themeManager.onThemeChange((theme) => {
-      setCurrentTheme(theme);
-    });
-
-    return unsubscribe;
-  }, [defaultTheme]);
+    // Apply global styles for current theme
+    const globalStyles = createGlobalStyles(currentTheme);
+    globalStyles();
+  }, [currentTheme]);
 
   const handleSetTheme = (theme: ThemeName) => {
-    themeManager.setTheme(theme);
+    setCurrentTheme(theme);
   };
 
   return (
@@ -48,7 +47,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       value={{
         currentTheme,
         setTheme: handleSetTheme,
-        availableThemes: themeManager.getAvailableThemes(),
+        availableThemes: ['cyberpunk', 'corporate'],
       }}
     >
       {children}

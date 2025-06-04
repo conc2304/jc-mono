@@ -1,4 +1,5 @@
 import { StrictMode } from 'react';
+import { ThemeProvider } from '@jc/theming';
 import * as ReactDOM from 'react-dom/client';
 
 import App from './app/app';
@@ -10,6 +11,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <StrictMode>
-    <App />
+    <ThemeProvider defaultTheme="cyberpunk">
+      <App />
+    </ThemeProvider>
   </StrictMode>
 );

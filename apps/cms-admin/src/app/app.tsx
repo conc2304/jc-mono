@@ -1,4 +1,5 @@
 // import { ConnectFour } from '@jc/games-lib';
+import { styled, useTheme, ThemeSwitcher } from '@jc/theming';
 import {
   BaseBeveledContainer,
   BeveledButton,
@@ -7,19 +8,44 @@ import {
 } from '@jc/ui-components';
 
 export function App() {
-  return (
-    <div
-      style={{
-        position: 'relative',
-        height: '100vh',
-        width: '100vw',
-        background:
-          'linear-gradient(-45deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)',
-      }}
-    >
-      {/* <ConnectFour /> */}
-      {/* <BevelDemo /> */}
+  const { currentTheme } = useTheme();
 
+  const AppContainer = styled('div', {
+    position: 'relative',
+    minHeight: '100vh',
+    padding: '$8',
+    background:
+      'linear-gradient(-45deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)',
+  });
+
+  const Header = styled('header', {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '$8',
+    padding: '$6',
+    backgroundColor: '$surface',
+    borderRadius: '$lg',
+    border: '1px solid $border',
+  });
+
+  const Title = styled('h1', {
+    fontSize: '$4xl',
+    fontWeight: '$bold',
+    color: '$textPrimary',
+
+    '.cyberpunk &': {
+      color: '$primary',
+      textShadow: '0 0 10px $primary',
+    },
+  });
+
+  return (
+    <AppContainer>
+      <Header>
+        <Title>My {currentTheme} App</Title>
+        <ThemeSwitcher />
+      </Header>
       <div style={{ width: 'auto', height: '100px', padding: '15px' }}>
         <BaseBeveledContainer
           background="url('https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg') no-repeat center / cover"
@@ -111,7 +137,7 @@ export function App() {
       >
         <p>Body of the Card</p>
       </BeveledCard>
-    </div>
+    </AppContainer>
   );
 }
 
