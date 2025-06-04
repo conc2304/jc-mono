@@ -196,7 +196,7 @@ export const ConnectFour = ({
   }, []);
 
   return (
-    <div>
+    <div className="bg-radial from-blue-900 from-40% to-blue-400">
       <img
         src={connectFourLogo}
         alt="Connect Four Logo"

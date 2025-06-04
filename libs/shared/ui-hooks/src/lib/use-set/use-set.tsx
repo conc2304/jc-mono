@@ -8,6 +8,7 @@ export interface UseSetReturn<T> {
   reset: () => void;
   clear: () => void;
 }
+
 export const useSet = <T,>(initialSet: Set<T>): UseSetReturn<T> => {
   const [set, setSet] = useState(initialSet);
 

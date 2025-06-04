@@ -16,8 +16,6 @@ export const Board = ({
   playerOneColor,
   playerTwoColor,
 }: BoardProps) => {
-  const debugBoard = false;
-
   const playerColorMap = {
     1: playerOneColor,
     2: playerTwoColor,
@@ -57,14 +55,7 @@ export const Board = ({
                       ? playerColorMap[boardState[rowIndex][colIndex]]
                       : 'white',
                 }}
-              >
-                {debugBoard && (
-                  <p className="text-xs text-slate-300 text-center">
-                    R: {rowIndex}, C: {colIndex}
-                    {/* {boardState[rowIndex][colIndex]} */}
-                  </p>
-                )}
-              </div>
+              ></div>
             </div>
           ))}
         </div>

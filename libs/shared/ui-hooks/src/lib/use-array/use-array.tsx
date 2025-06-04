@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, use, useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
 interface UseArrayReturn<T> {
   array: T[];

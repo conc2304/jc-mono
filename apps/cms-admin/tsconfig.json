@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/shared/components"
+    },
+    {
       "path": "../../libs/features/games-lib"
     },
     {
