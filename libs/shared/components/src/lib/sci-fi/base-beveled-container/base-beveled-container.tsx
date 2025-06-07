@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { useDebounce } from '@jc/ui-hooks';
 
-import { BevelConfig, GlowConfig, StepConfig } from '../types';
 import {
+  calculateDynamicShadow,
   generateBeveledCornersPath,
   generateFillPath,
   generateStraightEdgesPath,
@@ -10,16 +11,15 @@ import {
   getMinPadding,
   getStepBounds,
 } from './utils';
+import { BevelConfig, StepConfig } from '../types';
 
 interface BaseBeveledContainerProps
   extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height' | 'onClick'> {
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
-  // fill?: string;
   backgroundStyle?: React.CSSProperties; // CSS background value (color, gradient, image, etc.)
   stroke?: string;
   strokeWidth?: number;
-  glow?: GlowConfig;
   className?: string;
   rootStyle?: React.CSSProperties;
   children?: React.ReactNode; // Content inside the shape
@@ -34,11 +34,9 @@ interface BaseBeveledContainerProps
 export const BaseBeveledContainer = ({
   bevelConfig = {},
   stepsConfig = {},
-  // fill = 'currentColor',
   backgroundStyle,
   stroke,
   strokeWidth = 0,
-  glow,
   className = '',
   style: rootStyle = {},
   children,
@@ -53,14 +51,15 @@ export const BaseBeveledContainer = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [isInitialized, setIsInitialized] = useState(false);
+  const [shadowOffset, setShadowOffset] = useState({ x: 0, y: 0 });
 
-  // Generate unique IDs (must be before early return to maintain hook order)
-  const glowFilterId = React.useMemo(
-    () => `glow-filter-${Math.random().toString(36).substr(2, 9)}`,
-    []
-  );
-
-  const paddingValue = getMinPadding({
+  const {
+    padding: paddingValue,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+  } = getMinPadding({
     bevelConfig,
     stepsConfig,
     strokeWidth,
@@ -125,7 +124,6 @@ export const BaseBeveledContainer = ({
     if (contentRef.current) {
       resizeObserver.observe(contentRef.current);
     }
-
     return () => {
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
@@ -138,6 +136,31 @@ export const BaseBeveledContainer = ({
     stepBounds.bottom,
     stepBounds.left,
   ]);
+
+  // Create debounced update function
+  const updateShadow = useCallback(() => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const shadow = calculateDynamicShadow(rect, 15);
+      setShadowOffset(shadow);
+    }
+  }, []);
+
+  const debouncedUpdateShadow = useDebounce(updateShadow, 50); // 50ms debounce
+
+  useEffect(() => {
+    // Initial calculation
+    updateShadow();
+
+    // Use debounced version for events
+    window.addEventListener('scroll', debouncedUpdateShadow);
+    window.addEventListener('resize', debouncedUpdateShadow);
+
+    return () => {
+      window.removeEventListener('scroll', debouncedUpdateShadow);
+      window.removeEventListener('resize', debouncedUpdateShadow);
+    };
+  }, [updateShadow, debouncedUpdateShadow]);
 
   // Don't render SVG until we have real dimensions
   if (!isInitialized || dimensions.width === 0 || dimensions.height === 0) {
@@ -208,12 +231,6 @@ export const BaseBeveledContainer = ({
     strokeWidth
   );
 
-  // Glow configuration with defaults
-  const glowColor = glow?.color || stroke || '#ffffff';
-  const glowIntensity = (glow?.intensity ?? 3) * 2;
-  const glowSpread = glow?.spread ?? 1;
-  const glowOpacity = glow?.opacity ?? 0.8;
-
   // Determine interactive styles
   const isClickable = onClick && !disabled;
   const interactiveStyles: React.CSSProperties = {
@@ -257,8 +274,11 @@ export const BaseBeveledContainer = ({
         position: 'relative',
         width: `${dimensions.width}px`,
         height: `${dimensions.height}px`,
+        margin: '8px',
         ...interactiveStyles,
         ...rootStyle,
+        border: 'unset !important',
+        overflow: 'visible',
       }}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -282,10 +302,36 @@ export const BaseBeveledContainer = ({
           ...backgroundStyle,
         }}
       />
+
+      <div
+        className={'base-beveled-container--background-shadow'}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          filter: `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2px rgba(17, 235, 255, 0.25))`,
+          transition: 'filter 300ms',
+        }}
+      >
+        <div
+          className={'base-beveled-container--background'}
+          style={{
+            position: 'absolute',
+            top: innerRect.y,
+            left: innerRect.x,
+            width: `${innerRect.width}px`,
+            height: `${innerRect.height}px`,
+            clipPath: `path('${fillPath}')`,
+            zIndex: 1,
+            pointerEvents: 'none',
+            ...backgroundStyle,
+          }}
+        />
+      </div>
       {/* )} */}
 
       <svg
-        className={'base-beveled-container--svg'}
+        className={'base-beveled-container--svg-border'}
         width="100%"
         height="100%"
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
@@ -300,51 +346,6 @@ export const BaseBeveledContainer = ({
         preserveAspectRatio="none"
         {...svgProps}
       >
-        <defs>
-          {/* Define glow filter if provided */}
-          {glow && (
-            <filter
-              id={glowFilterId}
-              x="-50%"
-              y="-50%"
-              width="200%"
-              height="200%"
-            >
-              <feGaussianBlur
-                stdDeviation={glowIntensity}
-                result="coloredBlur"
-              />
-              <feMorphology
-                operator="dilate"
-                radius={glowSpread}
-                result="dilated"
-              />
-              <feGaussianBlur
-                in="dilated"
-                stdDeviation={glowIntensity}
-                result="glowBlur"
-              />
-
-              <feFlood
-                floodColor={glowColor}
-                floodOpacity={glowOpacity}
-                result="glowColor"
-              />
-              <feComposite
-                in="glowColor"
-                in2="glowBlur"
-                operator="in"
-                result="coloredGlow"
-              />
-
-              <feMerge>
-                <feMergeNode in="coloredGlow" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          )}
-        </defs>
-
         <g transform={shapeTransform}>
           {/* Fill path (only if no background is provided) */}
           {/* {!background && <path d={fillPath} fill={fill} stroke="none" />} */}
@@ -357,7 +358,6 @@ export const BaseBeveledContainer = ({
               stroke={stroke}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
-              filter={glow ? `url(#${glowFilterId})` : undefined}
             />
           )}
 
@@ -369,7 +369,6 @@ export const BaseBeveledContainer = ({
               stroke={stroke}
               strokeWidth={adjustedStrokeWidth}
               strokeLinecap="round"
-              filter={glow ? `url(#${glowFilterId})` : undefined}
             />
           )}
         </g>
@@ -378,7 +377,7 @@ export const BaseBeveledContainer = ({
       {/* Content layer */}
       {children && (
         <div
-          className={'base-beveled-container--children'}
+          className={'base-beveled-container--children-wrapper'}
           ref={contentRef}
           style={{
             position: 'absolute',
@@ -388,16 +387,20 @@ export const BaseBeveledContainer = ({
             // height: `${innerRect.height}px`,
             zIndex: 3,
 
-            padding: `${paddingValue}px`,
+            padding: `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`,
             boxSizing: 'border-box',
             clipPath: `path('${fillPath}')`,
             pointerEvents: isClickable ? 'none' : 'auto', // Allow content interaction for modals
 
             // whiteSpace: 'nowrap', // Prevent text wrapping in final render too
-            ...contentStyle,
           }}
         >
-          {children}
+          <div
+            className={'base-beveled-container--children-wrapper'}
+            style={{ ...contentStyle }}
+          >
+            {children}
+          </div>
         </div>
       )}
     </div>

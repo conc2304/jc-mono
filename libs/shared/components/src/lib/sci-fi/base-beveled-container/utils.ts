@@ -789,48 +789,58 @@ export const getMinPadding = ({
   bevelConfig: BevelConfig;
   stepsConfig: StepConfig;
   strokeWidth: number;
-}): number => {
-  const paddingTop = Math.max(
-    (bevelConfig?.topLeft?.bevelSize || 0) / 2,
-    (bevelConfig?.topRight?.bevelSize || 0) / 2,
-    stepsConfig.top?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
+}): {
+  padding: number;
+  paddingTop: number;
+  paddingRight: number;
+  paddingBottom: number;
+  paddingLeft: number;
+} => {
+  const paddingTop =
+    Math.max(
+      (bevelConfig?.topLeft?.bevelSize || 0) / 2,
+      (bevelConfig?.topRight?.bevelSize || 0) / 2,
+      stepsConfig.top?.segments?.reduce(
+        (max, curr) => Math.max(max, curr.height),
+        -Infinity
+      ) || 0
+    ) + strokeWidth;
 
-  const paddingRight = Math.max(
-    (bevelConfig?.topRight?.bevelSize || 0) / 2,
-    (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
-    stepsConfig.right?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
+  const paddingRight =
+    Math.max(
+      (bevelConfig?.topRight?.bevelSize || 0) / 2,
+      (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
+      stepsConfig.right?.segments?.reduce(
+        (max, curr) => Math.max(max, curr.height),
+        -Infinity
+      ) || 0
+    ) + strokeWidth;
 
-  const paddingBottom = Math.max(
-    (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
-    (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
-    stepsConfig.bottom?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
+  const paddingBottom =
+    Math.max(
+      (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
+      (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
+      stepsConfig.bottom?.segments?.reduce(
+        (max, curr) => Math.max(max, curr.height),
+        -Infinity
+      ) || 0
+    ) + strokeWidth;
 
-  const paddingLeft = Math.max(
-    (bevelConfig?.topLeft?.bevelSize || 0) / 2,
-    (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
-    stepsConfig.bottom?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
+  const paddingLeft =
+    Math.max(
+      (bevelConfig?.topLeft?.bevelSize || 0) / 2,
+      (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
+      stepsConfig.bottom?.segments?.reduce(
+        (max, curr) => Math.max(max, curr.height),
+        -Infinity
+      ) || 0
+    ) + strokeWidth;
 
   const padding =
     Math.max(paddingTop, paddingRight, paddingBottom, paddingLeft) +
     strokeWidth * 2;
 
-  return padding;
+  return { padding, paddingTop, paddingRight, paddingBottom, paddingLeft };
 };
 
 // Calculate extra space needed for steps
@@ -868,4 +878,34 @@ export const getStepBounds = (
   }
 
   return bounds;
+};
+
+export const calculateDynamicShadow = (
+  elementRect: DOMRect,
+  maxShadowDistance = 20
+) => {
+  // Get viewport center
+  const viewportCenterX = window.innerWidth / 2;
+  const viewportCenterY = window.innerHeight / 2;
+
+  // Get element center
+  const elementCenterX = elementRect.x + elementRect.width / 2;
+  const elementCenterY = elementRect.y + elementRect.height / 2;
+
+  // Calculate distance from viewport center
+  const deltaX = elementCenterX - viewportCenterX;
+  const deltaY = elementCenterY - viewportCenterY;
+
+  // Calculate normalized distances (-1 to 1)
+  const normalizedX = deltaX / (window.innerWidth / 2);
+  const normalizedY = deltaY / (window.innerHeight / 2);
+
+  // Calculate shadow offsets (positive values push shadow away from center)
+  const shadowX = normalizedX * maxShadowDistance;
+  const shadowY = normalizedY * maxShadowDistance;
+
+  return {
+    x: Math.round(shadowX),
+    y: Math.round(shadowY),
+  };
 };

@@ -128,11 +128,6 @@ export function App() {
         }}
         stroke="#00ffff"
         strokeWidth={3}
-        glow={{
-          color: 'black',
-          intensity: 4,
-          spread: 0,
-        }}
       >
         <div style={{ display: 'flex' }}>
           <div
