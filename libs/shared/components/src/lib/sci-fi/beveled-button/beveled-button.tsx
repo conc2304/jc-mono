@@ -91,7 +91,7 @@ export const BeveledButton: React.FC<BeveledButtonProps> = ({
     <div style={{ minHeight: sizeStyles.minHeight, ...style }}>
       <BaseBeveledContainer
         bevelConfig={defaultBevelConfig}
-        background={background || variantStyles.background}
+        backgroundStyles={background || variantStyles.background}
         stroke={stroke || variantStyles.stroke}
         strokeWidth={strokeWidth ?? variantStyles.strokeWidth}
         glow={glow || variantStyles.glow}

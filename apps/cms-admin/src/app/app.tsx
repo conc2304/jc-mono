@@ -121,12 +121,11 @@ export function App() {
             ],
           },
         }}
-        // background="rgba(2, 2, 2, 0.34)"
-        // backgroundStyle={{
-        //   background:
-        //     'linear-gradient(rgba(17, 235, 255, 0.5), rgba(0, 0, 0, 0.5)), url("https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg") no-repeat center / cover',
-        // }}
-        background='linear-gradient(rgba(17, 235, 255, 0.5), rgba(0, 0, 0, 0.5)), url("https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg") no-repeat center / cover'
+        backgroundStyle={{
+          background:
+            'linear-gradient(rgba(17, 235, 255, 0.5), rgba(0, 0, 0, 0.5)) , url("https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg") no-repeat center / cover',
+          opacity: 0.7,
+        }}
         stroke="#00ffff"
         strokeWidth={3}
         glow={{

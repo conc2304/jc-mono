@@ -15,13 +15,13 @@ interface BaseBeveledContainerProps
   extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height' | 'onClick'> {
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
-  fill?: string;
-  background?: string; // CSS background value (color, gradient, image, etc.)
+  // fill?: string;
+  backgroundStyle?: React.CSSProperties; // CSS background value (color, gradient, image, etc.)
   stroke?: string;
   strokeWidth?: number;
   glow?: GlowConfig;
   className?: string;
-  style?: React.CSSProperties;
+  rootStyle?: React.CSSProperties;
   children?: React.ReactNode; // Content inside the shape
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void; // Click handler for button behavior
   disabled?: boolean; // For button-like behavior
@@ -34,13 +34,13 @@ interface BaseBeveledContainerProps
 export const BaseBeveledContainer = ({
   bevelConfig = {},
   stepsConfig = {},
-  fill = 'currentColor',
-  background,
+  // fill = 'currentColor',
+  backgroundStyle,
   stroke,
   strokeWidth = 0,
   glow,
   className = '',
-  style = {},
+  style: rootStyle = {},
   children,
   onClick,
   disabled = false,
@@ -148,7 +148,7 @@ export const BaseBeveledContainer = ({
         style={{
           display: 'inline-block',
           position: 'relative',
-          ...style,
+          ...rootStyle,
         }}
       >
         {/* Hidden content measurer - let content flow naturally */}
@@ -251,14 +251,14 @@ export const BaseBeveledContainer = ({
   return (
     <div
       ref={containerRef}
-      className={'base-beveled-container--root' + ' ' + className}
+      className={`base-beveled-container--root  ${className}`}
       style={{
         display: 'inline-block',
         position: 'relative',
         width: `${dimensions.width}px`,
         height: `${dimensions.height}px`,
         ...interactiveStyles,
-        ...style,
+        ...rootStyle,
       }}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -267,22 +267,22 @@ export const BaseBeveledContainer = ({
       aria-disabled={disabled}
     >
       {/* Background div with CSS background */}
-      {background && (
-        <div
-          className={'base-beveled-container--background'}
-          style={{
-            position: 'absolute',
-            top: innerRect.y,
-            left: innerRect.x,
-            width: `${innerRect.width}px`,
-            height: `${innerRect.height}px`,
-            background: background,
-            clipPath: `path('${fillPath}')`,
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
+      {/* {background && ( */}
+      <div
+        className={'base-beveled-container--background'}
+        style={{
+          position: 'absolute',
+          top: innerRect.y,
+          left: innerRect.x,
+          width: `${innerRect.width}px`,
+          height: `${innerRect.height}px`,
+          clipPath: `path('${fillPath}')`,
+          zIndex: 1,
+          pointerEvents: 'none',
+          ...backgroundStyle,
+        }}
+      />
+      {/* )} */}
 
       <svg
         className={'base-beveled-container--svg'}
@@ -347,7 +347,7 @@ export const BaseBeveledContainer = ({
 
         <g transform={shapeTransform}>
           {/* Fill path (only if no background is provided) */}
-          {!background && <path d={fillPath} fill={fill} stroke="none" />}
+          {/* {!background && <path d={fillPath} fill={fill} stroke="none" />} */}
 
           {/* Straight edges with normal stroke width */}
           {stroke && strokeWidth > 0 && (
@@ -384,8 +384,8 @@ export const BaseBeveledContainer = ({
             position: 'absolute',
             top: innerRect.y,
             left: innerRect.x,
-            width: `${innerRect.width}px`,
-            height: `${innerRect.height}px`,
+            // width: `${innerRect.width}px`,
+            // height: `${innerRect.height}px`,
             zIndex: 3,
 
             padding: `${paddingValue}px`,

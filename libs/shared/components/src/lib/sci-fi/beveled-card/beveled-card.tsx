@@ -57,7 +57,7 @@ export const BeveledCard: React.FC<BeveledCardProps> = ({
     >
       <BaseBeveledContainer
         bevelConfig={defaultBevelConfig}
-        background={cardBackground}
+        backgroundStyles={cardBackground}
         stroke={stroke || '#ffffff'}
         strokeWidth={strokeWidth ?? 2}
         glow={
