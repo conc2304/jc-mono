@@ -52,18 +52,18 @@ const SwitcherLabel = styled('label', {
 });
 
 export const ThemeSwitcher: React.FC = () => {
-  const { currentTheme, setTheme, availableThemes } = useTheme();
+  const { theme, setTheme, availableThemes } = useTheme();
 
   return (
     <SwitcherContainer>
       <SwitcherLabel htmlFor="theme-select">Theme:</SwitcherLabel>
       <SwitcherSelect
         id="theme-select"
-        value={currentTheme}
+        value={theme}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
           setTheme(e.target.value as any)
         }
-        theme={currentTheme}
+        theme={theme}
       >
         {availableThemes.map((theme) => (
           <option key={theme} value={theme}>

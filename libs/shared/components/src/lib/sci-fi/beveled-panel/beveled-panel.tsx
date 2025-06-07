@@ -55,10 +55,10 @@ export const BeveledPanel: React.FC<BeveledPanelProps> = ({
   const variantStyles = variants[variant];
 
   const defaultBevelConfig = bevelConfig || {
-    tl: { bevelSize: 16, bevelAngle: 45 },
-    tr: { bevelSize: 16, bevelAngle: 45 },
-    br: { bevelSize: 16, bevelAngle: 45 },
-    bl: { bevelSize: 32, bevelAngle: 45 },
+    topLeft: { bevelSize: 16, bevelAngle: 45 },
+    topRight: { bevelSize: 16, bevelAngle: 45 },
+    bottomRight: { bevelSize: 16, bevelAngle: 45 },
+    bottomLeft: { bevelSize: 32, bevelAngle: 45 },
   };
 
   return (

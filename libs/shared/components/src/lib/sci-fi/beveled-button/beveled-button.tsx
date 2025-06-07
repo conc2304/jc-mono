@@ -81,10 +81,10 @@ export const BeveledButton: React.FC<BeveledButtonProps> = ({
   const sizeStyles = sizes[size];
 
   const defaultBevelConfig = bevelConfig || {
-    tl: { bevelSize: 8, bevelAngle: 45 },
-    tr: { bevelSize: 8, bevelAngle: 45 },
-    br: { bevelSize: 8, bevelAngle: 45 },
-    bl: { bevelSize: 8, bevelAngle: 45 },
+    topLeft: { bevelSize: 8, bevelAngle: 45 },
+    topRight: { bevelSize: 8, bevelAngle: 45 },
+    bottomRight: { bevelSize: 8, bevelAngle: 45 },
+    bottomLeft: { bevelSize: 8, bevelAngle: 45 },
   };
 
   return (

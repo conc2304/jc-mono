@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-import { BevelConfig, GlowConfig } from '../types';
+import { BevelConfig, GlowConfig, StepConfig } from '../types';
 import {
   generateBeveledCornersPath,
   generateFillPath,
@@ -12,6 +12,7 @@ import {
 interface BaseBeveledContainerProps
   extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height' | 'onClick'> {
   bevelConfig?: BevelConfig;
+  stepsConfig?: StepConfig;
   fill?: string;
   background?: string; // CSS background value (color, gradient, image, etc.)
   stroke?: string;
@@ -25,12 +26,13 @@ interface BaseBeveledContainerProps
   role?: string; // Accessibility role (button, dialog, etc.)
   tabIndex?: number; // For keyboard navigation
   contentStyle?: React.CSSProperties;
-  padding?: number | string; // Additional padding around children
+  // padding?: number | string; // Additional padding around children
 }
 
-// Main component with dynamic viewBox based on children size
+// Main component with dynamic viewBox based on children size and step support
 export const BaseBeveledContainer = ({
   bevelConfig = {},
+  stepsConfig = {},
   fill = 'currentColor',
   background,
   stroke,
@@ -44,7 +46,7 @@ export const BaseBeveledContainer = ({
   role,
   tabIndex,
   contentStyle,
-  padding = '0.5rem',
+  // padding = '0.5rem',
   ...svgProps
 }: BaseBeveledContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +59,47 @@ export const BaseBeveledContainer = ({
     () => `glow-filter-${Math.random().toString(36).substr(2, 9)}`,
     []
   );
+
+  const paddingTop = Math.max(
+    (bevelConfig?.topLeft?.bevelSize || 0) / 2,
+    (bevelConfig?.topRight?.bevelSize || 0) / 2,
+    stepsConfig.top?.segments?.reduce(
+      (max, curr) => Math.max(max, curr.height),
+      -Infinity
+    ) || 0
+  );
+
+  const paddingRight = Math.max(
+    (bevelConfig?.topRight?.bevelSize || 0) / 2,
+    (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
+    stepsConfig.right?.segments?.reduce(
+      (max, curr) => Math.max(max, curr.height),
+      -Infinity
+    ) || 0
+  );
+
+  const paddingBottom = Math.max(
+    (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
+    (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
+    stepsConfig.bottom?.segments?.reduce(
+      (max, curr) => Math.max(max, curr.height),
+      -Infinity
+    ) || 0
+  );
+
+  const paddingLeft = Math.max(
+    (bevelConfig?.topLeft?.bevelSize || 0) / 2,
+    (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
+    stepsConfig.bottom?.segments?.reduce(
+      (max, curr) => Math.max(max, curr.height),
+      -Infinity
+    ) || 0
+  );
+
+  const padding =
+    Math.max(paddingTop, paddingRight, paddingBottom, paddingLeft) +
+    strokeWidth * 2 +
+    'px';
 
   // Convert padding to pixels for calculations
   const getPaddingPixels = (paddingValue: number | string): number => {
@@ -76,6 +119,46 @@ export const BaseBeveledContainer = ({
 
   const paddingPixels = getPaddingPixels(padding);
 
+  // Calculate extra space needed for steps
+  const getStepBounds = (): {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  } => {
+    const bounds = { top: 0, right: 0, bottom: 0, left: 0 };
+
+    // Check each edge for maximum step height
+    if (stepsConfig.top?.segments) {
+      bounds.top = Math.max(
+        0,
+        ...stepsConfig.top.segments.map((s) => s.height)
+      );
+    }
+    if (stepsConfig.right?.segments) {
+      bounds.right = Math.max(
+        0,
+        ...stepsConfig.right.segments.map((s) => s.height)
+      );
+    }
+    if (stepsConfig.bottom?.segments) {
+      bounds.bottom = Math.max(
+        0,
+        ...stepsConfig.bottom.segments.map((s) => s.height)
+      );
+    }
+    if (stepsConfig.left?.segments) {
+      bounds.left = Math.max(
+        0,
+        ...stepsConfig.left.segments.map((s) => s.height)
+      );
+    }
+
+    return bounds;
+  };
+
+  const stepBounds = getStepBounds();
+
   // Measure content size and update viewBox dimensions
   useEffect(() => {
     const updateDimensions = () => {
@@ -86,9 +169,14 @@ export const BaseBeveledContainer = ({
         const contentWidth = contentRect.width || 100;
         const contentHeight = contentRect.height || 50;
 
-        // Add padding around the content
-        const totalWidth = contentWidth + paddingPixels * 2;
-        const totalHeight = contentHeight + paddingPixels * 2;
+        // Add padding around the content and extra space for steps
+        const totalWidth =
+          contentWidth + paddingPixels * 2 + stepBounds.left + stepBounds.right;
+        const totalHeight =
+          contentHeight +
+          paddingPixels * 2 +
+          stepBounds.top +
+          stepBounds.bottom;
 
         if (totalWidth > 0 && totalHeight > 0) {
           setDimensions({ width: totalWidth, height: totalHeight });
@@ -107,9 +195,17 @@ export const BaseBeveledContainer = ({
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
 
-        // Add padding around the content
-        const totalWidth = (width || 100) + paddingPixels * 2;
-        const totalHeight = (height || 50) + paddingPixels * 2;
+        // Add padding around the content and extra space for steps
+        const totalWidth =
+          (width || 100) +
+          paddingPixels * 2 +
+          stepBounds.left +
+          stepBounds.right;
+        const totalHeight =
+          (height || 50) +
+          paddingPixels * 2 +
+          stepBounds.top +
+          stepBounds.bottom;
 
         if (totalWidth > 0 && totalHeight > 0) {
           setDimensions({ width: totalWidth, height: totalHeight });
@@ -128,7 +224,14 @@ export const BaseBeveledContainer = ({
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
     };
-  }, [isInitialized, paddingPixels]);
+  }, [
+    isInitialized,
+    paddingPixels,
+    stepBounds.top,
+    stepBounds.right,
+    stepBounds.bottom,
+    stepBounds.left,
+  ]);
 
   // Don't render SVG until we have real dimensions
   if (!isInitialized || dimensions.width === 0 || dimensions.height === 0) {
@@ -162,20 +265,31 @@ export const BaseBeveledContainer = ({
     );
   }
 
+  // Calculate the inner rectangle for the main shape (accounting for step space)
+  const innerRect = {
+    x: stepBounds.left,
+    y: stepBounds.top,
+    width: dimensions.width - stepBounds.left - stepBounds.right,
+    height: dimensions.height - stepBounds.top - stepBounds.bottom,
+  };
+
   const fillPath = generateFillPath(
-    dimensions.width,
-    dimensions.height,
-    bevelConfig
+    innerRect.width,
+    innerRect.height,
+    bevelConfig,
+    stepsConfig
   );
   const straightEdgesPath = generateStraightEdgesPath(
-    dimensions.width,
-    dimensions.height,
-    bevelConfig
+    innerRect.width,
+    innerRect.height,
+    bevelConfig,
+    stepsConfig
   );
   const beveledCornersPath = generateBeveledCornersPath(
-    dimensions.width,
-    dimensions.height,
-    bevelConfig
+    innerRect.width,
+    innerRect.height,
+    bevelConfig,
+    stepsConfig
   );
 
   // Calculate adjusted stroke width for beveled corners
@@ -222,10 +336,13 @@ export const BaseBeveledContainer = ({
     }
   };
 
+  // Create transform for the main shape (offset by step bounds)
+  const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
+
   return (
     <div
       ref={containerRef}
-      className={className}
+      className={'base-beveled-container--root' + ' ' + className}
       style={{
         display: 'inline-block',
         position: 'relative',
@@ -243,12 +360,13 @@ export const BaseBeveledContainer = ({
       {/* Background div with CSS background */}
       {background && (
         <div
+          className={'base-beveled-container--background'}
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
+            top: innerRect.y,
+            left: innerRect.x,
+            width: `${innerRect.width}px`,
+            height: `${innerRect.height}px`,
             background: background,
             clipPath: `path('${fillPath}')`,
             zIndex: 1,
@@ -258,6 +376,7 @@ export const BaseBeveledContainer = ({
       )}
 
       <svg
+        className={'base-beveled-container--svg'}
         width="100%"
         height="100%"
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
@@ -317,53 +436,55 @@ export const BaseBeveledContainer = ({
           )}
         </defs>
 
-        {/* Fill path (only if no background is provided) */}
-        {!background && <path d={fillPath} fill={fill} stroke="none" />}
+        <g transform={shapeTransform}>
+          {/* Fill path (only if no background is provided) */}
+          {!background && <path d={fillPath} fill={fill} stroke="none" />}
 
-        {/* Straight edges with normal stroke width */}
-        {stroke && strokeWidth > 0 && (
-          <path
-            d={straightEdgesPath}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            strokeLinecap="square"
-            filter={glow ? `url(#${glowFilterId})` : undefined}
-          />
-        )}
+          {/* Straight edges with normal stroke width */}
+          {stroke && strokeWidth > 0 && (
+            <path
+              d={straightEdgesPath}
+              fill="none"
+              stroke={stroke}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              filter={glow ? `url(#${glowFilterId})` : undefined}
+            />
+          )}
 
-        {/* Beveled corners with adjusted stroke width */}
-        {stroke && strokeWidth > 0 && (
-          <path
-            d={beveledCornersPath}
-            fill="none"
-            stroke={stroke}
-            strokeWidth={adjustedStrokeWidth}
-            strokeLinecap="square"
-            filter={glow ? `url(#${glowFilterId})` : undefined}
-          />
-        )}
+          {/* Beveled corners with adjusted stroke width */}
+          {stroke && strokeWidth > 0 && (
+            <path
+              d={beveledCornersPath}
+              fill="none"
+              stroke={stroke}
+              strokeWidth={adjustedStrokeWidth}
+              strokeLinecap="round"
+              filter={glow ? `url(#${glowFilterId})` : undefined}
+            />
+          )}
+        </g>
       </svg>
 
       {/* Content layer */}
       {children && (
         <div
+          className={'base-beveled-container--children'}
           ref={contentRef}
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
+            top: innerRect.y,
+            left: innerRect.x,
+            width: `${innerRect.width}px`,
+            height: `${innerRect.height}px`,
             zIndex: 3,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+
             padding: typeof padding === 'string' ? padding : `${padding}px`,
             boxSizing: 'border-box',
             clipPath: `path('${fillPath}')`,
             pointerEvents: isClickable ? 'none' : 'auto', // Allow content interaction for modals
-            whiteSpace: 'nowrap', // Prevent text wrapping in final render too
+
+            // whiteSpace: 'nowrap', // Prevent text wrapping in final render too
             ...contentStyle,
           }}
         >

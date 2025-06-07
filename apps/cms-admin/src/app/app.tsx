@@ -4,18 +4,18 @@ import {
   BaseBeveledContainer,
   BeveledButton,
   BeveledCard,
-  BeveledPanel,
+  // BeveledPanel,
 } from '@jc/ui-components';
 
 export function App() {
-  const { currentTheme } = useTheme();
+  const { themeName } = useTheme();
 
   const AppContainer = styled('div', {
     position: 'relative',
     minHeight: '100vh',
     padding: '$8',
     background:
-      'linear-gradient(-45deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)',
+      'linear-gradient(-45deg,rgb(79, 79, 79) 0%, rgb(165, 69, 69) 50%, rgb(62, 6, 6) 100%)',
   });
 
   const Header = styled('header', {
@@ -40,103 +40,113 @@ export function App() {
     },
   });
 
+  const { theme } = useTheme();
+
   return (
     <AppContainer>
       <Header>
-        <Title>My {currentTheme} App</Title>
+        <Title>My {themeName} App</Title>
         <ThemeSwitcher />
       </Header>
-      <div style={{ width: 'auto', height: '100px', padding: '15px' }}>
-        <BaseBeveledContainer
-          background="url('https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg') no-repeat center / cover"
-          bevelConfig={{
-            tl: { bevelSize: 20, bevelAngle: 45 },
-            tr: { bevelSize: 15, bevelAngle: 45 },
-            br: { bevelSize: 25, bevelAngle: 45 },
-            bl: { bevelSize: 10, bevelAngle: 45 },
-          }}
-          fill="yellow"
-          stroke="red"
-          strokeWidth={2}
-          glow={{
-            color: 'green',
-            intensity: 3,
-            spread: 20,
-            opacity: 1,
-          }}
-        />
-      </div>
-
-      {/* With gradient and glow */}
-      <div style={{ width: '500px', height: '200px', padding: '15px' }}>
-        <BaseBeveledContainer
-          bevelConfig={{
-            tl: { bevelSize: 30, bevelAngle: 45 },
-            tr: { bevelSize: 30, bevelAngle: 45 },
-            br: { bevelSize: 30, bevelAngle: 45 },
-            bl: { bevelSize: 30, bevelAngle: 45 },
-          }}
-          background="linear-gradient(45deg, #ff6b6bdd, #4ecdc4dd)"
-          stroke="#00ffff"
-          strokeWidth={3}
-          glow={{
-            color: 'black',
-            intensity: 4,
-            spread: 0,
-          }}
-        />
-      </div>
-
-      <div style={{ width: '200px', height: '60px' }}>
-        <BaseBeveledContainer
-          background="linear-gradient(45deg, #667eea, #764ba2)"
-          stroke="#ffffff"
-          strokeWidth={2}
-          bevelConfig={{
-            tl: { bevelSize: 15, bevelAngle: 45 },
-            tr: { bevelSize: 15, bevelAngle: 45 },
-            br: { bevelSize: 15, bevelAngle: 45 },
-            bl: { bevelSize: 15, bevelAngle: 45 },
-          }}
-          onClick={() => alert('Button clicked!')}
-          glow={{
-            color: '#667eea',
-            intensity: 3,
-            spread: 1,
-          }}
-        >
-          <span style={{ color: 'white', fontWeight: 'bold' }}>Click Me!</span>
-        </BaseBeveledContainer>
-      </div>
-
-      <BeveledButton
-        variant="primary"
-        size="large"
-        onClick={() => console.log('handleButton')}
+      {/* <div style={{ width: 'auto', height: '100px', padding: '15px' }}> */}
+      {/* <BaseBeveledContainer
+        background="linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) url('https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg') no-repeat center / cover"
+        bevelConfig={{
+          topLeft: { bevelSize: 20, bevelAngle: 45 },
+          topRight: { bevelSize: 15, bevelAngle: 45 },
+          bottomRight: { bevelSize: 80, bevelAngle: 45 },
+          bottomLeft: { bevelSize: 10, bevelAngle: 45 },
+        }}
+        stepsConfig={{
+          left: {
+            segments: [
+              {
+                start: 0.1,
+                end: 0.4,
+                height: 10,
+              },
+              {
+                end: 1 - 0.1,
+                start: 1 - 0.4,
+                height: 10,
+              },
+            ],
+          },
+        }}
+        // fill={theme.colors.secondary}
+        stroke={theme.colors.border}
+        strokeWidth={3}
+        glow={{
+          color: 'black',
+          intensity: 3,
+          spread: 20,
+          opacity: 0.4,
+        }}
       >
-        Submit Form
-      </BeveledButton>
+        <h1 style={{ color: 'red', fontSize: '5rem', marginRight: '60px' }}>
+          This is some text
+        </h1>
+      </BaseBeveledContainer> */}
+      {/* </div> */}
 
-      {/* <BeveledPanel
-        variant="modal"
-        title="Confirm Action"
-        onClose={() => console.log('handleClose')}
+      <BaseBeveledContainer
+        bevelConfig={{
+          topLeft: { bevelSize: 15, bevelAngle: 45 },
+          topRight: { bevelSize: 30, bevelAngle: 45 },
+          bottomRight: { bevelSize: 30, bevelAngle: 45 },
+          bottomLeft: { bevelSize: 30, bevelAngle: 45 },
+        }}
+        stepsConfig={{
+          top: {
+            segments: [
+              {
+                start: 0.2,
+                end: 1,
+                height: 15,
+              },
+            ],
+          },
+          left: {
+            segments: [
+              {
+                start: 0,
+                end: 0.6,
+                height: 15,
+              },
+              {
+                start: 0.8,
+                end: 0.5,
+                height: 15,
+              },
+            ],
+          },
+        }}
+        // background="rgba(2, 2, 2, 0.34)"
+        // backgroundStyle={{
+        //   background:
+        //     'linear-gradient(rgba(17, 235, 255, 0.5), rgba(0, 0, 0, 0.5)), url("https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg") no-repeat center / cover',
+        // }}
+        background='linear-gradient(rgba(17, 235, 255, 0.5), rgba(0, 0, 0, 0.5)), url("https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg") no-repeat center / cover'
+        stroke="#00ffff"
+        strokeWidth={3}
+        glow={{
+          color: 'black',
+          intensity: 4,
+          spread: 0,
+        }}
       >
-        <p>Are you sure you want to delete this item?</p>
-        <div>
-          <BeveledButton variant="danger">Delete</BeveledButton>
-          <BeveledButton variant="secondary">Cancel</BeveledButton>
+        <div style={{ display: 'flex' }}>
+          <div
+            style={{
+              width: '50px',
+              height: '50px',
+              background: 'red',
+              border: '1px solid black',
+            }}
+          ></div>
+          <h3> some text content that I am going to make </h3>
         </div>
-      </BeveledPanel> */}
-
-      <BeveledCard
-        title="Product Name"
-        description="Product description"
-        image="https://example.com/image.jpg"
-        onClick={() => console.log('on Card Click')}
-      >
-        <p>Body of the Card</p>
-      </BeveledCard>
+      </BaseBeveledContainer>
     </AppContainer>
   );
 }

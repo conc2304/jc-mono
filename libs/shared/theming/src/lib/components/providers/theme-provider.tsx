@@ -1,10 +1,10 @@
-import { ThemeName } from '../../themes';
+import { ThemeName, themes } from '../../themes';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { createGlobalStyles } from '../../stitches/globals';
-
+import { ThemeTokens } from 'src/lib/themes/types';
 interface ThemeContextValue {
-  currentTheme: ThemeName;
-  setTheme: (theme: ThemeName) => void;
+  theme: ThemeTokens;
+  themeName: ThemeName;
+  setTheme: (themeName: ThemeName) => void;
   availableThemes: ThemeName[];
 }
 
@@ -27,27 +27,43 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
   defaultTheme = 'cyberpunk',
 }) => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeName>(defaultTheme);
+  const [themeName, setThemeName] = useState<ThemeName>(defaultTheme);
+  const theme = themes[themeName];
 
   useEffect(() => {
-    // Apply theme class to document
-    document.documentElement.className = currentTheme;
+    // Apply CSS custom properties to document root
+    const root = document.documentElement;
 
-    // Apply global styles for current theme
-    const globalStyles = createGlobalStyles(currentTheme);
-    globalStyles();
-  }, [currentTheme]);
+    // Apply colors
+    Object.entries(theme.colors).forEach(([key, value]) => {
+      root.style.setProperty(`--color-${key}`, value);
+    });
 
-  const handleSetTheme = (theme: ThemeName) => {
-    setCurrentTheme(theme);
-  };
+    // Apply spacing
+    Object.entries(theme.spacing).forEach(([key, value]) => {
+      root.style.setProperty(`--spacing-${key}`, value);
+    });
+
+    // Apply typography
+    root.style.setProperty(`--font-family`, theme.typography.fontFamily);
+    Object.entries(theme.typography.fontSize).forEach(([key, value]) => {
+      root.style.setProperty(`--font-size-${key}`, value);
+    });
+    Object.entries(theme.typography.fontWeight).forEach(([key, value]) => {
+      root.style.setProperty(`--font-weight-${key}`, value);
+    });
+
+    // Apply theme class for CSS selectors
+    root.className = themeName;
+  }, [theme, themeName]);
 
   return (
     <ThemeContext.Provider
       value={{
-        currentTheme,
-        setTheme: handleSetTheme,
-        availableThemes: ['cyberpunk', 'corporate'],
+        theme,
+        themeName,
+        setTheme: setThemeName,
+        availableThemes: Object.keys(themes) as ThemeName[],
       }}
     >
       {children}

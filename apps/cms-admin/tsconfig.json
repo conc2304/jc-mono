@@ -6,7 +6,7 @@
       "path": "../../libs/shared/components"
     },
     {
-      "path": "../../libs/features/games-lib"
+      "path": "../../libs/shared/theming"
     },
     {
       "path": "./tsconfig.app.json"

@@ -34,7 +34,7 @@
       "path": "../../libs/shared/components/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/features/games-lib/tsconfig.lib.json"
+      "path": "../../libs/shared/theming/tsconfig.lib.json"
     }
   ]
 }
