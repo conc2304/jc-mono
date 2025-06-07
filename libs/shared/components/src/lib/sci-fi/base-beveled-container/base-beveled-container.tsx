@@ -7,6 +7,8 @@ import {
   generateStraightEdgesPath,
   getAdjustedStrokeWidth,
   getAverageBevelAngle,
+  getMinPadding,
+  getStepBounds,
 } from './utils';
 
 interface BaseBeveledContainerProps
@@ -26,7 +28,6 @@ interface BaseBeveledContainerProps
   role?: string; // Accessibility role (button, dialog, etc.)
   tabIndex?: number; // For keyboard navigation
   contentStyle?: React.CSSProperties;
-  // padding?: number | string; // Additional padding around children
 }
 
 // Main component with dynamic viewBox based on children size and step support
@@ -46,7 +47,6 @@ export const BaseBeveledContainer = ({
   role,
   tabIndex,
   contentStyle,
-  // padding = '0.5rem',
   ...svgProps
 }: BaseBeveledContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,104 +60,13 @@ export const BaseBeveledContainer = ({
     []
   );
 
-  const paddingTop = Math.max(
-    (bevelConfig?.topLeft?.bevelSize || 0) / 2,
-    (bevelConfig?.topRight?.bevelSize || 0) / 2,
-    stepsConfig.top?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
+  const paddingValue = getMinPadding({
+    bevelConfig,
+    stepsConfig,
+    strokeWidth,
+  });
 
-  const paddingRight = Math.max(
-    (bevelConfig?.topRight?.bevelSize || 0) / 2,
-    (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
-    stepsConfig.right?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
-
-  const paddingBottom = Math.max(
-    (bevelConfig?.bottomRight?.bevelSize || 0) / 2,
-    (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
-    stepsConfig.bottom?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
-
-  const paddingLeft = Math.max(
-    (bevelConfig?.topLeft?.bevelSize || 0) / 2,
-    (bevelConfig?.bottomLeft?.bevelSize || 0) / 2,
-    stepsConfig.bottom?.segments?.reduce(
-      (max, curr) => Math.max(max, curr.height),
-      -Infinity
-    ) || 0
-  );
-
-  const padding =
-    Math.max(paddingTop, paddingRight, paddingBottom, paddingLeft) +
-    strokeWidth * 2 +
-    'px';
-
-  // Convert padding to pixels for calculations
-  const getPaddingPixels = (paddingValue: number | string): number => {
-    if (typeof paddingValue === 'number') return paddingValue;
-
-    // Simple conversion for common CSS units - you might want to enhance this
-    if (paddingValue.endsWith('px')) {
-      return parseFloat(paddingValue);
-    } else if (paddingValue.endsWith('rem')) {
-      return parseFloat(paddingValue) * 16; // Assuming 16px = 1rem
-    } else if (paddingValue.endsWith('em')) {
-      return parseFloat(paddingValue) * 16; // Simplified assumption
-    }
-
-    return 16; // Default fallback
-  };
-
-  const paddingPixels = getPaddingPixels(padding);
-
-  // Calculate extra space needed for steps
-  const getStepBounds = (): {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  } => {
-    const bounds = { top: 0, right: 0, bottom: 0, left: 0 };
-
-    // Check each edge for maximum step height
-    if (stepsConfig.top?.segments) {
-      bounds.top = Math.max(
-        0,
-        ...stepsConfig.top.segments.map((s) => s.height)
-      );
-    }
-    if (stepsConfig.right?.segments) {
-      bounds.right = Math.max(
-        0,
-        ...stepsConfig.right.segments.map((s) => s.height)
-      );
-    }
-    if (stepsConfig.bottom?.segments) {
-      bounds.bottom = Math.max(
-        0,
-        ...stepsConfig.bottom.segments.map((s) => s.height)
-      );
-    }
-    if (stepsConfig.left?.segments) {
-      bounds.left = Math.max(
-        0,
-        ...stepsConfig.left.segments.map((s) => s.height)
-      );
-    }
-
-    return bounds;
-  };
-
-  const stepBounds = getStepBounds();
+  const stepBounds = getStepBounds(stepsConfig);
 
   // Measure content size and update viewBox dimensions
   useEffect(() => {
@@ -171,12 +80,9 @@ export const BaseBeveledContainer = ({
 
         // Add padding around the content and extra space for steps
         const totalWidth =
-          contentWidth + paddingPixels * 2 + stepBounds.left + stepBounds.right;
+          contentWidth + paddingValue * 2 + stepBounds.left + stepBounds.right;
         const totalHeight =
-          contentHeight +
-          paddingPixels * 2 +
-          stepBounds.top +
-          stepBounds.bottom;
+          contentHeight + paddingValue * 2 + stepBounds.top + stepBounds.bottom;
 
         if (totalWidth > 0 && totalHeight > 0) {
           setDimensions({ width: totalWidth, height: totalHeight });
@@ -198,12 +104,12 @@ export const BaseBeveledContainer = ({
         // Add padding around the content and extra space for steps
         const totalWidth =
           (width || 100) +
-          paddingPixels * 2 +
+          paddingValue * 2 +
           stepBounds.left +
           stepBounds.right;
         const totalHeight =
           (height || 50) +
-          paddingPixels * 2 +
+          paddingValue * 2 +
           stepBounds.top +
           stepBounds.bottom;
 
@@ -226,7 +132,7 @@ export const BaseBeveledContainer = ({
     };
   }, [
     isInitialized,
-    paddingPixels,
+    paddingValue,
     stepBounds.top,
     stepBounds.right,
     stepBounds.bottom,
@@ -253,7 +159,10 @@ export const BaseBeveledContainer = ({
             position: 'absolute',
             top: 0,
             left: 0,
-            padding: typeof padding === 'string' ? padding : `${padding}px`,
+            padding:
+              typeof paddingValue === 'string'
+                ? paddingValue
+                : `${paddingValue}px`,
             whiteSpace: 'nowrap', // Prevent text wrapping during measurement
             display: 'inline-block', // Let content determine its natural size
             ...contentStyle,
@@ -479,7 +388,7 @@ export const BaseBeveledContainer = ({
             height: `${innerRect.height}px`,
             zIndex: 3,
 
-            padding: typeof padding === 'string' ? padding : `${padding}px`,
+            padding: `${paddingValue}px`,
             boxSizing: 'border-box',
             clipPath: `path('${fillPath}')`,
             pointerEvents: isClickable ? 'none' : 'auto', // Allow content interaction for modals

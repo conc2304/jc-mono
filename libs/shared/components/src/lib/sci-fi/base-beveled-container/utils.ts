@@ -789,7 +789,7 @@ export const getMinPadding = ({
   bevelConfig: BevelConfig;
   stepsConfig: StepConfig;
   strokeWidth: number;
-}): Property.Padding => {
+}): number => {
   const paddingTop = Math.max(
     (bevelConfig?.topLeft?.bevelSize || 0) / 2,
     (bevelConfig?.topRight?.bevelSize || 0) / 2,
@@ -828,8 +828,7 @@ export const getMinPadding = ({
 
   const padding =
     Math.max(paddingTop, paddingRight, paddingBottom, paddingLeft) +
-    strokeWidth * 2 +
-    'px';
+    strokeWidth * 2;
 
   return padding;
 };
