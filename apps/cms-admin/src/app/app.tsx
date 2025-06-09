@@ -54,14 +54,14 @@ export function App() {
           topLeft: { bevelSize: 30, bevelAngle: 45 },
           topRight: { bevelSize: 8, bevelAngle: 45 },
           bottomRight: { bevelSize: 30, bevelAngle: 45 },
-          bottomLeft: { bevelSize: 15, bevelAngle: 45 },
+          bottomLeft: { bevelSize: 10, bevelAngle: 45 },
         }}
         stepsConfig={{
           top: {
             segments: [
               {
-                start: 0.2,
-                end: 1,
+                start: 0,
+                end: 0.5,
                 height: 15,
               },
             ],
@@ -70,11 +70,6 @@ export function App() {
             segments: [
               {
                 start: 0,
-                end: 0.6,
-                height: 15,
-              },
-              {
-                start: 0.8,
                 end: 0.5,
                 height: 15,
               },

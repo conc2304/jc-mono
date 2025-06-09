@@ -7,7 +7,7 @@ import {
   // generateBeveledCornersPath,
   generateFillPath,
   // generateStraightEdgesPath,
-  generateCompleteBeveledPath,
+  generateShapePath,
   getMinPadding,
   getStepBounds,
 } from './utils';
@@ -18,6 +18,7 @@ import {
   StateStyles,
   StepConfig,
 } from '../types';
+import { PathAsLines } from './svg-path-as-lines';
 
 interface BaseBeveledContainerProps
   extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height' | 'onClick'> {
@@ -106,9 +107,17 @@ export const BaseBeveledContainer = ({
 
         // Add padding around the content and extra space for steps
         const totalWidth =
-          contentWidth + paddingValue * 2 + stepBounds.left + stepBounds.right;
+          contentWidth +
+          paddingValue * 2 +
+          stepBounds.left +
+          stepBounds.right +
+          strokeWidth;
         const totalHeight =
-          contentHeight + paddingValue * 2 + stepBounds.top + stepBounds.bottom;
+          contentHeight +
+          paddingValue * 2 +
+          stepBounds.top +
+          stepBounds.bottom +
+          strokeWidth;
 
         if (totalWidth > 0 && totalHeight > 0) {
           setDimensions({ width: totalWidth, height: totalHeight });
@@ -239,7 +248,7 @@ export const BaseBeveledContainer = ({
     bevelConfig,
     stepsConfig
   );
-  const borderPath = generateCompleteBeveledPath(
+  const borderPath = generateShapePath(
     innerRect.width,
     innerRect.height,
     bevelConfig,
@@ -265,6 +274,7 @@ export const BaseBeveledContainer = ({
 
   // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
+  const strokePadding = Math.ceil(strokeWidth / 2) + 1;
 
   return (
     <div
@@ -338,7 +348,9 @@ export const BaseBeveledContainer = ({
         className={'base-beveled-container--svg-border'}
         width="100%"
         height="100%"
-        viewBox={`5 5 ${dimensions.width} ${dimensions.height}`}
+        viewBox={`${-strokePadding} ${-strokePadding} ${
+          dimensions.width + strokePadding * 2
+        } ${dimensions.height + strokePadding * 2}`}
         style={{
           display: 'block',
           position: 'absolute',
@@ -352,12 +364,12 @@ export const BaseBeveledContainer = ({
       >
         <g transform={shapeTransform}>
           {stroke && strokeWidth > 0 && (
-            <path
-              d={borderPath}
-              fill="none"
+            <PathAsLines
+              pathString={borderPath}
               stroke={borderStyles.stroke || stroke}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
+              strokeLinejoin="round"
             />
           )}
         </g>

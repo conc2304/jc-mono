@@ -1,6 +1,12 @@
 import { Property } from 'csstype';
 
-import { BevelConfig, CornerBevel, StepConfig, EdgeStepConfig } from '../types';
+import {
+  BevelConfig,
+  CornerBevel,
+  StepConfig,
+  EdgeStepConfig,
+  LineElement,
+} from '../types';
 
 // Helper function to calculate stroke width for angled lines
 export const getAdjustedStrokeWidth = (
@@ -483,6 +489,8 @@ export const getMinPadding = ({
   paddingBottom: number;
   paddingLeft: number;
 } => {
+  const strokePadding = Math.ceil(strokeWidth / 2) + 1;
+
   const paddingTop =
     Math.max(
       (bevelConfig?.topLeft?.bevelSize || 0) / 2,
@@ -491,7 +499,7 @@ export const getMinPadding = ({
         (max, curr) => Math.max(max, curr.height),
         -Infinity
       ) || 0
-    ) + strokeWidth;
+    ) + strokePadding;
 
   const paddingRight =
     Math.max(
@@ -501,7 +509,7 @@ export const getMinPadding = ({
         (max, curr) => Math.max(max, curr.height),
         -Infinity
       ) || 0
-    ) + strokeWidth;
+    ) + strokePadding;
 
   const paddingBottom =
     Math.max(
@@ -521,11 +529,11 @@ export const getMinPadding = ({
         (max, curr) => Math.max(max, curr.height),
         -Infinity
       ) || 0
-    ) + strokeWidth;
+    ) + strokePadding;
 
   const padding =
     Math.max(paddingTop, paddingRight, paddingBottom, paddingLeft) +
-    strokeWidth * 2;
+    strokePadding * 2;
 
   return { padding, paddingTop, paddingRight, paddingBottom, paddingLeft };
 };
@@ -597,7 +605,7 @@ export const calculateDynamicShadow = (
   };
 };
 
-export const generateCompleteBeveledPath = (
+export const generateShapePath = (
   width: number,
   height: number,
   bevelConfig: BevelConfig,
@@ -907,4 +915,79 @@ export const generateCompleteBeveledPath = (
   pathCommands.push('Z');
 
   return pathCommands.join(' ');
+};
+
+/**
+ * Converts an SVG path string to an array of line element props
+ * @param pathString - The SVG path string (e.g., "M 0 0 L 100 0 L 100 100 Z")
+ * @returns Array of line element properties
+ */
+export const convertPathToLines = (pathString: string): LineElement[] => {
+  const lines: LineElement[] = [];
+
+  if (!pathString || pathString.trim() === '') {
+    return lines;
+  }
+
+  // Parse the path string to extract coordinates
+  const pathCommands = pathString.trim().split(/(?=[MLZ])/);
+
+  let currentX = 0;
+  let currentY = 0;
+  let startX = 0;
+  let startY = 0;
+  let lineIndex = 0;
+
+  for (const command of pathCommands) {
+    const trimmedCommand = command.trim();
+    if (!trimmedCommand) continue;
+
+    const type = trimmedCommand[0];
+    const coords = trimmedCommand.slice(1).trim();
+
+    switch (type) {
+      case 'M': {
+        // Move to - set the starting point
+        const [x, y] = coords.split(/\s+/).map(Number);
+        currentX = x;
+        currentY = y;
+        startX = x;
+        startY = y;
+        break;
+      }
+
+      case 'L': {
+        // Line to - create a line from current position to new position
+        const [x, y] = coords.split(/\s+/).map(Number);
+
+        lines.push({
+          x1: currentX,
+          y1: currentY,
+          x2: x,
+          y2: y,
+          key: `line-${lineIndex++}`,
+        });
+
+        currentX = x;
+        currentY = y;
+        break;
+      }
+
+      case 'Z': {
+        // Close path - create a line back to the starting point
+        if (currentX !== startX || currentY !== startY) {
+          lines.push({
+            x1: currentX,
+            y1: currentY,
+            x2: startX,
+            y2: startY,
+            key: `line-${lineIndex++}`,
+          });
+        }
+        break;
+      }
+    }
+  }
+
+  return lines;
 };
