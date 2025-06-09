@@ -4,10 +4,10 @@ import { Properties, Property } from 'csstype';
 
 import {
   calculateDynamicShadow,
-  generateBeveledCornersPath,
+  // generateBeveledCornersPath,
   generateFillPath,
-  generateStraightEdgesPath,
-  getAdjustedStrokeWidth,
+  // generateStraightEdgesPath,
+  generateCompleteBeveledPath,
   getMinPadding,
   getStepBounds,
 } from './utils';
@@ -239,13 +239,7 @@ export const BaseBeveledContainer = ({
     bevelConfig,
     stepsConfig
   );
-  const straightEdgesPath = generateStraightEdgesPath(
-    innerRect.width,
-    innerRect.height,
-    bevelConfig,
-    stepsConfig
-  );
-  const beveledCornersPath = generateBeveledCornersPath(
+  const borderPath = generateCompleteBeveledPath(
     innerRect.width,
     innerRect.height,
     bevelConfig,
@@ -357,23 +351,11 @@ export const BaseBeveledContainer = ({
         {...svgProps}
       >
         <g transform={shapeTransform}>
-          {/* Straight edges with normal stroke width */}
           {stroke && strokeWidth > 0 && (
             <path
-              d={straightEdgesPath}
+              d={borderPath}
               fill="none"
               stroke={borderStyles.stroke || stroke}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-            />
-          )}
-
-          {/* Beveled corners with adjusted stroke width */}
-          {stroke && strokeWidth > 0 && (
-            <path
-              d={beveledCornersPath}
-              fill="none"
-              stroke={stroke}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
             />

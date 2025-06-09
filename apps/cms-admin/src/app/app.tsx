@@ -51,10 +51,10 @@ export function App() {
 
       <BaseBeveledContainer
         bevelConfig={{
-          topLeft: { bevelSize: 15, bevelAngle: 45 },
-          topRight: { bevelSize: 30, bevelAngle: 45 },
+          topLeft: { bevelSize: 30, bevelAngle: 45 },
+          topRight: { bevelSize: 8, bevelAngle: 45 },
           bottomRight: { bevelSize: 30, bevelAngle: 45 },
-          bottomLeft: { bevelSize: 30, bevelAngle: 45 },
+          bottomLeft: { bevelSize: 15, bevelAngle: 45 },
         }}
         stepsConfig={{
           top: {
