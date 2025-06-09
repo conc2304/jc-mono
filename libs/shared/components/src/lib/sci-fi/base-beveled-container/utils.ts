@@ -468,33 +468,6 @@ export const generateBeveledCornersPath = (
   return points.join(' ');
 };
 
-// Function to calculate average bevel angle for stroke adjustment
-export const getAverageBevelAngle = (bevelConfig: BevelConfig): number => {
-  const angles: number[] = [];
-
-  if (bevelConfig.topLeft?.bevelSize && bevelConfig.topLeft.bevelSize > 0) {
-    angles.push(bevelConfig.topLeft.bevelAngle || 45);
-  }
-  if (bevelConfig.topRight?.bevelSize && bevelConfig.topRight.bevelSize > 0) {
-    angles.push(bevelConfig.topRight.bevelAngle || 45);
-  }
-  if (
-    bevelConfig.bottomRight?.bevelSize &&
-    bevelConfig.bottomRight.bevelSize > 0
-  ) {
-    angles.push(bevelConfig.bottomRight.bevelAngle || 45);
-  }
-  if (
-    bevelConfig.bottomLeft?.bevelSize &&
-    bevelConfig.bottomLeft.bevelSize > 0
-  ) {
-    angles.push(bevelConfig.bottomLeft.bevelAngle || 45);
-  }
-
-  if (angles.length === 0) return 45;
-  return angles.reduce((sum, angle) => sum + angle, 0) / angles.length;
-};
-
 // Helper function to generate fill path
 export const generateFillPath = (
   width: number,

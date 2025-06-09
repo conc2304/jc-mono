@@ -48,46 +48,6 @@ export function App() {
         <Title>My {themeName} App</Title>
         <ThemeSwitcher />
       </Header>
-      {/* <div style={{ width: 'auto', height: '100px', padding: '15px' }}> */}
-      {/* <BaseBeveledContainer
-        background="linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) url('https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg') no-repeat center / cover"
-        bevelConfig={{
-          topLeft: { bevelSize: 20, bevelAngle: 45 },
-          topRight: { bevelSize: 15, bevelAngle: 45 },
-          bottomRight: { bevelSize: 80, bevelAngle: 45 },
-          bottomLeft: { bevelSize: 10, bevelAngle: 45 },
-        }}
-        stepsConfig={{
-          left: {
-            segments: [
-              {
-                start: 0.1,
-                end: 0.4,
-                height: 10,
-              },
-              {
-                end: 1 - 0.1,
-                start: 1 - 0.4,
-                height: 10,
-              },
-            ],
-          },
-        }}
-        // fill={theme.colors.secondary}
-        stroke={theme.colors.border}
-        strokeWidth={3}
-        glow={{
-          color: 'black',
-          intensity: 3,
-          spread: 20,
-          opacity: 0.4,
-        }}
-      >
-        <h1 style={{ color: 'red', fontSize: '5rem', marginRight: '60px' }}>
-          This is some text
-        </h1>
-      </BaseBeveledContainer> */}
-      {/* </div> */}
 
       <BaseBeveledContainer
         bevelConfig={{
@@ -120,11 +80,6 @@ export function App() {
               },
             ],
           },
-        }}
-        backgroundStyle={{
-          background:
-            'linear-gradient(rgba(17, 235, 255, 0.5), rgba(0, 0, 0, 0.5)) , url("https://t3.ftcdn.net/jpg/05/27/60/34/240_F_527603481_VUTQYCyYq0jPteCp7tQGueUQpfZp8tjQ.jpg") no-repeat center / cover',
-          opacity: 0.7,
         }}
         stroke="#00ffff"
         strokeWidth={3}

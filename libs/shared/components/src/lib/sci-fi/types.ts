@@ -1,3 +1,5 @@
+import { Property } from 'csstype';
+
 type CornerBevel = {
   bevelSize: number;
   bevelAngle?: number;
@@ -32,6 +34,54 @@ export interface StepConfig {
   right?: EdgeStepConfig;
   bottom?: EdgeStepConfig;
   left?: EdgeStepConfig;
+}
+
+export interface ShadowConfig {
+  locationAware?: boolean;
+  maxSpreadPx?: number;
+  transition?: {
+    duration?: string;
+    easing?: string;
+    property?: string;
+  };
+  states: {
+    default: {
+      color?: Property.Color;
+      offsetX?: number;
+      offsetY?: number;
+      blur?: number;
+      opacity?: number;
+    };
+    hover?: {
+      color?: Property.Color;
+      offsetX?: number;
+      offsetY?: number;
+      blur?: number;
+      opacity?: number;
+    };
+    active?: {
+      color?: Property.Color;
+      offsetX?: number;
+      offsetY?: number;
+      blur?: number;
+      opacity?: number;
+    };
+  };
+}
+
+export interface StateStyles {
+  default?: React.CSSProperties;
+  hover?: React.CSSProperties;
+  active?: React.CSSProperties;
+  disabled?: React.CSSProperties;
+}
+
+export interface ElementStyleConfig {
+  root?: StateStyles;
+  background?: StateStyles;
+  shadow?: StateStyles;
+  border?: StateStyles;
+  content?: StateStyles;
 }
 
 export type { BevelConfig, CornerBevel, GlowConfig };
