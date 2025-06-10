@@ -1,5 +1,3 @@
-import { Property } from 'csstype';
-
 import {
   BevelConfig,
   CornerBevel,
@@ -97,6 +95,7 @@ const generateSteppedEdgePath = (
   }
 
   const points: string[] = [];
+  // const edgeAngle = 0;
   const edgeAngle = Math.atan2(endY - startY, endX - startX);
   const normalX = -Math.sin(edgeAngle);
   const normalY = Math.cos(edgeAngle);
@@ -621,23 +620,15 @@ export const generateShapePath = (
       y: Math.abs(bevelSize * Math.sin(radians)),
     };
   }
+  const defaultBevel = {
+    bevelSize: 0,
+    bevelAngle: 45,
+  };
 
-  const tlBevel: CornerBevel = bevelConfig.topLeft || {
-    bevelSize: 0,
-    bevelAngle: 45,
-  };
-  const trBevel: CornerBevel = bevelConfig.topRight || {
-    bevelSize: 0,
-    bevelAngle: 45,
-  };
-  const brBevel: CornerBevel = bevelConfig.bottomRight || {
-    bevelSize: 0,
-    bevelAngle: 45,
-  };
-  const blBevel: CornerBevel = bevelConfig.bottomLeft || {
-    bevelSize: 0,
-    bevelAngle: 45,
-  };
+  const tlBevel: CornerBevel = bevelConfig.topLeft || defaultBevel;
+  const trBevel: CornerBevel = bevelConfig.topRight || defaultBevel;
+  const brBevel: CornerBevel = bevelConfig.bottomRight || defaultBevel;
+  const blBevel: CornerBevel = bevelConfig.bottomLeft || defaultBevel;
 
   const tlOffset = getBevelOffset(tlBevel.bevelSize, tlBevel.bevelAngle);
   const trOffset = getBevelOffset(trBevel.bevelSize, trBevel.bevelAngle);
@@ -677,6 +668,39 @@ export const generateShapePath = (
     stepConfig?.left
   );
 
+  // Calculate step start offsets for each edge
+  const topStartOffset = getEdgeStartOffset(
+    tlBevel.bevelSize > 0 ? tlOffset.x : 0,
+    0,
+    trBevel.bevelSize > 0 ? width - trOffset.x : width,
+    0,
+    stepConfig?.top
+  );
+
+  const rightStartOffset = getEdgeStartOffset(
+    width,
+    trBevel.bevelSize > 0 ? trOffset.y : 0,
+    width,
+    brBevel.bevelSize > 0 ? height - brOffset.y : height,
+    stepConfig?.right
+  );
+
+  const bottomStartOffset = getEdgeStartOffset(
+    brBevel.bevelSize > 0 ? width - brOffset.x : width,
+    height,
+    blBevel.bevelSize > 0 ? blOffset.x : 0,
+    height,
+    stepConfig?.bottom
+  );
+
+  const leftStartOffset = getEdgeStartOffset(
+    0,
+    blBevel.bevelSize > 0 ? height - blOffset.y : height,
+    0,
+    tlBevel.bevelSize > 0 ? tlOffset.y : 0,
+    stepConfig?.left
+  );
+
   // Helper function to extract path coordinates from a path string
   function extractPathCoordinates(
     pathStr: string
@@ -709,10 +733,11 @@ export const generateShapePath = (
       : 0 + leftEndOffset.offsetY;
   pathCommands.push(`M ${startX} ${startY}`);
 
-  // 2. Top-left bevel (if exists)
+  // 2. Top-left bevel (if exists) - adjust end point for top edge start offset
   if (tlBevel.bevelSize > 0) {
-    const bevelEndX = tlOffset.x + leftEndOffset.offsetX;
-    const bevelEndY = 0 + leftEndOffset.offsetY;
+    const bevelEndX =
+      tlOffset.x + leftEndOffset.offsetX + topStartOffset.offsetX;
+    const bevelEndY = 0 + leftEndOffset.offsetY + topStartOffset.offsetY;
     pathCommands.push(`L ${bevelEndX} ${bevelEndY}`);
   }
 
@@ -725,6 +750,8 @@ export const generateShapePath = (
   const topEndX = trBevel.bevelSize > 0 ? width - trOffset.x : width;
   const topEndY = 0; // Keep the base edge at Y=0 for proper horizontal steps
 
+  console.log({ topStartX, topStartY, topEndX, topEndY });
+
   if (topStartX < topEndX) {
     const topResult = generateSteppedEdgePath(
       topStartX,
@@ -736,6 +763,8 @@ export const generateShapePath = (
       undefined
     );
 
+    console.log({ topResult });
+
     // Extract coordinates and add them, but adjust final coordinate for bevel connection
     const coords = extractPathCoordinates(topResult.path);
     for (let i = 1; i < coords.length; i++) {
@@ -744,9 +773,12 @@ export const generateShapePath = (
         // Last coordinate should connect to the top-right bevel or adjusted end point
         const finalX =
           trBevel.bevelSize > 0
-            ? width - trOffset.x + topEndOffset.offsetX
-            : width + topEndOffset.offsetX;
-        const finalY = 0 + topEndOffset.offsetY;
+            ? width -
+              trOffset.x +
+              topEndOffset.offsetX +
+              rightStartOffset.offsetX
+            : width + topEndOffset.offsetX + rightStartOffset.offsetX;
+        const finalY = 0 + topEndOffset.offsetY + rightStartOffset.offsetY;
         pathCommands.push(`L ${finalX} ${finalY}`);
       } else {
         pathCommands.push(`L ${coords[i].x} ${coords[i].y}`);
@@ -755,16 +787,17 @@ export const generateShapePath = (
   } else {
     const finalX =
       trBevel.bevelSize > 0
-        ? width - trOffset.x + topEndOffset.offsetX
-        : width + topEndOffset.offsetX;
-    const finalY = 0 + topEndOffset.offsetY;
+        ? width - trOffset.x + topEndOffset.offsetX + rightStartOffset.offsetX
+        : width + topEndOffset.offsetX + rightStartOffset.offsetX;
+    const finalY = 0 + topEndOffset.offsetY + rightStartOffset.offsetY;
     pathCommands.push(`L ${finalX} ${finalY}`);
   }
 
-  // 4. Top-right bevel (if exists)
+  // 4. Top-right bevel (if exists) - adjust end point for right edge start offset
   if (trBevel.bevelSize > 0) {
-    const bevelEndX = width + topEndOffset.offsetX;
-    const bevelEndY = trOffset.y + topEndOffset.offsetY;
+    const bevelEndX = width + topEndOffset.offsetX + rightStartOffset.offsetX;
+    const bevelEndY =
+      trOffset.y + topEndOffset.offsetY + rightStartOffset.offsetY;
     pathCommands.push(`L ${bevelEndX} ${bevelEndY}`);
   }
 
@@ -792,29 +825,38 @@ export const generateShapePath = (
     for (let i = 1; i < coords.length; i++) {
       if (i === coords.length - 1) {
         // Last coordinate should connect to the bottom-right bevel or adjusted end point
-        const finalX = width + rightEndOffset.offsetX;
+        const finalX =
+          width + rightEndOffset.offsetX + bottomStartOffset.offsetX;
         const finalY =
           brBevel.bevelSize > 0
-            ? height - brOffset.y + rightEndOffset.offsetY
-            : height + rightEndOffset.offsetY;
+            ? height -
+              brOffset.y +
+              rightEndOffset.offsetY +
+              bottomStartOffset.offsetY
+            : height + rightEndOffset.offsetY + bottomStartOffset.offsetY;
         pathCommands.push(`L ${finalX} ${finalY}`);
       } else {
         pathCommands.push(`L ${coords[i].x} ${coords[i].y}`);
       }
     }
   } else {
-    const finalX = width + rightEndOffset.offsetX;
+    const finalX = width + rightEndOffset.offsetX + bottomStartOffset.offsetX;
     const finalY =
       brBevel.bevelSize > 0
-        ? height - brOffset.y + rightEndOffset.offsetY
-        : height + rightEndOffset.offsetY;
+        ? height -
+          brOffset.y +
+          rightEndOffset.offsetY +
+          bottomStartOffset.offsetY
+        : height + rightEndOffset.offsetY + bottomStartOffset.offsetY;
     pathCommands.push(`L ${finalX} ${finalY}`);
   }
 
-  // 6. Bottom-right bevel (if exists)
+  // 6. Bottom-right bevel (if exists) - adjust end point for bottom edge start offset
   if (brBevel.bevelSize > 0) {
-    const bevelEndX = width - brOffset.x + rightEndOffset.offsetX;
-    const bevelEndY = height + rightEndOffset.offsetY;
+    const bevelEndX =
+      width - brOffset.x + rightEndOffset.offsetX + bottomStartOffset.offsetX;
+    const bevelEndY =
+      height + rightEndOffset.offsetY + bottomStartOffset.offsetY;
     pathCommands.push(`L ${bevelEndX} ${bevelEndY}`);
   }
 
@@ -844,9 +886,10 @@ export const generateShapePath = (
         // Last coordinate should connect to the bottom-left bevel or adjusted end point
         const finalX =
           blBevel.bevelSize > 0
-            ? blOffset.x + bottomEndOffset.offsetX
-            : 0 + bottomEndOffset.offsetX;
-        const finalY = height + bottomEndOffset.offsetY;
+            ? blOffset.x + bottomEndOffset.offsetX + leftStartOffset.offsetX
+            : 0 + bottomEndOffset.offsetX + leftStartOffset.offsetX;
+        const finalY =
+          height + bottomEndOffset.offsetY + leftStartOffset.offsetY;
         pathCommands.push(`L ${finalX} ${finalY}`);
       } else {
         pathCommands.push(`L ${coords[i].x} ${coords[i].y}`);
@@ -855,16 +898,17 @@ export const generateShapePath = (
   } else {
     const finalX =
       blBevel.bevelSize > 0
-        ? blOffset.x + bottomEndOffset.offsetX
-        : 0 + bottomEndOffset.offsetX;
-    const finalY = height + bottomEndOffset.offsetY;
+        ? blOffset.x + bottomEndOffset.offsetX + leftStartOffset.offsetX
+        : 0 + bottomEndOffset.offsetX + leftStartOffset.offsetX;
+    const finalY = height + bottomEndOffset.offsetY + leftStartOffset.offsetY;
     pathCommands.push(`L ${finalX} ${finalY}`);
   }
 
-  // 8. Bottom-left bevel (if exists)
+  // 8. Bottom-left bevel (if exists) - adjust end point for left edge start offset
   if (blBevel.bevelSize > 0) {
-    const bevelEndX = 0 + bottomEndOffset.offsetX;
-    const bevelEndY = height - blOffset.y + bottomEndOffset.offsetY;
+    const bevelEndX = 0 + bottomEndOffset.offsetX + leftStartOffset.offsetX;
+    const bevelEndY =
+      height - blOffset.y + bottomEndOffset.offsetY + leftStartOffset.offsetY;
     pathCommands.push(`L ${bevelEndX} ${bevelEndY}`);
   }
 
@@ -892,22 +936,22 @@ export const generateShapePath = (
     for (let i = 1; i < coords.length; i++) {
       if (i === coords.length - 1) {
         // Last coordinate should connect back to start point properly
-        const finalX = 0 + leftEndOffset.offsetX;
+        const finalX = 0 + leftEndOffset.offsetX + topStartOffset.offsetX;
         const finalY =
           tlBevel.bevelSize > 0
-            ? tlOffset.y + leftEndOffset.offsetY
-            : 0 + leftEndOffset.offsetY;
+            ? tlOffset.y + leftEndOffset.offsetY + topStartOffset.offsetY
+            : 0 + leftEndOffset.offsetY + topStartOffset.offsetY;
         pathCommands.push(`L ${finalX} ${finalY}`);
       } else {
         pathCommands.push(`L ${coords[i].x} ${coords[i].y}`);
       }
     }
   } else {
-    const finalX = 0 + leftEndOffset.offsetX;
+    const finalX = 0 + leftEndOffset.offsetX + topStartOffset.offsetX;
     const finalY =
       tlBevel.bevelSize > 0
-        ? tlOffset.y + leftEndOffset.offsetY
-        : 0 + leftEndOffset.offsetY;
+        ? tlOffset.y + leftEndOffset.offsetY + topStartOffset.offsetY
+        : 0 + leftEndOffset.offsetY + topStartOffset.offsetY;
     pathCommands.push(`L ${finalX} ${finalY}`);
   }
 

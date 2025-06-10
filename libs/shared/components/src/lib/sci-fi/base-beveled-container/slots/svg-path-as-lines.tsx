@@ -1,4 +1,4 @@
-import { convertPathToLines } from './utils';
+import { convertPathToLines } from '../utils';
 
 interface PathAsLinesProps {
   pathString: string;

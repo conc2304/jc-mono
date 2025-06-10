@@ -1,42 +1,50 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useDebounce } from '@jc/ui-hooks';
-import { Properties, Property } from 'csstype';
 
 import {
   calculateDynamicShadow,
-  // generateBeveledCornersPath,
   generateFillPath,
-  // generateStraightEdgesPath,
   generateShapePath,
   getMinPadding,
   getStepBounds,
 } from './utils';
+import { BeveledContainerContext, BeveledContainerState } from '../context';
 import {
   BevelConfig,
   ElementStyleConfig,
-  ShadowConfig,
   StateStyles,
   StepConfig,
 } from '../types';
-import { PathAsLines } from './svg-path-as-lines';
+// import { PathAsLines } from './svg-path-as-lines';
+import {
+  ContainerBackground,
+  ContainerBorder,
+  ContainerContent,
+} from './slots';
+import { PathAsLines } from './slots/svg-path-as-lines';
 
 interface BaseBeveledContainerProps
-  extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height' | 'onClick'> {
+  extends Omit<
+    React.SVGProps<SVGSVGElement>,
+    'width' | 'height' | 'onClick' | 'children'
+  > {
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
   styleConfig?: ElementStyleConfig;
   stroke?: string;
   strokeWidth?: number;
+  provideStateToChildren?: boolean;
   className?: string;
-  // rootStyle?: React.CSSProperties;
-  children?: React.ReactNode; // Content inside the shape
+  children?:
+    | React.ReactNode
+    | ((state: BeveledContainerState) => React.ReactNode); // Support render prop pattern
+
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void; // Click handler for button behavior
   disabled?: boolean; // For button-like behavior
   role?: string; // Accessibility role (button, dialog, etc.)
   tabIndex?: number; // For keyboard navigation
 }
 
-// Main component with dynamic viewBox based on children size and step support
 export const BaseBeveledContainer = ({
   bevelConfig = {},
   stepsConfig = {},
@@ -50,6 +58,7 @@ export const BaseBeveledContainer = ({
   role,
   tabIndex,
   children,
+  provideStateToChildren = true,
   ...svgProps
 }: BaseBeveledContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -71,6 +80,24 @@ export const BaseBeveledContainer = ({
     stepsConfig,
     strokeWidth,
   });
+
+  // Determine current state
+  const getCurrentState = (): BeveledContainerState['currentState'] => {
+    if (disabled) return 'disabled';
+    if (isActive) return 'active';
+    if (isHovered) return 'hover';
+    return 'default';
+  };
+
+  const currentState = getCurrentState();
+
+  // Context value for children
+  const contextValue: BeveledContainerState = {
+    isHovered,
+    isActive,
+    disabled,
+    currentState,
+  };
 
   // Helper function to get current state styles
   const getCurrentStateStyles = (elementStyles: StateStyles = {}) => {
@@ -108,13 +135,15 @@ export const BaseBeveledContainer = ({
         // Add padding around the content and extra space for steps
         const totalWidth =
           contentWidth +
-          paddingValue * 2 +
+          paddingLeft +
+          paddingRight +
           stepBounds.left +
           stepBounds.right +
           strokeWidth;
         const totalHeight =
           contentHeight +
-          paddingValue * 2 +
+          paddingTop +
+          paddingBottom +
           stepBounds.top +
           stepBounds.bottom +
           strokeWidth;
@@ -139,12 +168,14 @@ export const BaseBeveledContainer = ({
         // Add padding around the content and extra space for steps
         const totalWidth =
           (width || 100) +
-          paddingValue * 2 +
+          paddingLeft +
+          paddingRight +
           stepBounds.left +
           stepBounds.right;
         const totalHeight =
           (height || 50) +
-          paddingValue * 2 +
+          paddingTop +
+          paddingBottom +
           stepBounds.top +
           stepBounds.bottom;
 
@@ -182,13 +213,10 @@ export const BaseBeveledContainer = ({
     }
   }, []);
 
-  const debouncedUpdateShadow = useDebounce(updateShadow, 50); // 50ms debounce
+  const debouncedUpdateShadow = useDebounce(updateShadow, 50);
 
   useEffect(() => {
-    // Initial calculation
     updateShadow();
-
-    // Use debounced version for events
     window.addEventListener('scroll', debouncedUpdateShadow);
     window.addEventListener('resize', debouncedUpdateShadow);
 
@@ -197,6 +225,26 @@ export const BaseBeveledContainer = ({
       window.removeEventListener('resize', debouncedUpdateShadow);
     };
   }, [updateShadow, debouncedUpdateShadow]);
+
+  // Render children with or without context
+  const renderChildren = () => {
+    if (typeof children === 'function') {
+      // Render prop pattern - always provide state
+      return children(contextValue);
+    }
+
+    if (provideStateToChildren) {
+      // Wrap in context provider
+      return (
+        <BeveledContainerContext.Provider value={contextValue}>
+          {children}
+        </BeveledContainerContext.Provider>
+      );
+    }
+
+    // Regular children without context
+    return children;
+  };
 
   // Don't render SVG until we have real dimensions
   if (!isInitialized || dimensions.width === 0 || dimensions.height === 0) {
@@ -223,12 +271,12 @@ export const BaseBeveledContainer = ({
             top: 0,
             left: 0,
             padding: `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`,
-            whiteSpace: 'nowrap', // Prevent text wrapping during measurement
-            display: 'inline-block', // Let content determine its natural size
+            whiteSpace: 'nowrap',
+            display: 'inline-block',
             ...contentStyles,
           }}
         >
-          {children}
+          {renderChildren()}
         </div>
       </div>
     );
@@ -255,7 +303,7 @@ export const BaseBeveledContainer = ({
     stepsConfig
   );
 
-  const isClickable = onClick && !disabled;
+  const isClickable = Boolean(onClick && !disabled);
 
   // Handle click events
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -274,21 +322,22 @@ export const BaseBeveledContainer = ({
 
   // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
-  const strokePadding = Math.ceil(strokeWidth / 2) + 1;
+  const strokePadding = Math.ceil(strokeWidth / 2);
 
   return (
     <div
       ref={containerRef}
       className={`base-beveled-container--root  ${className}`}
       style={{
-        display: 'inline-block',
         position: 'relative',
+        display: 'inline-block',
         width: `${dimensions.width}px`,
         height: `${dimensions.height}px`,
-        margin: '8px',
         ...rootStyles,
         border: 'unset !important',
-        overflow: 'visible',
+        borderStyle: 'unset !important',
+        borderRadius: 'unset !important',
+        borderWidth: 'unset !important',
       }}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -300,110 +349,66 @@ export const BaseBeveledContainer = ({
       tabIndex={isClickable ? tabIndex ?? 0 : tabIndex}
       aria-disabled={disabled}
     >
-      {/* Background div with CSS background */}
       <div
-        className={'base-beveled-container--background'}
-        style={{
-          position: 'absolute',
-          top: innerRect.y,
-          left: innerRect.x,
-          width: `${innerRect.width}px`,
-          height: `${innerRect.height}px`,
-          clipPath: `path('${fillPath}')`,
-          zIndex: 1,
-          pointerEvents: 'none',
-          transition: 'all 0.2s ease',
-          ...backgroundStyles,
-        }}
-      />
-
-      <div
-        className={'base-beveled-container--background-shadow'}
+        className={'base-beveled-container--shadow'}
         style={{
           position: 'relative',
           width: '100%',
           height: '100%',
-          // filter: `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2px rgba(17, 235, 255, 0.25))`, // TODO Migrate out of here
-          // transition: 'filter 300ms, all 0.2s ease',
+          // TODO Migrate out of here
+          filter: shadowStyles.filter,
+          transition: shadowStyles.transition,
+          // filter: `drop-shadow(${shadowOffset.x * 5.5}px ${
+          //   shadowOffset.y * 5.5
+          // }px 2px rgba(0, 0, 0, 0.35))`,
+          transition: 'filter 300ms, all 0.2s ease',
+
           ...shadowStyles,
         }}
       >
-        <div
-          className={'base-beveled-container--background'}
-          style={{
-            position: 'absolute',
-            top: innerRect.y,
-            left: innerRect.x,
-            width: `${innerRect.width}px`,
-            height: `${innerRect.height}px`,
-            clipPath: `path('${fillPath}')`,
+        <ContainerBackground
+          innerRect={innerRect}
+          fillPath={fillPath}
+          backgroundStyles={{
+            ...(styleConfig?.background?.[contextValue.currentState] ??
+              styleConfig?.background?.default ??
+              {}),
+            backgroundColor: 'rgba(54, 1, 1, 0.2)',
             zIndex: 1,
-            pointerEvents: 'none',
-            ...backgroundStyles,
           }}
         />
+
+        <ContainerBorder
+          dimensions={dimensions}
+          strokeWidth={strokeWidth}
+          shapeTransform={shapeTransform}
+          borderPath={borderPath}
+          stroke={stroke}
+          borderStyles={
+            styleConfig?.border?.[contextValue.currentState] ??
+            styleConfig?.border?.default ??
+            {}
+          }
+          svgProps={svgProps}
+        />
+        {/* Content layer */}
+        {children && (
+          <ContainerContent
+            children={children}
+            contextValue={contextValue}
+            provideStateToChildren={provideStateToChildren}
+            innerRect={innerRect}
+            fillPath={fillPath}
+            paddingTop={paddingTop}
+            paddingBottom={paddingBottom}
+            paddingLeft={paddingLeft}
+            paddingRight={paddingRight}
+            contentStyles={contentStyles}
+            isClickable={isClickable}
+            contentRef={contentRef}
+          />
+        )}
       </div>
-
-      <svg
-        className={'base-beveled-container--svg-border'}
-        width="100%"
-        height="100%"
-        viewBox={`${-strokePadding} ${-strokePadding} ${
-          dimensions.width + strokePadding * 2
-        } ${dimensions.height + strokePadding * 2}`}
-        style={{
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: 2,
-          pointerEvents: 'none',
-        }}
-        preserveAspectRatio="none"
-        {...svgProps}
-      >
-        <g transform={shapeTransform}>
-          {stroke && strokeWidth > 0 && (
-            <PathAsLines
-              pathString={borderPath}
-              stroke={borderStyles.stroke || stroke}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          )}
-        </g>
-      </svg>
-
-      {/* Content layer */}
-      {children && (
-        <div
-          className={'base-beveled-container--children-wrapper'}
-          ref={contentRef}
-          style={{
-            position: 'absolute',
-            top: innerRect.y,
-            left: innerRect.x,
-            // width: `${innerRect.width}px`,
-            // height: `${innerRect.height}px`,
-            zIndex: 3,
-
-            padding: `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`,
-            boxSizing: 'border-box',
-            clipPath: `path('${fillPath}')`,
-            pointerEvents: isClickable ? 'none' : 'auto', // Allow content interaction for modals
-
-            // whiteSpace: 'nowrap', // Prevent text wrapping in final render too
-          }}
-        >
-          <div
-            className={'base-beveled-container--children-wrapper'}
-            style={{ ...contentStyles }}
-          >
-            {children}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

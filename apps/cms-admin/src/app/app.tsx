@@ -48,49 +48,115 @@ export function App() {
         <Title>My {themeName} App</Title>
         <ThemeSwitcher />
       </Header>
-
-      <BaseBeveledContainer
-        bevelConfig={{
-          topLeft: { bevelSize: 30, bevelAngle: 45 },
-          topRight: { bevelSize: 8, bevelAngle: 45 },
-          bottomRight: { bevelSize: 30, bevelAngle: 45 },
-          bottomLeft: { bevelSize: 10, bevelAngle: 45 },
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignContent: 'center',
+          color: 'white',
         }}
-        stepsConfig={{
-          top: {
-            segments: [
-              {
-                start: 0,
-                end: 0.5,
-                height: 15,
-              },
-            ],
-          },
-          left: {
-            segments: [
-              {
-                start: 0,
-                end: 0.5,
-                height: 15,
-              },
-            ],
-          },
-        }}
-        stroke="#00ffff"
-        strokeWidth={3}
       >
-        <div style={{ display: 'flex' }}>
-          <div
-            style={{
-              width: '50px',
-              height: '50px',
-              background: 'red',
-              border: '1px solid black',
-            }}
-          ></div>
-          <h3> some text content that I am going to make </h3>
-        </div>
-      </BaseBeveledContainer>
+        {new Array(2).fill(null).map(() => {
+          return (
+            <BaseBeveledContainer
+              bevelConfig={{
+                topLeft: { bevelSize: 30, bevelAngle: 45 },
+                topRight: { bevelSize: 8, bevelAngle: 45 },
+                bottomRight: { bevelSize: 30, bevelAngle: 45 },
+                bottomLeft: { bevelSize: 10, bevelAngle: 45 },
+              }}
+              stepsConfig={{
+                top: {
+                  segments: [
+                    // {
+                    //   start: 0.25,
+                    //   end: 0.5,
+                    //   height: 15,
+                    // },
+                    {
+                      start: 0.5,
+                      end: 1,
+                      height: 30,
+                    },
+                  ],
+                },
+                right: {
+                  // segments: [
+                  //   {
+                  //     start: 0,
+                  //     end: 0.5,
+                  //     height: 15,
+                  //   },
+                  // ],
+                },
+              }}
+              stroke="#00ffff"
+              strokeWidth={3}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  maxWidth: '300px',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    background: 'red',
+                    marginRight: '10px',
+                    border: '1px solid black',
+                    // flexBasis: 'auto',
+                    flexShrink: 0,
+                    flexGrow: 0,
+                  }}
+                ></div>
+                <h3
+                // style={{ flexBasis: 'auto' }}
+                >
+                  some text content that I am going to make do stuff and maybe
+                  it should start wrapping
+                </h3>
+              </div>
+            </BaseBeveledContainer>
+          );
+        })}
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+          color: 'white',
+        }}
+      >
+        {new Array(2).fill(null).map(() => {
+          return (
+            <div style={{ display: 'flex', maxWidth: '300px' }}>
+              <div
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  background: 'red',
+                  marginRight: '10px',
+                  border: '1px solid black',
+                  // flexBasis: 'auto',
+                  flexShrink: 0,
+                  flexGrow: 0,
+                }}
+              ></div>
+              <h3
+              // style={{ flexBasis: 'auto' }}
+              >
+                some text content that I am going to make do stuff and maybe it
+                should start wrapping
+              </h3>
+            </div>
+          );
+        })}
+      </div>
     </AppContainer>
   );
 }
