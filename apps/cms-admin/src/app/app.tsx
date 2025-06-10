@@ -59,6 +59,7 @@ export function App() {
         {new Array(2).fill(null).map(() => {
           return (
             <BaseBeveledContainer
+              key={Math.random() * 1000}
               bevelConfig={{
                 topLeft: { bevelSize: 30, bevelAngle: 45 },
                 topRight: { bevelSize: 8, bevelAngle: 45 },
@@ -134,7 +135,10 @@ export function App() {
       >
         {new Array(2).fill(null).map(() => {
           return (
-            <div style={{ display: 'flex', maxWidth: '300px' }}>
+            <div
+              style={{ display: 'flex', maxWidth: '300px' }}
+              key={Math.random() * 1000}
+            >
               <div
                 style={{
                   width: '50px',

@@ -180,7 +180,6 @@ const generateSteppedEdgePath = (
     points.push(`L ${finalX} ${finalY}`);
   }
 
-  console.log('here');
   return {
     path: points.join(' '),
     endOffset,
@@ -750,8 +749,6 @@ export const generateShapePath = (
   const topEndX = trBevel.bevelSize > 0 ? width - trOffset.x : width;
   const topEndY = 0; // Keep the base edge at Y=0 for proper horizontal steps
 
-  console.log({ topStartX, topStartY, topEndX, topEndY });
-
   if (topStartX < topEndX) {
     const topResult = generateSteppedEdgePath(
       topStartX,
@@ -762,8 +759,6 @@ export const generateShapePath = (
       undefined, // Don't pass bevel target for cleaner step calculation
       undefined
     );
-
-    console.log({ topResult });
 
     // Extract coordinates and add them, but adjust final coordinate for bevel connection
     const coords = extractPathCoordinates(topResult.path);
