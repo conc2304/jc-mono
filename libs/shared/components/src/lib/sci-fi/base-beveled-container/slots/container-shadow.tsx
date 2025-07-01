@@ -6,13 +6,13 @@ import { StateStyles } from '../../types';
 import { calculateDynamicShadow } from '../utils';
 
 interface ContainerShadowProps {
-  shadowStyles: React.CSSProperties;
+  shadowStyles?: React.CSSProperties;
   containerRef: RefObject<HTMLDivElement | null>;
   children?: ReactNode;
 }
 
 export const ContainerShadow = ({
-  shadowStyles,
+  shadowStyles = {},
   containerRef,
   children,
 }: ContainerShadowProps) => {
@@ -44,17 +44,15 @@ export const ContainerShadow = ({
     <div
       className={'base-beveled-container--shadow'}
       style={{
+        ...shadowStyles,
+
         position: 'relative',
         width: '100%',
         height: '100%',
-        filter:
-          shadowStyles.filter ??
-          `drop-shadow(${shadowOffset.x * 5.5}px ${
-            shadowOffset.y * 5.5
-          }px 2.5px rgba(0, 0, 0, 0.35))`,
-        transition: shadowStyles.transition ?? 'filter 300ms, all 0.2s ease',
-
-        ...shadowStyles,
+        filter: `drop-shadow(${shadowOffset.x * 5.5}px ${
+          shadowOffset.y * 5.5
+        }px 2.5px rgba(0, 0, 0, 0.35))`,
+        transition: 'filter 300ms, all 0.2s ease',
       }}
     >
       {children}

@@ -43,6 +43,32 @@ export function App() {
 
   const { theme } = useTheme();
 
+  const Content = () => (
+    <div
+      style={{ display: 'flex', maxWidth: '300px' }}
+      key={Math.random() * 1000}
+    >
+      <div
+        style={{
+          width: '50px',
+          height: '50px',
+          background: 'red',
+          marginRight: '10px',
+          border: '1px solid black',
+          // flexBasis: 'auto',
+          flexShrink: 0,
+          flexGrow: 0,
+        }}
+      ></div>
+      <h3
+      // style={{ flexBasis: 'auto' }}
+      >
+        some text content that I am going to make do stuff and maybe it should
+        start wrapping
+      </h3>
+    </div>
+  );
+
   return (
     <AppContainer>
       <Header>
@@ -55,9 +81,10 @@ export function App() {
           justifyContent: 'space-around',
           alignContent: 'center',
           color: 'white',
+          marginBottom: '20px',
         }}
       >
-        {new Array(2).fill(null).map(() => {
+        {new Array(3).fill(null).map(() => {
           return (
             <BaseBeveledContainer
               key={Math.random() * 1000}
@@ -95,32 +122,7 @@ export function App() {
               stroke="#00ffff"
               strokeWidth={3}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  maxWidth: '300px',
-                  boxSizing: 'border-box',
-                }}
-              >
-                <div
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    background: 'red',
-                    marginRight: '10px',
-                    border: '1px solid black',
-                    // flexBasis: 'auto',
-                    flexShrink: 0,
-                    flexGrow: 0,
-                  }}
-                ></div>
-                <h3
-                // style={{ flexBasis: 'auto' }}
-                >
-                  some text content that I am going to make do stuff and maybe
-                  it should start wrapping
-                </h3>
-              </div>
+              <Content />
             </BaseBeveledContainer>
           );
         })}
@@ -134,32 +136,8 @@ export function App() {
           color: 'white',
         }}
       >
-        {new Array(2).fill(null).map(() => {
-          return (
-            <div
-              style={{ display: 'flex', maxWidth: '300px' }}
-              key={Math.random() * 1000}
-            >
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  background: 'red',
-                  marginRight: '10px',
-                  border: '1px solid black',
-                  // flexBasis: 'auto',
-                  flexShrink: 0,
-                  flexGrow: 0,
-                }}
-              ></div>
-              <h3
-              // style={{ flexBasis: 'auto' }}
-              >
-                some text content that I am going to make do stuff and maybe it
-                should start wrapping
-              </h3>
-            </div>
-          );
+        {new Array(3).fill(null).map(() => {
+          return <Content />;
         })}
       </div>
     </AppContainer>
