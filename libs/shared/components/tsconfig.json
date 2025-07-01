@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../ui-hooks"
+    },
+    {
       "path": "./tsconfig.lib.json"
     },
     {

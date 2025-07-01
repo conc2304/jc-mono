@@ -355,13 +355,12 @@ export const BaseBeveledContainer = ({
           position: 'relative',
           width: '100%',
           height: '100%',
-          // TODO Migrate out of here
-          filter: shadowStyles.filter,
-          transition: shadowStyles.transition,
-          filter: `drop-shadow(${shadowOffset.x * 5.5}px ${
-            shadowOffset.y * 5.5
-          }px 2.5px rgba(0, 0, 0, 0.35))`,
-          transition: 'filter 300ms, all 0.2s ease',
+          filter:
+            shadowStyles.filter ??
+            `drop-shadow(${shadowOffset.x * 5.5}px ${
+              shadowOffset.y * 5.5
+            }px 2.5px rgba(0, 0, 0, 0.35))`,
+          transition: shadowStyles.transition ?? 'filter 300ms, all 0.2s ease',
 
           ...shadowStyles,
         }}

@@ -91,4 +91,10 @@ export interface ElementStyleConfig {
   content?: StateStyles;
 }
 
+export type ShadowTarget =
+  | 'viewportCenter'
+  | { x: number; y: number }
+  | { element: Element }
+  | { percentX: number; percentY: number };
+
 export type { BevelConfig, CornerBevel, GlowConfig };

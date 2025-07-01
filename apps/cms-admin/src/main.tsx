@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { ThemeProvider } from '@jc/theming';
+import { MousePositionProvider } from '@jc/ui-components';
 import * as ReactDOM from 'react-dom/client';
 
 import App from './app/app';
@@ -11,8 +12,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <StrictMode>
-    <ThemeProvider defaultTheme="cyberpunk">
-      <App />
-    </ThemeProvider>
+    <MousePositionProvider>
+      <ThemeProvider defaultTheme="cyberpunk">
+        <App />
+      </ThemeProvider>
+    </MousePositionProvider>
   </StrictMode>
 );

@@ -4,6 +4,7 @@ import {
   StepConfig,
   EdgeStepConfig,
   LineElement,
+  ShadowTarget,
 } from '../types';
 
 // Helper function to calculate stroke width for angled lines
@@ -575,25 +576,36 @@ export const getStepBounds = (
 
 export const calculateDynamicShadow = (
   elementRect: DOMRect,
-  maxShadowDistance = 20
+  maxShadowDistance = 20,
+  target: ShadowTarget = 'viewportCenter'
 ) => {
-  // Get viewport center
-  const viewportCenterX = window.innerWidth / 2;
-  const viewportCenterY = window.innerHeight / 2;
+  let targetX = 0;
+  let targetY = 0;
 
-  // Get element center
+  if (target === 'viewportCenter') {
+    targetX = window.innerWidth / 2;
+    targetY = window.innerHeight / 2;
+  } else if ('x' in target && 'y' in target) {
+    targetX = target.x;
+    targetY = target.y;
+  } else if ('element' in target) {
+    const rect = target.element.getBoundingClientRect();
+    targetX = rect.x + rect.width / 2;
+    targetY = rect.y + rect.height / 2;
+  } else if ('percentX' in target && 'percentY' in target) {
+    targetX = window.innerWidth * target.percentX;
+    targetY = window.innerHeight * target.percentY;
+  }
+
   const elementCenterX = elementRect.x + elementRect.width / 2;
   const elementCenterY = elementRect.y + elementRect.height / 2;
 
-  // Calculate distance from viewport center
-  const deltaX = elementCenterX - viewportCenterX;
-  const deltaY = elementCenterY - viewportCenterY;
+  const deltaX = elementCenterX - targetX;
+  const deltaY = elementCenterY - targetY;
 
-  // Calculate normalized distances (-1 to 1)
   const normalizedX = deltaX / (window.innerWidth / 2);
   const normalizedY = deltaY / (window.innerHeight / 2);
 
-  // Calculate shadow offsets (positive values push shadow away from center)
   const shadowX = normalizedX * maxShadowDistance;
   const shadowY = normalizedY * maxShadowDistance;
 
