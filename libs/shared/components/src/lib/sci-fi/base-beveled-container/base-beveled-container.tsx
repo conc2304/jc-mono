@@ -8,6 +8,7 @@ import {
   getCurrentStateStyles,
   getMinPadding,
   getStepBounds,
+  processAllStyles,
 } from './utils';
 import {
   BeveledContainerContext,
@@ -81,7 +82,6 @@ export const BaseBeveledContainer = ({
   );
 
   // State management
-
   const { dimensions, isInitialized } = useContainerDimensions(
     contentRef,
     padding,
@@ -101,36 +101,14 @@ export const BaseBeveledContainer = ({
   };
 
   // Calculate styles for each element
-  const rootStyles = getCurrentStateStyles(
-    styleConfig.root,
-    isHovered,
-    isActive,
-    disabled
-  );
-  const backgroundStyles = getCurrentStateStyles(
-    styleConfig.background,
-    isHovered,
-    isActive,
-    disabled
-  );
-  const shadowStyles = getCurrentStateStyles(
-    styleConfig.shadow,
-    isHovered,
-    isActive,
-    disabled
-  );
-  const borderStyles = getCurrentStateStyles(
-    styleConfig.border,
-    isHovered,
-    isActive,
-    disabled
-  );
-  const contentStyles = getCurrentStateStyles(
-    styleConfig.content,
-    isHovered,
-    isActive,
-    disabled
-  );
+
+  const {
+    rootStyles,
+    backgroundStyles,
+    shadowStyles,
+    borderStyles,
+    contentStyles,
+  } = processAllStyles(styleConfig, isHovered, isActive, disabled);
 
   // Event handlers
   const isClickable = Boolean(onClick && !disabled);
@@ -171,10 +149,6 @@ export const BaseBeveledContainer = ({
       <div
         ref={containerRef}
         className={className}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onMouseDown={() => setIsActive(true)}
-        onMouseUp={() => setIsActive(false)}
         style={{
           display: 'inline-block',
           position: 'relative',
