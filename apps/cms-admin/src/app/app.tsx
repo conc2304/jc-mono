@@ -116,6 +116,11 @@ export function App() {
                   // ],
                 },
               }}
+              shadowConfig={{
+                target: { type: 'mouse' },
+                maxShadowDistance: 30,
+                smoothing: 0.8,
+              }}
               stroke="#00ffff"
               strokeWidth={3}
             >

@@ -1,11 +1,9 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useDebounce, useDynamicShadow } from '@jc/ui-hooks';
+import React, { useRef, useCallback, useMemo } from 'react';
+import { DynamicShadowConfig, useDynamicShadow } from '@jc/ui-hooks';
 
 import {
-  calculateDynamicShadow,
   generateFillPath,
   generateShapePath,
-  getCurrentStateStyles,
   getMinPadding,
   getStepBounds,
   processAllStyles,
@@ -15,12 +13,7 @@ import {
   BeveledContainerState,
   useContainerState,
 } from '../context';
-import {
-  BevelConfig,
-  ElementStyleConfig,
-  StateStyles,
-  StepConfig,
-} from '../types';
+import { BevelConfig, ElementStyleConfig, StepConfig } from '../types';
 import {
   ContainerBackground,
   ContainerBorder,
@@ -36,6 +29,7 @@ interface BaseBeveledContainerProps
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
   styleConfig?: ElementStyleConfig;
+  shadowConfig?: DynamicShadowConfig;
   stroke?: string;
   strokeWidth?: number;
   provideStateToChildren?: boolean;
@@ -54,6 +48,7 @@ export const BaseBeveledContainer = ({
   bevelConfig = {},
   stepsConfig = {},
   styleConfig = {},
+  shadowConfig,
   stroke,
   strokeWidth = 0,
   className = '',
@@ -90,7 +85,10 @@ export const BaseBeveledContainer = ({
   );
   const { isHovered, setIsHovered, isActive, setIsActive, currentState } =
     useContainerState(disabled);
-  const shadowOffset = useDynamicShadow(containerRef);
+  const { shadowOffset, isVisible: isShadowVisible } = useDynamicShadow(
+    containerRef,
+    shadowConfig
+  );
 
   // Context value for children
   const contextValue: BeveledContainerState = {
@@ -100,8 +98,6 @@ export const BaseBeveledContainer = ({
     currentState,
   };
 
-  // Calculate styles for each element
-
   const {
     rootStyles,
     backgroundStyles,
@@ -109,6 +105,16 @@ export const BaseBeveledContainer = ({
     borderStyles,
     contentStyles,
   } = processAllStyles(styleConfig, isHovered, isActive, disabled);
+
+  const shadowFilter = useMemo(() => {
+    if (!isShadowVisible) return 'none';
+
+    // Use custom shadow styles filter if provided, otherwise calculate based on offset
+    return (
+      shadowStyles.filter ??
+      `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2.5px rgba(0, 0, 0, 0.35))`
+    );
+  }, [isShadowVisible, shadowStyles.filter, shadowOffset]);
 
   // Event handlers
   const isClickable = Boolean(onClick && !disabled);
@@ -230,11 +236,7 @@ export const BaseBeveledContainer = ({
           position: 'relative',
           width: '100%',
           height: '100%',
-          filter:
-            shadowStyles.filter ??
-            `drop-shadow(${shadowOffset.x * 5.5}px ${
-              shadowOffset.y * 5.5
-            }px 2.5px rgba(0, 0, 0, 0.35))`,
+          filter: shadowFilter,
           transition: shadowStyles.transition ?? 'filter 300ms, all 0.2s ease',
 
           ...shadowStyles,
