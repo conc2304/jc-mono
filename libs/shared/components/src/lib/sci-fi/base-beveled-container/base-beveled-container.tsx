@@ -132,15 +132,29 @@ export const BaseBeveledContainer = ({
     disabled
   );
 
-  // Render children with or without context
-  const renderChildren = () => {
+  // Event handlers
+  const isClickable = Boolean(onClick && !disabled);
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!disabled && onClick) {
+      onClick(event);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!disabled && onClick && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      onClick(event as any);
+    }
+  };
+
+  // Render helpers
+  const renderChildren = useCallback(() => {
     if (typeof children === 'function') {
-      // Render prop pattern - always provide state
       return children(contextValue);
     }
 
     if (provideStateToChildren) {
-      // Wrap in context provider
       return (
         <BeveledContainerContext.Provider value={contextValue}>
           {children}
@@ -148,9 +162,8 @@ export const BaseBeveledContainer = ({
       );
     }
 
-    // Regular children without context
     return children;
-  };
+  }, [children, contextValue, provideStateToChildren]);
 
   // Don't render SVG until we have real dimensions
   if (!isInitialized || dimensions.width === 0 || dimensions.height === 0) {
@@ -208,23 +221,6 @@ export const BaseBeveledContainer = ({
     bevelConfig,
     stepsConfig
   );
-
-  const isClickable = Boolean(onClick && !disabled);
-
-  // Handle click events
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!disabled && onClick) {
-      onClick(event);
-    }
-  };
-
-  // Handle keyboard events for accessibility
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!disabled && onClick && (event.key === 'Enter' || event.key === ' ')) {
-      event.preventDefault();
-      onClick(event as any);
-    }
-  };
 
   // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
