@@ -1,61 +1,74 @@
 import { useRef, useEffect, useState } from 'react';
 
-interface DimensionsConfig {
-  paddingTop: number;
-  paddingBottom: number;
-  paddingLeft: number;
-  paddingRight: number;
-  stepBounds: { top: number; bottom: number; left: number; right: number };
-  strokeWidth: number;
-}
+import { getMinPadding, getStepBounds } from '../base-beveled-container/utils';
+import { Dimensions } from '../types';
 
-export const useDimensions = (config: DimensionsConfig) => {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+export const useContainerDimensions = (
+  contentRef: React.RefObject<HTMLDivElement | null>,
+  padding: ReturnType<typeof getMinPadding>,
+  stepBounds: ReturnType<typeof getStepBounds>,
+  strokeWidth: number
+) => {
+  const [dimensions, setDimensions] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const {
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    stepBounds,
-    strokeWidth,
-  } = config;
+  const { paddingTop, paddingRight, paddingBottom, paddingLeft } = padding;
 
   useEffect(() => {
+    const calculateDimensions = (width: number, height: number) => {
+      const contentWidth = width || 100;
+      const contentHeight = height || 50;
+
+      return {
+        width:
+          contentWidth +
+          paddingLeft +
+          paddingRight +
+          stepBounds.left +
+          stepBounds.right +
+          strokeWidth,
+        height:
+          contentHeight +
+          paddingTop +
+          paddingBottom +
+          stepBounds.top +
+          stepBounds.bottom +
+          strokeWidth,
+      };
+    };
+
     const updateDimensions = () => {
-      if (!contentRef.current) return;
+      if (contentRef.current) {
+        const rect = contentRef.current.getBoundingClientRect();
+        const newDimensions = calculateDimensions(rect.width, rect.height);
 
-      const contentRect = contentRef.current.getBoundingClientRect();
-      const contentWidth = contentRect.width || 100;
-      const contentHeight = contentRect.height || 50;
-
-      const totalWidth =
-        contentWidth +
-        paddingLeft +
-        paddingRight +
-        stepBounds.left +
-        stepBounds.right +
-        strokeWidth;
-      const totalHeight =
-        contentHeight +
-        paddingTop +
-        paddingBottom +
-        stepBounds.top +
-        stepBounds.bottom +
-        strokeWidth;
-
-      if (totalWidth > 0 && totalHeight > 0) {
-        setDimensions({ width: totalWidth, height: totalHeight });
-        if (!isInitialized) {
-          setIsInitialized(true);
+        if (newDimensions.width > 0 && newDimensions.height > 0) {
+          setDimensions(newDimensions);
+          if (!isInitialized) {
+            setIsInitialized(true);
+          }
         }
       }
     };
 
     const rafId = requestAnimationFrame(updateDimensions);
-    const resizeObserver = new ResizeObserver(updateDimensions);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        const newDimensions = calculateDimensions(width, height);
+
+        if (newDimensions.width > 0 && newDimensions.height > 0) {
+          setDimensions(newDimensions);
+          if (!isInitialized) {
+            setIsInitialized(true);
+          }
+        }
+      }
+    });
 
     if (contentRef.current) {
       resizeObserver.observe(contentRef.current);
@@ -66,14 +79,14 @@ export const useDimensions = (config: DimensionsConfig) => {
       resizeObserver.disconnect();
     };
   }, [
+    isInitialized,
     paddingTop,
+    paddingRight,
     paddingBottom,
     paddingLeft,
-    paddingRight,
     stepBounds,
     strokeWidth,
-    isInitialized,
   ]);
 
-  return { contentRef, dimensions, isInitialized };
+  return { dimensions, isInitialized };
 };

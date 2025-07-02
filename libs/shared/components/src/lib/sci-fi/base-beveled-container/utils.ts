@@ -1048,26 +1048,22 @@ export const convertPathToLines = (pathString: string): LineElement[] => {
 
 export const getCurrentStateStyles = (
   elementStyles: StateStyles = {},
-  currentState: BeveledContainerState['currentState']
+  isHovered: boolean,
+  isActive: boolean,
+  disabled: boolean
 ) => {
   const baseStyles = elementStyles.default || {};
 
-  switch (currentState) {
-    case 'disabled':
-      return elementStyles.disabled
-        ? { ...baseStyles, ...elementStyles.disabled }
-        : baseStyles;
-    case 'active':
-      return elementStyles.active
-        ? { ...baseStyles, ...elementStyles.active }
-        : baseStyles;
-    case 'hover':
-      return elementStyles.hover
-        ? { ...baseStyles, ...elementStyles.hover }
-        : baseStyles;
-    default:
-      return baseStyles;
+  if (disabled && elementStyles.disabled) {
+    return { ...baseStyles, ...elementStyles.disabled };
   }
+  if (isActive && elementStyles.active) {
+    return { ...baseStyles, ...elementStyles.active };
+  }
+  if (isHovered && elementStyles.hover) {
+    return { ...baseStyles, ...elementStyles.hover };
+  }
+  return baseStyles;
 };
 
 export const processAllStyles = (

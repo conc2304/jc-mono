@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export const useDynamicShadow = (
-  containerRef: React.RefObject<HTMLDivElement>,
+  containerRef: React.RefObject<HTMLDivElement | null>,
   maxShadowDistance = 20
 ) => {
   const [shadowOffset, setShadowOffset] = useState({ x: 0, y: 0 });

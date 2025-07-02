@@ -5,6 +5,7 @@ import {
   calculateDynamicShadow,
   generateFillPath,
   generateShapePath,
+  getCurrentStateStyles,
   getMinPadding,
   getStepBounds,
 } from './utils';
@@ -15,13 +16,11 @@ import {
   StateStyles,
   StepConfig,
 } from '../types';
-// import { PathAsLines } from './svg-path-as-lines';
 import {
   ContainerBackground,
   ContainerBorder,
   ContainerContent,
 } from './slots';
-import { PathAsLines } from './slots/svg-path-as-lines';
 
 interface BaseBeveledContainerProps
   extends Omit<
@@ -99,26 +98,37 @@ export const BaseBeveledContainer = ({
     currentState,
   };
 
-  // Helper function to get current state styles
-  const getCurrentStateStyles = (elementStyles: StateStyles = {}) => {
-    if (disabled && elementStyles.disabled) {
-      return { ...elementStyles.default, ...elementStyles.disabled };
-    }
-    if (isActive && elementStyles.active) {
-      return { ...elementStyles.default, ...elementStyles.active };
-    }
-    if (isHovered && elementStyles.hover) {
-      return { ...elementStyles.default, ...elementStyles.hover };
-    }
-    return elementStyles.default || {};
-  };
-
   // Calculate styles for each element
-  const rootStyles = getCurrentStateStyles(styleConfig.root);
-  const backgroundStyles = getCurrentStateStyles(styleConfig.background);
-  const shadowStyles = getCurrentStateStyles(styleConfig.shadow);
-  const borderStyles = getCurrentStateStyles(styleConfig.border);
-  const contentStyles = getCurrentStateStyles(styleConfig.content);
+  const rootStyles = getCurrentStateStyles(
+    styleConfig.root,
+    isHovered,
+    isActive,
+    disabled
+  );
+  const backgroundStyles = getCurrentStateStyles(
+    styleConfig.background,
+    isHovered,
+    isActive,
+    disabled
+  );
+  const shadowStyles = getCurrentStateStyles(
+    styleConfig.shadow,
+    isHovered,
+    isActive,
+    disabled
+  );
+  const borderStyles = getCurrentStateStyles(
+    styleConfig.border,
+    isHovered,
+    isActive,
+    disabled
+  );
+  const contentStyles = getCurrentStateStyles(
+    styleConfig.content,
+    isHovered,
+    isActive,
+    disabled
+  );
 
   const stepBounds = getStepBounds(stepsConfig);
 

@@ -23,37 +23,29 @@ export const BeveledContainerContext =
 //   return context;
 // };
 
-export const useBeveledContainerState = (
-  disabled: boolean | undefined = undefined
-) => {
+export const useContainerState = (disabled = false) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  const getCurrentState = useCallback(() => {
-    if (disabled) return 'disabled' as const;
-    if (isActive) return 'active' as const;
-    if (isHovered) return 'hover' as const;
-    return 'default' as const;
-  }, [disabled, isActive, isHovered]);
-
-  const handlers = {
-    onMouseEnter: () => setIsHovered(true),
-    onMouseLeave: () => setIsHovered(false),
-    onMouseDown: () => setIsActive(true),
-    onMouseUp: () => setIsActive(false),
-  };
+  const currentState: BeveledContainerState['currentState'] = (() => {
+    if (disabled) return 'disabled';
+    if (isActive) return 'active';
+    if (isHovered) return 'hover';
+    return 'default';
+  })();
 
   return {
     isHovered,
+    setIsHovered,
     isActive,
-    currentState: getCurrentState(),
-    handlers,
+    setIsActive,
+    currentState,
   };
 };
 
 // Helper hook for children to get state-based styles
 export const useBeveledContainerStyles = (styles: StateStyles) => {
-  const { currentState } = useBeveledContainerState();
+  const { currentState } = useContainerState();
 
   return {
     ...styles.default,

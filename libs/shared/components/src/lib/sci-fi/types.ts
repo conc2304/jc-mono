@@ -98,3 +98,20 @@ export type ShadowTarget =
   | { percentX: number; percentY: number };
 
 export type { BevelConfig, CornerBevel, GlowConfig };
+
+export interface Dimensions {
+  width: number;
+  height: number;
+}
+
+export interface ShadowOffset {
+  x: number;
+  y: number;
+}
+
+export interface InnerRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
