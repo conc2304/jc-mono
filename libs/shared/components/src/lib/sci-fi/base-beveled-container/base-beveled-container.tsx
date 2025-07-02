@@ -369,9 +369,7 @@ export const BaseBeveledContainer = ({
           innerRect={innerRect}
           fillPath={fillPath}
           backgroundStyles={{
-            ...(styleConfig?.background?.[contextValue.currentState] ??
-              styleConfig?.background?.default ??
-              {}),
+            ...backgroundStyles,
             backgroundColor: 'rgba(54, 1, 1, 0.2)',
             zIndex: 1,
           }}
@@ -383,11 +381,9 @@ export const BaseBeveledContainer = ({
           shapeTransform={shapeTransform}
           borderPath={borderPath}
           stroke={stroke}
-          borderStyles={
-            styleConfig?.border?.[contextValue.currentState] ??
-            styleConfig?.border?.default ??
-            {}
-          }
+          borderStyles={{
+            ...borderStyles,
+          }}
           svgProps={svgProps}
         />
         {/* Content layer */}

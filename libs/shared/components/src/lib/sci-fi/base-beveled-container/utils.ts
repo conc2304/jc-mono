@@ -1,3 +1,4 @@
+import { BeveledContainerState } from '../context';
 import {
   BevelConfig,
   CornerBevel,
@@ -5,6 +6,8 @@ import {
   EdgeStepConfig,
   LineElement,
   ShadowTarget,
+  StateStyles,
+  ElementStyleConfig,
 } from '../types';
 
 // Helper function to calculate stroke width for angled lines
@@ -1042,3 +1045,38 @@ export const convertPathToLines = (pathString: string): LineElement[] => {
 
   return lines;
 };
+
+export const getCurrentStateStyles = (
+  elementStyles: StateStyles = {},
+  currentState: BeveledContainerState['currentState']
+) => {
+  const baseStyles = elementStyles.default || {};
+
+  switch (currentState) {
+    case 'disabled':
+      return elementStyles.disabled
+        ? { ...baseStyles, ...elementStyles.disabled }
+        : baseStyles;
+    case 'active':
+      return elementStyles.active
+        ? { ...baseStyles, ...elementStyles.active }
+        : baseStyles;
+    case 'hover':
+      return elementStyles.hover
+        ? { ...baseStyles, ...elementStyles.hover }
+        : baseStyles;
+    default:
+      return baseStyles;
+  }
+};
+
+export const processAllStyles = (
+  styleConfig: ElementStyleConfig,
+  currentState: BeveledContainerState['currentState']
+) => ({
+  root: getCurrentStateStyles(styleConfig.root, currentState),
+  background: getCurrentStateStyles(styleConfig.background, currentState),
+  shadow: getCurrentStateStyles(styleConfig.shadow, currentState),
+  border: getCurrentStateStyles(styleConfig.border, currentState),
+  content: getCurrentStateStyles(styleConfig.content, currentState),
+});

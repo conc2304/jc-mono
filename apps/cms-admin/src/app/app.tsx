@@ -55,14 +55,11 @@ export function App() {
           background: 'red',
           marginRight: '10px',
           border: '1px solid black',
-          // flexBasis: 'auto',
           flexShrink: 0,
           flexGrow: 0,
         }}
       ></div>
-      <h3
-      // style={{ flexBasis: 'auto' }}
-      >
+      <h3>
         some text content that I am going to make do stuff and maybe it should
         start wrapping
       </h3>
@@ -136,9 +133,9 @@ export function App() {
           color: 'white',
         }}
       >
-        {new Array(3).fill(null).map(() => {
-          return <Content />;
-        })}
+        {new Array(3).fill(null).map(() => (
+          <Content />
+        ))}
       </div>
     </AppContainer>
   );

@@ -1,15 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-export const useContainerState = (disabled: boolean) => {
+import { BeveledContainerState } from '../context';
+
+export const useBeveledContainerState = (disabled = false) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  const getCurrentState = useCallback(() => {
-    if (disabled) return 'disabled' as const;
-    if (isActive) return 'active' as const;
-    if (isHovered) return 'hover' as const;
-    return 'default' as const;
-  }, [disabled, isActive, isHovered]);
+  const getCurrentState =
+    useCallback((): BeveledContainerState['currentState'] => {
+      if (disabled) return 'disabled';
+      if (isActive) return 'active';
+      if (isHovered) return 'hover';
+      return 'default';
+    }, [disabled, isActive, isHovered]);
 
   const handlers = {
     onMouseEnter: () => setIsHovered(true),
@@ -23,5 +26,11 @@ export const useContainerState = (disabled: boolean) => {
     isActive,
     currentState: getCurrentState(),
     handlers,
+    contextValue: {
+      isHovered,
+      isActive,
+      disabled,
+      currentState: getCurrentState(),
+    },
   };
 };
