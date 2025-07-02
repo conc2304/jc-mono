@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useDebounce } from '@jc/ui-hooks';
+import { useDebounce, useDynamicShadow } from '@jc/ui-hooks';
 
 import {
   calculateDynamicShadow,
@@ -9,7 +9,11 @@ import {
   getMinPadding,
   getStepBounds,
 } from './utils';
-import { BeveledContainerContext, BeveledContainerState } from '../context';
+import {
+  BeveledContainerContext,
+  BeveledContainerState,
+  useContainerState,
+} from '../context';
 import {
   BevelConfig,
   ElementStyleConfig,
@@ -21,6 +25,7 @@ import {
   ContainerBorder,
   ContainerContent,
 } from './slots';
+import { useContainerDimensions } from '../ui-hooks';
 
 interface BaseBeveledContainerProps
   extends Omit<
@@ -60,35 +65,32 @@ export const BaseBeveledContainer = ({
   provideStateToChildren = true,
   ...svgProps
 }: BaseBeveledContainerProps) => {
+  // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [shadowOffset, setShadowOffset] = useState({ x: 0, y: 0 });
 
-  const {
-    padding: paddingValue,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    paddingTop,
-  } = getMinPadding({
-    bevelConfig,
-    stepsConfig,
-    strokeWidth,
-  });
+  // Configuration
+  const padding = React.useMemo(
+    () => getMinPadding({ bevelConfig, stepsConfig, strokeWidth }),
+    [bevelConfig, stepsConfig, strokeWidth]
+  );
+  const { paddingTop, paddingRight, paddingBottom, paddingLeft } = padding;
+  const stepBounds = React.useMemo(
+    () => getStepBounds(stepsConfig),
+    [stepsConfig]
+  );
 
-  // Determine current state
-  const getCurrentState = (): BeveledContainerState['currentState'] => {
-    if (disabled) return 'disabled';
-    if (isActive) return 'active';
-    if (isHovered) return 'hover';
-    return 'default';
-  };
+  // State management
 
-  const currentState = getCurrentState();
+  const { dimensions, isInitialized } = useContainerDimensions(
+    contentRef,
+    padding,
+    stepBounds,
+    strokeWidth
+  );
+  const { isHovered, setIsHovered, isActive, setIsActive, currentState } =
+    useContainerState(disabled);
+  const shadowOffset = useDynamicShadow(containerRef);
 
   // Context value for children
   const contextValue: BeveledContainerState = {
@@ -129,112 +131,6 @@ export const BaseBeveledContainer = ({
     isActive,
     disabled
   );
-
-  const stepBounds = getStepBounds(stepsConfig);
-
-  // Measure content size and update viewBox dimensions
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (contentRef.current) {
-        const contentRect = contentRef.current.getBoundingClientRect();
-
-        // If content has no size, use minimum dimensions
-        const contentWidth = contentRect.width || 100;
-        const contentHeight = contentRect.height || 50;
-
-        // Add padding around the content and extra space for steps
-        const totalWidth =
-          contentWidth +
-          paddingLeft +
-          paddingRight +
-          stepBounds.left +
-          stepBounds.right +
-          strokeWidth;
-        const totalHeight =
-          contentHeight +
-          paddingTop +
-          paddingBottom +
-          stepBounds.top +
-          stepBounds.bottom +
-          strokeWidth;
-
-        if (totalWidth > 0 && totalHeight > 0) {
-          setDimensions({ width: totalWidth, height: totalHeight });
-          if (!isInitialized) {
-            setIsInitialized(true);
-          }
-        }
-      }
-    };
-
-    // Use requestAnimationFrame for smoother initial render
-    const rafId = requestAnimationFrame(updateDimensions);
-
-    // Create ResizeObserver to watch for content size changes
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-
-        // Add padding around the content and extra space for steps
-        const totalWidth =
-          (width || 100) +
-          paddingLeft +
-          paddingRight +
-          stepBounds.left +
-          stepBounds.right;
-        const totalHeight =
-          (height || 50) +
-          paddingTop +
-          paddingBottom +
-          stepBounds.top +
-          stepBounds.bottom;
-
-        if (totalWidth > 0 && totalHeight > 0) {
-          setDimensions({ width: totalWidth, height: totalHeight });
-          if (!isInitialized) {
-            setIsInitialized(true);
-          }
-        }
-      }
-    });
-
-    if (contentRef.current) {
-      resizeObserver.observe(contentRef.current);
-    }
-    return () => {
-      cancelAnimationFrame(rafId);
-      resizeObserver.disconnect();
-    };
-  }, [
-    isInitialized,
-    paddingValue,
-    stepBounds.top,
-    stepBounds.right,
-    stepBounds.bottom,
-    stepBounds.left,
-  ]);
-
-  // Create debounced update function
-  const updateShadow = useCallback(() => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const shadow = calculateDynamicShadow(rect, 15);
-      setShadowOffset(shadow);
-    }
-  }, []);
-
-  const debouncedUpdateShadow = useDebounce(updateShadow, 50);
-
-  useEffect(() => {
-    updateShadow();
-    window.addEventListener('scroll', debouncedUpdateShadow);
-    window.addEventListener('resize', debouncedUpdateShadow);
-
-    return () => {
-      window.removeEventListener('scroll', debouncedUpdateShadow);
-      window.removeEventListener('resize', debouncedUpdateShadow);
-    };
-  }, [updateShadow, debouncedUpdateShadow]);
 
   // Render children with or without context
   const renderChildren = () => {
@@ -332,7 +228,6 @@ export const BaseBeveledContainer = ({
 
   // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
-  const strokePadding = Math.ceil(strokeWidth / 2);
 
   return (
     <div

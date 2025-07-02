@@ -1066,13 +1066,13 @@ export const getCurrentStateStyles = (
   return baseStyles;
 };
 
-export const processAllStyles = (
-  styleConfig: ElementStyleConfig,
-  currentState: BeveledContainerState['currentState']
-) => ({
-  root: getCurrentStateStyles(styleConfig.root, currentState),
-  background: getCurrentStateStyles(styleConfig.background, currentState),
-  shadow: getCurrentStateStyles(styleConfig.shadow, currentState),
-  border: getCurrentStateStyles(styleConfig.border, currentState),
-  content: getCurrentStateStyles(styleConfig.content, currentState),
-});
+// export const processAllStyles = (
+//   styleConfig: ElementStyleConfig,
+//   currentState: BeveledContainerState['currentState']
+// ) => ({
+//   root: getCurrentStateStyles(styleConfig.root, currentState),
+//   background: getCurrentStateStyles(styleConfig.background, currentState),
+//   shadow: getCurrentStateStyles(styleConfig.shadow, currentState),
+//   border: getCurrentStateStyles(styleConfig.border, currentState),
+//   content: getCurrentStateStyles(styleConfig.content, currentState),
+// });
