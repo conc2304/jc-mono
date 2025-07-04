@@ -245,36 +245,3 @@ export const useDynamicShadow = (
     isVisible,
   };
 };
-
-// Example usage:
-/*
-// Viewport center (default)
-const shadow1 = useDynamicShadow(containerRef);
-
-// Custom viewport position (top-left corner)
-const shadow2 = useDynamicShadow(containerRef, {
-  target: { type: 'viewport', position: { x: 0, y: 0 } },
-});
-
-// Follow mouse
-const shadow3 = useDynamicShadow(containerRef, {
-  target: { type: 'mouse' },
-  maxShadowDistance: 30,
-  smoothing: 0.8, // Smooth mouse following
-});
-
-// Follow another element
-const targetRef = useRef<HTMLDivElement>(null);
-const shadow4 = useDynamicShadow(containerRef, {
-  target: { type: 'element', ref: targetRef },
-  checkVisibility: true,
-  visibilityThreshold: 0.5, // Shadow only updates when 50% visible
-});
-
-// Static shadow
-const shadow5 = useDynamicShadow(containerRef, {
-  target: { type: 'static', offset: { x: 10, y: 10 } },
-  updateOnScroll: false, // No need to update static shadows
-  updateOnResize: false,
-});
-*/

@@ -237,7 +237,7 @@ export const BaseBeveledContainer = ({
           width: '100%',
           height: '100%',
           filter: shadowFilter,
-          transition: shadowStyles.transition ?? 'filter 300ms, all 0.2s ease',
+          transition: shadowStyles.transition ?? 'filter 3ms, all 0.2s ease',
 
           ...shadowStyles,
         }}
@@ -247,17 +247,16 @@ export const BaseBeveledContainer = ({
           fillPath={fillPath}
           backgroundStyles={{
             ...backgroundStyles,
-            backgroundColor: 'rgba(54, 1, 1, 0.2)',
             zIndex: 1,
           }}
         />
 
         <ContainerBorder
           dimensions={dimensions}
-          strokeWidth={strokeWidth}
           shapeTransform={shapeTransform}
           borderPath={borderPath}
-          stroke={stroke}
+          strokeWidth={strokeWidth ?? Number(borderStyles.strokeWidth ?? 0)}
+          stroke={borderStyles?.stroke ?? stroke}
           borderStyles={{
             ...borderStyles,
           }}

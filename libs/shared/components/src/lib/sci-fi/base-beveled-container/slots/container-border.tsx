@@ -39,6 +39,7 @@ export const ContainerBorder: React.FC<ContainerBorderProps> = ({
         left: 0,
         zIndex: 2,
         pointerEvents: 'none',
+        ...borderStyles,
       }}
       preserveAspectRatio="none"
       {...svgProps}

@@ -3,10 +3,12 @@ import { styled, useTheme, ThemeSwitcher } from '@jc/theming';
 import {
   BaseBeveledContainer,
   BeveledButton,
+  BeveledButtonDemo,
   BeveledCard,
   useMousePosition,
   // BeveledPanel,
 } from '@jc/ui-components';
+import { SaveIcon } from 'lucide-react';
 
 export function App() {
   const { themeName } = useTheme();
@@ -81,7 +83,7 @@ export function App() {
           marginBottom: '20px',
         }}
       >
-        {new Array(3).fill(null).map(() => {
+        {new Array(0).fill(null).map(() => {
           return (
             <BaseBeveledContainer
               key={Math.random() * 1000}
@@ -141,6 +143,10 @@ export function App() {
         {new Array(3).fill(null).map(() => (
           <Content />
         ))}
+      </div>
+
+      <div>
+        <BeveledButtonDemo />
       </div>
     </AppContainer>
   );

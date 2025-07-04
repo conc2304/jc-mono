@@ -1,115 +1,246 @@
-import { BaseBeveledContainer } from '../base-beveled-container';
-import { BevelConfig, GlowConfig } from '../types';
+import React, { forwardRef } from 'react';
+import { styled } from '@jc/theming';
 
-interface BeveledButtonProps {
-  children: React.ReactNode;
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+import { BaseBeveledContainer } from '../base-beveled-container';
+import { getBevelConfig, getStyleConfig } from './variants-config';
+
+import type { BevelConfig, ElementStyleConfig, StepConfig } from '../types';
+import type { DynamicShadowConfig } from '@jc/ui-hooks';
+
+// Button variant types similar to MUI
+export type ButtonVariant = 'contained' | 'outlined' | 'text';
+export type ButtonColor =
+  | 'primary'
+  | 'secondary'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'success';
+export type ButtonSize = 'small' | 'medium' | 'large';
+
+// Button props interface
+export interface BeveledButtonProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'> {
+  variant?: ButtonVariant;
+  color?: ButtonColor;
+  size?: ButtonSize;
+  fullWidth?: boolean;
   disabled?: boolean;
-  variant?: 'primary' | 'secondary' | 'success' | 'danger';
-  size?: 'small' | 'medium' | 'large';
+  disableElevation?: boolean;
+  disableRipple?: boolean;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  loading?: boolean;
+  href?: string;
+  component?: React.ElementType;
+  shadowConfig?: DynamicShadowConfig;
   bevelConfig?: BevelConfig;
-  background?: string;
-  stroke?: string;
-  strokeWidth?: number;
-  glow?: GlowConfig;
-  className?: string;
-  style?: React.CSSProperties;
+  stepsConfig?: StepConfig;
 }
 
-export const BeveledButton: React.FC<BeveledButtonProps> = ({
-  children,
-  onClick,
-  disabled = false,
-  variant = 'primary',
-  size = 'medium',
-  bevelConfig,
-  background,
-  stroke,
-  strokeWidth,
-  glow,
-  className,
-  style,
-}) => {
-  // Predefined variants
-  const variants = {
-    primary: {
-      background: 'linear-gradient(45deg, #667eea, #764ba2)',
-      stroke: '#ffffff',
-      strokeWidth: 2,
-      glow: { color: '#667eea', intensity: 3, spread: 1 },
-    },
-    secondary: {
-      background: 'linear-gradient(45deg, #gray-500, #gray-600)',
-      stroke: '#gray-300',
-      strokeWidth: 2,
-      glow: undefined,
-    },
-    success: {
-      background: 'linear-gradient(45deg, #10b981, #059669)',
-      stroke: '#ffffff',
-      strokeWidth: 2,
-      glow: { color: '#10b981', intensity: 3, spread: 1 },
-    },
-    danger: {
-      background: 'linear-gradient(45deg, #ef4444, #dc2626)',
-      stroke: '#ffffff',
-      strokeWidth: 2,
-      glow: { color: '#ef4444', intensity: 3, spread: 1 },
-    },
-  };
+// Icon wrapper component
+const IconWrapper = styled('span', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 
-  // Size configurations
-  const sizes = {
-    small: {
-      minHeight: '32px',
-      padding: '0.25rem 0.75rem',
-      fontSize: '0.875rem',
+  variants: {
+    size: {
+      small: { fontSize: '18px' },
+      medium: { fontSize: '20px' },
+      large: { fontSize: '22px' },
     },
-    medium: {
-      minHeight: '40px',
-      padding: '0.5rem 1rem',
-      fontSize: '1rem',
+  },
+});
+
+// Styled components for button internals
+const ButtonBase = styled('div', {
+  position: 'relative',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textDecoration: 'none',
+  verticalAlign: 'middle',
+  WebkitTapHighlightColor: 'transparent',
+  cursor: 'pointer',
+  userSelect: 'none',
+  whiteSpace: 'nowrap',
+
+  '&:focus-visible': {
+    outline: '2px solid $primary',
+    outlineOffset: '2px',
+  },
+
+  variants: {
+    fullWidth: {
+      true: {
+        width: '100%',
+      },
     },
-    large: {
-      minHeight: '48px',
-      padding: '0.75rem 1.5rem',
-      fontSize: '1.125rem',
+    disabled: {
+      true: {
+        cursor: 'not-allowed',
+        pointerEvents: 'none',
+      },
     },
-  };
+  },
+});
 
-  const variantStyles = variants[variant];
-  const sizeStyles = sizes[size];
+const ButtonContent = styled('span', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '$2',
+  position: 'relative',
+  zIndex: 1,
+  whiteSpace: 'nowrap',
+});
 
-  const defaultBevelConfig = bevelConfig || {
-    topLeft: { bevelSize: 8, bevelAngle: 45 },
-    topRight: { bevelSize: 8, bevelAngle: 45 },
-    bottomRight: { bevelSize: 8, bevelAngle: 45 },
-    bottomLeft: { bevelSize: 8, bevelAngle: 45 },
-  };
+const LoadingSpinner = styled('span', {
+  display: 'inline-block',
+  width: '1em',
+  height: '1em',
+  border: '2px solid transparent',
+  borderTopColor: 'currentColor',
+  borderRadius: '50%',
+  animation: 'button-spin 0.8s linear infinite',
 
-  return (
-    <div style={{ minHeight: sizeStyles.minHeight, ...style }}>
-      <BaseBeveledContainer
-        bevelConfig={defaultBevelConfig}
-        backgroundStyles={background || variantStyles.background}
-        stroke={stroke || variantStyles.stroke}
-        strokeWidth={strokeWidth ?? variantStyles.strokeWidth}
-        glow={glow || variantStyles.glow}
-        onClick={onClick}
-        disabled={disabled}
-        role="button"
+  '@keyframes button-spin': {
+    from: { transform: 'rotate(0deg)' },
+    to: { transform: 'rotate(360deg)' },
+  },
+});
+
+// Main Button Component
+export const BeveledButton = forwardRef<HTMLDivElement, BeveledButtonProps>(
+  (
+    {
+      variant = 'contained',
+      color = 'primary',
+      size = 'medium',
+      fullWidth = false,
+      disabled = false,
+      disableElevation = false,
+      disableRipple = false,
+      startIcon,
+      endIcon,
+      loading = false,
+      href,
+      component: Component = href ? 'a' : 'button',
+      children,
+      onClick,
+      shadowConfig,
+      bevelConfig,
+      stepsConfig,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const styleConfig = getStyleConfig(variant, color, size, disableElevation);
+    const finalBevelConfig = getBevelConfig(size, bevelConfig);
+
+    // Default steps config (no steps for buttons)
+    const defaultStepsConfig: StepConfig = {
+      top: { segments: [] },
+      right: { segments: [] },
+      bottom: { segments: [] },
+      left: { segments: [] },
+    };
+
+    const buttonContent = (
+      <ButtonContent>
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            {startIcon && <IconWrapper size={size}>{startIcon}</IconWrapper>}
+            {children}
+            {endIcon && <IconWrapper size={size}>{endIcon}</IconWrapper>}
+          </>
+        )}
+      </ButtonContent>
+    );
+
+    return (
+      <ButtonBase
+        as={BaseBeveledContainer as any}
+        ref={ref}
+        fullWidth={fullWidth}
+        disabled={disabled || loading}
         className={className}
-        // contentStyle={{
-        //   padding: sizeStyles.padding,
-        //   fontSize: sizeStyles.fontSize,
-        //   fontWeight: 'bold',
-        //   color: 'white',
-        //   textAlign: 'center',
-        //   userSelect: 'none'
-        // }}
+        onClick={onClick}
+        role={Component === 'button' ? 'button' : undefined}
+        tabIndex={disabled ? -1 : 0}
+        styleConfig={styleConfig}
+        shadowConfig={shadowConfig}
+        bevelConfig={finalBevelConfig}
+        stepsConfig={stepsConfig || defaultStepsConfig}
+        {...(href && { href })}
+        {...props}
       >
-        {children}
-      </BaseBeveledContainer>
-    </div>
-  );
-};
+        {buttonContent}
+      </ButtonBase>
+    );
+  }
+);
+
+BeveledButton.displayName = 'BeveledButton';
+
+// Example usage:
+/*
+// Basic contained button
+<BeveledButton variant="contained" color="primary">
+  Click Me
+</BeveledButton>
+
+// Outlined button with start icon
+<BeveledButton
+  variant="outlined"
+  color="secondary"
+  startIcon={<SaveIcon />}
+>
+  Save
+</BeveledButton>
+
+// Large text button
+<BeveledButton
+  variant="text"
+  color="error"
+  size="large"
+>
+  Delete
+</BeveledButton>
+
+// Full width loading button
+<BeveledButton
+  variant="contained"
+  color="primary"
+  fullWidth
+  loading
+>
+  Processing...
+</BeveledButton>
+
+// Button with custom shadow
+<BeveledButton
+  variant="contained"
+  color="primary"
+  shadowConfig={{
+    target: { type: 'mouse' },
+    maxShadowDistance: 20,
+    smoothing: 0.8
+  }}
+>
+  Interactive Shadow
+</BeveledButton>
+
+// Link button
+<BeveledButton
+  variant="text"
+  color="primary"
+  href="/about"
+  component="a"
+>
+  Learn More
+</BeveledButton>
+*/
