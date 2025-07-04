@@ -4,11 +4,7 @@ import { BeveledContainerContext, BeveledContainerState } from '../../context';
 import { StateStyles } from '../../types';
 
 interface ContainerContentProps {
-  children:
-    | React.ReactNode
-    | ((state: BeveledContainerState) => React.ReactNode);
-  contextValue: BeveledContainerState;
-  provideStateToChildren: boolean;
+  children: React.ReactNode;
   innerRect: { x: number; y: number; width: number; height: number };
   fillPath: string;
   paddingTop: number;
@@ -22,8 +18,6 @@ interface ContainerContentProps {
 
 export const ContainerContent: React.FC<ContainerContentProps> = ({
   children,
-  contextValue,
-  provideStateToChildren,
   innerRect,
   fillPath,
   paddingTop,
@@ -34,22 +28,6 @@ export const ContainerContent: React.FC<ContainerContentProps> = ({
   isClickable,
   contentRef,
 }) => {
-  const renderChildren = () => {
-    if (typeof children === 'function') {
-      return children(contextValue);
-    }
-
-    if (provideStateToChildren) {
-      return (
-        <BeveledContainerContext.Provider value={contextValue}>
-          {children}
-        </BeveledContainerContext.Provider>
-      );
-    }
-
-    return children;
-  };
-
   if (!children) return null;
 
   return (
@@ -73,7 +51,7 @@ export const ContainerContent: React.FC<ContainerContentProps> = ({
           ...contentStyles,
         }}
       >
-        {renderChildren()}
+        {children}
       </div>
     </div>
   );

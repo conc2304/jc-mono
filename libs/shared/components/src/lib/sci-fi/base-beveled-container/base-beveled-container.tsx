@@ -13,13 +13,7 @@ import {
   generateShapePath,
   getMinPadding,
   getStepBounds,
-  processAllStyles,
 } from './utils';
-import {
-  BeveledContainerContext,
-  BeveledContainerState,
-  useContainerState,
-} from '../context';
 import { BevelConfig, ElementStyleConfig, StepConfig } from '../types';
 import {
   ContainerBackground,
@@ -36,12 +30,9 @@ interface BaseBeveledContainerProps {
   shadowConfig?: DynamicShadowConfig;
   stroke?: string;
   strokeWidth?: number;
-  provideStateToChildren?: boolean;
   className?: string;
-  children?:
-    | React.ReactNode
-    | ((state: BeveledContainerState) => React.ReactNode); // Support render prop pattern
-  style: CSSProperties;
+  children: React.ReactNode;
+  style?: CSSProperties;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
   role?: string;
@@ -63,7 +54,6 @@ export const BaseBeveledContainer = ({
   role,
   tabIndex,
   children,
-  provideStateToChildren = true,
   ...svgProps
 }: BaseBeveledContainerProps) => {
   // Refs
@@ -88,28 +78,17 @@ export const BaseBeveledContainer = ({
     stepBounds,
     strokeWidth
   );
-  const { isHovered, setIsHovered, isActive, setIsActive, currentState } =
-    useContainerState(disabled);
+
   const { shadowOffset, isVisible: isShadowVisible } = useDynamicShadow(
     containerRef,
     shadowConfig
   );
 
-  // Context value for children
-  const contextValue: BeveledContainerState = {
-    isHovered,
-    isActive,
-    disabled,
-    currentState,
-  };
-
-  const {
-    rootStyles,
-    backgroundStyles,
-    shadowStyles,
-    borderStyles,
-    contentStyles,
-  } = processAllStyles(styleConfig, isHovered, isActive, disabled);
+  const rootStyles = styleConfig.root?.default ?? {},
+    backgroundStyles = styleConfig.background?.default ?? {},
+    shadowStyles = styleConfig.shadow?.default ?? {},
+    borderStyles = styleConfig.border?.default ?? {},
+    contentStyles = styleConfig.content?.default ?? {};
 
   const shadowFilter = useMemo(() => {
     if (!isShadowVisible) return 'none';
@@ -137,23 +116,6 @@ export const BaseBeveledContainer = ({
     }
   };
 
-  // Render helpers
-  const renderChildren = useCallback(() => {
-    if (typeof children === 'function') {
-      return children(contextValue);
-    }
-
-    if (provideStateToChildren) {
-      return (
-        <BeveledContainerContext.Provider value={contextValue}>
-          {children}
-        </BeveledContainerContext.Provider>
-      );
-    }
-
-    return children;
-  }, [children, contextValue, provideStateToChildren]);
-
   // Common props that will be passed to the dynamic component
   const commonProps = {
     ref: containerRef,
@@ -169,10 +131,6 @@ export const BaseBeveledContainer = ({
     },
     onClick: handleClick,
     onKeyDown: handleKeyDown,
-    onMouseEnter: () => setIsHovered(true),
-    onMouseLeave: () => setIsHovered(false),
-    onMouseDown: () => setIsActive(true),
-    onMouseUp: () => setIsActive(false),
     role: role || (onClick ? 'button' : undefined),
     tabIndex: isClickable ? tabIndex ?? 0 : tabIndex,
     'aria-disabled': disabled,
@@ -199,7 +157,7 @@ export const BaseBeveledContainer = ({
             ...contentStyles,
           },
         },
-        renderChildren()
+        children
       )
     );
   }
@@ -283,8 +241,6 @@ export const BaseBeveledContainer = ({
           React.createElement(ContainerContent, {
             key: 'content',
             children,
-            contextValue,
-            provideStateToChildren,
             innerRect,
             fillPath,
             paddingTop,
