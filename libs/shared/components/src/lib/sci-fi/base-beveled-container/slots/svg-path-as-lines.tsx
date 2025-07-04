@@ -31,8 +31,6 @@ export const PathAsLines: React.FC<PathAsLinesProps> = ({
           y1={line.y1}
           x2={line.x2}
           y2={line.y2}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
           strokeLinecap={strokeLinecap}
           strokeLinejoin={strokeLinejoin}
           {...otherProps}

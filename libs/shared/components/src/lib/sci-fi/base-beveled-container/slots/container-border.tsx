@@ -48,8 +48,10 @@ export const ContainerBorder: React.FC<ContainerBorderProps> = ({
         {stroke && strokeWidth > 0 && (
           <PathAsLines
             pathString={borderPath}
-            stroke={borderStyles.stroke || stroke}
-            strokeWidth={strokeWidth}
+            style={{
+              stroke: borderStyles.stroke ?? stroke,
+              strokeWidth: borderStyles.strokeWidth ?? strokeWidth,
+            }}
             strokeLinecap="round"
             strokeLinejoin="round"
           />

@@ -1,4 +1,5 @@
 // import { ConnectFour } from '@jc/games-lib';
+import { ReactNode } from 'react';
 import { styled, useTheme, ThemeSwitcher } from '@jc/theming';
 import {
   BaseBeveledContainer,
@@ -67,21 +68,27 @@ export function App() {
     </div>
   );
 
+  const FlexWrapper = ({ children }: { children: ReactNode }) => (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignContent: 'center',
+        color: 'white',
+        marginBottom: '20px',
+      }}
+    >
+      {children}
+    </div>
+  );
+
   return (
     <AppContainer>
       <Header>
         <Title>My {themeName} App</Title>
         <ThemeSwitcher />
       </Header>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          alignContent: 'center',
-          color: 'white',
-          marginBottom: '20px',
-        }}
-      >
+      <FlexWrapper>
         {new Array(3).fill(null).map(() => {
           return (
             <BaseBeveledContainer
@@ -129,20 +136,13 @@ export function App() {
             </BaseBeveledContainer>
           );
         })}
-      </div>
+      </FlexWrapper>
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignContent: 'center',
-          color: 'white',
-        }}
-      >
+      <FlexWrapper>
         {new Array(3).fill(null).map(() => (
           <Content />
         ))}
-      </div>
+      </FlexWrapper>
 
       <div>{/* <BeveledButtonDemo /> */}</div>
     </AppContainer>
