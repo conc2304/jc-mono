@@ -1,4 +1,11 @@
-import React, { useRef, useCallback, useMemo } from 'react';
+import React, {
+  useRef,
+  useCallback,
+  useMemo,
+  createElement,
+  CSSProperties,
+  ElementType,
+} from 'react';
 import { DynamicShadowConfig, useDynamicShadow } from '@jc/ui-hooks';
 
 import {
@@ -21,11 +28,8 @@ import {
 } from './slots';
 import { useContainerDimensions } from '../ui-hooks';
 
-interface BaseBeveledContainerProps
-  extends Omit<
-    React.SVGProps<SVGSVGElement>,
-    'width' | 'height' | 'onClick' | 'children'
-  > {
+interface BaseBeveledContainerProps {
+  component?: ElementType;
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
   styleConfig?: ElementStyleConfig;
@@ -37,14 +41,15 @@ interface BaseBeveledContainerProps
   children?:
     | React.ReactNode
     | ((state: BeveledContainerState) => React.ReactNode); // Support render prop pattern
-
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void; // Click handler for button behavior
-  disabled?: boolean; // For button-like behavior
-  role?: string; // Accessibility role (button, dialog, etc.)
-  tabIndex?: number; // For keyboard navigation
+  style: CSSProperties;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  disabled?: boolean;
+  role?: string;
+  tabIndex?: number;
 }
 
 export const BaseBeveledContainer = ({
+  component = 'div',
   bevelConfig = {},
   stepsConfig = {},
   styleConfig = {},
@@ -62,7 +67,7 @@ export const BaseBeveledContainer = ({
   ...svgProps
 }: BaseBeveledContainerProps) => {
   // Refs
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Configuration
@@ -119,13 +124,13 @@ export const BaseBeveledContainer = ({
   // Event handlers
   const isClickable = Boolean(onClick && !disabled);
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (!disabled && onClick) {
       onClick(event);
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (!disabled && onClick && (event.key === 'Enter' || event.key === ' ')) {
       event.preventDefault();
       onClick(event as any);
@@ -149,22 +154,41 @@ export const BaseBeveledContainer = ({
     return children;
   }, [children, contextValue, provideStateToChildren]);
 
+  // Common props that will be passed to the dynamic component
+  const commonProps = {
+    ref: containerRef,
+    className: `base-beveled-container--root ${className}`,
+    style: {
+      position: 'relative' as const,
+      display: 'inline-block' as const,
+      ...rootStyles,
+      border: 'unset !important',
+      borderStyle: 'unset !important',
+      borderRadius: 'unset !important',
+      borderWidth: 'unset !important',
+    },
+    onClick: handleClick,
+    onKeyDown: handleKeyDown,
+    onMouseEnter: () => setIsHovered(true),
+    onMouseLeave: () => setIsHovered(false),
+    onMouseDown: () => setIsActive(true),
+    onMouseUp: () => setIsActive(false),
+    role: role || (onClick ? 'button' : undefined),
+    tabIndex: isClickable ? tabIndex ?? 0 : tabIndex,
+    'aria-disabled': disabled,
+  };
+
   // Don't render SVG until we have real dimensions
   if (!isInitialized || dimensions.width === 0 || dimensions.height === 0) {
-    return (
-      <div
-        ref={containerRef}
-        className={className}
-        style={{
-          display: 'inline-block',
-          position: 'relative',
-          ...rootStyles,
-        }}
-      >
-        {/* Hidden content measurer - let content flow naturally */}
-        <div
-          ref={contentRef}
-          style={{
+    return createElement(
+      component,
+      commonProps,
+      // Hidden content measurer - let content flow naturally
+      createElement(
+        'div',
+        {
+          ref: contentRef,
+          style: {
             visibility: 'hidden',
             position: 'absolute',
             top: 0,
@@ -173,11 +197,10 @@ export const BaseBeveledContainer = ({
             whiteSpace: 'nowrap',
             display: 'inline-block',
             ...contentStyles,
-          }}
-        >
-          {renderChildren()}
-        </div>
-      </div>
+          },
+        },
+        renderChildren()
+      )
     );
   }
 
@@ -205,81 +228,74 @@ export const BaseBeveledContainer = ({
   // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
 
-  return (
-    <div
-      ref={containerRef}
-      className={`base-beveled-container--root  ${className}`}
-      style={{
-        position: 'relative',
-        display: 'inline-block',
-        width: `${dimensions.width}px`,
-        height: `${dimensions.height}px`,
-        ...rootStyles,
-        border: 'unset !important',
-        borderStyle: 'unset !important',
-        borderRadius: 'unset !important',
-        borderWidth: 'unset !important',
-      }}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseDown={() => setIsActive(true)}
-      onMouseUp={() => setIsActive(false)}
-      role={role || (onClick ? 'button' : undefined)}
-      tabIndex={isClickable ? tabIndex ?? 0 : tabIndex}
-      aria-disabled={disabled}
-    >
-      <div
-        className={'base-beveled-container--shadow'}
-        style={{
+  // Update the style to include dimensions
+  const finalStyle = {
+    ...commonProps.style,
+    width: `${dimensions.width}px`,
+    height: `${dimensions.height}px`,
+  };
+
+  return createElement(
+    component,
+    {
+      ...commonProps,
+      style: finalStyle,
+    },
+    createElement(
+      'div',
+      {
+        className: 'base-beveled-container--shadow',
+        style: {
           position: 'relative',
           width: '100%',
           height: '100%',
           filter: shadowFilter,
           transition: shadowStyles.transition ?? 'filter 3ms, all 0.2s ease',
-
           ...shadowStyles,
-        }}
-      >
-        <ContainerBackground
-          innerRect={innerRect}
-          fillPath={fillPath}
-          backgroundStyles={{
+        },
+      },
+      [
+        React.createElement(ContainerBackground, {
+          key: 'background',
+          innerRect,
+          fillPath,
+          backgroundStyles: {
             ...backgroundStyles,
             zIndex: 1,
-          }}
-        />
+          },
+        }),
 
-        <ContainerBorder
-          dimensions={dimensions}
-          shapeTransform={shapeTransform}
-          borderPath={borderPath}
-          strokeWidth={strokeWidth ?? Number(borderStyles.strokeWidth ?? 0)}
-          stroke={borderStyles?.stroke ?? stroke}
-          borderStyles={{
+        React.createElement(ContainerBorder, {
+          key: 'border',
+          dimensions,
+          shapeTransform,
+          borderPath,
+          strokeWidth: strokeWidth ?? Number(borderStyles.strokeWidth ?? 0),
+          stroke: borderStyles?.stroke ?? stroke,
+          borderStyles: {
             ...borderStyles,
-          }}
-          svgProps={svgProps}
-        />
-        {/* Content layer */}
-        {children && (
-          <ContainerContent
-            children={children}
-            contextValue={contextValue}
-            provideStateToChildren={provideStateToChildren}
-            innerRect={innerRect}
-            fillPath={fillPath}
-            paddingTop={paddingTop}
-            paddingBottom={paddingBottom}
-            paddingLeft={paddingLeft}
-            paddingRight={paddingRight}
-            contentStyles={contentStyles}
-            isClickable={isClickable}
-            contentRef={contentRef}
-          />
-        )}
-      </div>
-    </div>
+          },
+          svgProps,
+        }),
+
+        // Content layer
+        children &&
+          React.createElement(ContainerContent, {
+            key: 'content',
+            children,
+            contextValue,
+            provideStateToChildren,
+            innerRect,
+            fillPath,
+            paddingTop,
+            paddingBottom,
+            paddingLeft,
+            paddingRight,
+            contentStyles,
+            isClickable,
+            contentRef,
+          }),
+      ]
+    )
   );
 };
