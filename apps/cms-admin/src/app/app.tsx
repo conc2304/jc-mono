@@ -133,15 +133,15 @@ export function App() {
         <Title>My {themeName} App</Title>
         <ThemeSwitcher />
       </Header>
-      {/* <DemoContainer /> */}
+      <DemoContainer />
       <FlexWrapper>
-        <BeveledButton color="primary" variant="solid" size="lg">
+        <BeveledButton color="primary" variant="solid" size="sm">
           <BtnChild />
         </BeveledButton>
-        <BeveledButton color="secondary" variant="solid" size="lg">
+        <BeveledButton color="secondary" variant="outline" size="md">
           <BtnChild />
         </BeveledButton>
-        <BeveledButton color="warning" variant="solid" size="lg">
+        <BeveledButton color="warning" variant="ghost" size="lg">
           <BtnChild />
         </BeveledButton>
         {/* <BeveledButtonDemo /> */}

@@ -7,7 +7,6 @@ import React, {
   ElementType,
 } from 'react';
 import { ThemeColor, ThemeVariant } from '@jc/theming';
-// import { DynamicShadowConfig, useDynamicShadow } from '@jc/ui-hooks';
 
 import {
   ContainerBackground,
@@ -261,8 +260,11 @@ export const BaseBeveledContainer = ({
           width: '100%',
           height: '100%',
           filter: shadowFilter,
-          transition: 'filter 3ms, all 0.2s ease',
+          // transition: 'filter 3ms, all 0.2s ease',
           ...enhancedShadowStyles,
+          '&:after': {
+            border: '2px solid red',
+          },
         },
       },
       [
@@ -270,7 +272,7 @@ export const BaseBeveledContainer = ({
           key: 'background',
           innerRect,
           fillPath,
-          backgroundStyles: {
+          style: {
             transition: 'all 0.2s ease',
             ...enhancedBackgroundStyles,
             zIndex: 1,
