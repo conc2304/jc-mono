@@ -6,6 +6,9 @@
       "path": "../ui-hooks"
     },
     {
+      "path": "../theming"
+    },
+    {
       "path": "./tsconfig.lib.json"
     },
     {

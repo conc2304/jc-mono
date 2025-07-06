@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ContainerContent } from './container-content';
-import { BeveledContainerState } from '../../context';
+import { BeveledContainerState } from '../../../context';
 
 interface ContainerMeasurerProps {
   containerRef: React.RefObject<HTMLDivElement | null>;

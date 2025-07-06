@@ -1,8 +1,5 @@
 import React from 'react';
 
-import { BeveledContainerContext, BeveledContainerState } from '../../context';
-import { StateStyles } from '../../types';
-
 interface ContainerContentProps {
   children: React.ReactNode;
   innerRect: { x: number; y: number; width: number; height: number };

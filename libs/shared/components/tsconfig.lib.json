@@ -32,6 +32,9 @@
   "references": [
     {
       "path": "../ui-hooks/tsconfig.lib.json"
+    },
+    {
+      "path": "../theming/tsconfig.lib.json"
     }
   ]
 }

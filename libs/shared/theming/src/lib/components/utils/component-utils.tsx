@@ -1,9 +1,14 @@
-import { ThemeTokens } from 'src/lib/themes/types';
+import {
+  ThemeColor,
+  ThemeSize,
+  ThemeTokens,
+  ThemeVariant,
+} from 'src/lib/types';
 
 export interface ComponentThemeProps {
-  color?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
-  variant?: 'default' | 'elevated' | 'minimal' | 'outlined' | 'filled';
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  color?: ThemeColor;
+  variant?: ThemeVariant;
+  size?: ThemeSize;
 }
 
 export const getThemeProps = (

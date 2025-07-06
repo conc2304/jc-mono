@@ -1,6 +1,9 @@
 import { useRef, useEffect, useState } from 'react';
 
-import { getMinPadding, getStepBounds } from '../base-beveled-container/utils';
+import {
+  getMinPadding,
+  getStepBounds,
+} from '../components/base-beveled-container/utils';
 import { Dimensions } from '../types';
 
 export const useContainerDimensions = (

@@ -1,4 +1,4 @@
-import { ColorTokens, ThemeTokens } from '../types';
+import { ColorTokens, ThemeTokens } from '../../types';
 
 const colors: ColorTokens = {
   // Professional, muted palette

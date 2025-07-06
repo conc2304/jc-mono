@@ -1,4 +1,4 @@
-import { BeveledContainerState } from '../context';
+import { BeveledContainerState } from '../../context';
 import {
   BevelConfig,
   CornerBevel,
@@ -8,7 +8,7 @@ import {
   ShadowTarget,
   StateStyles,
   ElementStyleConfig,
-} from '../types';
+} from '../../types';
 
 // Helper function to calculate stroke width for angled lines
 export const getAdjustedStrokeWidth = (
@@ -1103,3 +1103,85 @@ export const processAllStyles = (
     disabled
   ),
 });
+
+/**
+ * Extracts the numeric pixel value from a CSS strokeWidth value
+ * @param value - The strokeWidth value (string, number, or undefined)
+ * @returns The numeric pixel value, defaulting to 0 for invalid inputs
+ */
+export function getStrokeWidthPixels(
+  value: string | number | undefined
+): number {
+  // Handle undefined/null
+  if (value == null) {
+    return 0;
+  }
+
+  // Handle numeric values (assume pixels)
+  if (typeof value === 'number') {
+    return Math.max(0, value); // Ensure non-negative
+  }
+
+  // Handle string values
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+
+    // Handle empty string
+    if (!trimmed) {
+      return 0;
+    }
+
+    // Handle "0" or pure numbers
+    const numericValue = parseFloat(trimmed);
+    if (!isNaN(numericValue)) {
+      // If it's just a number, treat as pixels
+      if (trimmed === numericValue.toString()) {
+        return Math.max(0, numericValue);
+      }
+
+      // Handle units
+      if (trimmed.endsWith('px')) {
+        return Math.max(0, numericValue);
+      }
+
+      // Handle other common CSS units (convert to approximate pixels)
+      if (trimmed.endsWith('em')) {
+        return Math.max(0, numericValue * 16); // Assuming 1em = 16px
+      }
+
+      if (trimmed.endsWith('rem')) {
+        return Math.max(0, numericValue * 16); // Assuming 1rem = 16px
+      }
+
+      if (trimmed.endsWith('pt')) {
+        return Math.max(0, numericValue * 1.333); // 1pt ≈ 1.333px
+      }
+
+      if (trimmed.endsWith('%')) {
+        // Percentage is context-dependent, but for strokeWidth we'll assume 100% = 1px
+        return Math.max(0, numericValue / 100);
+      }
+
+      // If we have a number but unrecognized unit, just return the number
+      return Math.max(0, numericValue);
+    }
+
+    // Handle CSS keywords
+    switch (trimmed.toLowerCase()) {
+      case 'thin':
+        return 1;
+      case 'medium':
+        return 3;
+      case 'thick':
+        return 5;
+      case 'none':
+      case 'hidden':
+        return 0;
+      default:
+        return 0;
+    }
+  }
+
+  // Fallback for any other type
+  return 0;
+}

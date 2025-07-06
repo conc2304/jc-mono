@@ -63,3 +63,14 @@ export interface ThemeTokens {
     };
   };
 }
+
+export type ThemeSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type ThemeColor =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info';
+
+export type ThemeVariant = 'solid' | 'outline' | 'ghost' | 'soft';

@@ -4,10 +4,7 @@ import { styled, useTheme, ThemeSwitcher } from '@jc/theming';
 import {
   BaseBeveledContainer,
   BeveledButton,
-  BeveledButtonDemo,
-  BeveledCard,
-  useMousePosition,
-  // BeveledPanel,
+  // BeveledButtonDemo,
 } from '@jc/ui-components';
 
 export function App() {
@@ -68,7 +65,7 @@ export function App() {
     </div>
   );
 
-  const FlexWrapper = ({ children }: { children: ReactNode }) => (
+  const FlexWrapper = ({ children }: { children?: ReactNode }) => (
     <div
       style={{
         display: 'flex',
@@ -82,17 +79,15 @@ export function App() {
     </div>
   );
 
-  return (
-    <AppContainer>
-      <Header>
-        <Title>My {themeName} App</Title>
-        <ThemeSwitcher />
-      </Header>
+  const BtnChild = () => <p>Click Me</p>;
+
+  const DemoContainer = () => (
+    <>
       <FlexWrapper>
-        {new Array(3).fill(null).map(() => {
+        {new Array(3).fill(null).map((_, index) => {
           return (
             <BaseBeveledContainer
-              key={Math.random() * 1000}
+              key={index}
               bevelConfig={{
                 topLeft: { bevelSize: 30, bevelAngle: 45 },
                 topRight: { bevelSize: 8, bevelAngle: 45 },
@@ -102,11 +97,6 @@ export function App() {
               stepsConfig={{
                 top: {
                   segments: [
-                    // {
-                    //   start: 0.25,
-                    //   end: 0.5,
-                    //   height: 15,
-                    // },
                     {
                       start: 0.5,
                       end: 1,
@@ -114,23 +104,14 @@ export function App() {
                     },
                   ],
                 },
-                right: {
-                  // segments: [
-                  //   {
-                  //     start: 0,
-                  //     end: 0.5,
-                  //     height: 15,
-                  //   },
-                  // ],
-                },
               }}
               shadowConfig={{
                 target: { type: 'mouse' },
                 maxShadowDistance: 30,
-                smoothing: 0.001,
+                smoothing: 0,
               }}
-              stroke="#00ffff"
-              strokeWidth={3}
+              // stroke="#00ffff"
+              // strokeWidth={5}
             >
               <Content />
             </BaseBeveledContainer>
@@ -139,12 +120,32 @@ export function App() {
       </FlexWrapper>
 
       <FlexWrapper>
-        {new Array(3).fill(null).map(() => (
-          <Content />
+        {new Array(3).fill(null).map((_, index) => (
+          <Content key={index} />
         ))}
       </FlexWrapper>
+    </>
+  );
 
-      <div>{/* <BeveledButtonDemo /> */}</div>
+  return (
+    <AppContainer>
+      <Header>
+        <Title>My {themeName} App</Title>
+        <ThemeSwitcher />
+      </Header>
+      {/* <DemoContainer /> */}
+      <FlexWrapper>
+        <BeveledButton color="primary" variant="solid" size="lg">
+          <BtnChild />
+        </BeveledButton>
+        <BeveledButton color="secondary" variant="solid" size="lg">
+          <BtnChild />
+        </BeveledButton>
+        <BeveledButton color="warning" variant="solid" size="lg">
+          <BtnChild />
+        </BeveledButton>
+        {/* <BeveledButtonDemo /> */}
+      </FlexWrapper>
     </AppContainer>
   );
 }

@@ -1,5 +1,5 @@
 import { cyberpunkPalette } from '../../foundations/colors/palettes/cyberpunk';
-import { ColorTokens, ThemeTokens } from '../types';
+import { ColorTokens, ThemeTokens } from '../../types';
 
 const colors: ColorTokens = {
   // Semantic mappings

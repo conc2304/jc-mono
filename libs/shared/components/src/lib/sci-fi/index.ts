@@ -1,5 +1,3 @@
-export * from './base-beveled-container';
-export * from './beveled-button';
-export * from './beveled-card';
-export * from './beveled-panel';
+export * from './components/base-beveled-container';
+export * from './components/beveled-button';
 export * from './context';

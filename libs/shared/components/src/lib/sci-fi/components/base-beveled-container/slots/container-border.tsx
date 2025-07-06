@@ -1,28 +1,26 @@
 import React from 'react';
 
 import { PathAsLines } from './svg-path-as-lines';
-import { StateStyles } from '../../types';
+import { getStrokeWidthPixels } from '../utils';
 
 interface ContainerBorderProps {
   dimensions: { width: number; height: number };
-  strokeWidth: number;
   shapeTransform: string;
   borderPath: string;
-  stroke?: string;
   borderStyles: React.CSSProperties;
-  svgProps: React.SVGProps<SVGSVGElement>;
 }
 
 export const ContainerBorder: React.FC<ContainerBorderProps> = ({
   dimensions,
-  strokeWidth,
   shapeTransform,
   borderPath,
-  stroke,
   borderStyles,
-  svgProps,
 }) => {
+  const strokeWidth = getStrokeWidthPixels(borderStyles.strokeWidth);
+  const stroke = borderStyles?.stroke;
   const strokePadding = Math.ceil(strokeWidth / 2);
+
+  console.log({ borderStyles, stroke, strokeWidth });
 
   return (
     <svg
@@ -39,18 +37,17 @@ export const ContainerBorder: React.FC<ContainerBorderProps> = ({
         left: 0,
         zIndex: 2,
         pointerEvents: 'none',
-        ...borderStyles,
       }}
       preserveAspectRatio="none"
-      {...svgProps}
     >
       <g transform={shapeTransform}>
         {stroke && strokeWidth > 0 && (
           <PathAsLines
             pathString={borderPath}
             style={{
-              stroke: borderStyles.stroke ?? stroke,
-              strokeWidth: borderStyles.strokeWidth ?? strokeWidth,
+              ...borderStyles,
+              stroke,
+              strokeWidth,
             }}
             strokeLinecap="round"
             strokeLinejoin="round"

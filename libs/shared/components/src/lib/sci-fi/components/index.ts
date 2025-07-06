@@ -1,2 +1,2 @@
 export * from './base-beveled-container';
-// export * from './beveled-rectangle';
+export * from './beveled-button';

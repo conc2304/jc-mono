@@ -1,4 +1,5 @@
-import { Property } from 'csstype';
+import { ThemeColor, ThemeVariant } from '@jc/theming';
+import { Properties, Property } from 'csstype';
 
 type CornerBevel = {
   bevelSize: number;
@@ -68,6 +69,7 @@ export interface ShadowConfig {
     };
   };
 }
+
 export interface LineElement {
   x1: number;
   y1: number;
@@ -77,10 +79,11 @@ export interface LineElement {
 }
 
 export interface StateStyles {
-  default?: React.CSSProperties;
-  hover?: React.CSSProperties;
-  active?: React.CSSProperties;
-  disabled?: React.CSSProperties;
+  default?: Properties;
+  hover?: Properties;
+  focus?: Properties;
+  active?: Properties;
+  disabled?: Properties;
 }
 
 export interface ElementStyleConfig {
@@ -115,3 +118,50 @@ export interface InnerRect {
   width: number;
   height: number;
 }
+
+// Component states
+export type ComponentState =
+  | 'default'
+  | 'hover'
+  | 'focus'
+  | 'active'
+  | 'disabled';
+
+// Style configuration for each state
+export interface StateStyleConfig {
+  default?: Properties;
+  hover?: Properties;
+  focus?: Properties;
+  active?: Properties;
+  disabled?: Properties;
+}
+
+// Slot style configuration
+export interface SlotStyleConfig {
+  root?: StateStyleConfig;
+  background?: StateStyleConfig;
+  border?: StateStyleConfig;
+  content?: StateStyleConfig;
+  shadow?: StateStyleConfig;
+}
+
+// Theme configuration for a component
+export interface ComponentThemeConfig {
+  [key: string]: {
+    // color variant key
+    [key: string]: SlotStyleConfig; // component variant key
+  };
+}
+
+// Utility type for creating component themes
+export type ComponentTheme<T extends string = ThemeColor> = {
+  [K in T]: {
+    [V in ThemeVariant]?: SlotStyleConfig;
+  };
+};
+
+export type SizeConfigItem = {
+  bevelConfig: BevelConfig;
+  strokeWidth: Property.StrokeWidth;
+  className: string;
+};
