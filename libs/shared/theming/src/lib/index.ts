@@ -1,2 +1,2 @@
 export * from './vanilla-extract';
-export * from './stitches-theming';
+// export * from './stitches-theming';

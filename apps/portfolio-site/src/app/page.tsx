@@ -1,3 +1,5 @@
+import { Button, ThemeSwitcher } from '@jc/theming';
+
 export default function Index() {
   /*
    * Replace the elements below with your own.
@@ -6,9 +8,11 @@ export default function Index() {
    */
   return (
     <div>
-      {/* <Button variant="contained" size="large" color="primary"> */}
-      Click me
-      {/* </Button> */}
+      <ThemeSwitcher variant="dropdown" showLabel />
+
+      <Button variant="contained" size="large" color="primary">
+        Click me
+      </Button>
     </div>
   );
 }
