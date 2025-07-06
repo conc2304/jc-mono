@@ -3,7 +3,7 @@ import {
   ThemeSize,
   ThemeTokens,
   ThemeVariant,
-} from 'src/lib/types';
+} from 'src/lib/stitches-theming/types';
 
 export interface ComponentThemeProps {
   color?: ThemeColor;

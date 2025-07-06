@@ -1,6 +1,6 @@
 import { ThemeName, themes } from '../../themes';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ThemeTokens } from 'src/lib/types';
+import { ThemeTokens } from 'src/lib/stitches-theming/types';
 interface ThemeContextValue {
   theme: ThemeTokens;
   themeName: ThemeName;
