@@ -1,4 +1,4 @@
-// theme-provider.tsx
+// theme-provider.tsx (updated to accept theme mappings)
 'use client';
 
 import React, {
@@ -20,24 +20,29 @@ export type ThemeVariant = 'default' | 'blue';
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';
 
+// Define the structure for theme mappings
+export interface ThemeMapping {
+  main: string;
+  components?: string;
+}
+
+export interface ThemeClassMapping {
+  [variant: string]: {
+    [mode in ResolvedTheme]: ThemeMapping;
+  };
+}
+
 export interface ThemeContextType {
   variant: ThemeVariant;
-
   mode: ThemeMode;
-
   resolvedTheme: ResolvedTheme;
-
   systemPreference: ResolvedTheme;
-
-  // Functions to update theme
   setVariant: (variant: ThemeVariant) => void;
   setMode: (mode: ThemeMode) => void;
-  toggleMode: () => void; // Toggles between light/dark for current variant
-
+  toggleMode: () => void;
   availableVariants: ThemeVariant[];
-
-  // Current theme class name for vanilla-extract
   currentThemeClass: string;
+  currentComponentThemeClass?: string;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -58,17 +63,17 @@ const getSystemPreference = (): ResolvedTheme => {
     : 'light';
 };
 
-// Theme class mapping
-const themeClasses = {
+// Default theme class mapping (without component themes)
+const defaultThemeClasses: ThemeClassMapping = {
   blue: {
-    light: blueLight,
-    dark: blueDark,
+    light: { main: blueLight },
+    dark: { main: blueDark },
   },
   default: {
-    light: defaultLightTheme,
-    dark: defaultDarkTheme,
+    light: { main: defaultLightTheme },
+    dark: { main: defaultDarkTheme },
   },
-} as const;
+};
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -76,6 +81,9 @@ interface ThemeProviderProps {
   defaultMode?: ThemeMode;
   variantStorageKey?: string;
   modeStorageKey?: string;
+  // Allow external theme mappings to be injected
+  themeClasses?: ThemeClassMapping;
+  availableVariants?: ThemeVariant[];
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
@@ -84,6 +92,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   defaultMode = 'system',
   variantStorageKey = 'theme-variant',
   modeStorageKey = 'theme-mode',
+  themeClasses = defaultThemeClasses,
+  availableVariants = ['default', 'blue'],
 }) => {
   const [systemPreference, setSystemPreference] = useState<ResolvedTheme>(
     () => {
@@ -95,7 +105,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     if (typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem(variantStorageKey) as ThemeVariant;
-        if (stored && ['blue', 'default'].includes(stored)) {
+        if (stored && availableVariants.includes(stored)) {
           return stored;
         }
       } catch (error) {
@@ -193,11 +203,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     ? 'light'
     : defaultMode;
 
-  // Get current theme class
-  const currentThemeClass =
-    themeClasses[effectiveVariant][effectiveResolvedTheme];
+  // Get current theme classes from the injected mapping
+  const currentThemeMapping =
+    themeClasses[effectiveVariant]?.[effectiveResolvedTheme];
+  const currentThemeClass = currentThemeMapping?.main || '';
+  const currentComponentThemeClass = currentThemeMapping?.components;
 
-  const availableVariants: ThemeVariant[] = ['blue', 'default'];
+  // Build the combined class name
+  const combinedThemeClass = [currentThemeClass, currentComponentThemeClass]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <ThemeContext.Provider
@@ -211,9 +226,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         toggleMode,
         availableVariants,
         currentThemeClass,
+        currentComponentThemeClass,
       }}
     >
-      <div className={currentThemeClass}>{children}</div>
+      <div className={combinedThemeClass}>{children}</div>
     </ThemeContext.Provider>
   );
 };

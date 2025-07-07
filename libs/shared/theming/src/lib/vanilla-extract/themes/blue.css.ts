@@ -16,7 +16,6 @@ export const blueLight = createTheme(themeContract, {
       dark: '#7b1fa2',
       contrastText: '#fff',
     },
-    // ... rest of your existing lightTheme values
     error: {
       main: '#d32f2f',
       light: '#ef5350',
