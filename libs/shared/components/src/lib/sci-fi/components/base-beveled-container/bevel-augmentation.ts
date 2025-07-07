@@ -1,23 +1,12 @@
-import { BeveledContainerState } from '../../context';
 import {
   CornersConfig,
   CornerBevel,
   StepConfig,
   EdgeStepConfig,
-  LineElement,
   ShadowTarget,
   StateStyles,
   ElementStyleConfig,
 } from '../../types';
-
-// Helper function to calculate stroke width for angled lines
-export const getAdjustedStrokeWidth = (
-  angle: number,
-  baseStrokeWidth: number
-): number => {
-  const radians = (angle * Math.PI) / 180;
-  return baseStrokeWidth * Math.sin(radians);
-};
 
 // Calculate the final height offset at the end of an edge after all steps
 const getEdgeEndOffset = (

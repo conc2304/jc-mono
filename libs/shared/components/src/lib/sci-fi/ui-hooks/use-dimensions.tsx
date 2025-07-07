@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from 'react';
 import {
   getMinPadding,
   getStepBounds,
-} from '../components/base-beveled-container/utils';
+} from '../components/base-beveled-container/bevel-augmentation';
 import { Dimensions } from '../types';
 
 export const useContainerDimensions = (

@@ -1,4 +1,4 @@
-import { convertPathToLines } from '../utils_new';
+import { convertPathToLines } from '../border-augmentation';
 interface PathAsLinesProps {
   pathString: string;
   stroke?: string;

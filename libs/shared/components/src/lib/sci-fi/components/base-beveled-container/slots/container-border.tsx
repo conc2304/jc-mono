@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PathAsLines } from './svg-path-as-lines';
-import { getStrokeWidthPixels } from '../utils';
+import { getStrokeWidthPixels } from '../bevel-augmentation';
 
 interface ContainerBorderProps {
   dimensions: { width: number; height: number };

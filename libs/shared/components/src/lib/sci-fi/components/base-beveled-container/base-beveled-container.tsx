@@ -10,25 +10,24 @@ import {
 import { Property } from 'csstype';
 
 import {
-  ContainerBackground,
-  ContainerBorder,
-  ContainerContent,
-} from './slots';
-import {
-  generateFillPath,
   generateShapePath,
   getMinPadding,
   getStepBounds,
   getStrokeWidthPixels,
-} from './utils';
+} from './bevel-augmentation';
 import {
   generateAugmentedShapePath,
   BorderConfig,
   isBorderConfig,
   isBevelConfig,
   getBorderPadding,
-} from './utils_new';
-import { ShapeConfig, ComponentState } from '../../types';
+} from './border-augmentation';
+import {
+  ContainerBackground,
+  ContainerBorder,
+  ContainerContent,
+} from './slots';
+import { ShapeConfig } from '../../types';
 import {
   DynamicShadowConfig,
   useContainerDimensions,
@@ -72,9 +71,8 @@ export const BaseBeveledContainer = ({
   const containerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const strokeWidth = getStrokeWidthPixels(strokeWidthProp ?? '2px');
-
   // Configuration
+  const strokeWidth = getStrokeWidthPixels(strokeWidthProp ?? '2px');
 
   const isBevelShape = useMemo(
     () => (shapeConfig ? isBevelConfig(shapeConfig) : false),
@@ -128,15 +126,6 @@ export const BaseBeveledContainer = ({
     shadowConfig
   );
 
-  // Determine current component state
-  const currentState: ComponentState = useMemo(() => {
-    if (disabled) return 'disabled';
-    if (isActive) return 'active';
-    return 'default';
-  }, [disabled, isActive]);
-
-  // Get styles for current state
-
   const shadowFilter = useMemo(() => {
     if (!isShadowVisible) return 'none';
 
@@ -181,7 +170,6 @@ export const BaseBeveledContainer = ({
     role: role || (onClick ? 'button' : undefined),
     tabIndex: isClickable ? tabIndex ?? 0 : tabIndex,
     'aria-disabled': disabled,
-    'data-state': currentState,
   };
 
   // Calculate the inner rectangle for the main shape (accounting for step space)
@@ -192,7 +180,7 @@ export const BaseBeveledContainer = ({
       width: dimensions.width - stepBounds.left - stepBounds.right,
       height: dimensions.height - stepBounds.top - stepBounds.bottom,
     }),
-    [dimensions]
+    [dimensions, stepBounds]
   );
 
   const getShapePath = useCallback(() => {
@@ -247,30 +235,8 @@ export const BaseBeveledContainer = ({
     );
   }
 
-  // const fillPath = generateFillPath(
-  //   innerRect.width,
-  //   innerRect.height,
-  //   bevelConfig,
-  //   stepsConfig
-  // );
-  // const borderPath = generateShapePath(
-  //   innerRect.width,
-  //   innerRect.height,
-  //   bevelConfig,
-  //   stepsConfig
-  // );
-
-  // const path = generateAugmentedShapePath(
-  //   innerRect.width,
-  //   innerRect.height,
-  //   shapeConfig
-  // );
-  // const lines = convertPathToLines(path); // For your line-based rendering
-
-  // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
 
-  // Update the style to include dimensions
   const finalStyle = {
     ...commonProps.style,
     width: `${dimensions.width}px`,

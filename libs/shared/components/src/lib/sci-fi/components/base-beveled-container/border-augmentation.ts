@@ -3,10 +3,8 @@ import { ShapeConfig } from '../../types';
 // Size presets that determine the scale of augmentations
 export type PresetSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
-// / Edges only support: clip, rect
 export type AugmentationTypeEdge = 'clip' | 'rect';
 
-// Corners support: clip, rect, step, round, scoop
 export type AugmentationTypeCorner =
   | AugmentationTypeEdge
   | 'step'
@@ -14,7 +12,6 @@ export type AugmentationTypeCorner =
   | 'scoop';
 export type AugmentationType = AugmentationTypeEdge | AugmentationTypeCorner;
 
-// Corner sections can have variations
 export type CornerSectionPreset =
   | {
       type: AugmentationTypeCorner;
@@ -22,18 +19,9 @@ export type CornerSectionPreset =
     }
   | undefined;
 
-// Edge sections are simpler (no variations)
 export type EdgeSectionPreset =
   | {
       type: AugmentationTypeEdge;
-      size: PresetSize;
-    }
-  | undefined;
-
-// Configuration for each section preset
-export type SectionPreset =
-  | {
-      type: AugmentationType;
       size: PresetSize;
     }
   | undefined;
@@ -81,7 +69,9 @@ type SectionPosition =
 /**
  * Convert preset configuration to augmentation data
  */
-function resolveAugmentation(preset: SectionPreset): AugmentationData | null {
+function resolveAugmentation(
+  preset: EdgeSectionPreset | CornerSectionPreset
+): AugmentationData | null {
   if (!preset) return null;
 
   const size = SIZE_PRESETS[preset.size];
@@ -174,8 +164,6 @@ function generateCornerAugmentation(
   endPoint: { x: number; y: number };
   midPoints: { x: number; y: number }[];
 } {
-  const midPoints: { x: number; y: number }[] = [];
-
   switch (type) {
     case 'clip': {
       const offset = getClipOffset(size);
@@ -353,9 +341,7 @@ function generateEdgeAugmentation(
 
   // Determine which edge we're on based on position
   const isTopEdge = centerY === 0;
-  const isBottomEdge = centerY > 0 && orientation === 'horizontal';
   const isLeftEdge = centerX === 0;
-  const isRightEdge = centerX > 0 && orientation === 'vertical';
 
   switch (type) {
     case 'clip': {
@@ -937,7 +923,9 @@ export const getBorderPadding = (
   const strokePadding = Math.ceil(strokeWidth / 2) + 1;
 
   // Helper function to resolve augmentation data from preset
-  const resolveAugmentationSize = (preset: SectionPreset): number => {
+  const resolveAugmentationSize = (
+    preset: EdgeSectionPreset | CornerSectionPreset
+  ): number => {
     if (!preset) return 0;
     return SIZE_PRESETS[preset.size];
   };
