@@ -1,12 +1,17 @@
 // import { ThemeColor, ThemeVariant } from '@jc/theming';
 import { Properties, Property } from 'csstype';
 
-type CornerBevel = {
+export type ShapeConfig = {
+  bevelConfig: CornersConfig;
+  stepsConfig: StepConfig;
+};
+
+export type CornerBevel = {
   bevelSize: number;
   bevelAngle?: number;
 };
 
-type BevelConfig = {
+export type CornersConfig = {
   topLeft?: CornerBevel;
   topRight?: CornerBevel;
   bottomRight?: CornerBevel;
@@ -30,7 +35,7 @@ export interface StepConfig {
   left?: EdgeStepConfig;
 }
 
-type GlowConfig = {
+export type GlowConfig = {
   color?: string;
   intensity?: number;
   spread?: number;
@@ -100,8 +105,6 @@ export type ShadowTarget =
   | { element: Element }
   | { percentX: number; percentY: number };
 
-export type { BevelConfig, CornerBevel, GlowConfig };
-
 export interface Dimensions {
   width: number;
   height: number;
@@ -145,23 +148,8 @@ export interface SlotStyleConfig {
   shadow?: StateStyleConfig;
 }
 
-// Theme configuration for a component
-export interface ComponentThemeConfig {
-  [key: string]: {
-    // color variant key
-    [key: string]: SlotStyleConfig; // component variant key
-  };
-}
-
-// // Utility type for creating component themes
-// export type ComponentTheme<T extends string = ThemeColor> = {
-//   [K in T]: {
-//     [V in ThemeVariant]?: SlotStyleConfig;
-//   };
-// };
-
 export type SizeConfigItem = {
-  bevelConfig: BevelConfig;
+  bevelConfig: CornersConfig;
   strokeWidth: Property.StrokeWidth;
   className: string;
 };

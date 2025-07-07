@@ -1,6 +1,6 @@
 import { BeveledContainerState } from '../../context';
 import {
-  BevelConfig,
+  CornersConfig,
   CornerBevel,
   StepConfig,
   EdgeStepConfig,
@@ -194,7 +194,7 @@ const generateSteppedEdgePath = (
 export const generateFillPath = (
   width: number,
   height: number,
-  bevelConfig: BevelConfig,
+  bevelConfig: CornersConfig,
   stepConfig?: StepConfig
 ): string => {
   const points: string[] = [];
@@ -481,7 +481,7 @@ export const getMinPadding = ({
   stepsConfig,
   strokeWidth = 0,
 }: {
-  bevelConfig: BevelConfig;
+  bevelConfig: CornersConfig;
   stepsConfig: StepConfig;
   strokeWidth: number;
 }): {
@@ -621,7 +621,7 @@ export const calculateDynamicShadow = (
 export const generateShapePath = (
   width: number,
   height: number,
-  bevelConfig: BevelConfig,
+  bevelConfig: CornersConfig,
   stepConfig?: StepConfig
 ): string => {
   function getBevelOffset(

@@ -38,30 +38,44 @@ const FlexWrapper = ({ children }: { children?: ReactNode }) => (
     {children}
   </div>
 );
+const borderConfig = {
+  topLeft: { type: 'clip', size: 'md' },
+  top: { type: 'clip', size: 'lg' },
+  topRight: { type: 'round', size: 'lg' },
+  right: { type: 'clip', size: 'lg' },
+  bottomRight: { type: 'scoop', size: 'md' },
+  bottom: { type: 'rect', size: 'lg' },
+  bottomLeft: { type: 'rect', size: 'sm' },
+  left: { type: 'clip', size: 'lg' },
+};
+
+const shapeConfig = {
+  bevelConfig: {
+    topLeft: { bevelSize: 30, bevelAngle: 45 },
+    topRight: { bevelSize: 8, bevelAngle: 45 },
+    bottomRight: { bevelSize: 30, bevelAngle: 45 },
+    bottomLeft: { bevelSize: 10, bevelAngle: 45 },
+  },
+  stepsConfig: {
+    top: {
+      segments: [
+        {
+          start: 0.5,
+          end: 1,
+          height: 30,
+        },
+      ],
+    },
+  },
+};
 const DemoContainer = () => (
   <>
     <FlexWrapper>
-      {new Array(3).fill(null).map((_, index) => {
+      {new Array(2).fill(null).map((_, index) => {
         return (
           <BaseBeveledContainer
             key={index}
-            // bevelConfig={{
-            //   topLeft: { bevelSize: 30, bevelAngle: 45 },
-            //   topRight: { bevelSize: 8, bevelAngle: 45 },
-            //   bottomRight: { bevelSize: 30, bevelAngle: 45 },
-            //   bottomLeft: { bevelSize: 10, bevelAngle: 45 },
-            // }}
-            // stepsConfig={{
-            //   top: {
-            //     segments: [
-            //       {
-            //         start: 0.5,
-            //         end: 1,
-            //         height: 30,
-            //       },
-            //     ],
-            //   },
-            // }}
+            shapeConfig={index % 2 === 0 ? shapeConfig : borderConfig}
             shadowConfig={{
               target: { type: 'mouse' },
               maxShadowDistance: 30,
@@ -77,7 +91,7 @@ const DemoContainer = () => (
     </FlexWrapper>
 
     <FlexWrapper>
-      {new Array(3).fill(null).map((_, index) => (
+      {new Array(2).fill(null).map((_, index) => (
         <Content key={index} />
       ))}
     </FlexWrapper>

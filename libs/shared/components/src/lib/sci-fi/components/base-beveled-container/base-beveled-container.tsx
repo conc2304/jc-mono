@@ -1,10 +1,11 @@
 'use client';
-import React, {
+import {
   useRef,
   useMemo,
   createElement,
   CSSProperties,
   ElementType,
+  useCallback,
 } from 'react';
 import { Property } from 'csstype';
 
@@ -20,8 +21,14 @@ import {
   getStepBounds,
   getStrokeWidthPixels,
 } from './utils';
-import { generateAugmentedShapePath, NewShapeConfig } from './utils_new';
-import { BevelConfig, StepConfig, ComponentState } from '../../types';
+import {
+  generateAugmentedShapePath,
+  BorderConfig,
+  isBorderConfig,
+  isBevelConfig,
+  getBorderPadding,
+} from './utils_new';
+import { ShapeConfig, ComponentState } from '../../types';
 import {
   DynamicShadowConfig,
   useContainerDimensions,
@@ -32,10 +39,8 @@ const DEFAULT_EMPTY_OBJ = {};
 
 interface BaseBeveledContainerProps {
   component?: ElementType;
-  bevelConfig?: BevelConfig;
-  stepsConfig?: StepConfig;
+  shapeConfig?: BorderConfig | ShapeConfig;
   shadowConfig?: DynamicShadowConfig;
-
   className?: string;
   children?: React.ReactNode;
   style?: CSSProperties;
@@ -43,18 +48,15 @@ interface BaseBeveledContainerProps {
   disabled?: boolean;
   role?: string;
   tabIndex?: number;
-
   isActive?: boolean;
-
   stroke: Property.Stroke;
   strokeWidth: Property.StrokeWidth;
 }
 
 export const BaseBeveledContainer = ({
   component = 'div',
-  bevelConfig = DEFAULT_EMPTY_OBJ,
-  stepsConfig = DEFAULT_EMPTY_OBJ,
-  shadowConfig,
+  shapeConfig,
+  shadowConfig = DEFAULT_EMPTY_OBJ,
   className = '',
   style: rootStyle = DEFAULT_EMPTY_OBJ,
   isActive = false,
@@ -70,17 +72,47 @@ export const BaseBeveledContainer = ({
   const containerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Configuration
   const strokeWidth = getStrokeWidthPixels(strokeWidthProp ?? '2px');
 
-  const padding = React.useMemo(
-    () => getMinPadding({ bevelConfig, stepsConfig, strokeWidth }),
-    [bevelConfig, stepsConfig, strokeWidth]
+  // Configuration
+
+  const isBevelShape = useMemo(
+    () => (shapeConfig ? isBevelConfig(shapeConfig) : false),
+    [shapeConfig]
   );
+
+  const padding = useMemo(() => {
+    if (!shapeConfig) {
+      return {
+        padding: 0,
+        paddingTop: 0,
+        paddingRight: 0,
+        paddingBottom: 0,
+        paddingLeft: 0,
+      };
+    }
+
+    if (isBevelShape) {
+      const { bevelConfig, stepsConfig } = shapeConfig as ShapeConfig;
+      return getMinPadding({
+        bevelConfig,
+        stepsConfig,
+        strokeWidth,
+      });
+    } else {
+      // shapeConfig is BorderConfig here
+      const borderConfig = shapeConfig as BorderConfig;
+      return getBorderPadding(borderConfig, strokeWidth);
+    }
+  }, [shapeConfig, strokeWidth, isBevelShape]);
   const { paddingTop, paddingRight, paddingBottom, paddingLeft } = padding;
-  const stepBounds = React.useMemo(
-    () => getStepBounds(stepsConfig),
-    [stepsConfig]
+
+  const stepBounds = useMemo(
+    () =>
+      isBevelShape
+        ? getStepBounds((shapeConfig as ShapeConfig).stepsConfig)
+        : { top: 0, right: 0, bottom: 0, left: 0 },
+    [shapeConfig, isBevelShape]
   );
 
   // State management
@@ -152,6 +184,44 @@ export const BaseBeveledContainer = ({
     'data-state': currentState,
   };
 
+  // Calculate the inner rectangle for the main shape (accounting for step space)
+  const innerRect = useMemo(
+    () => ({
+      x: stepBounds.left,
+      y: stepBounds.top,
+      width: dimensions.width - stepBounds.left - stepBounds.right,
+      height: dimensions.height - stepBounds.top - stepBounds.bottom,
+    }),
+    [dimensions]
+  );
+
+  const getShapePath = useCallback(() => {
+    if (!shapeConfig || !isInitialized) {
+      return ''; // Return empty path if no config
+    }
+
+    if (isBevelShape) {
+      // Use legacy bevel generation logic
+      return generateShapePath(
+        innerRect.width,
+        innerRect.height,
+        (shapeConfig as ShapeConfig).bevelConfig,
+        (shapeConfig as ShapeConfig).stepsConfig
+      );
+    } else if (isBorderConfig(shapeConfig)) {
+      // Use new border generation logic
+      return generateAugmentedShapePath(
+        innerRect.width,
+        innerRect.height,
+        shapeConfig
+      );
+    }
+
+    return '';
+  }, [shapeConfig, isBevelShape, isInitialized, innerRect]);
+
+  const path = getShapePath();
+
   // Don't render SVG until we have real dimensions
   if (!isInitialized || dimensions.width === 0 || dimensions.height === 0) {
     return createElement(
@@ -177,14 +247,6 @@ export const BaseBeveledContainer = ({
     );
   }
 
-  // Calculate the inner rectangle for the main shape (accounting for step space)
-  const innerRect = {
-    x: stepBounds.left,
-    y: stepBounds.top,
-    width: dimensions.width - stepBounds.left - stepBounds.right,
-    height: dimensions.height - stepBounds.top - stepBounds.bottom,
-  };
-
   // const fillPath = generateFillPath(
   //   innerRect.width,
   //   innerRect.height,
@@ -198,22 +260,11 @@ export const BaseBeveledContainer = ({
   //   stepsConfig
   // );
 
-  const config: NewShapeConfig = {
-    topLeft: { type: 'clip', size: 'md' },
-    top: { type: 'round', size: 'lg' },
-    topRight: { type: 'round', size: 'lg' },
-    right: { type: 'clip', size: 'lg' },
-    bottomRight: { type: 'scoop', size: 'md' },
-    bottom: { type: 'round', size: 'lg' },
-    bottomLeft: { type: 'rect', size: 'sm' },
-    left: { type: 'clip', size: 'lg' },
-  };
-
-  const path = generateAugmentedShapePath(
-    innerRect.width,
-    innerRect.height,
-    config
-  );
+  // const path = generateAugmentedShapePath(
+  //   innerRect.width,
+  //   innerRect.height,
+  //   shapeConfig
+  // );
   // const lines = convertPathToLines(path); // For your line-based rendering
 
   // Create transform for the main shape (offset by step bounds)
@@ -247,7 +298,7 @@ export const BaseBeveledContainer = ({
         },
       },
       [
-        React.createElement(ContainerBackground, {
+        createElement(ContainerBackground, {
           key: 'background',
           innerRect,
           fillPath: path,
@@ -258,7 +309,7 @@ export const BaseBeveledContainer = ({
           },
         }),
 
-        React.createElement(ContainerBorder, {
+        createElement(ContainerBorder, {
           key: 'border',
           dimensions,
           shapeTransform,
@@ -272,7 +323,7 @@ export const BaseBeveledContainer = ({
 
         // Content layer
         children &&
-          React.createElement(ContainerContent, {
+          createElement(ContainerContent, {
             key: 'content',
             children,
             innerRect,

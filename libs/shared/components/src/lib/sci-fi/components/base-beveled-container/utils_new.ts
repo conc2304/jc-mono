@@ -1,8 +1,34 @@
+import { ShapeConfig } from '../../types';
+
 // Size presets that determine the scale of augmentations
 export type PresetSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
-// Base augmentation types inspired by augmented-ui
-export type AugmentationType = 'clip' | 'step' | 'rect' | 'round' | 'scoop';
+// / Edges only support: clip, rect
+export type AugmentationTypeEdge = 'clip' | 'rect';
+
+// Corners support: clip, rect, step, round, scoop
+export type AugmentationTypeCorner =
+  | AugmentationTypeEdge
+  | 'step'
+  | 'round'
+  | 'scoop';
+export type AugmentationType = AugmentationTypeEdge | AugmentationTypeCorner;
+
+// Corner sections can have variations
+export type CornerSectionPreset =
+  | {
+      type: AugmentationTypeCorner;
+      size: PresetSize;
+    }
+  | undefined;
+
+// Edge sections are simpler (no variations)
+export type EdgeSectionPreset =
+  | {
+      type: AugmentationTypeEdge;
+      size: PresetSize;
+    }
+  | undefined;
 
 // Configuration for each section preset
 export type SectionPreset =
@@ -13,15 +39,15 @@ export type SectionPreset =
   | undefined;
 
 // Main shape configuration with 8 sections
-export type NewShapeConfig = {
-  topLeft: SectionPreset;
-  top: SectionPreset;
-  topRight: SectionPreset;
-  right: SectionPreset;
-  bottomRight: SectionPreset;
-  bottom: SectionPreset;
-  bottomLeft: SectionPreset;
-  left: SectionPreset;
+export type BorderConfig = {
+  topLeft: CornerSectionPreset;
+  top: EdgeSectionPreset;
+  topRight: CornerSectionPreset;
+  right: EdgeSectionPreset;
+  bottomRight: CornerSectionPreset;
+  bottom: EdgeSectionPreset;
+  bottomLeft: CornerSectionPreset;
+  left: EdgeSectionPreset;
 };
 
 // Internal augmentation data with calculated dimensions
@@ -126,6 +152,7 @@ function generateAugmentationPoints(
         height,
         'horizontal'
       );
+
     case 'left':
       return generateEdgeAugmentation(type, size, 0, height / 2, 'vertical');
     default:
@@ -137,7 +164,7 @@ function generateAugmentationPoints(
  * Generate augmentation points for corner positions
  */
 function generateCornerAugmentation(
-  type: AugmentationType,
+  type: AugmentationTypeCorner,
   size: number,
   cornerX: number,
   cornerY: number,
@@ -298,60 +325,6 @@ function generateCornerAugmentation(
       }
       break;
     }
-
-    case 'scoop': {
-      // Generate inverted curve (scoop) points
-      const controlPointRatio = 0.552;
-      const cp = size * controlPointRatio;
-
-      switch (corner) {
-        case 'topLeft':
-          return {
-            startPoint: { x: 0, y: 0 },
-            endPoint: { x: 0, y: 0 },
-            midPoints: [
-              { x: cp, y: 0 },
-              { x: 0, y: cp },
-              { x: size, y: 0 },
-              { x: 0, y: size },
-            ],
-          };
-        case 'topRight':
-          return {
-            startPoint: { x: cornerX, y: 0 },
-            endPoint: { x: cornerX, y: 0 },
-            midPoints: [
-              { x: cornerX - cp, y: 0 },
-              { x: cornerX, y: cp },
-              { x: cornerX - size, y: 0 },
-              { x: cornerX, y: size },
-            ],
-          };
-        case 'bottomRight':
-          return {
-            startPoint: { x: cornerX, y: cornerY },
-            endPoint: { x: cornerX, y: cornerY },
-            midPoints: [
-              { x: cornerX, y: cornerY - cp },
-              { x: cornerX - cp, y: cornerY },
-              { x: cornerX, y: cornerY - size },
-              { x: cornerX - size, y: cornerY },
-            ],
-          };
-        case 'bottomLeft':
-          return {
-            startPoint: { x: 0, y: cornerY },
-            endPoint: { x: 0, y: cornerY },
-            midPoints: [
-              { x: cp, y: cornerY },
-              { x: 0, y: cornerY - cp },
-              { x: size, y: cornerY },
-              { x: 0, y: cornerY - size },
-            ],
-          };
-      }
-      break;
-    }
   }
 
   // Fallback
@@ -421,54 +394,6 @@ function generateEdgeAugmentation(
       }
     }
 
-    case 'step': {
-      if (orientation === 'horizontal') {
-        if (isTopEdge) {
-          const stepDirection = size; // Down for top
-          return {
-            startPoint: { x: centerX - halfSize, y: centerY },
-            endPoint: { x: centerX + halfSize, y: centerY },
-            midPoints: [
-              { x: centerX - halfSize, y: centerY + stepDirection },
-              { x: centerX + halfSize, y: centerY + stepDirection },
-            ],
-          };
-        } else {
-          const stepDirection = -size; // Up for bottom
-          return {
-            startPoint: { x: centerX + halfSize, y: centerY },
-            endPoint: { x: centerX - halfSize, y: centerY },
-            midPoints: [
-              { x: centerX + halfSize, y: centerY + stepDirection },
-              { x: centerX - halfSize, y: centerY + stepDirection },
-            ],
-          };
-        }
-      } else {
-        if (isLeftEdge) {
-          const stepDirection = size; // Right for left
-          return {
-            startPoint: { x: centerX, y: centerY + halfSize },
-            endPoint: { x: centerX, y: centerY - halfSize },
-            midPoints: [
-              { x: centerX + stepDirection, y: centerY + halfSize },
-              { x: centerX + stepDirection, y: centerY - halfSize },
-            ],
-          };
-        } else {
-          const stepDirection = -size; // Left for right
-          return {
-            startPoint: { x: centerX, y: centerY - halfSize },
-            endPoint: { x: centerX, y: centerY + halfSize },
-            midPoints: [
-              { x: centerX + stepDirection, y: centerY - halfSize },
-              { x: centerX + stepDirection, y: centerY + halfSize },
-            ],
-          };
-        }
-      }
-    }
-
     case 'rect': {
       if (orientation === 'horizontal') {
         if (isTopEdge) {
@@ -484,11 +409,11 @@ function generateEdgeAugmentation(
         } else {
           const stepDirection = -size;
           return {
-            startPoint: { x: centerX + halfSize, y: centerY },
-            endPoint: { x: centerX - halfSize, y: centerY },
+            startPoint: { x: centerX - halfSize, y: centerY },
+            endPoint: { x: centerX + halfSize, y: centerY },
             midPoints: [
-              { x: centerX + halfSize, y: centerY + stepDirection },
               { x: centerX - halfSize, y: centerY + stepDirection },
+              { x: centerX + halfSize, y: centerY + stepDirection },
             ],
           };
         }
@@ -496,11 +421,11 @@ function generateEdgeAugmentation(
         if (isLeftEdge) {
           const stepDirection = size;
           return {
-            startPoint: { x: centerX, y: centerY + halfSize },
-            endPoint: { x: centerX, y: centerY - halfSize },
+            endPoint: { x: centerX, y: centerY + halfSize },
+            startPoint: { x: centerX, y: centerY - halfSize },
             midPoints: [
-              { x: centerX + stepDirection, y: centerY + halfSize },
               { x: centerX + stepDirection, y: centerY - halfSize },
+              { x: centerX + stepDirection, y: centerY + halfSize },
             ],
           };
         } else {
@@ -511,145 +436,6 @@ function generateEdgeAugmentation(
             midPoints: [
               { x: centerX + stepDirection, y: centerY - halfSize },
               { x: centerX + stepDirection, y: centerY + halfSize },
-            ],
-          };
-        }
-      }
-    }
-
-    case 'round': {
-      const controlPointRatio = 0.552;
-      const cp = size * controlPointRatio;
-
-      if (orientation === 'horizontal') {
-        if (isTopEdge) {
-          const curveDirection = size;
-          return {
-            startPoint: { x: centerX - halfSize, y: centerY },
-            endPoint: { x: centerX + halfSize, y: centerY },
-            midPoints: [
-              { x: centerX - halfSize, y: centerY + cp },
-              { x: centerX + halfSize, y: centerY + cp },
-            ],
-          };
-        } else {
-          const curveDirection = -size;
-          return {
-            startPoint: { x: centerX + halfSize, y: centerY },
-            endPoint: { x: centerX - halfSize, y: centerY },
-            midPoints: [
-              {
-                x: centerX + halfSize,
-                y: centerY + cp * Math.sign(curveDirection),
-              },
-              {
-                x: centerX - halfSize,
-                y: centerY + cp * Math.sign(curveDirection),
-              },
-            ],
-          };
-        }
-      } else {
-        if (isLeftEdge) {
-          const curveDirection = size;
-          return {
-            startPoint: { x: centerX, y: centerY + halfSize },
-            endPoint: { x: centerX, y: centerY - halfSize },
-            midPoints: [
-              { x: centerX + cp, y: centerY + halfSize },
-              { x: centerX + cp, y: centerY - halfSize },
-            ],
-          };
-        } else {
-          const curveDirection = -size;
-          return {
-            startPoint: { x: centerX, y: centerY - halfSize },
-            endPoint: { x: centerX, y: centerY + halfSize },
-            midPoints: [
-              {
-                x: centerX + cp * Math.sign(curveDirection),
-                y: centerY - halfSize,
-              },
-              {
-                x: centerX + cp * Math.sign(curveDirection),
-                y: centerY + halfSize,
-              },
-            ],
-          };
-        }
-      }
-    }
-
-    case 'scoop': {
-      const controlPointRatio = 0.552;
-      const cp = size * controlPointRatio;
-
-      if (orientation === 'horizontal') {
-        if (isTopEdge) {
-          // Scoop curves inward (opposite of round)
-          const curveDirection = -size;
-          return {
-            startPoint: { x: centerX - halfSize, y: centerY },
-            endPoint: { x: centerX + halfSize, y: centerY },
-            midPoints: [
-              {
-                x: centerX - halfSize,
-                y: centerY + cp * Math.sign(curveDirection),
-              },
-              {
-                x: centerX + halfSize,
-                y: centerY + cp * Math.sign(curveDirection),
-              },
-            ],
-          };
-        } else {
-          const curveDirection = size;
-          return {
-            startPoint: { x: centerX + halfSize, y: centerY },
-            endPoint: { x: centerX - halfSize, y: centerY },
-            midPoints: [
-              {
-                x: centerX + halfSize,
-                y: centerY + cp * Math.sign(curveDirection),
-              },
-              {
-                x: centerX - halfSize,
-                y: centerY + cp * Math.sign(curveDirection),
-              },
-            ],
-          };
-        }
-      } else {
-        if (isLeftEdge) {
-          const curveDirection = -size;
-          return {
-            startPoint: { x: centerX, y: centerY + halfSize },
-            endPoint: { x: centerX, y: centerY - halfSize },
-            midPoints: [
-              {
-                x: centerX + cp * Math.sign(curveDirection),
-                y: centerY + halfSize,
-              },
-              {
-                x: centerX + cp * Math.sign(curveDirection),
-                y: centerY - halfSize,
-              },
-            ],
-          };
-        } else {
-          const curveDirection = size;
-          return {
-            startPoint: { x: centerX, y: centerY - halfSize },
-            endPoint: { x: centerX, y: centerY + halfSize },
-            midPoints: [
-              {
-                x: centerX + cp * Math.sign(curveDirection),
-                y: centerY - halfSize,
-              },
-              {
-                x: centerX + cp * Math.sign(curveDirection),
-                y: centerY + halfSize,
-              },
             ],
           };
         }
@@ -671,7 +457,7 @@ function generateEdgeAugmentation(
 export const generateAugmentedShapePath = (
   width: number,
   height: number,
-  config: NewShapeConfig
+  config: BorderConfig
 ): string => {
   const pathCommands: string[] = [];
 
@@ -925,9 +711,9 @@ function addAugmentationToPath(
     endPoint: { x: number; y: number };
     midPoints: { x: number; y: number }[];
   },
-  type: AugmentationType
+  type: AugmentationTypeCorner
 ): void {
-  if (type === 'round' || type === 'scoop') {
+  if (type === 'round') {
     // Use cubic bezier curves for rounded corners
     if (points.midPoints.length >= 2) {
       pathCommands.push(
@@ -956,9 +742,9 @@ function addAugmentationToPathReverse(
     endPoint: { x: number; y: number };
     midPoints: { x: number; y: number }[];
   },
-  type: AugmentationType
+  type: AugmentationTypeCorner
 ): void {
-  if (type === 'round' || type === 'scoop') {
+  if (type === 'round') {
     // Use cubic bezier curves for rounded corners (reverse control points)
     if (points.midPoints.length >= 2) {
       pathCommands.push(
@@ -1086,4 +872,115 @@ export const convertPathToLines = (pathString: string): LineElement[] => {
   }
 
   return lines;
+};
+
+// Type guard to distinguish between BevelConfig and BorderConfig
+export function isBevelConfig(
+  config: BorderConfig | ShapeConfig
+): config is ShapeConfig {
+  // Check if the config has BevelConfig properties (corners or steps)
+  const { bevelConfig, stepsConfig } = config as ShapeConfig;
+  if (!bevelConfig || !stepsConfig) return false;
+  // Check for corner properties (from CornersConfig)
+  const hasCorners = !!(
+    bevelConfig.topLeft?.bevelSize ||
+    bevelConfig.topRight?.bevelSize ||
+    bevelConfig.bottomRight?.bevelSize ||
+    bevelConfig.bottomLeft?.bevelSize
+  );
+
+  // Check for step properties (from StepConfig)
+  const hasSteps = !!(
+    stepsConfig.top?.segments ||
+    stepsConfig.right?.segments ||
+    stepsConfig.bottom?.segments ||
+    stepsConfig.left?.segments
+  );
+
+  return hasCorners || hasSteps;
+}
+
+export function isBorderConfig(
+  config: BorderConfig | ShapeConfig
+): config is BorderConfig {
+  // Check if the config has BorderConfig properties
+  const borderConfig = config as BorderConfig;
+
+  // Check if any section has the preset structure with type and size
+  const hasBorderPresets = !!(
+    borderConfig.topLeft?.type ||
+    borderConfig.top?.type ||
+    borderConfig.topRight?.type ||
+    borderConfig.right?.type ||
+    borderConfig.bottomRight?.type ||
+    borderConfig.bottom?.type ||
+    borderConfig.bottomLeft?.type ||
+    borderConfig.left?.type
+  );
+
+  return hasBorderPresets;
+}
+
+/**
+ * Calculate padding needed for BorderConfig-based augmentations
+ */
+export const getBorderPadding = (
+  config: BorderConfig,
+  strokeWidth = 0
+): {
+  padding: number;
+  paddingTop: number;
+  paddingRight: number;
+  paddingBottom: number;
+  paddingLeft: number;
+} => {
+  const strokePadding = Math.ceil(strokeWidth / 2) + 1;
+
+  // Helper function to resolve augmentation data from preset
+  const resolveAugmentationSize = (preset: SectionPreset): number => {
+    if (!preset) return 0;
+    return SIZE_PRESETS[preset.size];
+  };
+
+  // Calculate padding for each side by taking the max size from relevant sections
+  const paddingTop =
+    Math.max(
+      resolveAugmentationSize(config.topLeft),
+      resolveAugmentationSize(config.top),
+      resolveAugmentationSize(config.topRight)
+    ) + strokePadding;
+
+  const paddingRight =
+    Math.max(
+      resolveAugmentationSize(config.topRight),
+      resolveAugmentationSize(config.right),
+      resolveAugmentationSize(config.bottomRight)
+    ) + strokePadding;
+
+  const paddingBottom =
+    Math.max(
+      resolveAugmentationSize(config.bottomRight),
+      resolveAugmentationSize(config.bottom),
+      resolveAugmentationSize(config.bottomLeft)
+    ) + strokePadding;
+
+  const paddingLeft =
+    Math.max(
+      resolveAugmentationSize(config.bottomLeft),
+      resolveAugmentationSize(config.left),
+      resolveAugmentationSize(config.topLeft)
+    ) + strokePadding;
+
+  // Overall padding is the maximum of all sides plus extra stroke padding
+  const padding =
+    Math.max(paddingTop, paddingRight, paddingBottom, paddingLeft) +
+    strokePadding;
+
+  return {
+    padding,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+  };
 };
