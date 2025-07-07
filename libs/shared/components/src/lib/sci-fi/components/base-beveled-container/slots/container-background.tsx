@@ -4,17 +4,19 @@ interface ContainerBackgroundProps {
   innerRect: { x: number; y: number; width: number; height: number };
   fillPath: string;
   style: React.CSSProperties;
+  className?: string;
 }
 
 export const ContainerBackground: React.FC<ContainerBackgroundProps> = ({
   innerRect,
   fillPath,
   style,
+  className = '',
 }) => (
   <div
-    className="base-beveled-container--background"
+    className={`base-beveled-container--background ${className}`}
     style={{
-      ...style,
+      // Default styles
       position: 'absolute',
       top: innerRect.y,
       left: innerRect.x,
@@ -24,6 +26,8 @@ export const ContainerBackground: React.FC<ContainerBackgroundProps> = ({
       zIndex: 0,
       pointerEvents: 'none',
       transition: 'all 0.1s ease',
+      // Theme styles override defaults
+      ...style,
     }}
   />
 );

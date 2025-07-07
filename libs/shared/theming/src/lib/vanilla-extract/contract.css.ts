@@ -1,3 +1,4 @@
+// contract.css.ts
 import { createThemeContract } from '@vanilla-extract/css';
 
 export const themeContract = createThemeContract({

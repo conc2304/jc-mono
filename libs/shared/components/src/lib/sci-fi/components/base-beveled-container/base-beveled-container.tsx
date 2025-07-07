@@ -1,12 +1,14 @@
+'use client';
+
 import React, {
   useRef,
-  useCallback,
   useMemo,
   createElement,
   CSSProperties,
   ElementType,
+  useState,
 } from 'react';
-import { ThemeColor, ThemeVariant } from '@jc/theming';
+import { Property } from 'csstype';
 
 import {
   ContainerBackground,
@@ -20,13 +22,7 @@ import {
   getStepBounds,
   getStrokeWidthPixels,
 } from './utils';
-import {
-  BevelConfig,
-  ElementStyleConfig,
-  StepConfig,
-  SlotStyleConfig,
-  ComponentState,
-} from '../../types';
+import { BevelConfig, StepConfig, ComponentState } from '../../types';
 import {
   DynamicShadowConfig,
   useContainerDimensions,
@@ -39,10 +35,9 @@ interface BaseBeveledContainerProps {
   component?: ElementType;
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
-  styleConfig?: ElementStyleConfig;
   shadowConfig?: DynamicShadowConfig;
-  // stroke?: string;
-  // strokeWidth?: number;
+  stroke?: Property.Stroke;
+  strokeWidth?: Property.StrokeWidth;
   className?: string;
   children?: React.ReactNode;
   style?: CSSProperties;
@@ -50,12 +45,21 @@ interface BaseBeveledContainerProps {
   disabled?: boolean;
   role?: string;
   tabIndex?: number;
-
-  // New props for enhanced styling
-  color?: ThemeColor;
-  variant?: ThemeVariant;
   isActive?: boolean;
-  slotStyles?: SlotStyleConfig;
+
+  // New theme-aware style props
+  backgroundStyle?: CSSProperties;
+  borderStyle?: CSSProperties;
+  contentStyle?: CSSProperties;
+  shadowStyle?: CSSProperties;
+
+  // Event handlers for state management
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  onMouseDown?: () => void;
+  onMouseUp?: () => void;
 }
 
 export const BaseBeveledContainer = ({
@@ -70,19 +74,32 @@ export const BaseBeveledContainer = ({
   role,
   tabIndex,
   children,
-  color = 'primary',
-  variant = 'solid',
   isActive = false,
-  slotStyles = DEFAULT_EMPTY_OBJ,
+  strokeWidth: strokeWidthProp = 0,
+
+  // Theme style props
+  backgroundStyle = DEFAULT_EMPTY_OBJ,
+  borderStyle = DEFAULT_EMPTY_OBJ,
+  contentStyle = DEFAULT_EMPTY_OBJ,
+  shadowStyle = DEFAULT_EMPTY_OBJ,
+
+  // Event handlers
+  onMouseEnter,
+  onMouseLeave,
+  onFocus,
+  onBlur,
+  onMouseDown,
+  onMouseUp,
 }: BaseBeveledContainerProps) => {
   // Refs
   const containerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Configuration
-  const strokeWidth = getStrokeWidthPixels(
-    slotStyles.border?.default?.strokeWidth
-  );
+  // Configuration - prioritize borderStyle.strokeWidth over strokeWidthProp
+  const strokeWidth = 3;
+  // getStrokeWidthPixels(
+  //   borderStyle.strokeWidth || strokeWidthProp
+  // );
 
   const padding = React.useMemo(
     () => getMinPadding({ bevelConfig, stepsConfig, strokeWidth }),
@@ -114,36 +131,20 @@ export const BaseBeveledContainer = ({
     return 'default';
   }, [disabled, isActive]);
 
-  // Get styles for current state
-  const getSlotStyles = useCallback(
-    (slotName: keyof SlotStyleConfig) => {
-      const slotConfig = slotStyles[slotName];
-      if (!slotConfig) return {};
-
-      // Return styles for current state, falling back to default
-      return slotConfig[currentState] || slotConfig.default || {};
-    },
-    [slotStyles, currentState]
-  );
-
-  // Enhanced styles with state support
-  const enhancedRootStyles = getSlotStyles('root');
-  const enhancedBackgroundStyles = getSlotStyles('background');
-  const enhancedShadowStyles = getSlotStyles('shadow');
-  const enhancedBorderStyles = getSlotStyles('border');
-  const enhancedContentStyles = getSlotStyles('content');
-
-  console.log({ enhancedBorderStyles });
-
+  // Enhanced shadow filter that combines dynamic shadow with theme shadow
   const shadowFilter = useMemo(() => {
-    if (!isShadowVisible) return 'none';
+    const themeShadowFilter = shadowStyle.filter;
 
-    // Use custom shadow styles filter if provided, otherwise calculate based on offset
-    return (
-      enhancedShadowStyles.filter ??
-      `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2.5px rgba(0, 0, 0, 0.35))`
-    );
-  }, [isShadowVisible, enhancedShadowStyles.filter, shadowOffset]);
+    if (!isShadowVisible && !themeShadowFilter) return 'none';
+
+    // If we have a theme shadow filter, use it; otherwise use dynamic shadow
+    if (themeShadowFilter) {
+      return themeShadowFilter;
+    }
+
+    // Fallback to dynamic shadow
+    return `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2.5px rgba(0, 0, 0, 0.35))`;
+  }, [isShadowVisible, shadowStyle.filter, shadowOffset]);
 
   // Event handlers
   const isClickable = Boolean(onClick && !disabled);
@@ -161,6 +162,31 @@ export const BaseBeveledContainer = ({
     }
   };
 
+  // Enhanced event handlers that call both internal and external handlers
+  const handleMouseEnter = () => {
+    onMouseEnter?.();
+  };
+
+  const handleMouseLeave = () => {
+    onMouseLeave?.();
+  };
+
+  const handleFocus = () => {
+    onFocus?.();
+  };
+
+  const handleBlur = () => {
+    onBlur?.();
+  };
+
+  const handleMouseDown = () => {
+    onMouseDown?.();
+  };
+
+  const handleMouseUp = () => {
+    onMouseUp?.();
+  };
+
   // Common props that will be passed to the dynamic component
   const commonProps = {
     ref: containerRef,
@@ -168,7 +194,6 @@ export const BaseBeveledContainer = ({
     style: {
       position: 'relative' as const,
       display: 'inline-block' as const,
-      ...enhancedRootStyles,
       border: 'unset !important',
       borderStyle: 'unset !important',
       borderRadius: 'unset !important',
@@ -180,12 +205,16 @@ export const BaseBeveledContainer = ({
     },
     onClick: handleClick,
     onKeyDown: handleKeyDown,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    onFocus: handleFocus,
+    onBlur: handleBlur,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
     role: role || (onClick ? 'button' : undefined),
     tabIndex: isClickable ? tabIndex ?? 0 : tabIndex,
     'aria-disabled': disabled,
     'data-state': currentState,
-    'data-color': color,
-    'data-variant': variant,
   };
 
   // Don't render SVG until we have real dimensions
@@ -206,7 +235,8 @@ export const BaseBeveledContainer = ({
             padding: `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`,
             whiteSpace: 'nowrap',
             display: 'inline-block',
-            ...enhancedContentStyles,
+            // Apply content styles for measurement
+            ...contentStyle,
           },
         },
         children
@@ -260,11 +290,10 @@ export const BaseBeveledContainer = ({
           width: '100%',
           height: '100%',
           filter: shadowFilter,
-          // transition: 'filter 3ms, all 0.2s ease',
-          ...enhancedShadowStyles,
-          '&:after': {
-            border: '2px solid red',
-          },
+          // Merge theme shadow styles (excluding filter which we handle above)
+          ...Object.fromEntries(
+            Object.entries(shadowStyle).filter(([key]) => key !== 'filter')
+          ),
         },
       },
       [
@@ -274,8 +303,9 @@ export const BaseBeveledContainer = ({
           fillPath,
           style: {
             transition: 'all 0.2s ease',
-            ...enhancedBackgroundStyles,
             zIndex: 1,
+            // Merge theme background styles
+            ...backgroundStyle,
           },
         }),
 
@@ -284,9 +314,10 @@ export const BaseBeveledContainer = ({
           dimensions,
           shapeTransform,
           borderPath,
-          borderStyles: {
+          style: {
             transition: 'all 0.2s ease',
-            ...enhancedBorderStyles,
+            // Merge theme border styles
+            ...borderStyle,
           },
         }),
 
@@ -303,7 +334,8 @@ export const BaseBeveledContainer = ({
             paddingRight,
             contentStyles: {
               transition: 'all 0.2s ease',
-              ...enhancedContentStyles,
+              // Merge theme content styles
+              ...contentStyle,
             },
             isClickable,
             contentRef,

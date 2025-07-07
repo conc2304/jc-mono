@@ -1,3 +1,4 @@
+// theme-provider.tsx
 'use client';
 
 import React, {
@@ -7,18 +8,36 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
-import { darkTheme, lightTheme } from '../../theme.css';
-// import { lightTheme, darkTheme } from './theme.css';
 
-type ThemeMode = 'light' | 'dark' | 'system';
-type ResolvedTheme = 'light' | 'dark';
+import {
+  defaultLightTheme,
+  defaultDarkTheme,
+  blueLight,
+  blueDark,
+} from '../../themes';
 
-interface ThemeContextType {
+export type ThemeVariant = 'default' | 'blue';
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type ResolvedTheme = 'light' | 'dark';
+
+export interface ThemeContextType {
+  variant: ThemeVariant;
+
   mode: ThemeMode;
+
   resolvedTheme: ResolvedTheme;
-  toggleTheme: () => void;
-  setTheme: (mode: ThemeMode) => void;
+
   systemPreference: ResolvedTheme;
+
+  // Functions to update theme
+  setVariant: (variant: ThemeVariant) => void;
+  setMode: (mode: ThemeMode) => void;
+  toggleMode: () => void; // Toggles between light/dark for current variant
+
+  availableVariants: ThemeVariant[];
+
+  // Current theme class name for vanilla-extract
+  currentThemeClass: string;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -34,38 +53,67 @@ export const useTheme = () => {
 // Helper function to get system preference
 const getSystemPreference = (): ResolvedTheme => {
   if (typeof window === 'undefined') return 'light';
-
   return window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
     : 'light';
 };
 
+// Theme class mapping
+const themeClasses = {
+  blue: {
+    light: blueLight,
+    dark: blueDark,
+  },
+  default: {
+    light: defaultLightTheme,
+    dark: defaultDarkTheme,
+  },
+} as const;
+
 interface ThemeProviderProps {
   children: ReactNode;
+  defaultVariant?: ThemeVariant;
   defaultMode?: ThemeMode;
-  storageKey?: string;
+  variantStorageKey?: string;
+  modeStorageKey?: string;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
+  defaultVariant = 'default',
   defaultMode = 'system',
-  storageKey = 'theme-mode',
+  variantStorageKey = 'theme-variant',
+  modeStorageKey = 'theme-mode',
 }) => {
-  const [systemPreference, setSystemPreference] =
-    useState<ResolvedTheme>('light');
-  const [mode, setMode] = useState<ThemeMode>(() => {
-    // Only try to read from localStorage on the client side during initialization
+  const [systemPreference, setSystemPreference] = useState<ResolvedTheme>(
+    () => {
+      return getSystemPreference();
+    }
+  );
+
+  const [variant, setVariantState] = useState<ThemeVariant>(() => {
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem(storageKey) as ThemeMode;
-        if (
-          stored &&
-          (stored === 'light' || stored === 'dark' || stored === 'system')
-        ) {
+        const stored = localStorage.getItem(variantStorageKey) as ThemeVariant;
+        if (stored && ['blue', 'default'].includes(stored)) {
           return stored;
         }
       } catch (error) {
-        console.warn('Failed to read from localStorage:', error);
+        console.warn('Failed to read variant from localStorage:', error);
+      }
+    }
+    return defaultVariant;
+  });
+
+  const [mode, setModeState] = useState<ThemeMode>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(modeStorageKey) as ThemeMode;
+        if (stored && ['light', 'dark', 'system'].includes(stored)) {
+          return stored;
+        }
+      } catch (error) {
+        console.warn('Failed to read mode from localStorage:', error);
       }
     }
     return defaultMode;
@@ -78,13 +126,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
     const updateSystemPreference = () => {
-      setSystemPreference(mediaQuery.matches ? 'dark' : 'light');
+      const newPreference = getSystemPreference();
+      setSystemPreference(newPreference);
     };
 
-    // Set initial system preference
     updateSystemPreference();
-
-    // Listen for changes
     mediaQuery.addEventListener('change', updateSystemPreference);
 
     return () => {
@@ -92,60 +138,94 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     };
   }, []);
 
-  // Set mounted to true after first render to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Save to localStorage when mode changes (only after mounted)
+  // Save to localStorage when values change
   useEffect(() => {
     if (mounted && typeof window !== 'undefined') {
       try {
-        localStorage.setItem(storageKey, mode);
+        localStorage.setItem(variantStorageKey, variant);
       } catch (error) {
-        console.warn('Failed to save to localStorage:', error);
+        console.warn('Failed to save variant to localStorage:', error);
       }
     }
-  }, [mode, mounted, storageKey]);
+  }, [variant, mounted, variantStorageKey]);
 
-  // Calculate resolved theme (what theme is actually applied)
+  useEffect(() => {
+    if (mounted && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(modeStorageKey, mode);
+      } catch (error) {
+        console.warn('Failed to save mode to localStorage:', error);
+      }
+    }
+  }, [mode, mounted, modeStorageKey]);
+
   const resolvedTheme: ResolvedTheme =
     mode === 'system' ? systemPreference : mode;
 
-  const toggleTheme = () => {
-    // Cycle through: light -> dark -> system -> light
-    setMode((prev) => {
+  // Theme management functions
+  const setVariant = (newVariant: ThemeVariant) => {
+    setVariantState(newVariant);
+  };
+
+  const setMode = (newMode: ThemeMode) => {
+    setModeState(newMode);
+  };
+
+  const toggleMode = () => {
+    setModeState((prev) => {
       if (prev === 'light') return 'dark';
-      if (prev === 'dark') return 'system';
-      return 'light';
+      if (prev === 'dark') return 'light';
+      // If system, toggle to opposite of current system preference
+      return systemPreference === 'dark' ? 'light' : 'dark';
     });
   };
 
-  const setTheme = (newMode: ThemeMode) => {
-    setMode(newMode);
-  };
-
-  // For SSR compatibility, use default theme initially
+  // Compute effective values for SSR
+  const effectiveVariant = mounted ? variant : defaultVariant;
   const effectiveMode = mounted ? mode : defaultMode;
   const effectiveResolvedTheme = mounted
     ? resolvedTheme
     : defaultMode === 'system'
     ? 'light'
     : defaultMode;
-  const effectiveThemeClass =
-    effectiveResolvedTheme === 'dark' ? darkTheme : lightTheme;
+
+  // Get current theme class
+  const currentThemeClass =
+    themeClasses[effectiveVariant][effectiveResolvedTheme];
+
+  const availableVariants: ThemeVariant[] = ['blue', 'default'];
 
   return (
     <ThemeContext.Provider
       value={{
+        variant: effectiveVariant,
         mode: effectiveMode,
         resolvedTheme: effectiveResolvedTheme,
-        toggleTheme,
-        setTheme,
         systemPreference,
+        setVariant,
+        setMode,
+        toggleMode,
+        availableVariants,
+        currentThemeClass,
       }}
     >
-      <div className={effectiveThemeClass}>{children}</div>
+      <div className={currentThemeClass}>{children}</div>
     </ThemeContext.Provider>
   );
+};
+
+// Convenience hooks for specific theme management
+export const useThemeVariant = () => {
+  const { variant, setVariant, availableVariants } = useTheme();
+  return { variant, setVariant, availableVariants };
+};
+
+export const useThemeMode = () => {
+  const { mode, resolvedTheme, setMode, toggleMode, systemPreference } =
+    useTheme();
+  return { mode, resolvedTheme, setMode, toggleMode, systemPreference };
 };

@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface ContainerContentProps {
   children: React.ReactNode;
   innerRect: { x: number; y: number; width: number; height: number };
@@ -11,6 +9,7 @@ interface ContainerContentProps {
   contentStyles: React.CSSProperties;
   isClickable: boolean;
   contentRef: React.RefObject<HTMLDivElement | null>;
+  className?: string;
 }
 
 export const ContainerContent: React.FC<ContainerContentProps> = ({
@@ -24,14 +23,16 @@ export const ContainerContent: React.FC<ContainerContentProps> = ({
   contentStyles,
   isClickable,
   contentRef,
+  className = '',
 }) => {
   if (!children) return null;
 
   return (
     <div
-      className="base-beveled-container--children-wrapper"
+      className={`base-beveled-container--children-wrapper ${className}`}
       ref={contentRef}
       style={{
+        // Default styles
         position: 'absolute',
         top: innerRect.y,
         left: innerRect.x,
@@ -43,8 +44,15 @@ export const ContainerContent: React.FC<ContainerContentProps> = ({
       }}
     >
       <div
-        className="base-beveled-container--children-content"
+        className={`base-beveled-container--children-content ${className}__content`}
         style={{
+          // Default content styles
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%',
+          // Theme content styles override defaults
           ...contentStyles,
         }}
       >

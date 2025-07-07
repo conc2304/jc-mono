@@ -1,4 +1,5 @@
-// MousePositionProvider.tsx
+'use client';
+
 import {
   createContext,
   ReactNode,

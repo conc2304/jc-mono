@@ -10,7 +10,7 @@ const nextConfig = {
   // Use this to set Nx-specific options
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
-  transpilePackages: ['@jc/theming'],
+  transpilePackages: ['@jc/ui-components', '@jc/theme'],
 };
 
 const withVanillaExtract = createVanillaExtractPlugin();

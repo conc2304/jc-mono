@@ -1,3 +1,5 @@
+'use client';
+
 import { useContext, createContext, useState, useCallback } from 'react';
 
 import { StateStyles } from '../types';

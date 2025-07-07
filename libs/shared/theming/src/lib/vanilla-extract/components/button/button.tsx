@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import {
   buttonBase,
   buttonVariants,
@@ -15,7 +16,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const ButtonVanilla: React.FC<ButtonProps> = ({
   variant = 'contained',
   size = 'medium',
   color = 'primary',
