@@ -1,7 +1,6 @@
 // theme/beveled-themes.css.ts
+import { themeContract } from '@jc/theming';
 import { createTheme } from '@vanilla-extract/css';
-
-import { themeContract } from '../../../../../../theming/src/lib/vanilla-extract';
 
 import { beveledThemeContract } from './components-theme.css';
 
