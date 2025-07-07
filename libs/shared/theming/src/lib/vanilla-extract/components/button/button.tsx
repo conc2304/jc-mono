@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+// import { BaseBeveledContainer } from '@jc/ui-components';
 import {
   buttonBase,
   buttonVariants,
@@ -34,8 +35,10 @@ export const Button: React.FC<ButtonProps> = ({
     .join(' ');
 
   return (
-    <button className={classes} {...props}>
-      {children}
-    </button>
+    <>
+      <button className={classes} {...props}>
+        {children}
+      </button>
+    </>
   );
 };

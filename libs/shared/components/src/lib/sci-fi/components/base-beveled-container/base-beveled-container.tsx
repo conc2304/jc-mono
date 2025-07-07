@@ -1,12 +1,12 @@
+'use client';
 import React, {
   useRef,
-  useCallback,
   useMemo,
   createElement,
   CSSProperties,
   ElementType,
 } from 'react';
-import { ThemeColor, ThemeVariant } from '@jc/theming';
+import { Property } from 'csstype';
 
 import {
   ContainerBackground,
@@ -20,13 +20,8 @@ import {
   getStepBounds,
   getStrokeWidthPixels,
 } from './utils';
-import {
-  BevelConfig,
-  ElementStyleConfig,
-  StepConfig,
-  SlotStyleConfig,
-  ComponentState,
-} from '../../types';
+import { generateAugmentedShapePath, NewShapeConfig } from './utils_new';
+import { BevelConfig, StepConfig, ComponentState } from '../../types';
 import {
   DynamicShadowConfig,
   useContainerDimensions,
@@ -39,10 +34,8 @@ interface BaseBeveledContainerProps {
   component?: ElementType;
   bevelConfig?: BevelConfig;
   stepsConfig?: StepConfig;
-  styleConfig?: ElementStyleConfig;
   shadowConfig?: DynamicShadowConfig;
-  // stroke?: string;
-  // strokeWidth?: number;
+
   className?: string;
   children?: React.ReactNode;
   style?: CSSProperties;
@@ -51,11 +44,10 @@ interface BaseBeveledContainerProps {
   role?: string;
   tabIndex?: number;
 
-  // New props for enhanced styling
-  color?: ThemeColor;
-  variant?: ThemeVariant;
   isActive?: boolean;
-  slotStyles?: SlotStyleConfig;
+
+  stroke: Property.Stroke;
+  strokeWidth: Property.StrokeWidth;
 }
 
 export const BaseBeveledContainer = ({
@@ -65,24 +57,21 @@ export const BaseBeveledContainer = ({
   shadowConfig,
   className = '',
   style: rootStyle = DEFAULT_EMPTY_OBJ,
-  onClick,
+  isActive = false,
   disabled = false,
+  onClick,
   role,
   tabIndex,
   children,
-  color = 'primary',
-  variant = 'solid',
-  isActive = false,
-  slotStyles = DEFAULT_EMPTY_OBJ,
+  stroke = 'red',
+  strokeWidth: strokeWidthProp = '1',
 }: BaseBeveledContainerProps) => {
   // Refs
   const containerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Configuration
-  const strokeWidth = getStrokeWidthPixels(
-    slotStyles.border?.default?.strokeWidth
-  );
+  const strokeWidth = getStrokeWidthPixels(strokeWidthProp ?? '2px');
 
   const padding = React.useMemo(
     () => getMinPadding({ bevelConfig, stepsConfig, strokeWidth }),
@@ -115,35 +104,13 @@ export const BaseBeveledContainer = ({
   }, [disabled, isActive]);
 
   // Get styles for current state
-  const getSlotStyles = useCallback(
-    (slotName: keyof SlotStyleConfig) => {
-      const slotConfig = slotStyles[slotName];
-      if (!slotConfig) return {};
-
-      // Return styles for current state, falling back to default
-      return slotConfig[currentState] || slotConfig.default || {};
-    },
-    [slotStyles, currentState]
-  );
-
-  // Enhanced styles with state support
-  const enhancedRootStyles = getSlotStyles('root');
-  const enhancedBackgroundStyles = getSlotStyles('background');
-  const enhancedShadowStyles = getSlotStyles('shadow');
-  const enhancedBorderStyles = getSlotStyles('border');
-  const enhancedContentStyles = getSlotStyles('content');
-
-  console.log({ enhancedBorderStyles });
 
   const shadowFilter = useMemo(() => {
     if (!isShadowVisible) return 'none';
 
     // Use custom shadow styles filter if provided, otherwise calculate based on offset
-    return (
-      enhancedShadowStyles.filter ??
-      `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2.5px rgba(0, 0, 0, 0.35))`
-    );
-  }, [isShadowVisible, enhancedShadowStyles.filter, shadowOffset]);
+    return `drop-shadow(${shadowOffset.x}px ${shadowOffset.y}px 2.5px rgba(0, 0, 0, 0.35))`;
+  }, [isShadowVisible, shadowOffset]);
 
   // Event handlers
   const isClickable = Boolean(onClick && !disabled);
@@ -168,7 +135,6 @@ export const BaseBeveledContainer = ({
     style: {
       position: 'relative' as const,
       display: 'inline-block' as const,
-      ...enhancedRootStyles,
       border: 'unset !important',
       borderStyle: 'unset !important',
       borderRadius: 'unset !important',
@@ -184,8 +150,6 @@ export const BaseBeveledContainer = ({
     tabIndex: isClickable ? tabIndex ?? 0 : tabIndex,
     'aria-disabled': disabled,
     'data-state': currentState,
-    'data-color': color,
-    'data-variant': variant,
   };
 
   // Don't render SVG until we have real dimensions
@@ -206,7 +170,6 @@ export const BaseBeveledContainer = ({
             padding: `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`,
             whiteSpace: 'nowrap',
             display: 'inline-block',
-            ...enhancedContentStyles,
           },
         },
         children
@@ -222,18 +185,36 @@ export const BaseBeveledContainer = ({
     height: dimensions.height - stepBounds.top - stepBounds.bottom,
   };
 
-  const fillPath = generateFillPath(
+  // const fillPath = generateFillPath(
+  //   innerRect.width,
+  //   innerRect.height,
+  //   bevelConfig,
+  //   stepsConfig
+  // );
+  // const borderPath = generateShapePath(
+  //   innerRect.width,
+  //   innerRect.height,
+  //   bevelConfig,
+  //   stepsConfig
+  // );
+
+  const config: NewShapeConfig = {
+    topLeft: { type: 'clip', size: 'md' },
+    top: { type: 'round', size: 'lg' },
+    topRight: { type: 'round', size: 'lg' },
+    right: { type: 'clip', size: 'lg' },
+    bottomRight: { type: 'scoop', size: 'md' },
+    bottom: { type: 'round', size: 'lg' },
+    bottomLeft: { type: 'rect', size: 'sm' },
+    left: { type: 'clip', size: 'lg' },
+  };
+
+  const path = generateAugmentedShapePath(
     innerRect.width,
     innerRect.height,
-    bevelConfig,
-    stepsConfig
+    config
   );
-  const borderPath = generateShapePath(
-    innerRect.width,
-    innerRect.height,
-    bevelConfig,
-    stepsConfig
-  );
+  // const lines = convertPathToLines(path); // For your line-based rendering
 
   // Create transform for the main shape (offset by step bounds)
   const shapeTransform = `translate(${innerRect.x}, ${innerRect.y})`;
@@ -260,8 +241,6 @@ export const BaseBeveledContainer = ({
           width: '100%',
           height: '100%',
           filter: shadowFilter,
-          // transition: 'filter 3ms, all 0.2s ease',
-          ...enhancedShadowStyles,
           '&:after': {
             border: '2px solid red',
           },
@@ -271,11 +250,11 @@ export const BaseBeveledContainer = ({
         React.createElement(ContainerBackground, {
           key: 'background',
           innerRect,
-          fillPath,
+          fillPath: path,
           style: {
             transition: 'all 0.2s ease',
-            ...enhancedBackgroundStyles,
             zIndex: 1,
+            background: 'rgba(67, 56, 56, 0.38)',
           },
         }),
 
@@ -283,10 +262,11 @@ export const BaseBeveledContainer = ({
           key: 'border',
           dimensions,
           shapeTransform,
-          borderPath,
-          borderStyles: {
+          borderPath: path,
+          style: {
+            stroke,
+            strokeWidth,
             transition: 'all 0.2s ease',
-            ...enhancedBorderStyles,
           },
         }),
 
@@ -296,14 +276,13 @@ export const BaseBeveledContainer = ({
             key: 'content',
             children,
             innerRect,
-            fillPath,
+            fillPath: path,
             paddingTop,
             paddingBottom,
             paddingLeft,
             paddingRight,
-            contentStyles: {
+            style: {
               transition: 'all 0.2s ease',
-              ...enhancedContentStyles,
             },
             isClickable,
             contentRef,

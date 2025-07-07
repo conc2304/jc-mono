@@ -1,4 +1,4 @@
-import { ThemeColor, ThemeVariant } from '@jc/theming';
+// import { ThemeColor, ThemeVariant } from '@jc/theming';
 import { Properties, Property } from 'csstype';
 
 type CornerBevel = {
@@ -11,13 +11,6 @@ type BevelConfig = {
   topRight?: CornerBevel;
   bottomRight?: CornerBevel;
   bottomLeft?: CornerBevel;
-};
-
-type GlowConfig = {
-  color?: string;
-  intensity?: number;
-  spread?: number;
-  opacity?: number;
 };
 
 export interface StepSegment {
@@ -36,6 +29,13 @@ export interface StepConfig {
   bottom?: EdgeStepConfig;
   left?: EdgeStepConfig;
 }
+
+type GlowConfig = {
+  color?: string;
+  intensity?: number;
+  spread?: number;
+  opacity?: number;
+};
 
 export interface ShadowConfig {
   locationAware?: boolean;
@@ -153,12 +153,12 @@ export interface ComponentThemeConfig {
   };
 }
 
-// Utility type for creating component themes
-export type ComponentTheme<T extends string = ThemeColor> = {
-  [K in T]: {
-    [V in ThemeVariant]?: SlotStyleConfig;
-  };
-};
+// // Utility type for creating component themes
+// export type ComponentTheme<T extends string = ThemeColor> = {
+//   [K in T]: {
+//     [V in ThemeVariant]?: SlotStyleConfig;
+//   };
+// };
 
 export type SizeConfigItem = {
   bevelConfig: BevelConfig;

@@ -7,20 +7,20 @@ interface ContainerBorderProps {
   dimensions: { width: number; height: number };
   shapeTransform: string;
   borderPath: string;
-  borderStyles: React.CSSProperties;
+  style: React.CSSProperties;
 }
 
 export const ContainerBorder: React.FC<ContainerBorderProps> = ({
   dimensions,
   shapeTransform,
   borderPath,
-  borderStyles,
+  style,
 }) => {
-  const strokeWidth = getStrokeWidthPixels(borderStyles.strokeWidth);
-  const stroke = borderStyles?.stroke;
+  const strokeWidth = getStrokeWidthPixels(style.strokeWidth);
+  const stroke = style?.stroke;
   const strokePadding = Math.ceil(strokeWidth / 2);
 
-  console.log({ borderStyles, stroke, strokeWidth });
+  console.log({ style, stroke, strokeWidth });
 
   return (
     <svg
@@ -45,7 +45,7 @@ export const ContainerBorder: React.FC<ContainerBorderProps> = ({
           <PathAsLines
             pathString={borderPath}
             style={{
-              ...borderStyles,
+              ...style,
               stroke,
               strokeWidth,
             }}

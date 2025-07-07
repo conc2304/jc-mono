@@ -13,9 +13,7 @@ interface ContainerMeasurerProps {
   paddingLeft: number;
   paddingRight: number;
   contentStyles: React.CSSProperties;
-  children:
-    | React.ReactNode
-    | ((state: BeveledContainerState) => React.ReactNode);
+  children: React.ReactNode;
   contextValue: BeveledContainerState;
   provideStateToChildren: boolean;
 }

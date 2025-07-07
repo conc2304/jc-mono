@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 interface ContainerContentProps {
@@ -8,7 +10,7 @@ interface ContainerContentProps {
   paddingBottom: number;
   paddingLeft: number;
   paddingRight: number;
-  contentStyles: React.CSSProperties;
+  style: React.CSSProperties;
   isClickable: boolean;
   contentRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -21,7 +23,7 @@ export const ContainerContent: React.FC<ContainerContentProps> = ({
   paddingBottom,
   paddingLeft,
   paddingRight,
-  contentStyles,
+  style,
   isClickable,
   contentRef,
 }) => {
@@ -45,7 +47,7 @@ export const ContainerContent: React.FC<ContainerContentProps> = ({
       <div
         className="base-beveled-container--children-content"
         style={{
-          ...contentStyles,
+          ...style,
         }}
       >
         {children}

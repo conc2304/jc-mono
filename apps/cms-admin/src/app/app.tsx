@@ -1,6 +1,6 @@
 // import { ConnectFour } from '@jc/games-lib';
 import { ReactNode } from 'react';
-import { styled, useTheme, ThemeSwitcher } from '@jc/theming';
+import { useTheme, ThemeSwitcher } from '@jc/theming';
 import {
   BaseBeveledContainer,
   BeveledButton,
