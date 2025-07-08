@@ -1,8 +1,0 @@
-{
-  "name": "@jc/cms-admin",
-  "version": "0.0.1",
-  "private": true,
-  "nx": {
-    "name": "cms-admin"
-  }
-}
