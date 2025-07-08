@@ -8,6 +8,7 @@
       "@nx/react/typings/image.d.ts",
       "vite/client"
     ],
+    "lib": ["dom"],
     "rootDir": "src",
     "jsx": "react-jsx",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"

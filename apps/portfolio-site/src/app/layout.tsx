@@ -1,3 +1,6 @@
+import { ThemeProvider } from '@jc/augmented-ui';
+
+import 'augmented-ui/augmented-ui.min.css';
 import './global.css';
 
 export const metadata = {
@@ -12,7 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ThemeProvider defaultTheme="cyberpunkTheme" persistTheme={true}>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
