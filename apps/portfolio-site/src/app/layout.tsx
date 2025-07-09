@@ -1,6 +1,6 @@
-import { ThemeProvider } from '@jc/augmented-ui';
+// import { ThemeProvider } from '@jc/augmented-ui';
 
-import { ApplicationThemes } from '@/themes';
+// import { ApplicationThemes } from '@/themes';
 
 import 'augmented-ui/augmented-ui.min.css';
 import './global.css';
@@ -18,9 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider availableThemes={ApplicationThemes} persistTheme={true}>
-          {children}
-        </ThemeProvider>
+        {/* <ThemeProvider availableThemes={ApplicationThemes} persistTheme={true}> */}
+        {children}
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
