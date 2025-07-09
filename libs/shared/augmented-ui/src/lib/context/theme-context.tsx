@@ -1,6 +1,6 @@
 'use client';
 
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -9,40 +9,44 @@ import React, {
 } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { themes } from '../themes/themes';
 import { ThemeConfig } from '../themes/types';
 
 import { augmentedTheme } from '../contract.css';
 
-export type ThemeName = keyof typeof themes;
-
-interface ThemeContextType {
-  currentTheme: ThemeName;
+interface ThemeContextType<T extends Record<string, ThemeConfig>> {
+  currentTheme: keyof T;
   themeConfig: ThemeConfig;
-  setTheme: (theme: ThemeName) => void;
-  availableThemes: ThemeName[];
+  setTheme: (theme: keyof T) => void;
+  availableThemes: (keyof T)[];
   isDarkMode: boolean;
   setDarkMode: (isDark: boolean) => void;
   customTheme: Partial<ThemeConfig> | null;
   setCustomTheme: (theme: Partial<ThemeConfig> | null) => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType<any> | undefined>(
+  undefined
+);
 
-interface ThemeProviderProps {
+interface ThemeProviderProps<T extends Record<string, ThemeConfig>> {
   children: ReactNode;
-  defaultTheme?: ThemeName;
+  defaultTheme?: keyof T;
   persistTheme?: boolean;
   storageKey?: string;
+  availableThemes: T;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+export const ThemeProvider = <T extends Record<string, ThemeConfig>>({
   children,
-  defaultTheme = Object.keys(themes)[0],
+  defaultTheme,
   persistTheme = true,
   storageKey = 'augmented-ui-theme',
-}) => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeName>(defaultTheme);
+  availableThemes,
+}: ThemeProviderProps<T>) => {
+  const fallbackThemeName = Object.keys(availableThemes)[0];
+  const [currentTheme, setCurrentTheme] = useState<keyof T>(
+    defaultTheme || fallbackThemeName
+  );
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [customTheme, setCustomTheme] = useState<Partial<ThemeConfig> | null>(
     null
@@ -55,8 +59,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       const savedDarkMode = localStorage.getItem(`${storageKey}-dark`);
       const savedCustomTheme = localStorage.getItem(`${storageKey}-custom`);
 
-      if (savedTheme && savedTheme in themes) {
-        setCurrentTheme(savedTheme as ThemeName);
+      if (savedTheme && savedTheme in availableThemes) {
+        setCurrentTheme(savedTheme);
       }
 
       if (savedDarkMode) {
@@ -71,7 +75,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         }
       }
     }
-  }, [persistTheme, storageKey]);
+  }, [persistTheme, storageKey, availableThemes]);
 
   // Save theme to localStorage when it changes
   useEffect(() => {
@@ -90,7 +94,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
   }, [currentTheme, isDarkMode, customTheme, persistTheme, storageKey]);
 
-  const setTheme = (theme: ThemeName) => {
+  const setTheme = (theme: keyof T) => {
     setCurrentTheme(theme);
     setCustomTheme(null); // Clear custom theme when selecting preset
   };
@@ -100,8 +104,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   };
 
   // Merge custom theme with base theme
-  const getActiveThemeConfig = (): ThemeConfig => {
-    const baseTheme = themes[currentTheme];
+  const getActiveThemeConfig = (availableThemes: T): ThemeConfig => {
+    const baseTheme = availableThemes[currentTheme];
 
     if (!customTheme) {
       return baseTheme;
@@ -116,7 +120,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     };
   };
 
-  const themeConfig = getActiveThemeConfig();
+  const themeConfig = getActiveThemeConfig(availableThemes);
 
   // Apply theme variables to document
   useEffect(() => {
@@ -137,11 +141,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
   }, [themeConfig, isDarkMode, currentTheme]);
 
-  const contextValue: ThemeContextType = {
+  const contextValue: ThemeContextType<T> = {
     currentTheme,
     themeConfig,
     setTheme,
-    availableThemes: Object.keys(themes) as ThemeName[],
+    availableThemes: Object.keys(availableThemes) as (keyof T)[],
     isDarkMode,
     setDarkMode,
     customTheme,
@@ -155,10 +159,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   );
 };
 
-export const useTheme = (): ThemeContextType => {
+export const useTheme = <T extends Record<string, ThemeConfig>>() => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-  return context;
+  return context as ThemeContextType<T>;
 };

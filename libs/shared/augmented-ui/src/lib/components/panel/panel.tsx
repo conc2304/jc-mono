@@ -1,12 +1,13 @@
 import React, { forwardRef } from 'react';
 import { clsx } from 'clsx';
+
+import { panelBase, panelVariants } from './panel.css';
 import {
   augmentedBase,
   augmentedSizes,
   augmentedVariants,
   augmentedGlow,
 } from '../base/augmented-base.css';
-import { panelBase, panelVariants } from './panel.css';
 
 export interface PanelProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'primary' | 'secondary' | 'accent' | 'cyberpunk' | 'neon';

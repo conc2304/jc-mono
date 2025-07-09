@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { clsx } from 'clsx';
 
 import { useTheme } from '../../context/theme-context';
-import { themes } from '../../themes/themes';
+import { AvailableThemes } from '../../themes/themes';
 
 import {
   themeSwitcherContainer,
@@ -127,7 +127,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
                   <div
                     className={themeColorSwatch}
                     style={{
-                      background: `linear-gradient(45deg, ${themes[themeName].colors.primary}, ${themes[themeName].colors.secondary})`,
+                      background: `linear-gradient(45deg, ${AvailableThemes[themeName].colors.primary}, ${AvailableThemes[themeName].colors.secondary})`,
                     }}
                   />
                 )}

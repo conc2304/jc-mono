@@ -1,5 +1,7 @@
 import { ThemeProvider } from '@jc/augmented-ui';
 
+import { ApplicationThemes } from '@/themes';
+
 import 'augmented-ui/augmented-ui.min.css';
 import './global.css';
 
@@ -16,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider defaultTheme="cyberpunkTheme" persistTheme={true}>
+        <ThemeProvider availableThemes={ApplicationThemes} persistTheme={true}>
           {children}
         </ThemeProvider>
       </body>

@@ -9,10 +9,9 @@ import { Panel } from '../panel';
 import { ThemeCustomizer } from '../theme-customizer';
 import { ThemeSwitcher } from '../theme-switcher';
 
-const ThemeShowcaseContent: React.FC = () => {
+export const ThemeShowcase: React.FC = () => {
   const [showCustomizer, setShowCustomizer] = useState(false);
   const { currentTheme, themeConfig } = useTheme();
-  console.log({ currentTheme, themeConfig });
 
   return (
     <div
@@ -226,13 +225,5 @@ const ThemeShowcaseContent: React.FC = () => {
         </div>
       </Panel>
     </div>
-  );
-};
-
-export const ThemeShowcase: React.FC = () => {
-  return (
-    <ThemeProvider defaultTheme="cyberpunk" persistTheme={true}>
-      <ThemeShowcaseContent />
-    </ThemeProvider>
   );
 };

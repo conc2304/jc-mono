@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { clsx } from 'clsx';
+
 import {
   augmentedBase,
   augmentedSizes,
@@ -59,7 +60,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         style={{
           padding: '1rem',
           backgroundColor: 'var(--aug-inlay-bg, #1a1a1a)',
-          color: 'var(--theme-text, #ffffff)',
+          // color: 'var(--colors-text, #ffffff)',
           ...(shape === 'hex' && { '--aug-all-width': '200px' }),
           ...(shape === 'triangle' && { '--aug-all-width': '200px' }),
           ...(shape === 'hexangle' && { '--aug-all-width': '200px' }),
