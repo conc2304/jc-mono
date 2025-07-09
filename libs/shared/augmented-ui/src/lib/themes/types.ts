@@ -1,3 +1,13 @@
+export type VariantColor =
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'cyberpunk'
+  | 'neon';
+
+export type VariantSize = 'small' | 'medium' | 'large';
+export type VariantShape = 'clip' | 'round' | 'scoop' | 'mixed';
+
 export interface ThemeConfig {
   colors: {
     primary: string;

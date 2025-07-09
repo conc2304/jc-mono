@@ -4,16 +4,23 @@ import React, { forwardRef, useState } from 'react';
 
 import { Button } from './button';
 import { augmentedTheme } from '../../contract.css';
+import { VariantColor, VariantShape, VariantSize } from '../../themes';
 
 export const ButtonDemo = () => {
-  const [selectedVariant, setSelectedVariant] = useState('primary');
-  const [selectedSize, setSelectedSize] = useState('medium');
-  const [selectedShape, setSelectedShape] = useState('clip');
-  const [glowEnabled, setGlowEnabled] = useState(false);
+  const variants: VariantColor[] = [
+    'primary',
+    'secondary',
+    'accent',
+    'cyberpunk',
+    'neon',
+  ];
+  const sizes: VariantSize[] = ['small', 'medium', 'large'];
+  const shapes: VariantShape[] = ['clip', 'round', 'scoop', 'mixed'];
 
-  const variants = ['primary', 'secondary', 'accent', 'cyberpunk', 'neon'];
-  const sizes = ['small', 'medium', 'large'];
-  const shapes = ['clip', 'round', 'scoop', 'mixed'];
+  const [selectedVariant, setSelectedVariant] = useState(variants[0]);
+  const [selectedSize, setSelectedSize] = useState(sizes[1]);
+  const [selectedShape, setSelectedShape] = useState(shapes[0]);
+  const [glowEnabled, setGlowEnabled] = useState(false);
 
   return (
     <div
@@ -88,7 +95,9 @@ export const ButtonDemo = () => {
               </label>
               <select
                 value={selectedVariant}
-                onChange={(e) => setSelectedVariant(e.target.value)}
+                onChange={(e) =>
+                  setSelectedVariant(e.target.value as VariantColor)
+                }
                 style={{
                   width: '100%',
                   padding: '0.5rem',
@@ -119,7 +128,7 @@ export const ButtonDemo = () => {
               </label>
               <select
                 value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value)}
+                onChange={(e) => setSelectedSize(e.target.value as VariantSize)}
                 style={{
                   width: '100%',
                   padding: '0.5rem',
@@ -150,7 +159,9 @@ export const ButtonDemo = () => {
               </label>
               <select
                 value={selectedShape}
-                onChange={(e) => setSelectedShape(e.target.value)}
+                onChange={(e) =>
+                  setSelectedShape(e.target.value as VariantShape)
+                }
                 style={{
                   width: '100%',
                   padding: '0.5rem',

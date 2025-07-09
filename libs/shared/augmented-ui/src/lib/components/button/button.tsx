@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react';
 import { clsx } from 'clsx';
 
+import { VariantColor, VariantShape, VariantSize } from '../../themes';
+
 import { buttonBase, buttonShapes } from './button.css';
 import {
   augmentedBase,
@@ -11,9 +13,9 @@ import {
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'accent' | 'cyberpunk' | 'neon';
-  size?: 'small' | 'medium' | 'large';
-  shape?: 'clip' | 'round' | 'scoop' | 'mixed';
+  variant?: VariantColor;
+  size?: VariantSize;
+  shape?: VariantShape;
   glow?: boolean;
   customAugmentation?: string;
   children: React.ReactNode;
