@@ -28,6 +28,29 @@ export default function ButtonBase(theme: Theme): Components {
           const size = ownerState.size ? ownerState.size : undefined;
           const color = theme.palette[colorTheme || 'primary'];
 
+          const bgImgMap = {
+            primary:
+              'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3YwZ3R1cDRubnN3aDd6a251Z3RzeWo4OHY0d3Rjamh4Mjd6bTd6YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XWwYUsbW57BrGomT98/giphy.gif',
+            secondary:
+              'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGdrcXBjaWl6NTM2bjB3M3Y4cHo4aHAyZTE0eTJ6bnR1d3JodmQ2NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/u7CzwBdITKleMOhUK9/giphy.webp',
+            error:
+              'https://media2.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bDMzM3ZiaXV2Z3A5Z2JtdHF5dW5zcW01cm1veXU3dGQ5Z2p3ZXBxYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/zhmIHStBa2ezu/200.webp',
+            info: 'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cWNnNm41dGg5aTRwbG5weGRibHBoeDZqbHlrMjFlbmM1OW9pZTQ0biZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/11UhXwm8Ipd9C/giphy.webp',
+            warning:
+              'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3a2k0aTRwa2h5cHNqaDNoOHJkejNmeHNndXE1ZDV0NnIxbnhyZGJlaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EwyHisjzUbkTj2FPgB/giphy.webp',
+            success:
+              'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3a2k0aTRwa2h5cHNqaDNoOHJkejNmeHNndXE1ZDV0NnIxbnhyZGJlaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l4FGGLEASwntRikZa/giphy.webp',
+            default:
+              'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3emI3NXhpaDlzcWFwdWdwODFvNmV3eHFyNHdrNnZ2dGJ3M2xhY2hiYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xT39CQm5YgyBvmGglW/200.webp',
+          };
+
+          const bgImage =
+            bgImgMap[
+              ownerState.color && ownerState.color !== 'inherit'
+                ? ownerState.color
+                : 'default'
+            ];
+
           return {
             // Global Styles
             '&': {
@@ -57,9 +80,11 @@ export default function ButtonBase(theme: Theme): Components {
               } 0%, ${
                 colorTheme !== undefined ? darken(color.main, 0.4) : 'inherit'
               } 100%)`,
-              boxShadow: `0 0 20px ${
-                colorTheme !== undefined ? color.light : 'inherit'
-              }`,
+
+              // TODO fix box shadow
+              // boxShadow: `0 0 20px ${
+              //   colorTheme !== undefined ? color.light : 'inherit'
+              // }`,
               transform: 'translateY(-2px)',
             },
 
@@ -87,19 +112,20 @@ export default function ButtonBase(theme: Theme): Components {
               left: 0,
               width: '100%',
               height: '100%',
-              filter: 'drop-shadow(0px 0px 4px #4444dd)',
+              // filter: 'drop-shadow(19px 19px 4px #4444dd)',
             },
 
             '&:hover::after': {
-              filter: 'drop-shadow(0px 0px 4px #4444dd)',
+              // filter: 'drop-shadow(10px 10px 4px #4444dd)',
             },
 
             '.MuiTouchRipple-child': {
               backgroundColor: colorTheme ? color.contrastText : undefined,
-              // // https://cdn.vectorstock.com/i/1000v/82/46/circuit-board-technology-background-vector-13208246.jpg
-              backgroundImage: `url("https://cdn.vectorstock.com/i/1000v/82/46/circuit-board-technology-background-vector-13208246.jpg")`,
-              backgroundSize: 'cover',
+              backgroundImage:
+                ownerState.variant !== 'text' ? `url("${bgImage}")` : undefined,
+              backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center center',
             },
 
             // Disabled Styles
@@ -117,9 +143,18 @@ export default function ButtonBase(theme: Theme): Components {
                   ? alpha(color.main, 0.07)
                   : undefined,
 
-                // '&:hover': {
-                //   backgroundColor: 'red',
-                // },
+                '&:hover': {
+                  //   backgroundColor: 'red',
+                  background: `linear-gradient(90deg, ${
+                    colorTheme !== undefined
+                      ? alpha(lighten(color.main, 0.2), 0.2)
+                      : 'inherit'
+                  } 0%, ${
+                    colorTheme !== undefined
+                      ? alpha(color.main, 0.4)
+                      : 'inherit'
+                  } 100%)`,
+                },
 
                 '.MuiTouchRipple-child': {
                   backgroundColor: colorTheme ? color.main : undefined,
@@ -136,7 +171,8 @@ export default function ButtonBase(theme: Theme): Components {
                 '&:hover': {
                   backgroundColor: colorTheme
                     ? alpha(color.main, 0.05)
-                    : undefined, // 5% opacity for Text Button
+                    : undefined,
+                  // filter: `blur(4px)`,
                 },
                 '.MuiTouchRipple-child': {
                   backgroundColor: colorTheme ? color.main : undefined,
