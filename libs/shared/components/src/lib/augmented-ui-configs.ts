@@ -7,9 +7,7 @@ export interface ShapeMapping {
   };
 }
 
-// Define semantic shape names to augmented-ui mixin mappings
-export const SHAPE_MAPPINGS: ShapeMapping = {
-  // Basic button shapes
+export const BUTTON_SHAPE_MAPPINGS: ShapeMapping = {
   buttonLeft: {
     'data-augmented-ui': 'bl-clip tr-clip',
   },
@@ -25,6 +23,11 @@ export const SHAPE_MAPPINGS: ShapeMapping = {
   buttonScoop: {
     'data-augmented-ui': 'tl-scoop tr-scoop br-scoop bl-scoop',
   },
+};
+// Define semantic shape names to augmented-ui mixin mappings
+export const SHAPE_MAPPINGS: ShapeMapping = {
+  // Basic button shapes
+  ...BUTTON_SHAPE_MAPPINGS,
 
   // Futuristic shapes
   futuristicHex: {

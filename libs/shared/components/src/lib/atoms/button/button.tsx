@@ -23,7 +23,6 @@ const borderMap: Record<
 };
 interface AugmentedButtonProps extends ButtonProps {
   shape?: keyof typeof SHAPE_MAPPINGS;
-  // borderSize?: number;
 }
 const augmentationSizeMap = {
   small: '6px',

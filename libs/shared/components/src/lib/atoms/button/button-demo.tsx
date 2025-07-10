@@ -4,7 +4,7 @@ import { ReactNode, SyntheticEvent, useState } from 'react';
 import {
   Box,
   ButtonPropsColorOverrides,
-  IconButton,
+  // IconButton,
   IconButtonPropsColorOverrides,
   Tab,
   Table,
@@ -23,6 +23,7 @@ import { Property } from 'csstype';
 import { RewindIcon, SaveAllIcon, SaveIcon, StarIcon } from 'lucide-react';
 
 import { AugmentedButton as Button } from './button';
+import { AugmentedIconButton as IconButton } from '../button-icon/button-icon';
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -71,7 +72,7 @@ export const ButtonDemo = ({
   endIconOn,
   loadingOn = true,
 }: Props) => {
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(3);
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
@@ -109,8 +110,7 @@ export const ButtonDemo = ({
           <Box
             sx={{
               p: 3,
-              background: (theme) =>
-                theme.palette.background.default ?? backgroundColor,
+              background: 'transparent',
             }}
           >
             {children}
