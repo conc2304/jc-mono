@@ -71,7 +71,7 @@ export const ButtonDemo = ({
   endIconOn,
   loadingOn = true,
 }: Props) => {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(1);
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
@@ -220,41 +220,41 @@ export const ButtonDemo = ({
           ))}
         </TableRow>
         {/* Loading Button Styles */}
-        {buttonVariant !== 'icon' && (
-          <TableRow>
-            <TableCell align="left">
-              <Typography variant="caption">loading</Typography>
-            </TableCell>
-            {[...colors, `inherit ${inheritColor}`].map((color) => (
-              <TableCell align="center" key={`loading-${color}`}>
-                <Box
-                  component={'span'}
-                  color={
-                    color === `inherit ${inheritColor}`
-                      ? inheritColor
-                      : undefined
-                  }
-                >
-                  <LoadingButton
-                    variant={buttonVariant}
-                    color={
-                      color === `inherit ${inheritColor}`
-                        ? 'inherit'
-                        : (color as ButtonColor)
-                    }
-                    size={size}
-                    loading={loadingOn}
-                    startIcon={<SaveIcon />}
-                    loadingPosition="start"
-                    endIcon={endIconOn && <RewindIcon />}
-                  >
-                    Label
-                  </LoadingButton>
-                </Box>
-              </TableCell>
-            ))}
-          </TableRow>
-        )}
+        {/* {buttonVariant !== 'icon' && (
+          // <TableRow>
+          //   <TableCell align="left">
+          //     <Typography variant="caption">loading</Typography>
+          //   </TableCell>
+          //   {[...colors, `inherit ${inheritColor}`].map((color) => (
+          //     <TableCell align="center" key={`loading-${color}`}>
+          //       <Box
+          //         component={'span'}
+          //         color={
+          //           color === `inherit ${inheritColor}`
+          //             ? inheritColor
+          //             : undefined
+          //         }
+          //       >
+          //         <LoadingButton
+          //           variant={buttonVariant}
+          //           color={
+          //             color === `inherit ${inheritColor}`
+          //               ? 'inherit'
+          //               : (color as ButtonColor)
+          //           }
+          //           size={size}
+          //           loading={loadingOn}
+          //           startIcon={<SaveIcon />}
+          //           loadingPosition="start"
+          //           endIcon={endIconOn && <RewindIcon />}
+          //         >
+          //           Label
+          //         </LoadingButton>
+          //       </Box>
+          //     </TableCell>
+          //   ))}
+          // </TableRow>
+        )} */}
       </>
     );
   };

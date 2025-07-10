@@ -25,31 +25,22 @@ export default function ButtonBase(theme: Theme): Components {
             0.12
           );
           const actionDisabledText = alpha(theme.palette.common.black, 0.38);
-
           const size = ownerState.size ? ownerState.size : undefined;
-
-          const augmentationSizeMap = {
-            small: '8px',
-            medium: '10px',
-            large: '16px',
-            default: '10px',
-          };
-
-          const color = colorTheme
-            ? theme.palette[colorTheme].contrastText
-            : 'rgba(10,10,10, 0.3)';
-
-          const stop1 = alpha(color, 0.3);
-          const stop2 = alpha(darken(color, 0.3), 0.5);
-
-          const auSize = augmentationSizeMap[size ?? 'default'];
+          const color = theme.palette[colorTheme || 'primary'];
 
           return {
             // Global Styles
             '&': {
-              // background: 'linear-gradient(45deg, #001122 0%, #003344 100%)',
+              background:
+                ownerState.variant === 'contained'
+                  ? `linear-gradient(45deg, ${alpha(
+                      color.main,
+                      0.8
+                    )} 0%, ${alpha(color.main, 0.5)} 100%)`
+                  : alpha(color.main, 0.0),
+              border: 'unset !important', // leave it to augmented ui
               position: 'relative',
-              overflow: 'hidden',
+              overflow: 'visible !important',
               borderRadius: 0,
               transition: theme.transitions.create(
                 ['background-color', 'transform'],
@@ -60,40 +51,14 @@ export default function ButtonBase(theme: Theme): Components {
               ...theme.typography.button,
             },
 
-            // ...(ownerState.size && {
-            //   '&[data-augmented-ui]': {
-            //     '--aug-border-all': '1px',
-            //     '--aug-border-bg': '#00ffff',
-            //     '--aug-tl': auSize,
-            //     '--aug-tr': auSize,
-            //     '--aug-bl': auSize,
-            //     '--aug-br': auSize,
-            //   },
-            // }),
-
-            '&[data-augmented-ui]': {
-              '--aug-border-all': '1px',
-              '--aug-border-bg': '#00ffff',
-              '--aug-tl': auSize,
-              '--aug-tr': auSize,
-              '--aug-bl': auSize,
-              '--aug-br': auSize,
-            },
-
             '&:hover': {
               background: `linear-gradient(90deg, ${
-                colorTheme !== undefined
-                  ? lighten(theme.palette[colorTheme].main, 0.2)
-                  : 'inherit'
+                colorTheme !== undefined ? lighten(color.main, 0.2) : 'inherit'
               } 0%, ${
-                colorTheme !== undefined
-                  ? darken(theme.palette[colorTheme].main, 0.4)
-                  : 'inherit'
+                colorTheme !== undefined ? darken(color.main, 0.4) : 'inherit'
               } 100%)`,
               boxShadow: `0 0 20px ${
-                colorTheme !== undefined
-                  ? theme.palette[colorTheme].light
-                  : 'inherit'
+                colorTheme !== undefined ? color.light : 'inherit'
               }`,
               transform: 'translateY(-2px)',
             },
@@ -106,9 +71,7 @@ export default function ButtonBase(theme: Theme): Components {
               width: '100%',
               height: '100%',
               background: `linear-gradient(90deg, transparent, ${
-                colorTheme !== undefined
-                  ? theme.palette[colorTheme].light
-                  : 'inherit'
+                colorTheme !== undefined ? color.light : 'inherit'
               }, transparent)`,
               transition: 'left 0.5s',
             },
@@ -117,10 +80,22 @@ export default function ButtonBase(theme: Theme): Components {
               left: '100%',
             },
 
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              filter: 'drop-shadow(0px 0px 4px #4444dd)',
+            },
+
+            '&:hover::after': {
+              filter: 'drop-shadow(0px 0px 4px #4444dd)',
+            },
+
             '.MuiTouchRipple-child': {
-              // backgroundColor: colorTheme
-              //   ? theme.palette[colorTheme].contrastText
-              //   : undefined,
+              backgroundColor: colorTheme ? color.contrastText : undefined,
               // // https://cdn.vectorstock.com/i/1000v/82/46/circuit-board-technology-background-vector-13208246.jpg
               backgroundImage: `url("https://cdn.vectorstock.com/i/1000v/82/46/circuit-board-technology-background-vector-13208246.jpg")`,
               backgroundSize: 'cover',
@@ -138,24 +113,16 @@ export default function ButtonBase(theme: Theme): Components {
             // Outlined Variant Styles
             ...(ownerState.variant === 'outlined' && {
               '&&': {
-                border: ownerState.disabled
-                  ? undefined
-                  : `1px solid ${
-                      colorTheme ? theme.palette[colorTheme].main : 'inherit'
-                    }`,
                 backgroundColor: colorTheme
-                  ? alpha(theme.palette[colorTheme].main, 0.0)
+                  ? alpha(color.main, 0.07)
                   : undefined,
-                '&:hover': {
-                  backgroundColor: colorTheme
-                    ? alpha(theme.palette[colorTheme].main, 0.04)
-                    : undefined, // 4% opacity for Contained button
-                },
+
+                // '&:hover': {
+                //   backgroundColor: 'red',
+                // },
 
                 '.MuiTouchRipple-child': {
-                  backgroundColor: colorTheme
-                    ? theme.palette[colorTheme].main
-                    : undefined,
+                  backgroundColor: colorTheme ? color.main : undefined,
                 },
               },
             }),
@@ -163,19 +130,16 @@ export default function ButtonBase(theme: Theme): Components {
             // Text Variant Styles
             ...(ownerState.variant === 'text' && {
               '&&': {
-                background: colorTheme
-                  ? alpha(theme.palette[colorTheme].main, 0.0)
-                  : undefined,
+                background: colorTheme ? alpha(color.main, 0.0) : undefined,
                 color: ownerState.disabled ? actionDisabledText : undefined,
+
                 '&:hover': {
                   backgroundColor: colorTheme
-                    ? alpha(theme.palette[colorTheme].main, 0.05)
+                    ? alpha(color.main, 0.05)
                     : undefined, // 5% opacity for Text Button
                 },
                 '.MuiTouchRipple-child': {
-                  backgroundColor: colorTheme
-                    ? theme.palette[colorTheme].main
-                    : undefined,
+                  backgroundColor: colorTheme ? color.main : undefined,
                 },
               },
             }),
@@ -183,15 +147,15 @@ export default function ButtonBase(theme: Theme): Components {
             // Typography by Button Size
             ...(ownerState.size === 'large' && {
               '&.MuiButton-sizeLarge': {
-                fontSize: pxToRem(15),
-                lineHeight: pxToRem(26),
+                fontSize: pxToRem(16),
+                lineHeight: pxToRem(28),
                 letterSpacing: '0.46px',
               },
             }),
             ...(ownerState.size === 'medium' && {
               '&.MuiButton-sizeMedium': {
-                fontSize: pxToRem(14),
-                lineHeight: pxToRem(24),
+                fontSize: pxToRem(16),
+                lineHeight: pxToRem(25),
                 letterSpacing: '0.4px',
               },
             }),
