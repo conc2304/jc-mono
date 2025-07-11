@@ -1,6 +1,7 @@
-import { ThemeContextProvider } from '@jc/themes';
+import { InitColorSchemeScript } from '@mui/material';
+import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
 
-import { availableThemes } from '@/themes';
+// import { availableThemes } from '@/themes';
 
 import 'augmented-ui/augmented-ui.min.css';
 import './global.css';
@@ -18,13 +19,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeContextProvider
-          themes={availableThemes}
+        {/* Prevent SSR color scheme flicker */}
+        <InitColorSchemeScript defaultMode="system" />
+        <EnhancedThemeProvider
+          themes={enhancedThemes}
           defaultThemeId="neon-cyberpunk"
-          storageKey="my-app-theme"
+          defaultColorMode="system"
+          themeStorageKey="my-app-theme"
+          colorModeStorageKey="my-app-color-mode"
         >
           {children}
-        </ThemeContextProvider>
+        </EnhancedThemeProvider>
       </body>
     </html>
   );

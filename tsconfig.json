@@ -22,9 +22,6 @@
       "path": "./apps/portfolio-site"
     },
     {
-      "path": "./libs/shared/augmented-ui"
-    },
-    {
       "path": "./libs/shared/themes"
     }
   ]

@@ -1,11 +1,17 @@
 'use client';
 
 import { Box, Typography, Card, CardContent } from '@mui/material';
-import { ThemeSwitcher, useAppTheme } from '@jc/themes';
+import { EnhancedThemeSwitcher, useEnhancedTheme } from '@jc/themes';
 import { AugmentedButton as Button } from '@jc/ui-components';
 
 export default function Index() {
-  const { themes, currentThemeId } = useAppTheme();
+  const { themes, currentThemeId, changeTheme } = useEnhancedTheme();
+
+  // const changeTheme = (...args) => {
+  //   console.log('change Theme');
+  //   console.log({ args });
+  //   changeTheme()
+  // };
 
   return (
     <Box sx={{ p: 3, minHeight: '100vh' }}>
@@ -17,15 +23,11 @@ export default function Index() {
           Choose from our collection of retro futurism and cyberpunk themes
         </Typography>
 
-        <ThemeSwitcher
+        <EnhancedThemeSwitcher
           themes={themes}
           selectedThemeId={currentThemeId}
-          // onThemeChange={handleThemeChange}
-          label="Select Theme"
-          showPreview={true}
-          groupByCategory={true}
-          storageKey="demo-theme"
-          width={300}
+          onThemeChange={changeTheme}
+          compact={true}
         />
       </Box>
 
