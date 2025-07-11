@@ -23,6 +23,9 @@
     },
     {
       "path": "./libs/shared/themes"
+    },
+    {
+      "path": "./libs/features/desktop-OS"
     }
   ]
 }
