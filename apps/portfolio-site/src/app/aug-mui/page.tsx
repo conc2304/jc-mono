@@ -1,5 +1,3 @@
-import { CssBaseline, ThemeProvider, useTheme } from '@mui/material';
-import { BasicTheme } from '@jc/themes';
 import { ButtonDemo } from '@jc/ui-components';
 
 export default function Page() {
@@ -61,20 +59,17 @@ export default function Page() {
           ${lgPx} ${lgPx}`,
       }}
     >
-      <ThemeProvider theme={BasicTheme}>
-        <CssBaseline />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '20px',
-            height: '100%',
-          }}
-        >
-          <ButtonDemo />
-        </div>
-      </ThemeProvider>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+          height: '100%',
+        }}
+      >
+        <ButtonDemo />
+      </div>
     </div>
   );
 }

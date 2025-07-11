@@ -1,6 +1,6 @@
-// import { ThemeProvider } from '@jc/augmented-ui';
+import { ThemeContextProvider } from '@jc/themes';
 
-// import { ApplicationThemes } from '@/themes';
+import { availableThemes } from '@/themes';
 
 import 'augmented-ui/augmented-ui.min.css';
 import './global.css';
@@ -18,9 +18,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <ThemeProvider availableThemes={ApplicationThemes} persistTheme={true}> */}
-        {children}
-        {/* </ThemeProvider> */}
+        <ThemeContextProvider
+          themes={availableThemes}
+          defaultThemeId="neon-cyberpunk"
+          storageKey="my-app-theme"
+        >
+          {children}
+        </ThemeContextProvider>
       </body>
     </html>
   );

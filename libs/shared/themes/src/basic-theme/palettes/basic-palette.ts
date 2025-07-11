@@ -1,6 +1,6 @@
 import { PaletteOptions } from '@mui/material/styles';
 
-const getPalette = (): PaletteOptions => {
+export const basicPalette = (): PaletteOptions => {
   return {
     mode: 'light',
     contrastThreshold: 4,
@@ -29,8 +29,8 @@ const getPalette = (): PaletteOptions => {
     },
     divider: 'rgba(0, 0, 0, 0.12)',
     background: {
-      default: 'rgb(250,245,220)',
-      paper: 'rgb(250,245,220)',
+      default: 'rgb(255, 255, 255)',
+      paper: 'rgb(237, 233, 232)2)',
     },
 
     action: {
@@ -53,5 +53,3 @@ const getPalette = (): PaletteOptions => {
     },
   };
 };
-
-export default getPalette;

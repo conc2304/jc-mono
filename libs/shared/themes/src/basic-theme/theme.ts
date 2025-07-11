@@ -1,33 +1,51 @@
 'use client';
-import { createTheme, Theme, ThemeOptions } from '@mui/material';
+import {
+  createTheme,
+  PaletteOptions,
+  Theme,
+  ThemeOptions,
+  TypographyVariantsOptions,
+} from '@mui/material';
 
 import getComponentOverrides from './component-overrides';
-import getPalette from './palette';
+import { basicPalette } from './palettes';
 import getTypography from './typography';
 
 // import '../fonts/index.css';  TODO later
-
-const palette = getPalette();
-const typography = getTypography(`'Roboto', sans-serif`);
-
-const baseThemeOptions: ThemeOptions = {
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 768,
-      md: 1024,
-      lg: 1266,
-      xl: 1536,
-    },
-  },
-  direction: 'ltr',
-  mixins: {},
-  palette,
-  typography,
+type CreateThemeOptionProps = {
+  palette?: PaletteOptions;
+  typography?: TypographyVariantsOptions;
 };
 
-const theme = createTheme(baseThemeOptions);
-export const BasicTheme: Theme = {
-  ...theme,
-  components: { ...theme.components, ...getComponentOverrides(theme) },
+const paletteFallback = basicPalette();
+const typographyFallBack = getTypography(`'Roboto', sans-serif`);
+
+export const createThemeFromOptions = ({
+  palette = paletteFallback,
+  typography = typographyFallBack,
+}: CreateThemeOptionProps): Theme => {
+  const baseThemeOptions: ThemeOptions = {
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 768,
+        md: 1024,
+        lg: 1266,
+        xl: 1536,
+      },
+    },
+    direction: 'ltr',
+    // mixins: {},
+    palette,
+    typography,
+  };
+
+  const theme = createTheme(baseThemeOptions);
+
+  const fullTheme: Theme = {
+    ...theme,
+    components: { ...theme.components, ...getComponentOverrides(theme) },
+  };
+
+  return fullTheme;
 };
