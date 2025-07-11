@@ -7,12 +7,6 @@ import { AugmentedButton as Button } from '@jc/ui-components';
 export default function Index() {
   const { themes, currentThemeId, changeTheme } = useEnhancedTheme();
 
-  // const changeTheme = (...args) => {
-  //   console.log('change Theme');
-  //   console.log({ args });
-  //   changeTheme()
-  // };
-
   return (
     <Box sx={{ p: 3, minHeight: '100vh' }}>
       <Box sx={{ mb: 4 }}>

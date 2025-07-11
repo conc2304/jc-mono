@@ -16,51 +16,60 @@ export default function ButtonBase(theme: Theme): Components {
       },
       styleOverrides: {
         root: ({ ownerState }) => {
-          const colorTheme =
-            ownerState.color && ownerState.color !== 'inherit'
-              ? ownerState.color
+          const { color, variant, size, disabled } = ownerState;
+          const shouldUseColorStyling =
+            color !== undefined && color !== 'inherit';
+          const colorTheme = shouldUseColorStyling ? color : undefined;
+          const paletteColor =
+            shouldUseColorStyling && colorTheme
+              ? theme.palette[colorTheme]
               : undefined;
+
           const actionDisabledBackground = alpha(
-            theme.palette.common.black,
+            theme.palette.mode === 'light'
+              ? theme.palette.common.black
+              : theme.palette.common.white,
             0.12
           );
           const actionDisabledText = alpha(theme.palette.common.black, 0.38);
-          const size = ownerState.size ? ownerState.size : undefined;
-          const color = theme.palette[colorTheme || 'primary'];
 
+          //  commented out ones are other good options
           const bgImgMap = {
             primary:
-              'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3YwZ3R1cDRubnN3aDd6a251Z3RzeWo4OHY0d3Rjamh4Mjd6bTd6YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XWwYUsbW57BrGomT98/giphy.gif',
+              'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NmZ6bmU5eXExMDc4YmI5Y2xib2pvaDdqZGR3aDh5MWNrYzRta2puNyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/d1E2diIb2cktChLW/giphy.webp',
+            // 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3YwZ3R1cDRubnN3aDd6a251Z3RzeWo4OHY0d3Rjamh4Mjd6bTd6YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XWwYUsbW57BrGomT98/giphy.gif',
             secondary:
-              'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGdrcXBjaWl6NTM2bjB3M3Y4cHo4aHAyZTE0eTJ6bnR1d3JodmQ2NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/u7CzwBdITKleMOhUK9/giphy.webp',
+              'https://media1.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Z3plNTlndWJwNHhsaXlrdDlsNGF0MWczMWtvemJtczBwZ3ZkbG90MSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/QAmzAMUA4rOIkG0Rdv/giphy.webp',
+            // 'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3d3VwaDQxNnNvYnZ4amNoZXMxZDZtcnVxMmdwZ29wYnRmM2s3dW03dyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8Uu7Bt2vShW3g6uqLY/giphy.webp',
+            // 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGdrcXBjaWl6NTM2bjB3M3Y4cHo4aHAyZTE0eTJ6bnR1d3JodmQ2NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/u7CzwBdITKleMOhUK9/giphy.webp',
             error:
-              'https://media2.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bDMzM3ZiaXV2Z3A5Z2JtdHF5dW5zcW01cm1veXU3dGQ5Z2p3ZXBxYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/zhmIHStBa2ezu/200.webp',
-            info: 'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cWNnNm41dGg5aTRwbG5weGRibHBoeDZqbHlrMjFlbmM1OW9pZTQ0biZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/11UhXwm8Ipd9C/giphy.webp',
+              'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MDFheWc4ZG8xcngwcmt2MTNsaWxwcnh6bXFhdWo4OWsyNTFuenVlNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LmNy9OYM7hni2iHKeO/giphy.webp',
+            // 'https://media2.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bDMzM3ZiaXV2Z3A5Z2JtdHF5dW5zcW01cm1veXU3dGQ5Z2p3ZXBxYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/zhmIHStBa2ezu/200.webp',
+            info: 'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dTdyMWptZHAzaXQ5aDIwMWF6bXpic21rdGp6MWZveG5xNTE0dHg4ZSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/7FrOU9tPbgAZtxV5mb/giphy.webp',
+            // 'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cWNnNm41dGg5aTRwbG5weGRibHBoeDZqbHlrMjFlbmM1OW9pZTQ0biZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/11UhXwm8Ipd9C/giphy.webp',
             warning:
               'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3a2k0aTRwa2h5cHNqaDNoOHJkejNmeHNndXE1ZDV0NnIxbnhyZGJlaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EwyHisjzUbkTj2FPgB/giphy.webp',
             success:
-              'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3a2k0aTRwa2h5cHNqaDNoOHJkejNmeHNndXE1ZDV0NnIxbnhyZGJlaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l4FGGLEASwntRikZa/giphy.webp',
-            default:
-              'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3emI3NXhpaDlzcWFwdWdwODFvNmV3eHFyNHdrNnZ2dGJ3M2xhY2hiYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xT39CQm5YgyBvmGglW/200.webp',
+              'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bTBiOGtqc3dhbDU5cXNzOGU3bGFraGY2a3pvc21uZm14czg5NHl2aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oz8xF2tbONaIIy92M/giphy.webp',
+            default: 'https://i.giphy.com/2aQS3AHfvvfIkSdbFM.webp',
           };
 
-          const bgImage =
-            bgImgMap[
-              ownerState.color && ownerState.color !== 'inherit'
-                ? ownerState.color
-                : 'default'
-            ];
+          const bgImage = bgImgMap[shouldUseColorStyling ? color : 'default'];
 
           return {
             // Global Styles
             '&': {
               background:
                 ownerState.variant === 'contained'
-                  ? `linear-gradient(45deg, ${alpha(
-                      color.main,
-                      0.8
-                    )} 0%, ${alpha(color.main, 0.5)} 100%)`
-                  : alpha(color.main, 0.0),
+                  ? shouldUseColorStyling && paletteColor
+                    ? `linear-gradient(45deg, ${alpha(
+                        paletteColor.main,
+                        0.8
+                      )} 0%, ${alpha(paletteColor.main, 0.5)} 100%)`
+                    : 'inherit' // or transparent, or whatever inherit should look like
+                  : shouldUseColorStyling && paletteColor
+                  ? alpha(paletteColor.main, 0.0)
+                  : 'inherit',
               border: 'unset !important', // leave it to augmented ui
               position: 'relative',
               overflow: 'visible !important',
@@ -76,15 +85,15 @@ export default function ButtonBase(theme: Theme): Components {
 
             '&:hover': {
               background: `linear-gradient(90deg, ${
-                colorTheme !== undefined ? lighten(color.main, 0.2) : 'inherit'
+                shouldUseColorStyling && paletteColor
+                  ? lighten(paletteColor.main, 0.2)
+                  : 'inherit'
               } 0%, ${
-                colorTheme !== undefined ? darken(color.main, 0.4) : 'inherit'
+                shouldUseColorStyling && paletteColor
+                  ? darken(paletteColor.main, 0.4)
+                  : 'inherit'
               } 100%)`,
 
-              // TODO fix box shadow
-              // boxShadow: `0 0 20px ${
-              //   colorTheme !== undefined ? color.light : 'inherit'
-              // }`,
               transform: 'translateY(-2px)',
             },
 
@@ -96,7 +105,9 @@ export default function ButtonBase(theme: Theme): Components {
               width: '100%',
               height: '100%',
               background: `linear-gradient(90deg, transparent, ${
-                colorTheme !== undefined ? color.light : 'inherit'
+                shouldUseColorStyling && paletteColor
+                  ? paletteColor.light
+                  : 'inherit'
               }, transparent)`,
               transition: 'left 0.5s',
             },
@@ -120,16 +131,19 @@ export default function ButtonBase(theme: Theme): Components {
             },
 
             '.MuiTouchRipple-child': {
-              backgroundColor: colorTheme ? color.contrastText : undefined,
+              backgroundColor:
+                shouldUseColorStyling && paletteColor
+                  ? paletteColor.contrastText
+                  : 'inherit',
               backgroundImage:
-                ownerState.variant !== 'text' ? `url("${bgImage}")` : undefined,
+                variant !== 'text' ? `url("${bgImage}")` : undefined,
               backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center center',
             },
 
             // Disabled Styles
-            ...(ownerState.disabled && {
+            ...(disabled && {
               '&&': {
                 background: actionDisabledBackground,
                 color: actionDisabledText,
@@ -137,65 +151,76 @@ export default function ButtonBase(theme: Theme): Components {
             }),
 
             // Outlined Variant Styles
-            ...(ownerState.variant === 'outlined' && {
+            ...(variant === 'outlined' && {
               '&&': {
-                backgroundColor: colorTheme
-                  ? alpha(color.main, 0.07)
-                  : undefined,
+                backgroundColor:
+                  shouldUseColorStyling && paletteColor
+                    ? alpha(paletteColor.main, 0.07)
+                    : 'inherit',
 
                 '&:hover': {
                   //   backgroundColor: 'red',
                   background: `linear-gradient(90deg, ${
-                    colorTheme !== undefined
-                      ? alpha(lighten(color.main, 0.2), 0.2)
+                    shouldUseColorStyling && paletteColor
+                      ? alpha(lighten(paletteColor.main, 0.2), 0.2)
                       : 'inherit'
                   } 0%, ${
-                    colorTheme !== undefined
-                      ? alpha(color.main, 0.4)
+                    shouldUseColorStyling && paletteColor
+                      ? alpha(paletteColor.main, 0.4)
                       : 'inherit'
                   } 100%)`,
                 },
 
                 '.MuiTouchRipple-child': {
-                  backgroundColor: colorTheme ? color.main : undefined,
+                  backgroundColor:
+                    shouldUseColorStyling && paletteColor
+                      ? paletteColor.main
+                      : 'inherit',
                 },
               },
             }),
 
             // Text Variant Styles
-            ...(ownerState.variant === 'text' && {
+            ...(variant === 'text' && {
               '&&': {
-                background: colorTheme ? alpha(color.main, 0.0) : undefined,
-                color: ownerState.disabled ? actionDisabledText : undefined,
+                background:
+                  shouldUseColorStyling && paletteColor
+                    ? alpha(paletteColor.main, 0.0)
+                    : undefined,
+                color: disabled ? actionDisabledText : undefined,
 
                 '&:hover': {
-                  backgroundColor: colorTheme
-                    ? alpha(color.main, 0.05)
-                    : undefined,
+                  backgroundColor:
+                    shouldUseColorStyling && paletteColor
+                      ? alpha(paletteColor.main, 0.05)
+                      : 'inherit',
                   // filter: `blur(4px)`,
                 },
                 '.MuiTouchRipple-child': {
-                  backgroundColor: colorTheme ? color.main : undefined,
+                  backgroundColor:
+                    shouldUseColorStyling && paletteColor
+                      ? paletteColor.main
+                      : 'inherit',
                 },
               },
             }),
 
             // Typography by Button Size
-            ...(ownerState.size === 'large' && {
+            ...(size === 'large' && {
               '&.MuiButton-sizeLarge': {
                 fontSize: pxToRem(16),
                 lineHeight: pxToRem(28),
                 letterSpacing: '0.46px',
               },
             }),
-            ...(ownerState.size === 'medium' && {
+            ...(size === 'medium' && {
               '&.MuiButton-sizeMedium': {
                 fontSize: pxToRem(16),
                 lineHeight: pxToRem(25),
                 letterSpacing: '0.4px',
               },
             }),
-            ...(ownerState.size === 'small' && {
+            ...(size === 'small' && {
               '&.MuiButton-sizeSmall': {
                 fontSize: pxToRem(13),
                 lineHeight: pxToRem(23),
