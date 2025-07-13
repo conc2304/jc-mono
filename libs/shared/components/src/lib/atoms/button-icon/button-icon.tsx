@@ -7,7 +7,7 @@ import { OverridableStringUnion } from '@mui/types';
 
 import { getShapeData, SHAPE_MAPPINGS } from '../../augmented-ui-configs';
 
-interface AugmentedIconButtonProps extends IconButtonProps {
+export interface AugmentedIconButtonProps extends IconButtonProps {
   shape?: keyof typeof SHAPE_MAPPINGS;
   borderSize?: number;
 }

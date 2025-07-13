@@ -1,88 +1,61 @@
-import { alpha, Box, Typography } from '@mui/material';
-import { Minimize2 } from 'lucide-react';
+import { Box } from '@mui/material';
+import { Maximize2, Minimize2, X } from 'lucide-react';
 
-import { AugmentedIconButton } from '../../atoms';
+import { AugmentedIconButton, AugmentedIconButtonProps } from '../../atoms';
 
 type WindowControlProps = {
   isActive?: boolean;
+  id: string;
+  minimizeWindow: (id: string) => void;
+  maximizeWindow: (id: string) => void;
+  closeWindow: (id: string) => void;
 };
 
-export const WindowControls = ({ isActive }: WindowControlProps) => {
+export const WindowControls = ({
+  isActive,
+  id,
+  minimizeWindow,
+  maximizeWindow,
+  closeWindow,
+}: WindowControlProps) => {
+  const buttonProps: AugmentedIconButtonProps = {
+    size: 'small',
+    shape: 'buttonRight',
+    disableRipple: true,
+  };
+
   return (
-    <Box
-      className="TitleBar--root"
-      sx={{
-        background: (theme) =>
-          isActive
-            ? theme.palette.primary.dark
-            : darke(theme.palette.primary.dark, 0.5),
-        color: (theme) => alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
-        p: 0.25,
-      }}
-    >
-      <Box
-        onMouseDown={(e) => onWindowMouseDown(e, id)}
-        sx={{
-          cursor: 'move',
-          m: 0.1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          position: 'relative',
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <AugmentedIconButton
+        {...buttonProps}
+        color="info"
+        onClick={(e) => {
+          e.stopPropagation();
+          minimizeWindow(id);
         }}
       >
-        <Box
-          className="flex items-center space-x-2"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            ml: 0.5,
-          }}
-        >
-          {icon}
-          <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-            {title}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AugmentedIconButton
-            color="info"
-            size="small"
-            shape="buttonRight"
-            disableRipple
-            onClick={(e) => {
-              e.stopPropagation();
-              minimizeWindow(id);
-            }}
-          >
-            <Minimize2 />
-          </AugmentedIconButton>
-          <AugmentedIconButton
-            color="info"
-            size="small"
-            shape="buttonRight"
-            disableRipple
-            onClick={(e) => {
-              e.stopPropagation();
-              maximizeWindow(id);
-            }}
-          >
-            <Maximize2 />
-          </AugmentedIconButton>
-          <AugmentedIconButton
-            color="error"
-            size="small"
-            shape="buttonRight"
-            disableRipple
-            onClick={(e) => {
-              e.stopPropagation();
-              closeWindow(id);
-            }}
-          >
-            <X />
-          </AugmentedIconButton>
-        </Box>
-      </Box>
+        <Minimize2 />
+      </AugmentedIconButton>
+      <AugmentedIconButton
+        {...buttonProps}
+        color="info"
+        onClick={(e) => {
+          e.stopPropagation();
+          maximizeWindow(id);
+        }}
+      >
+        <Maximize2 />
+      </AugmentedIconButton>
+      <AugmentedIconButton
+        {...buttonProps}
+        color="error"
+        onClick={(e) => {
+          e.stopPropagation();
+          closeWindow(id);
+        }}
+      >
+        <X />
+      </AugmentedIconButton>
     </Box>
   );
 };

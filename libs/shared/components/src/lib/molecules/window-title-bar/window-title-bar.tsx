@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 import { alpha, Box, darken, Typography } from '@mui/material';
-import { Maximize2, Minimize2, X } from 'lucide-react';
 
-import { AugmentedIconButton } from '../../atoms';
+import { WindowControls } from '../window-controls';
 
 type WindowTitleBarProps = {
   isActive?: boolean;
@@ -64,7 +63,13 @@ export const WindowTitleBar = ({
             {title}
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <WindowControls
+          id={id}
+          minimizeWindow={minimizeWindow}
+          maximizeWindow={maximizeWindow}
+          closeWindow={closeWindow}
+        />
+        {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <AugmentedIconButton
             color="info"
             size="small"
@@ -101,7 +106,7 @@ export const WindowTitleBar = ({
           >
             <X />
           </AugmentedIconButton>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
