@@ -12,6 +12,13 @@ interface AugmentedIconButtonProps extends IconButtonProps {
   borderSize?: number;
 }
 
+const augmentationSizeMap = {
+  small: '8px',
+  medium: '10px',
+  large: '12px',
+  default: '10px',
+};
+
 // Base styled button that will receive the augmented-ui attributes
 const StyledButton = styled(MuiIconButton)<AugmentedIconButtonProps>(
   ({ theme, color, disabled, size }) => {
@@ -29,11 +36,17 @@ const StyledButton = styled(MuiIconButton)<AugmentedIconButtonProps>(
       !disabled ? 0.5 : 0.1
     )}, ${alpha(componentColor.main, !disabled ? 0.7 : 0.2)})`;
     const styleHover = `${gradientStyle}, ${urlStyle}`;
+    const auSize = augmentationSizeMap[size ?? 'default'];
 
     return {
       // Apply augmented-ui specific styles
       '&[data-augmented-ui]': {
         '--aug-border-all': borderWidth,
+
+        '--aug-tl': auSize,
+        '--aug-tr': auSize,
+        '--aug-bl': auSize,
+        '--aug-br': auSize,
       },
 
       '&[data-augmented-ui]:hover': {
@@ -49,7 +62,7 @@ const StyledButton = styled(MuiIconButton)<AugmentedIconButtonProps>(
 export const AugmentedIconButton = React.forwardRef<
   HTMLButtonElement,
   AugmentedIconButtonProps
->(({ shape = 'futuristicHex', borderSize = 1, children, ...props }, ref) => {
+>(({ shape = 'futuristicHex', borderSize = 0, children, ...props }, ref) => {
   // const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;
 
   let shapeAttributes = getShapeData({ shape, hasBorder: borderSize > 0 });

@@ -31,7 +31,11 @@ export const DesktopIcon = ({
       sx={{
         position: 'absolute',
         cursor: 'pointer',
-        transition: 'all 200ms',
+        // transition: 'all 200ms',
+        transition: (theme) =>
+          theme.transitions.create(['transform', 'filter'], {
+            duration: theme.transitions.duration.standard,
+          }),
         transform: isDragging ? 'scale(1.1)' : 'scale(1)',
         filter: ({ palette }) => {
           const blurSize = isDragging ? '4px' : '0px';
@@ -87,9 +91,6 @@ export const DesktopIcon = ({
             border: isDragging
               ? '1px solid rgba(255, 255, 255, 1)'
               : '1px solid rgba(255, 255, 255, 0)',
-            '&::after': {
-              border: '1px solid red',
-            },
           }}
         >
           {icon}

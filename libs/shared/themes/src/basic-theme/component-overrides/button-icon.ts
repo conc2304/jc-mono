@@ -35,6 +35,8 @@ export default function ButtonIcon(theme: Theme): Components {
             },
 
             '&&': {
+              borderRadius: 'unset',
+
               '&:hover': {
                 backgroundColor: colorTheme
                   ? alpha(theme.palette[colorTheme].main, 0.1)

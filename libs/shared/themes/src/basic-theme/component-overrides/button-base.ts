@@ -59,6 +59,7 @@ export default function ButtonBase(theme: Theme): Components {
           return {
             // Global Styles
             '&': {
+              minWidth: '2rem',
               background:
                 ownerState.variant === 'contained'
                   ? shouldUseColorStyling && paletteColor

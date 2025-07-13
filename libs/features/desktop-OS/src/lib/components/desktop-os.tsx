@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import {
   DesktopIcon,
   DesktopIconMetaData,
+  Window,
   WindowMetaData,
 } from '@jc/ui-components';
 
@@ -31,28 +32,7 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
   const desktopRef = useRef(null);
   const dragRef = useRef({ startX: 0, startY: 0, elementX: 0, elementY: 0 });
 
-  const openWindow = (iconId: string) => {
-    console.log('Open WIndow', iconId);
-    const icon = desktopIcons && desktopIcons.find((i) => i.id === iconId);
-    if (!icon) return;
-
-    const newWindow: WindowMetaData = {
-      id: `window-${Date.now()}`,
-      title: icon.name,
-      icon: icon.icon,
-      // color: icon.color,
-      x: 200 + windows.length * 30,
-      y: 100 + windows.length * 30,
-      width: 400,
-      height: 300,
-      zIndex: windowZIndex + 1,
-      minimized: false,
-      maximized: false,
-    };
-
-    setWindows((prev) => [...prev, newWindow]);
-    setWindowZIndex(windowZIndex + 1);
-  };
+  const TempContent = () => <Box>Temp Content</Box>;
 
   const handleIconMouseDown = (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -129,6 +109,80 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     );
   };
 
+  const openWindow = (iconId: string) => {
+    console.log('Open WIndow', iconId);
+    const icon = desktopIcons && desktopIcons.find((i) => i.id === iconId);
+    if (!icon) return;
+
+    const newWindow: WindowMetaData = {
+      id: `window-${Date.now()}`,
+      title: icon.name,
+      icon: icon.icon,
+      // color: icon.color,
+      x: 200 + windows.length * 30,
+      y: 100 + windows.length * 30,
+      width: 400,
+      height: 300,
+      zIndex: windowZIndex + 1,
+      minimized: false,
+      maximized: false,
+      windowContent: <TempContent />, // todo add content prop to desktopIcon
+    };
+
+    setWindows((prev) => [...prev, newWindow]);
+    setWindowZIndex(windowZIndex + 1);
+  };
+
+  const closeWindow = (windowId: string) => {
+    setWindows((prev) => prev.filter((w) => w.id !== windowId));
+  };
+
+  const minimizeWindow = (windowId: string) => {
+    setWindows((prev) =>
+      prev.map((window) =>
+        window.id === windowId
+          ? { ...window, minimized: !window.minimized }
+          : window
+      )
+    );
+  };
+
+  const maximizeWindow = (windowId: string) => {
+    setWindows((prev) =>
+      prev.map((window) =>
+        window.id === windowId
+          ? {
+              ...window,
+              maximized: !window.maximized,
+              x: window.maximized ? 200 : 0,
+              y: window.maximized ? 100 : 0,
+              width: window.maximized ? 400 : window.innerWidth || 800,
+              height: window.maximized ? 300 : window.innerHeight || 600,
+            }
+          : window
+      )
+    );
+  };
+
+  const handleWindowMouseDown = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    windowId: string
+  ) => {
+    e.preventDefault();
+    const windowElement = e.currentTarget;
+    const rect = windowElement.getBoundingClientRect();
+
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      elementX: rect.left,
+      elementY: rect.top,
+    };
+
+    setDraggedWindow(windowId);
+    bringToFront(windowId);
+  };
+
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (draggedIcon) {
@@ -167,6 +221,17 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
               onIconMouseDown={handleIconMouseDown}
               onOpenWindow={openWindow}
               key={iconMeta.id}
+            />
+          ))}
+        {windows &&
+          windows.map((windowMetaData) => (
+            <Window
+              {...windowMetaData}
+              onWindowMouseDown={handleWindowMouseDown}
+              bringToFront={bringToFront}
+              minimizeWindow={minimizeWindow}
+              maximizeWindow={maximizeWindow}
+              closeWindow={closeWindow}
             />
           ))}
       </Box>

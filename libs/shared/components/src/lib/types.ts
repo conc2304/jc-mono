@@ -18,4 +18,5 @@ export interface WindowMetaData {
   zIndex: number;
   minimized: boolean;
   maximized: boolean;
+  windowContent: ReactNode;
 }

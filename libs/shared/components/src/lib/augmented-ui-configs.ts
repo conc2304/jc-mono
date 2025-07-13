@@ -8,11 +8,17 @@ export interface ShapeMapping {
 }
 
 export const BUTTON_SHAPE_MAPPINGS: ShapeMapping = {
-  buttonLeft: {
+  buttonLeft2: {
     'data-augmented-ui': 'bl-clip tr-clip',
   },
-  buttonRight: {
+  buttonRight2: {
     'data-augmented-ui': 'br-clip tl-clip',
+  },
+  buttonLeft: {
+    'data-augmented-ui': 'bl-clip',
+  },
+  buttonRight: {
+    'data-augmented-ui': 'br-clip',
   },
   buttonRounded: {
     'data-augmented-ui': 'tl-round tr-round br-round bl-round',
@@ -24,6 +30,7 @@ export const BUTTON_SHAPE_MAPPINGS: ShapeMapping = {
     'data-augmented-ui': 'tl-scoop tr-scoop br-scoop bl-scoop',
   },
 };
+
 // Define semantic shape names to augmented-ui mixin mappings
 export const SHAPE_MAPPINGS: ShapeMapping = {
   // Basic button shapes
