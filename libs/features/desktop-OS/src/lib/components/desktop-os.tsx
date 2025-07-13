@@ -210,6 +210,27 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     bringToFront(windowId);
   };
 
+  const updateWindow = (
+    id: string,
+    dimensions: { x: number; y: number; width: number; height: number }
+  ) => {
+    setWindows((prev) =>
+      prev.map((window) =>
+        window.id === id
+          ? {
+              ...window,
+              ...dimensions,
+              // minimized: false,
+              // zIndex: windowZIndex + 1,
+              // isActive: true,
+            }
+          : window
+      )
+    );
+
+    return '';
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (draggedIcon) {
@@ -259,6 +280,10 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
               minimizeWindow={minimizeWindow}
               maximizeWindow={maximizeWindow}
               closeWindow={closeWindow}
+              onWindowResize={updateWindow}
+              minWidth={300}
+              minHeight={200}
+              resizable
             />
           ))}
       </Box>
