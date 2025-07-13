@@ -79,7 +79,7 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     }));
   };
 
-  const handleWindowMouseMove = (e) => {
+  const handleWindowMouseMove = (e: MouseEvent) => {
     if (!draggedWindow) return;
 
     const deltaX = e.clientX - dragRef.current.startX;
@@ -100,11 +100,15 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
   };
 
   const bringToFront = (windowId: string) => {
+    console.log(windowId);
     const newZIndex = windowZIndex + 1;
     setWindowZIndex(newZIndex);
     setWindows((prev) =>
-      prev.map((window) =>
-        window.id === windowId ? { ...window, zIndex: newZIndex } : window
+      prev.map(
+        (window) =>
+          window.id === windowId
+            ? { ...window, zIndex: newZIndex, isActive: true } // this window
+            : { ...window, isActive: false } // other windows
       )
     );
   };
@@ -114,22 +118,45 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     const icon = desktopIcons && desktopIcons.find((i) => i.id === iconId);
     if (!icon) return;
 
-    const newWindow: WindowMetaData = {
-      id: `window-${Date.now()}`,
-      title: icon.name,
-      icon: icon.icon,
-      // color: icon.color,
-      x: 200 + windows.length * 30,
-      y: 100 + windows.length * 30,
-      width: 400,
-      height: 300,
-      zIndex: windowZIndex + 1,
-      minimized: false,
-      maximized: false,
-      windowContent: <TempContent />, // todo add content prop to desktopIcon
-    };
+    const id = `window-${iconId}`;
+    // check if window already open
+    const currWindow = windows.find((window) => window.id === id);
+    if (currWindow) {
+      // bring it to the front and
+      setWindows((prev) =>
+        prev.map((window) =>
+          window.id === id
+            ? {
+                ...window,
+                minimized: false,
+                zIndex: windowZIndex + 1,
+                isActive: true,
+              }
+            : { ...window, isActive: false }
+        )
+      );
+    } else {
+      const newWindow: WindowMetaData = {
+        id,
+        title: icon.name,
+        icon: icon.icon,
+        x: 200 + windows.length * 30,
+        y: 100 + windows.length * 30,
+        width: 400,
+        height: 300,
+        zIndex: windowZIndex + 1,
+        minimized: false,
+        maximized: false,
+        windowContent: <TempContent />, // todo add content prop to desktopIcon
+        isActive: true,
+      };
 
-    setWindows((prev) => [...prev, newWindow]);
+      setWindows((prev) => [
+        ...prev.map((window) => ({ ...window, isActive: false })),
+        newWindow,
+      ]);
+    }
+
     setWindowZIndex(windowZIndex + 1);
   };
 
@@ -141,7 +168,7 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     setWindows((prev) =>
       prev.map((window) =>
         window.id === windowId
-          ? { ...window, minimized: !window.minimized }
+          ? { ...window, minimized: !window.minimized, isActive: false }
           : window
       )
     );
@@ -184,7 +211,7 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
   };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       if (draggedIcon) {
         handleIconMouseMove(e);
       }

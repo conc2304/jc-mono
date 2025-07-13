@@ -1,10 +1,12 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
+import { darken, lighten, emphasize, alpha } from '@mui/material/styles';
+import { muteColor, useWindowColors } from '@jc/themes';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 
 import { AugmentedIconButton } from '../../atoms';
 import { WindowMetaData } from '../../types';
-
 interface WindowProps extends WindowMetaData {
+  isActive: boolean;
   onWindowMouseDown: (event: any, id: string) => void;
   bringToFront: (id: string) => void;
   minimizeWindow: (id: string) => void;
@@ -23,6 +25,7 @@ export const Window = ({
   zIndex,
   minimized,
   maximized,
+  isActive = true,
   windowContent,
   onWindowMouseDown,
   bringToFront,
@@ -38,6 +41,9 @@ export const Window = ({
         background: (theme) => theme.palette.background.paper,
         overflow: 'hidden',
         visibility: minimized ? 'hidden' : undefined,
+        '&:focus': {
+          border: '3px solid red',
+        },
       }}
       style={{
         left: x,
@@ -52,8 +58,12 @@ export const Window = ({
       <Box
         className="Window--title-bar"
         sx={{
-          background: (theme) => theme.palette.primary.dark,
-          color: (theme) => theme.palette.text.primary,
+          background: (theme) =>
+            isActive
+              ? theme.palette.primary.dark
+              : darken(theme.palette.primary.dark, 0.5),
+          color: (theme) =>
+            alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
           cursor: 'move',
           p: 0.25,
           display: 'flex',
