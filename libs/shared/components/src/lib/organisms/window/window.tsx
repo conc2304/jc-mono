@@ -1,16 +1,17 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Box, Typography } from '@mui/material';
-import { darken, alpha } from '@mui/material/styles';
-import { Maximize2, Minimize2, X } from 'lucide-react';
+import { Box } from '@mui/material';
 
 import { ResizeDirection, ResizeHandlers, ResizeState } from './resize-handle';
 import { getCursorForDirection } from './utils';
-import { AugmentedIconButton } from '../../atoms';
+import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
 
 interface WindowProps extends WindowMetaData {
   isActive: boolean;
-  onWindowMouseDown: (event: any, id: string) => void;
+  onWindowMouseDown: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    id: string
+  ) => void;
   onWindowResize?: (
     id: string,
     newDimensions: { x: number; y: number; width: number; height: number }
@@ -252,8 +253,19 @@ export const Window = ({
       )}
 
       {/* Title Bar */}
-      <Box
-        className="Window--title-bar"
+      {/* <WindowControls /> */}
+      <WindowTitleBar
+        title={title}
+        id={id}
+        isActive={isActive}
+        icon={icon}
+        onWindowMouseDown={onWindowMouseDown}
+        minimizeWindow={minimizeWindow}
+        maximizeWindow={maximizeWindow}
+        closeWindow={closeWindow}
+      />
+      {/* <Box
+        className="TitleBar--root"
         sx={{
           background: (theme) =>
             isActive
@@ -327,7 +339,7 @@ export const Window = ({
             </AugmentedIconButton>
           </Box>
         </Box>
-      </Box>
+      </Box> */}
 
       {/* Window Content */}
       <Box

@@ -1,13 +1,33 @@
-import { alpha, Box, Typography } from '@mui/material';
-import { Minimize2 } from 'lucide-react';
+import { ReactNode } from 'react';
+import { alpha, Box, darken, Typography } from '@mui/material';
+import { Maximize2, Minimize2, X } from 'lucide-react';
 
 import { AugmentedIconButton } from '../../atoms';
 
-type WindowControlProps = {
+type WindowTitleBarProps = {
   isActive?: boolean;
+  id: string;
+  icon: ReactNode;
+  title: string;
+  minimizeWindow: (id: string) => void;
+  maximizeWindow: (id: string) => void;
+  closeWindow: (id: string) => void;
+  onWindowMouseDown: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    id: string
+  ) => void;
 };
 
-export const WindowControls = ({ isActive }: WindowControlProps) => {
+export const WindowTitleBar = ({
+  isActive,
+  id,
+  icon,
+  title,
+  onWindowMouseDown,
+  minimizeWindow,
+  maximizeWindow,
+  closeWindow,
+}: WindowTitleBarProps) => {
   return (
     <Box
       className="TitleBar--root"
@@ -15,7 +35,7 @@ export const WindowControls = ({ isActive }: WindowControlProps) => {
         background: (theme) =>
           isActive
             ? theme.palette.primary.dark
-            : darke(theme.palette.primary.dark, 0.5),
+            : darken(theme.palette.primary.dark, 0.5),
         color: (theme) => alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
         p: 0.25,
       }}
