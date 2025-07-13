@@ -4,7 +4,6 @@ import { Maximize2, Minimize2, X } from 'lucide-react';
 import { AugmentedIconButton, AugmentedIconButtonProps } from '../../atoms';
 
 type WindowControlProps = {
-  isActive?: boolean;
   id: string;
   minimizeWindow: (id: string) => void;
   maximizeWindow: (id: string) => void;
@@ -12,7 +11,6 @@ type WindowControlProps = {
 };
 
 export const WindowControls = ({
-  isActive,
   id,
   minimizeWindow,
   maximizeWindow,

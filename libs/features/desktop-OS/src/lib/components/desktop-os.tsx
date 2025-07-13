@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import {
   DesktopIcon,
   DesktopIconMetaData,
+  TaskBar,
   Window,
   WindowMetaData,
 } from '@jc/ui-components';
@@ -165,13 +166,25 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
   };
 
   const minimizeWindow = (windowId: string) => {
+    const current = windows.find(({ id }) => windowId === id);
+    const isOpening = !!current?.minimized;
+
     setWindows((prev) =>
-      prev.map((window) =>
-        window.id === windowId
-          ? { ...window, minimized: !window.minimized, isActive: false }
-          : window
-      )
+      prev.map((window) => {
+        return window.id === windowId
+          ? {
+              ...window,
+              minimized: !window.minimized,
+              isActive: isOpening,
+              zIndex: isOpening ? windowZIndex + 1 : window.zIndex,
+            }
+          : { ...window, isActive: isOpening ? false : window.isActive };
+      })
     );
+
+    if (isOpening) {
+      setWindowZIndex(windowZIndex + 1);
+    }
   };
 
   const maximizeWindow = (windowId: string) => {
@@ -284,8 +297,10 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
               minWidth={300}
               minHeight={200}
               resizable
+              key={windowMetaData.id}
             />
           ))}
+        <TaskBar minimizeWindow={minimizeWindow} windows={windows} />
       </Box>
     </Box>
   );
