@@ -2,7 +2,7 @@
 
 import { Box } from '@mui/material';
 import {
-  DesktopIconMetaData,
+  FileSystemItem,
   IconPosition,
   TaskBar,
   WindowProvider,
@@ -11,18 +11,18 @@ import {
 import { DesktopItemsRenderer } from './desktop-items-render';
 import { WindowsRenderer } from './windows-renderer';
 type DesktopOSProps = {
-  desktopIcons?: DesktopIconMetaData[];
+  fileSystem?: FileSystemItem[];
 };
 
-export const DesktopOS = ({ desktopIcons = [] }: DesktopOSProps) => {
-  const defaultIconPositions = desktopIcons.reduce((acc, icon, index) => {
+export const DesktopOS = ({ fileSystem = [] }: DesktopOSProps) => {
+  const defaultIconPositions = fileSystem.reduce((acc, icon, index) => {
     acc[icon.id] = { x: 50, y: 50 + index * 100 };
     return acc;
   }, {} as Record<string, IconPosition>);
 
   return (
     <WindowProvider
-      desktopIcons={desktopIcons}
+      fileSystemItems={fileSystem}
       defaultIconPositions={defaultIconPositions}
     >
       <Box className="Desktop-OS--root">

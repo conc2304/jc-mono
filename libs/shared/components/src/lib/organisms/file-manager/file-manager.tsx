@@ -12,11 +12,17 @@ import { PreviewPanel } from '../../molecules/preview-panel';
 import { FileSystemItem, SortBy, SortOrder, ViewMode } from '../../types';
 
 interface FileManagerProps {
-  fileSystem: FileSystemItem[];
+  initialPath: string;
+  folderContents: FileSystemItem[];
+  fileSystemItems: FileSystemItem[];
 }
-export const FileManager = ({ fileSystem }: FileManagerProps) => {
+export const FileManager = ({
+  fileSystemItems,
+  initialPath,
+  folderContents,
+}: FileManagerProps) => {
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(false);
-  const [currentPath, setCurrentPath] = useState('/');
+  const [currentPath, setCurrentPath] = useState(initialPath);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [sortBy, setSortBy] = useState<SortBy>('name');
@@ -52,7 +58,7 @@ export const FileManager = ({ fileSystem }: FileManagerProps) => {
   // Get current directory items
   const getCurrentItems = () => {
     // Filter items based on current path and sort them
-    const items = fileSystem.filter((item) => {
+    const items = folderContents.filter((item) => {
       if (currentPath === '/') {
         return !item.parentId; // Root level items
       }
@@ -85,6 +91,7 @@ export const FileManager = ({ fileSystem }: FileManagerProps) => {
   };
 
   const contextValue = {
+    fs: fileSystemItems,
     items: getCurrentItems(),
     currentPath,
     selectedItems,
@@ -132,7 +139,7 @@ export const FileManager = ({ fileSystem }: FileManagerProps) => {
               Preview
             </Typography>
             <Box sx={{ flex: 1, overflow: 'hidden' }}>
-              <PreviewPanel fileSystem={fileSystem} />
+              <PreviewPanel />
             </Box>
           </Box>
         </Box>

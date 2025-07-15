@@ -26,6 +26,7 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
 
   const handleItemClick = (item: FileSystemItem, event: React.MouseEvent) => {
     event.preventDefault();
+    if (event.button === 2) return;
 
     if (event.ctrlKey || event.metaKey) {
       context?.selectItem(item.id, true);
@@ -43,10 +44,12 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    if (e.button === 2) return; // ignore right click
   };
 
   const handleDrop = (targetItem: FileSystemItem, e: React.DragEvent) => {
     e.preventDefault();
+    if (e.button === 2) return; // ignore right click
     if (targetItem.type === 'folder' && context?.draggedItems) {
       context.moveItems(context.draggedItems, targetItem.path);
     }
@@ -69,7 +72,7 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
               key={item.id}
               hover
               selected={context?.selectedItems.includes(item.id)}
-              onClick={(e) => handleItemClick(item, e)}
+              onDoubleClick={(e) => handleItemClick(item, e)}
               draggable
               onDragStart={() => handleDragStart(item)}
               onDragOver={handleDragOver}
@@ -114,7 +117,7 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
                 border: context?.selectedItems.includes(item.id) ? 2 : 0,
                 borderColor: 'primary.main',
               }}
-              onClick={(e) => handleItemClick(item, e)}
+              onDoubleClick={(e) => handleItemClick(item, e)}
               draggable
               onDragStart={() => handleDragStart(item)}
               onDragOver={handleDragOver}
@@ -147,8 +150,8 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
         <ListItem
           key={item.id}
           // selected={context?.selectedItems.includes(item.id)}
-          onClick={(e) => handleItemClick(item, e)}
-          // draggable    // todo make dragagle
+          onDoubleClick={(e) => handleItemClick(item, e)}
+          // draggable    // todo make draggle
           onDragStart={() => handleDragStart(item)}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(item, e)}

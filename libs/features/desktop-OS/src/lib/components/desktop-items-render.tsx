@@ -6,7 +6,7 @@ import {
 
 export const DesktopItemsRenderer = () => {
   const { draggedIcon } = useWindowState();
-  const { desktopIcons, iconPositions } = useWindowManager();
+  const { fileSystemItems: desktopIcons, iconPositions } = useWindowManager();
 
   return (
     <>

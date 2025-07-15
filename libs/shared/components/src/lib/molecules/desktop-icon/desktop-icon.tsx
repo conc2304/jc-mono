@@ -102,7 +102,7 @@ export const DesktopIcon = ({
           color={!isDragging ? 'textPrimary' : 'textDisabled'}
           sx={{
             mt: 0.25,
-            width: '110%',
+            width: '125%',
             top: '50%',
             left: '50%',
             transform: 'translate(-0%, -0%)',

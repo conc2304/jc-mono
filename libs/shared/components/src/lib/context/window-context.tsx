@@ -5,11 +5,18 @@ import React, {
   useState,
   useEffect,
   useRef,
+  ReactNode,
 } from 'react';
 import { useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
-import { DesktopIconMetaData, WindowMetaData, IconPosition } from '../types';
+import { FileManager } from '../organisms/file-manager';
+import {
+  // DesktopIconMetaData,
+  WindowMetaData,
+  IconPosition,
+  FileSystemItem,
+} from '../types';
 
 interface DragRef {
   startX: number;
@@ -24,7 +31,7 @@ interface WindowState {
   windowZIndex: number;
   iconPositions: Record<string, IconPosition>;
   draggedIcon: string | null;
-  desktopIcons: DesktopIconMetaData[];
+  fileSystemItems: FileSystemItem[];
 }
 
 interface WindowActions {
@@ -72,9 +79,9 @@ const WindowContext = createContext<WindowContextValue | null>(null);
 // Provider
 export const WindowProvider: React.FC<{
   children: React.ReactNode;
-  desktopIcons: DesktopIconMetaData[];
+  fileSystemItems: FileSystemItem[];
   defaultIconPositions?: Record<string, IconPosition>;
-}> = ({ children, desktopIcons, defaultIconPositions = {} }) => {
+}> = ({ children, fileSystemItems, defaultIconPositions = {} }) => {
   const theme = useTheme();
 
   const [windows, setWindows] = useState<WindowMetaData[]>([]);
@@ -184,12 +191,15 @@ export const WindowProvider: React.FC<{
   }, []);
 
   const openWindow = useCallback(
-    (iconId: string) => {
-      const icon = desktopIcons && desktopIcons.find((i) => i.id === iconId);
-      if (!icon) return;
+    (itemId: string) => {
+      const fsItem =
+        fileSystemItems && fileSystemItems.find((i) => i.id === itemId);
+      if (!fsItem) return;
 
-      const id = `window-${iconId}`;
+      const id = `window-${itemId}`;
+      const type = fsItem.type;
       // check if window already open
+      const Temp_RenderFileContent = () => <div>Temporary Content</div>;
       const currWindow = windows.find((window) => window.id === id);
       if (currWindow) {
         // bring it to the front
@@ -208,8 +218,8 @@ export const WindowProvider: React.FC<{
       } else {
         const newWindow: WindowMetaData = {
           id,
-          title: icon.name,
-          icon: icon.icon,
+          title: fsItem.name,
+          icon: fsItem.icon,
           x: 200 + windows.length * 30,
           y: 100 + windows.length * 30,
           width: 400,
@@ -217,7 +227,7 @@ export const WindowProvider: React.FC<{
           zIndex: windowZIndex + 1,
           minimized: false,
           maximized: false,
-          windowContent: <div>Default Content</div>, // TODO Replace with actual content
+          windowContent: getWindowContent(fsItem, fileSystemItems),
           isActive: true,
         };
 
@@ -229,7 +239,7 @@ export const WindowProvider: React.FC<{
 
       setWindowZIndex(windowZIndex + 1);
     },
-    [desktopIcons, windows, windowZIndex]
+    [fileSystemItems, windows, windowZIndex]
   );
 
   const closeWindow = useCallback((windowId: string) => {
@@ -400,7 +410,7 @@ export const WindowProvider: React.FC<{
     windowZIndex,
     iconPositions,
     draggedIcon,
-    desktopIcons,
+    fileSystemItems,
 
     // Actions
     openWindow,
@@ -472,4 +482,22 @@ export const useIconDrag = () => {
 export const useWindowDrag = () => {
   const { handleWindowMouseDown, draggedWindow } = useWindowManager();
   return { handleWindowMouseDown, draggedWindow };
+};
+
+const getWindowContent = (
+  fsItem: FileSystemItem,
+  fileSystemItems: FileSystemItem[]
+): ReactNode => {
+  if (fsItem.type === 'folder') {
+    // For folders: render FileManager with folder contents
+    return (
+      <FileManager
+        initialPath={fsItem.path}
+        folderContents={fsItem.children || []}
+        fileSystemItems={fileSystemItems}
+      />
+    );
+  } else {
+    return <div>DEFAULT FILE CONTENT</div>;
+  }
 };
