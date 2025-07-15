@@ -6,6 +6,11 @@ export interface DesktopIconMetaData {
   icon: ReactNode;
 }
 
+export interface IconPosition {
+  x: number;
+  y: number;
+}
+
 export interface WindowMetaData {
   id: string;
   title: string;

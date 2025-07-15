@@ -2,20 +2,14 @@ import { Box } from '@mui/material';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 
 import { AugmentedIconButton, AugmentedIconButtonProps } from '../../atoms';
+import { useWindowActions } from '../../context';
 
 type WindowControlProps = {
   id: string;
-  minimizeWindow: (id: string) => void;
-  maximizeWindow: (id: string) => void;
-  closeWindow: (id: string) => void;
 };
 
-export const WindowControls = ({
-  id,
-  minimizeWindow,
-  maximizeWindow,
-  closeWindow,
-}: WindowControlProps) => {
+export const WindowControls = ({ id }: WindowControlProps) => {
+  const { minimizeWindow, maximizeWindow, closeWindow } = useWindowActions();
   const buttonProps: AugmentedIconButtonProps = {
     size: 'small',
     shape: 'buttonRight',

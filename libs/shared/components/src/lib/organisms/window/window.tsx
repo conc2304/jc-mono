@@ -8,23 +8,12 @@ import {
   ResizeState,
 } from './resize-handle';
 import { getCursorForDirection, getResizeDimensions } from './utils';
+import { useWindowManager } from '../../context';
 import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
 
 interface WindowProps extends WindowMetaData {
   isActive: boolean;
-  onWindowMouseDown: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: string
-  ) => void;
-  onWindowResize?: (
-    id: string,
-    newDimensions: { x: number; y: number; width: number; height: number }
-  ) => void;
-  bringToFront: (id: string) => void;
-  minimizeWindow: (id: string) => void;
-  maximizeWindow: (id: string) => void;
-  closeWindow: (id: string) => void;
   minWidth?: number;
   minHeight?: number;
   maxWidth?: number;
@@ -45,18 +34,13 @@ export const Window = ({
   maximized,
   isActive = true,
   windowContent,
-  onWindowMouseDown,
-  onWindowResize,
-  bringToFront,
-  minimizeWindow,
-  maximizeWindow,
-  closeWindow,
   minWidth = 200,
   minHeight = 150,
   maxWidth = window.innerWidth,
   maxHeight = window.innerHeight,
   resizable = true,
 }: WindowProps) => {
+  const { updateWindow, bringToFront } = useWindowManager();
   const [resizeState, setResizeState] = useState<ResizeState>({
     isResizing: false,
     direction: null,
@@ -118,14 +102,14 @@ export const Window = ({
       const newLeft = Math.max(0, Math.min(window.innerWidth - width, x));
       const newTop = Math.max(0, Math.min(window.innerHeight - height, y));
 
-      onWindowResize?.(id, {
+      updateWindow?.(id, {
         x: newLeft,
         y: newTop,
         width,
         height,
       });
     },
-    [resizeState, minWidth, minHeight, maxWidth, maxHeight, onWindowResize, id]
+    [resizeState, minWidth, minHeight, maxWidth, maxHeight, updateWindow, id]
   );
 
   // Handle resize end
@@ -185,16 +169,7 @@ export const Window = ({
       }}
       onClick={() => bringToFront(id)}
     >
-      <WindowTitleBar
-        title={title}
-        id={id}
-        isActive={isActive}
-        icon={icon}
-        onWindowMouseDown={onWindowMouseDown}
-        minimizeWindow={minimizeWindow}
-        maximizeWindow={maximizeWindow}
-        closeWindow={closeWindow}
-      />
+      <WindowTitleBar title={title} id={id} isActive={isActive} icon={icon} />
 
       <Box
         data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
@@ -231,7 +206,7 @@ export const Window = ({
             right: '25%',
             height: '4px',
           }}
-          onResizeStart={handleResizeStart}
+          onResizeStart={(e) => handleResizeStart(e, 's')}
         />
       </Box>
     </Box>

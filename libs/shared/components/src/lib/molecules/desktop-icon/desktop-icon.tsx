@@ -1,17 +1,11 @@
-import { Component, MouseEventHandler, ReactNode } from 'react';
-import { alpha, Box, styled, ThemeOptions, Typography } from '@mui/material';
+import { alpha, Box, Typography } from '@mui/material';
 
-import { AugmentedButton } from '../../atoms';
+import { useIconDrag, useWindowActions } from '../../context';
 import { DesktopIconMetaData } from '../../types';
 
 interface DesktopIconProps extends DesktopIconMetaData {
   position: { x: number; y: number };
   isDragging?: boolean;
-  onOpenWindow: (id: string) => void;
-  onIconMouseDown: (
-    e: React.MouseEvent<HTMLElement, MouseEvent>,
-    id: string
-  ) => void;
 }
 
 // TODO - can only have filter or backdrop filter, but not bot
@@ -21,10 +15,9 @@ export const DesktopIcon = ({
   isDragging = false,
   icon,
   name,
-  // color,
-  onOpenWindow,
-  onIconMouseDown,
 }: DesktopIconProps) => {
+  const { handleIconMouseDown } = useIconDrag();
+  const { openWindow } = useWindowActions();
   return (
     <Box
       className="DesktopIcon--root"
@@ -54,8 +47,8 @@ export const DesktopIcon = ({
         top: position.y,
         zIndex: isDragging ? 10000 : 1,
       }}
-      onMouseDown={(e) => onIconMouseDown(e, id)}
-      onDoubleClick={() => onOpenWindow(id)}
+      onMouseDown={(e) => handleIconMouseDown(e, id)}
+      onDoubleClick={() => openWindow(id)}
     >
       <Box
         className="DesktopIcon--content"

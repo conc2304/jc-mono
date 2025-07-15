@@ -1,14 +1,17 @@
 import { alpha, Box, Divider, Typography } from '@mui/material';
 
 import { AugmentedButton } from '../../atoms';
+import { useWindowActions, useWindowManager } from '../../context';
 import { WindowMetaData } from '../../types';
 
 interface TaskBarProps {
-  windows?: WindowMetaData[];
-  minimizeWindow: (id: string) => void;
+  // windows?: WindowMetaData[];
+  // minimizeWindow: (id: string) => void;
 }
 
-export const TaskBar = ({ windows = [], minimizeWindow }: TaskBarProps) => {
+export const TaskBar = ({}: TaskBarProps) => {
+  const { windows } = useWindowManager();
+  const { minimizeWindow } = useWindowActions();
   return (
     <Box
       className="TaskBar--root"

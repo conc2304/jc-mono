@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import { alpha, Box, darken, Theme, Typography } from '@mui/material';
+import { alpha, Box, darken, Typography } from '@mui/material';
 
+import { useWindowManager } from '../../context';
 import { WindowControls } from '../window-controls';
 
 type WindowTitleBarProps = {
@@ -8,13 +9,6 @@ type WindowTitleBarProps = {
   id: string;
   icon: ReactNode;
   title: string;
-  minimizeWindow: (id: string) => void;
-  maximizeWindow: (id: string) => void;
-  closeWindow: (id: string) => void;
-  onWindowMouseDown: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: string
-  ) => void;
 };
 
 export const WindowTitleBar = ({
@@ -22,11 +16,9 @@ export const WindowTitleBar = ({
   id,
   icon,
   title,
-  onWindowMouseDown,
-  minimizeWindow,
-  maximizeWindow,
-  closeWindow,
 }: WindowTitleBarProps) => {
+  const { handleWindowMouseDown } = useWindowManager();
+
   return (
     <Box
       className="TitleBar--root"
@@ -37,7 +29,7 @@ export const WindowTitleBar = ({
     >
       <Box
         className="Titlebar--move-handler"
-        onMouseDown={(e) => onWindowMouseDown(e, id)}
+        onMouseDown={(e) => handleWindowMouseDown(e, id)}
         sx={{
           cursor: 'move',
           m: 0,
@@ -111,12 +103,7 @@ export const WindowTitleBar = ({
             },
           }}
         >
-          <WindowControls
-            id={id}
-            minimizeWindow={minimizeWindow}
-            maximizeWindow={maximizeWindow}
-            closeWindow={closeWindow}
-          />
+          <WindowControls id={id} />
         </Box>
       </Box>
     </Box>
