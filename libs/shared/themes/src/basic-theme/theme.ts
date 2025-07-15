@@ -60,6 +60,7 @@ export const createThemeFromOptions = ({
   const fullTheme: Theme = {
     ...theme,
     components: { ...theme.components, ...getComponentOverrides(theme) },
+    zIndex: { ...theme.zIndex, window: 500 },
   };
 
   return fullTheme;

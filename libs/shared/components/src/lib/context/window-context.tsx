@@ -75,14 +75,15 @@ export const WindowProvider: React.FC<{
   desktopIcons: DesktopIconMetaData[];
   defaultIconPositions?: Record<string, IconPosition>;
 }> = ({ children, desktopIcons, defaultIconPositions = {} }) => {
+  const theme = useTheme();
+
   const [windows, setWindows] = useState<WindowMetaData[]>([]);
   const [draggedWindow, setDraggedWindow] = useState<string | null>(null);
-  const [windowZIndex, setWindowZIndex] = useState(1000);
+  const [windowZIndex, setWindowZIndex] = useState(theme.zIndex.window);
   const [iconPositions, setIconPositions] =
     useState<Record<string, IconPosition>>(defaultIconPositions);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
 
-  const theme = useTheme();
   const dragRef = useRef<DragRef>({
     startX: 0,
     startY: 0,

@@ -9,4 +9,8 @@ declare module '@mui/material/styles' {
     };
     desktopIcon: CSSProperties;
   }
+
+  interface ZIndex {
+    window: number;
+  }
 }
