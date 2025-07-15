@@ -1,0 +1,92 @@
+import { useContext, useState } from 'react';
+import {
+  Box,
+  ButtonGroup,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import { ArrowUpDown, Grid3x3, LayoutGrid, ListIcon } from 'lucide-react';
+
+import { FileSystemContext } from '../../context';
+import { SortBy, ViewMode } from '../../types';
+
+export const ViewControls = () => {
+  const context = useContext(FileSystemContext);
+  const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
+
+  const viewModeIcons = {
+    list: <ListIcon size={16} />,
+    details: <LayoutGrid size={16} />,
+    'large-icons': <Grid3x3 size={16} />,
+    'small-icons': <Grid3x3 size={16} />,
+  };
+
+  return (
+    <Box
+      sx={{
+        p: 1,
+        borderBottom: 1,
+        borderColor: 'divider',
+        display: 'flex',
+        gap: 1,
+        alignItems: 'center',
+      }}
+    >
+      <ButtonGroup size="small">
+        {Object.entries(viewModeIcons).map(([mode, icon]) => (
+          <IconButton
+            key={mode}
+            size="small"
+            color={context?.viewMode === mode ? 'primary' : 'default'}
+            onClick={() => context?.setViewMode(mode as ViewMode)}
+          >
+            {icon}
+          </IconButton>
+        ))}
+      </ButtonGroup>
+
+      <Divider orientation="vertical" flexItem />
+
+      <IconButton
+        size="small"
+        onClick={(e) => setSortMenuAnchor(e.currentTarget)}
+      >
+        <ArrowUpDown size={16} />
+      </IconButton>
+
+      <Menu
+        anchorEl={sortMenuAnchor}
+        open={Boolean(sortMenuAnchor)}
+        onClose={() => setSortMenuAnchor(null)}
+      >
+        {(['name', 'date', 'size', 'type'] as SortBy[]).map((sortBy) => (
+          <MenuItem
+            key={sortBy}
+            onClick={() => {
+              context?.setSorting(sortBy, context.sortOrder);
+              setSortMenuAnchor(null);
+            }}
+          >
+            {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}
+          </MenuItem>
+        ))}
+        <Divider />
+        <MenuItem
+          onClick={() => {
+            context?.setSorting(
+              context.sortBy,
+              context.sortOrder === 'asc' ? 'desc' : 'asc'
+            );
+            setSortMenuAnchor(null);
+          }}
+        >
+          {context?.sortOrder === 'asc' ? 'Descending' : 'Ascending'}
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+};
