@@ -265,3 +265,10 @@ export function useWindowColors(isActive: boolean, baseColor: string) {
     useWarmGray: true,
   });
 }
+
+export const remToPixels = (rem: string) => {
+  return (
+    parseFloat(rem) *
+    parseFloat(getComputedStyle(document.documentElement).fontSize)
+  );
+};

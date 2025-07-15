@@ -24,7 +24,8 @@ export const DesktopIcon = ({
       sx={{
         position: 'absolute',
         cursor: 'pointer',
-        width: '4.375rem',
+        width: (theme) => theme.mixins.desktopIcon.width,
+        maxHeight: (theme) => theme.mixins.desktopIcon.maxHeight,
         transition: (theme) =>
           theme.transitions.create(['transform', 'filter'], {
             duration: theme.transitions.duration.standard,

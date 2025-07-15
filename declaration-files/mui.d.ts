@@ -7,5 +7,6 @@ declare module '@mui/material/styles' {
     window: {
       titlebar: CSSProperties;
     };
+    desktopIcon: CSSProperties;
   }
 }

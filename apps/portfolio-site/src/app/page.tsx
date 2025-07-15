@@ -1,8 +1,8 @@
 'use client';
 
-import { Box, Typography, Card, CardContent } from '@mui/material';
+import { Box } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
-import { DesktopIcon, DesktopIconMetaData } from '@jc/ui-components';
+import { DesktopIconMetaData } from '@jc/ui-components';
 import {
   Folder,
   CalculatorIcon,
@@ -37,9 +37,7 @@ const desktopIcons: DesktopIconMetaData[] = [
 
 export default function Index() {
   return (
-    <Box sx={{ p: 3, minHeight: '100vh' }}>
-      {/* <Typography variant="h1">Site Home Page</Typography> */}
-
+    <Box sx={{ p: 3, minHeight: '100vh', maxHeight: '100vh' }}>
       <DesktopOS desktopIcons={desktopIcons} />
     </Box>
   );

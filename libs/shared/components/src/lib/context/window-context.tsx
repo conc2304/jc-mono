@@ -6,6 +6,8 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { useTheme } from '@mui/material';
+import { remToPixels } from '@jc/themes';
 
 import { DesktopIconMetaData, WindowMetaData, IconPosition } from '../types';
 
@@ -58,6 +60,9 @@ interface WindowActions {
   setDraggedIcon: React.Dispatch<React.SetStateAction<string | null>>;
   setWindowZIndex: React.Dispatch<React.SetStateAction<number>>;
 }
+const clamp = (num: number, min: number, max: number) => {
+  return Math.min(Math.max(num, min), max);
+};
 
 interface WindowContextValue extends WindowState, WindowActions {}
 
@@ -77,6 +82,7 @@ export const WindowProvider: React.FC<{
     useState<Record<string, IconPosition>>(defaultIconPositions);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
 
+  const theme = useTheme();
   const dragRef = useRef<DragRef>({
     startX: 0,
     startY: 0,
@@ -135,8 +141,21 @@ export const WindowProvider: React.FC<{
       const deltaX = e.clientX - dragRef.current.startX;
       const deltaY = e.clientY - dragRef.current.startY;
 
-      const newX = Math.max(0, dragRef.current.elementX + deltaX);
-      const newY = Math.max(0, dragRef.current.elementY + deltaY);
+      const iconWidth = remToPixels(theme.mixins.desktopIcon.width as string);
+      const iconHeight = remToPixels(
+        theme.mixins.desktopIcon.maxHeight as string
+      );
+      const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+      const newX = clamp(
+        dragRef.current.elementX + deltaX,
+        0,
+        window.innerWidth - iconWidth
+      );
+      const newY = clamp(
+        dragRef.current.elementY + deltaY,
+        0,
+        window.innerHeight - taskbarHeight - iconHeight
+      );
 
       setIconPositions((prev) => ({
         ...prev,
@@ -175,13 +194,26 @@ export const WindowProvider: React.FC<{
 
       const deltaX = e.clientX - dragRef.current.startX;
       const deltaY = e.clientY - dragRef.current.startY;
+      const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+      const titlebarHeight = remToPixels(
+        theme.mixins.window.titlebar.height as string
+      );
+      const overflowPadding = 20;
 
-      const newX = Math.max(0, dragRef.current.elementX + deltaX);
-      const newY = Math.max(0, dragRef.current.elementY + deltaY);
+      const newX = clamp(
+        dragRef.current.elementX + deltaX,
+        0,
+        window.innerWidth - overflowPadding * 3
+      );
+      const newY = clamp(
+        dragRef.current.elementY + deltaY,
+        0,
+        window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding // just a little extra padding
+      );
 
       setWindows((prev) =>
-        prev.map((window) =>
-          window.id === draggedWindow ? { ...window, x: newX, y: newY } : window
+        prev.map((w: WindowMetaData) =>
+          w.id === draggedWindow ? { ...w, x: newX, y: newY } : w
         )
       );
     },
@@ -195,7 +227,6 @@ export const WindowProvider: React.FC<{
   // Window management functions
   const bringToFront = useCallback(
     (windowId: string) => {
-      console.log(windowId);
       const newZIndex = windowZIndex + 1;
       setWindowZIndex(newZIndex);
       setWindows((prev) =>
@@ -212,7 +243,6 @@ export const WindowProvider: React.FC<{
 
   const openWindow = useCallback(
     (iconId: string) => {
-      console.log('Open Window', iconId);
       const icon = desktopIcons && desktopIcons.find((i) => i.id === iconId);
       if (!icon) return;
 
@@ -245,7 +275,7 @@ export const WindowProvider: React.FC<{
           zIndex: windowZIndex + 1,
           minimized: false,
           maximized: false,
-          windowContent: <div>Default Content</div>, // Replace with actual content
+          windowContent: <div>Default Content</div>, // TODO Replace with actual content
           isActive: true,
         };
 
@@ -261,14 +291,11 @@ export const WindowProvider: React.FC<{
   );
 
   const closeWindow = useCallback((windowId: string) => {
-    console.log('Close', windowId);
-
     setWindows((prev) => prev.filter((w) => w.id !== windowId));
   }, []);
 
   const minimizeWindow = useCallback(
     (windowId: string) => {
-      console.log('Minimize', windowId);
       const current = windows.find(({ id }) => windowId === id);
       const isOpening = !!current?.minimized;
 
@@ -293,8 +320,6 @@ export const WindowProvider: React.FC<{
   );
 
   const maximizeWindow = useCallback((windowId: string) => {
-    console.log('Maximize', windowId);
-
     setWindows((prev) =>
       prev.map((w) =>
         w.id === windowId

@@ -1,442 +1,821 @@
-import React, { useState, useRef, useEffect } from 'react';
+// @ts-expect-error  this is a temp file
+
+import React, { useState, useRef, createContext, useContext } from 'react';
+import {
+  Box,
+  Typography,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Breadcrumbs,
+  Link,
+  Menu,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
+  Chip,
+  Card,
+  CardContent,
+  Divider,
+  Collapse,
+  Grid,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Avatar,
+  Button,
+  ButtonGroup,
+} from '@mui/material';
 import {
   Folder,
+  FolderOpen,
   FileText,
-  Settings,
-  Calculator,
   Image,
-  Minimize2,
-  Maximize2,
-  X,
+  Music,
+  Video,
+  Archive,
+  Code,
+  Settings,
+  Home,
+  Download,
+  Star,
+  ChevronRight,
+  ChevronDown,
+  Grid3x3,
+  List as ListIcon,
+  LayoutGrid,
+  ArrowUpDown,
+  Filter,
+  GripVertical,
+  Info,
 } from 'lucide-react';
 
-const DesktopOS = () => {
-  const [windows, setWindows] = useState([]);
-  const [draggedIcon, setDraggedIcon] = useState(null);
-  const [draggedWindow, setDraggedWindow] = useState(null);
-  const [windowZIndex, setWindowZIndex] = useState(1000);
-  const [iconPositions, setIconPositions] = useState({
-    folder: { x: 50, y: 50 },
-    document: { x: 50, y: 150 },
-    settings: { x: 50, y: 250 },
-    calculator: { x: 50, y: 350 },
-    image: { x: 50, y: 450 },
-  });
-
-  const desktopRef = useRef(null);
-  const dragRef = useRef({ startX: 0, startY: 0, elementX: 0, elementY: 0 });
-
-  const desktopIcons = [
-    { id: 'folder', name: 'My Folder', icon: Folder, color: 'text-blue-500' },
-    {
-      id: 'document',
-      name: 'Document',
-      icon: FileText,
-      color: 'text-green-500',
-    },
-    {
-      id: 'settings',
-      name: 'Settings',
-      icon: Settings,
-      color: 'text-gray-500',
-    },
-    {
-      id: 'calculator',
-      name: 'Calculator',
-      icon: Calculator,
-      color: 'text-purple-500',
-    },
-    { id: 'image', name: 'Images', icon: Image, color: 'text-pink-500' },
-  ];
-
-  const snapToGrid = (x, y) => {
-    const gridSize = 20;
-    return {
-      x: Math.round(x / gridSize) * gridSize,
-      y: Math.round(y / gridSize) * gridSize,
-    };
+// Types for the file system
+interface FileSystemItem {
+  id: string;
+  name: string;
+  type: 'file' | 'folder';
+  size?: number;
+  dateModified: Date;
+  dateCreated: Date;
+  extension?: string;
+  mimeType?: string;
+  path: string;
+  parentId?: string;
+  children?: FileSystemItem[];
+  permissions: {
+    read: boolean;
+    write: boolean;
+    execute: boolean;
   };
-
-  const handleIconMouseDown = (e, iconId) => {
-    e.preventDefault();
-    // const rect = e.currentTarget.getBoundingClientRect();
-    // const desktopRect = desktopRef.current.getBoundingClientRect();
-
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      elementX: iconPositions[iconId].x,
-      elementY: iconPositions[iconId].y,
-    };
-
-    setDraggedIcon(iconId);
+  metadata: {
+    description?: string;
+    tags: string[];
+    favorite: boolean;
+    thumbnail?: string;
+    customProperties?: Record<string, any>;
   };
+}
 
-  const handleIconMouseMove = (e) => {
-    if (!draggedIcon) return;
+interface QuickAccessItem {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  path: string;
+  type: 'folder' | 'application';
+  category?: string;
+}
 
-    const deltaX = e.clientX - dragRef.current.startX;
-    const deltaY = e.clientY - dragRef.current.startY;
+type ViewMode = 'list' | 'details' | 'large-icons' | 'small-icons';
+type SortBy = 'name' | 'date' | 'size' | 'type';
+type SortOrder = 'asc' | 'desc';
 
-    const newX = Math.max(0, dragRef.current.elementX + deltaX);
-    const newY = Math.max(0, dragRef.current.elementY + deltaY);
+// Context for file system operations
+const FileSystemContext = createContext<{
+  items: FileSystemItem[];
+  currentPath: string;
+  selectedItems: string[];
+  viewMode: ViewMode;
+  sortBy: SortBy;
+  sortOrder: SortOrder;
+  navigateToPath: (path: string) => void;
+  selectItem: (id: string, multi?: boolean) => void;
+  setViewMode: (mode: ViewMode) => void;
+  setSorting: (sortBy: SortBy, order: SortOrder) => void;
+  moveItems: (itemIds: string[], targetPath: string) => void;
+  draggedItems: string[];
+  setDraggedItems: (items: string[]) => void;
+} | null>(null);
 
-    setIconPositions((prev) => ({
-      ...prev,
-      [draggedIcon]: { x: newX, y: newY },
-    }));
-  };
+// Mock data
+const mockFileSystem: FileSystemItem[] = [
+  {
+    id: '1',
+    name: 'Documents',
+    type: 'folder',
+    dateModified: new Date('2024-01-15'),
+    dateCreated: new Date('2024-01-01'),
+    path: '/Documents',
+    permissions: { read: true, write: true, execute: true },
+    metadata: { tags: [], favorite: true },
+    children: [
+      {
+        id: '2',
+        name: 'Resume.pdf',
+        type: 'file',
+        size: 245760,
+        extension: 'pdf',
+        mimeType: 'application/pdf',
+        dateModified: new Date('2024-01-10'),
+        dateCreated: new Date('2024-01-10'),
+        path: '/Documents/Resume.pdf',
+        parentId: '1',
+        permissions: { read: true, write: true, execute: false },
+        metadata: {
+          tags: ['work', 'important'],
+          favorite: true,
+          description: 'Professional resume',
+        },
+      },
+    ],
+  },
+  {
+    id: '3',
+    name: 'Pictures',
+    type: 'folder',
+    dateModified: new Date('2024-01-20'),
+    dateCreated: new Date('2024-01-01'),
+    path: '/Pictures',
+    permissions: { read: true, write: true, execute: true },
+    metadata: { tags: [], favorite: false },
+    children: [],
+  },
+  {
+    id: '4',
+    name: 'Projects',
+    type: 'folder',
+    dateModified: new Date('2024-01-25'),
+    dateCreated: new Date('2024-01-01'),
+    path: '/Projects',
+    permissions: { read: true, write: true, execute: true },
+    metadata: { tags: ['development'], favorite: true },
+    children: [],
+  },
+];
 
-  const handleIconMouseUp = () => {
-    if (draggedIcon) {
-      const currentPos = iconPositions[draggedIcon];
-      const snappedPos = snapToGrid(currentPos.x, currentPos.y);
+const quickAccessItems: QuickAccessItem[] = [
+  {
+    id: 'home',
+    name: 'Home',
+    icon: <Home size={16} />,
+    path: '/',
+    type: 'folder',
+  },
+  {
+    id: 'documents',
+    name: 'Documents',
+    icon: <FileText size={16} />,
+    path: '/Documents',
+    type: 'folder',
+  },
+  {
+    id: 'pictures',
+    name: 'Pictures',
+    icon: <Image size={16} />,
+    path: '/Pictures',
+    type: 'folder',
+  },
+  {
+    id: 'downloads',
+    name: 'Downloads',
+    icon: <Download size={16} />,
+    path: '/Downloads',
+    type: 'folder',
+  },
+  {
+    id: 'favorites',
+    name: 'Favorites',
+    icon: <Star size={16} />,
+    path: '/Favorites',
+    type: 'folder',
+  },
+];
 
-      setIconPositions((prev) => ({
-        ...prev,
-        [draggedIcon]: snappedPos,
-      }));
+// File icon component
+const FileIcon = ({
+  item,
+  size = 24,
+}: {
+  item: FileSystemItem;
+  size?: number;
+}) => {
+  if (item.type === 'folder') {
+    return <Folder size={size} color="#FFA726" />;
+  }
 
-      setDraggedIcon(null);
-    }
-  };
-
-  const handleWindowMouseDown = (e, windowId) => {
-    e.preventDefault();
-    const windowElement = e.currentTarget;
-    const rect = windowElement.getBoundingClientRect();
-
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      elementX: rect.left,
-      elementY: rect.top,
-    };
-
-    setDraggedWindow(windowId);
-    bringToFront(windowId);
-  };
-
-  const handleWindowMouseMove = (e) => {
-    if (!draggedWindow) return;
-
-    const deltaX = e.clientX - dragRef.current.startX;
-    const deltaY = e.clientY - dragRef.current.startY;
-
-    const newX = Math.max(0, dragRef.current.elementX + deltaX);
-    const newY = Math.max(0, dragRef.current.elementY + deltaY);
-
-    setWindows((prev) =>
-      prev.map((window) =>
-        window.id === draggedWindow ? { ...window, x: newX, y: newY } : window
-      )
-    );
-  };
-
-  const handleWindowMouseUp = () => {
-    setDraggedWindow(null);
-  };
-
-  const bringToFront = (windowId) => {
-    const newZIndex = windowZIndex + 1;
-    setWindowZIndex(newZIndex);
-    setWindows((prev) =>
-      prev.map((window) =>
-        window.id === windowId ? { ...window, zIndex: newZIndex } : window
-      )
-    );
-  };
-
-  const openWindow = (iconId) => {
-    const icon = desktopIcons.find((i) => i.id === iconId);
-    if (!icon) return;
-
-    const newWindow = {
-      id: `window-${Date.now()}`,
-      title: icon.name,
-      icon: icon.icon,
-      color: icon.color,
-      x: 200 + windows.length * 30,
-      y: 100 + windows.length * 30,
-      width: 400,
-      height: 300,
-      zIndex: windowZIndex + 1,
-      minimized: false,
-      maximized: false,
-    };
-
-    setWindows((prev) => [...prev, newWindow]);
-    setWindowZIndex(windowZIndex + 1);
-  };
-
-  const closeWindow = (windowId) => {
-    setWindows((prev) => prev.filter((w) => w.id !== windowId));
-  };
-
-  const minimizeWindow = (windowId) => {
-    setWindows((prev) =>
-      prev.map((window) =>
-        window.id === windowId
-          ? { ...window, minimized: !window.minimized }
-          : window
-      )
-    );
-  };
-
-  const maximizeWindow = (windowId) => {
-    setWindows((prev) =>
-      prev.map((window) =>
-        window.id === windowId
-          ? {
-              ...window,
-              maximized: !window.maximized,
-              x: window.maximized ? 200 : 0,
-              y: window.maximized ? 100 : 0,
-              width: window.maximized ? 400 : window.innerWidth || 800,
-              height: window.maximized ? 300 : window.innerHeight || 600,
-            }
-          : window
-      )
-    );
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (draggedIcon) {
-        handleIconMouseMove(e);
-      }
-      if (draggedWindow) {
-        handleWindowMouseMove(e);
-      }
-    };
-
-    const handleMouseUp = () => {
-      handleIconMouseUp();
-      handleWindowMouseUp();
-    };
-
-    if (draggedIcon || draggedWindow) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [draggedIcon, draggedWindow, iconPositions]);
-
-  const renderWindowContent = (window) => {
-    switch (window.title) {
-      case 'Calculator':
-        return (
-          <div className="p-4">
-            <div className="bg-gray-800 text-white p-2 rounded mb-2 text-right">
-              0
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                '7',
-                '8',
-                '9',
-                '/',
-                '4',
-                '5',
-                '6',
-                '*',
-                '1',
-                '2',
-                '3',
-                '-',
-                '0',
-                '.',
-                '=',
-                '+',
-              ].map((btn) => (
-                <button
-                  key={btn}
-                  className="bg-gray-200 hover:bg-gray-300 p-2 rounded"
-                >
-                  {btn}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-      case 'Settings':
-        return (
-          <div className="p-4">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span>Dark Mode</span>
-                <input type="checkbox" className="toggle" />
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Notifications</span>
-                <input type="checkbox" className="toggle" defaultChecked />
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Sound</span>
-                <input type="range" className="w-24" />
-              </div>
-            </div>
-          </div>
-        );
-      case 'My Folder':
-        return (
-          <div className="p-4">
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                'File 1.txt',
-                'File 2.doc',
-                'Image.jpg',
-                'Video.mp4',
-                'Archive.zip',
-              ].map((file) => (
-                <div
-                  key={file}
-                  className="flex flex-col items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
-                >
-                  <FileText className="w-8 h-8 text-blue-500 mb-1" />
-                  <span className="text-xs text-center">{file}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      default:
-        return (
-          <div className="p-4">
-            <p>This is the {window.title} application.</p>
-            <p className="text-gray-600 mt-2">Content goes here...</p>
-          </div>
-        );
-    }
+  const iconMap: Record<string, React.ReactNode> = {
+    pdf: <FileText size={size} color="#F44336" />,
+    doc: <FileText size={size} color="#1976D2" />,
+    docx: <FileText size={size} color="#1976D2" />,
+    jpg: <Image size={size} color="#4CAF50" />,
+    jpeg: <Image size={size} color="#4CAF50" />,
+    png: <Image size={size} color="#4CAF50" />,
+    mp3: <Music size={size} color="#9C27B0" />,
+    mp4: <Video size={size} color="#FF5722" />,
+    zip: <Archive size={size} color="#795548" />,
+    js: <Code size={size} color="#FFC107" />,
+    ts: <Code size={size} color="#2196F3" />,
+    jsx: <Code size={size} color="#61DAFB" />,
+    tsx: <Code size={size} color="#61DAFB" />,
   };
 
   return (
-    <div
-      ref={desktopRef}
-      className="w-full h-screen bg-gradient-to-br from-blue-400 to-purple-600 relative overflow-hidden select-none"
-    >
-      {/* Desktop Icons */}
-      {desktopIcons.map((icon) => {
-        const IconComponent = icon.icon;
-        const position = iconPositions[icon.id];
-
-        return (
-          <div
-            key={icon.id}
-            className={`absolute cursor-pointer transition-all duration-200 ${
-              draggedIcon === icon.id ? 'scale-110 shadow-lg' : ''
-            }`}
-            style={{
-              left: position.x,
-              top: position.y,
-              zIndex: draggedIcon === icon.id ? 10000 : 1,
-            }}
-            onMouseDown={(e) => handleIconMouseDown(e, icon.id)}
-            onDoubleClick={() => openWindow(icon.id)}
-          >
-            <div className="flex flex-col items-center p-2 rounded-lg bg-white bg-opacity-20 backdrop-blur-sm hover:bg-opacity-30 transition-all">
-              <IconComponent className={`w-8 h-8 ${icon.color} mb-1`} />
-              <span className="text-white text-xs font-medium text-center">
-                {icon.name}
-              </span>
-            </div>
-          </div>
-        );
-      })}
-
-      {/* Windows */}
-      {windows.map((window) => {
-        const IconComponent = window.icon;
-
-        return (
-          <div
-            key={window.id}
-            className={`absolute bg-white rounded-lg shadow-xl overflow-hidden transition-all duration-200 ${
-              window.minimized ? 'hidden' : ''
-            }`}
-            style={{
-              left: window.x,
-              top: window.y,
-              width: window.width,
-              height: window.height,
-              zIndex: window.zIndex,
-            }}
-            onClick={() => bringToFront(window.id)}
-          >
-            {/* Title Bar */}
-            <div
-              className="bg-gray-800 text-white p-2 flex items-center justify-between cursor-move"
-              onMouseDown={(e) => handleWindowMouseDown(e, window.id)}
-            >
-              <div className="flex items-center space-x-2">
-                <IconComponent className={`w-4 h-4 ${window.color}`} />
-                <span className="text-sm font-medium">{window.title}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    minimizeWindow(window.id);
-                  }}
-                  className="hover:bg-gray-700 p-1 rounded"
-                >
-                  <Minimize2 className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    maximizeWindow(window.id);
-                  }}
-                  className="hover:bg-gray-700 p-1 rounded"
-                >
-                  <Maximize2 className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeWindow(window.id);
-                  }}
-                  className="hover:bg-red-600 p-1 rounded"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-
-            {/* Window Content */}
-            <div className="h-full overflow-auto">
-              {renderWindowContent(window)}
-            </div>
-          </div>
-        );
-      })}
-
-      {/* Taskbar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm p-2 flex items-center space-x-2">
-        <div className="bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium">
-          Start
-        </div>
-        {windows.map((window) => (
-          <button
-            key={window.id}
-            onClick={() => minimizeWindow(window.id)}
-            className={`flex items-center space-x-2 px-3 py-1 rounded text-sm ${
-              window.minimized
-                ? 'bg-gray-600 text-gray-300'
-                : 'bg-gray-700 text-white hover:bg-gray-600'
-            }`}
-          >
-            <window.icon className="w-4 h-4" />
-            <span>{window.title}</span>
-          </button>
-        ))}
-      </div>
-    </div>
+    iconMap[item.extension || ''] || <FileText size={size} color="#757575" />
   );
 };
 
-export default DesktopOS;
+// Quick Access Panel
+const QuickAccessPanel = ({
+  collapsed,
+  onToggle,
+}: {
+  collapsed: boolean;
+  onToggle: () => void;
+}) => {
+  const context = useContext(FileSystemContext);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([
+    'folders',
+  ]);
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  return (
+    <Box
+      sx={{
+        width: collapsed ? 48 : 250,
+        height: '100%',
+        borderRight: 1,
+        borderColor: 'divider',
+        transition: 'width 0.3s ease',
+        overflow: 'hidden',
+      }}
+    >
+      <Box sx={{ p: 1, borderBottom: 1, borderColor: 'divider' }}>
+        <IconButton onClick={onToggle} size="small">
+          {collapsed ? <ChevronRight /> : <ChevronDown />}
+        </IconButton>
+        {!collapsed && (
+          <Typography variant="subtitle2" component="span" sx={{ ml: 1 }}>
+            Quick Access
+          </Typography>
+        )}
+      </Box>
+
+      {!collapsed && (
+        <List dense>
+          <ListItem button onClick={() => toggleCategory('folders')}>
+            <ListItemIcon>
+              {expandedCategories.includes('folders') ? (
+                <ChevronDown size={16} />
+              ) : (
+                <ChevronRight size={16} />
+              )}
+            </ListItemIcon>
+            <ListItemText primary="Folders" />
+          </ListItem>
+
+          <Collapse in={expandedCategories.includes('folders')}>
+            {quickAccessItems.map((item) => (
+              <ListItem
+                key={item.id}
+                button
+                sx={{ pl: 4 }}
+                onClick={() => context?.navigateToPath(item.path)}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.name} />
+              </ListItem>
+            ))}
+          </Collapse>
+        </List>
+      )}
+    </Box>
+  );
+};
+
+// Breadcrumb Navigation
+const BreadcrumbNavigation = () => {
+  const context = useContext(FileSystemContext);
+
+  const pathSegments = context?.currentPath.split('/').filter(Boolean) || [];
+  const segments = ['Home', ...pathSegments];
+
+  return (
+    <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <Breadcrumbs separator={<ChevronRight size={16} />}>
+        <Link
+          component="button"
+          variant="body2"
+          onClick={() => context?.navigateToPath('/')}
+          sx={{ textDecoration: 'none' }}
+        >
+          Home
+        </Link>
+        {pathSegments.map((segment, index) => {
+          const path = '/' + pathSegments.slice(0, index + 1).join('/');
+          const isLast = index === pathSegments.length - 1;
+
+          return isLast ? (
+            <Typography key={path} color="text.primary" variant="body2">
+              {segment}
+            </Typography>
+          ) : (
+            <Link
+              key={path}
+              component="button"
+              variant="body2"
+              onClick={() => context?.navigateToPath(path)}
+              sx={{ textDecoration: 'none' }}
+            >
+              {segment}
+            </Link>
+          );
+        })}
+      </Breadcrumbs>
+    </Box>
+  );
+};
+
+// View Controls
+const ViewControls = () => {
+  const context = useContext(FileSystemContext);
+  const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
+
+  const viewModeIcons = {
+    list: <ListIcon size={16} />,
+    details: <LayoutGrid size={16} />,
+    'large-icons': <Grid3x3 size={16} />,
+    'small-icons': <Grid3x3 size={16} />,
+  };
+
+  return (
+    <Box
+      sx={{
+        p: 1,
+        borderBottom: 1,
+        borderColor: 'divider',
+        display: 'flex',
+        gap: 1,
+        alignItems: 'center',
+      }}
+    >
+      <ButtonGroup size="small">
+        {Object.entries(viewModeIcons).map(([mode, icon]) => (
+          <IconButton
+            key={mode}
+            size="small"
+            color={context?.viewMode === mode ? 'primary' : 'default'}
+            onClick={() => context?.setViewMode(mode as ViewMode)}
+          >
+            {icon}
+          </IconButton>
+        ))}
+      </ButtonGroup>
+
+      <Divider orientation="vertical" flexItem />
+
+      <IconButton
+        size="small"
+        onClick={(e) => setSortMenuAnchor(e.currentTarget)}
+      >
+        <ArrowUpDown size={16} />
+      </IconButton>
+
+      <Menu
+        anchorEl={sortMenuAnchor}
+        open={Boolean(sortMenuAnchor)}
+        onClose={() => setSortMenuAnchor(null)}
+      >
+        {(['name', 'date', 'size', 'type'] as SortBy[]).map((sortBy) => (
+          <MenuItem
+            key={sortBy}
+            onClick={() => {
+              context?.setSorting(sortBy, context.sortOrder);
+              setSortMenuAnchor(null);
+            }}
+          >
+            {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}
+          </MenuItem>
+        ))}
+        <Divider />
+        <MenuItem
+          onClick={() => {
+            context?.setSorting(
+              context.sortBy,
+              context.sortOrder === 'asc' ? 'desc' : 'asc'
+            );
+            setSortMenuAnchor(null);
+          }}
+        >
+          {context?.sortOrder === 'asc' ? 'Descending' : 'Ascending'}
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+};
+
+// File List Views
+const FileListView = ({ items }: { items: FileSystemItem[] }) => {
+  const context = useContext(FileSystemContext);
+
+  const handleItemClick = (item: FileSystemItem, event: React.MouseEvent) => {
+    event.preventDefault();
+
+    if (event.ctrlKey || event.metaKey) {
+      context?.selectItem(item.id, true);
+    } else {
+      context?.selectItem(item.id, false);
+      if (item.type === 'folder') {
+        context?.navigateToPath(item.path);
+      }
+    }
+  };
+
+  const handleDragStart = (item: FileSystemItem) => {
+    context?.setDraggedItems([item.id]);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (targetItem: FileSystemItem, e: React.DragEvent) => {
+    e.preventDefault();
+    if (targetItem.type === 'folder' && context?.draggedItems) {
+      context.moveItems(context.draggedItems, targetItem.path);
+    }
+  };
+
+  if (context?.viewMode === 'details') {
+    return (
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Date Modified</TableCell>
+            <TableCell>Size</TableCell>
+            <TableCell>Type</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map((item) => (
+            <TableRow
+              key={item.id}
+              hover
+              selected={context?.selectedItems.includes(item.id)}
+              onClick={(e) => handleItemClick(item, e)}
+              draggable
+              onDragStart={() => handleDragStart(item)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(item, e)}
+              sx={{ cursor: 'pointer' }}
+            >
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <FileIcon item={item} size={16} />
+                  {item.name}
+                  {item.metadata.favorite && <Star size={12} color="gold" />}
+                </Box>
+              </TableCell>
+              <TableCell>{item.dateModified.toLocaleDateString()}</TableCell>
+              <TableCell>
+                {item.size ? `${Math.round(item.size / 1024)} KB` : '-'}
+              </TableCell>
+              <TableCell>
+                {item.type === 'folder'
+                  ? 'Folder'
+                  : item.extension?.toUpperCase() || 'File'}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  }
+
+  if (context?.viewMode === 'large-icons') {
+    return (
+      <Grid container spacing={2} sx={{ p: 2 }}>
+        {items.map((item) => (
+          <Grid item key={item.id}>
+            <Card
+              sx={{
+                width: 120,
+                cursor: 'pointer',
+                border: context?.selectedItems.includes(item.id) ? 2 : 0,
+                borderColor: 'primary.main',
+              }}
+              onClick={(e) => handleItemClick(item, e)}
+              draggable
+              onDragStart={() => handleDragStart(item)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(item, e)}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 1 }}>
+                <FileIcon item={item} size={48} />
+                <Typography
+                  variant="caption"
+                  display="block"
+                  sx={{ mt: 1, wordBreak: 'break-word' }}
+                >
+                  {item.name}
+                </Typography>
+                {item.metadata.favorite && (
+                  <Star size={12} color="gold" style={{ marginTop: 4 }} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
+
+  // List and small-icons view
+  return (
+    <List>
+      {items.map((item) => (
+        <ListItem
+          key={item.id}
+          button
+          selected={context?.selectedItems.includes(item.id)}
+          onClick={(e) => handleItemClick(item, e)}
+          draggable
+          onDragStart={() => handleDragStart(item)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(item, e)}
+          secondaryAction={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {item.metadata.tags.map((tag) => (
+                <Chip key={tag} label={tag} size="small" variant="outlined" />
+              ))}
+              {item.metadata.favorite && <Star size={16} color="gold" />}
+            </Box>
+          }
+        >
+          <ListItemIcon>
+            <FileIcon item={item} />
+          </ListItemIcon>
+          <ListItemText
+            primary={item.name}
+            secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
+          />
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+// Preview Panel
+const PreviewPanel = () => {
+  const context = useContext(FileSystemContext);
+  const selectedItem =
+    context?.selectedItems.length === 1
+      ? mockFileSystem.find((item) => item.id === context.selectedItems[0])
+      : null;
+
+  if (!selectedItem) {
+    return (
+      <Box sx={{ p: 2, textAlign: 'center', color: 'text.secondary' }}>
+        <Info size={48} />
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Select an item to preview
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ p: 2, height: '100%', overflow: 'auto' }}>
+      <Box sx={{ textAlign: 'center', mb: 2 }}>
+        <FileIcon item={selectedItem} size={64} />
+      </Box>
+
+      <Typography variant="h6" gutterBottom>
+        {selectedItem.name}
+      </Typography>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Typography variant="subtitle2" gutterBottom>
+        Properties
+      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="body2" color="text.secondary">
+            Type:
+          </Typography>
+          <Typography variant="body2">{selectedItem.type}</Typography>
+        </Box>
+
+        {selectedItem.size && (
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="body2" color="text.secondary">
+              Size:
+            </Typography>
+            <Typography variant="body2">
+              {Math.round(selectedItem.size / 1024)} KB
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="body2" color="text.secondary">
+            Modified:
+          </Typography>
+          <Typography variant="body2">
+            {selectedItem.dateModified.toLocaleDateString()}
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="body2" color="text.secondary">
+            Created:
+          </Typography>
+          <Typography variant="body2">
+            {selectedItem.dateCreated.toLocaleDateString()}
+          </Typography>
+        </Box>
+      </Box>
+
+      {selectedItem.metadata.description && (
+        <>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle2" gutterBottom>
+            Description
+          </Typography>
+          <Typography variant="body2">
+            {selectedItem.metadata.description}
+          </Typography>
+        </>
+      )}
+
+      {selectedItem.metadata.tags.length > 0 && (
+        <>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle2" gutterBottom>
+            Tags
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selectedItem.metadata.tags.map((tag) => (
+              <Chip key={tag} label={tag} size="small" />
+            ))}
+          </Box>
+        </>
+      )}
+    </Box>
+  );
+};
+
+// Main File Manager Component
+const FileManager = () => {
+  const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(false);
+  const [currentPath, setCurrentPath] = useState('/');
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [sortBy, setSortBy] = useState<SortBy>('name');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [draggedItems, setDraggedItems] = useState<string[]>([]);
+
+  const navigateToPath = (path: string) => {
+    setCurrentPath(path);
+    setSelectedItems([]);
+  };
+
+  const selectItem = (id: string, multi = false) => {
+    if (multi) {
+      setSelectedItems((prev) =>
+        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      );
+    } else {
+      setSelectedItems([id]);
+    }
+  };
+
+  const setSorting = (newSortBy: SortBy, newSortOrder: SortOrder) => {
+    setSortBy(newSortBy);
+    setSortOrder(newSortOrder);
+  };
+
+  const moveItems = (itemIds: string[], targetPath: string) => {
+    console.log('Moving items:', itemIds, 'to:', targetPath);
+    // Implementation would update the file system state
+    setDraggedItems([]);
+  };
+
+  // Get current directory items
+  const getCurrentItems = () => {
+    // Filter items based on current path and sort them
+    const items = mockFileSystem.filter((item) => {
+      if (currentPath === '/') {
+        return !item.parentId; // Root level items
+      }
+      return item.path.startsWith(currentPath) && item.path !== currentPath;
+    });
+
+    // Sort items
+    items.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'date':
+          comparison = a.dateModified.getTime() - b.dateModified.getTime();
+          break;
+        case 'size':
+          comparison = (a.size || 0) - (b.size || 0);
+          break;
+        case 'type':
+          comparison = a.type.localeCompare(b.type);
+          break;
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return items;
+  };
+
+  const contextValue = {
+    items: getCurrentItems(),
+    currentPath,
+    selectedItems,
+    viewMode,
+    sortBy,
+    sortOrder,
+    navigateToPath,
+    selectItem,
+    setViewMode,
+    setSorting,
+    moveItems,
+    draggedItems,
+    setDraggedItems,
+  };
+
+  return (
+    <FileSystemContext.Provider value={contextValue}>
+      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <BreadcrumbNavigation />
+        <ViewControls />
+
+        <Box sx={{ flex: 1, display: 'flex', minHeight: 0 }}>
+          <QuickAccessPanel
+            collapsed={quickAccessCollapsed}
+            onToggle={() => setQuickAccessCollapsed(!quickAccessCollapsed)}
+          />
+
+          <Box sx={{ flex: 1, overflow: 'auto' }}>
+            <FileListView items={getCurrentItems()} />
+          </Box>
+
+          <Box
+            sx={{
+              width: 300,
+              borderLeft: 1,
+              borderColor: 'divider',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}
+            >
+              Preview
+            </Typography>
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
+              <PreviewPanel />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </FileSystemContext.Provider>
+  );
+};
+
+export default FileManager;

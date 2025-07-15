@@ -46,6 +46,10 @@ export const createThemeFromOptions = ({
           minHeight: 40,
         },
       },
+      desktopIcon: {
+        width: '4.375rem',
+        maxHeight: '5.625rem',
+      },
     },
     palette,
     typography,
