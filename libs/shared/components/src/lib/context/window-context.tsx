@@ -165,81 +165,22 @@ export const WindowProvider: React.FC<{
     [draggedIcon]
   );
 
-  // Window drag handlers
-  const handleWindowMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLElement, MouseEvent>, windowId: string) => {
-      e.preventDefault();
-      if (e.button === 2) return; // ignore right click
-
-      const windowElement = e.currentTarget;
-      const rect = windowElement.getBoundingClientRect();
-
-      dragRef.current = {
-        startX: e.clientX,
-        startY: e.clientY,
-        elementX: rect.left,
-        elementY: rect.top,
-      };
-
-      setDraggedWindow(windowId);
-      bringToFront(windowId);
-    },
-    []
-  );
-
-  const handleWindowMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (e.button === 2) return; // ignore right click
-      if (!draggedWindow) return;
-
-      const deltaX = e.clientX - dragRef.current.startX;
-      const deltaY = e.clientY - dragRef.current.startY;
-      const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
-      const titlebarHeight = remToPixels(
-        theme.mixins.window.titlebar.height as string
-      );
-      const overflowPadding = 20;
-
-      const newX = clamp(
-        dragRef.current.elementX + deltaX,
-        0,
-        window.innerWidth - overflowPadding * 3
-      );
-      const newY = clamp(
-        dragRef.current.elementY + deltaY,
-        0,
-        window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding // just a little extra padding
-      );
-
-      setWindows((prev) =>
-        prev.map((w: WindowMetaData) =>
-          w.id === draggedWindow ? { ...w, x: newX, y: newY } : w
-        )
-      );
-    },
-    [draggedWindow]
-  );
-
-  const handleWindowMouseUp = useCallback(() => {
-    setDraggedWindow(null);
-  }, []);
-
   // Window management functions
-  const bringToFront = useCallback(
-    (windowId: string) => {
-      const newZIndex = windowZIndex + 1;
-      setWindowZIndex(newZIndex);
+  const bringToFront = useCallback((windowId: string) => {
+    setWindowZIndex((prevZIndex) => {
+      const newZIndex = prevZIndex + 1;
+
       setWindows((prev) =>
-        prev.map(
-          (window) =>
-            window.id === windowId
-              ? { ...window, zIndex: newZIndex, isActive: true } // this window
-              : { ...window, isActive: false } // other windows
+        prev.map((window) =>
+          window.id === windowId
+            ? { ...window, zIndex: newZIndex, isActive: true }
+            : { ...window, isActive: false }
         )
       );
-    },
-    [windowZIndex]
-  );
+
+      return newZIndex;
+    });
+  }, []);
 
   const openWindow = useCallback(
     (iconId: string) => {
@@ -355,6 +296,65 @@ export const WindowProvider: React.FC<{
     },
     []
   );
+
+  // Window drag handlers
+  const handleWindowMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>, windowId: string) => {
+      e.preventDefault();
+      if (e.button === 2) return; // ignore right click
+
+      const windowElement = e.currentTarget;
+      const rect = windowElement.getBoundingClientRect();
+
+      dragRef.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        elementX: rect.left,
+        elementY: rect.top,
+      };
+
+      setDraggedWindow(windowId);
+      bringToFront(windowId);
+    },
+    [bringToFront]
+  );
+
+  const handleWindowMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (e.button === 2) return; // ignore right click
+      if (!draggedWindow) return;
+
+      const deltaX = e.clientX - dragRef.current.startX;
+      const deltaY = e.clientY - dragRef.current.startY;
+      const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+      const titlebarHeight = remToPixels(
+        theme.mixins.window.titlebar.height as string
+      );
+      const overflowPadding = 20;
+
+      const newX = clamp(
+        dragRef.current.elementX + deltaX,
+        0,
+        window.innerWidth - overflowPadding * 3
+      );
+      const newY = clamp(
+        dragRef.current.elementY + deltaY,
+        0,
+        window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding // just a little extra padding
+      );
+
+      setWindows((prev) =>
+        prev.map((w: WindowMetaData) =>
+          w.id === draggedWindow ? { ...w, x: newX, y: newY } : w
+        )
+      );
+    },
+    [draggedWindow]
+  );
+
+  const handleWindowMouseUp = useCallback(() => {
+    setDraggedWindow(null);
+  }, []);
 
   // Mouse event listeners
   useEffect(() => {

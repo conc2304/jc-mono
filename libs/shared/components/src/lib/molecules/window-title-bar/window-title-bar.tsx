@@ -17,7 +17,7 @@ export const WindowTitleBar = ({
   icon,
   title,
 }: WindowTitleBarProps) => {
-  const { handleWindowMouseDown } = useWindowManager();
+  const { handleWindowMouseDown, bringToFront } = useWindowManager();
 
   return (
     <Box
