@@ -31,7 +31,7 @@ export const ResizeHandle = ({
       ...style,
       cursor: getCursorForDirection(direction),
       '&:hover': {
-        backgroundColor: (theme) => alpha(theme.palette.info.main, 0.5),
+        backgroundColor: (theme) => alpha(theme.palette.info.main, 0.25),
       },
     }}
     onMouseDown={(e) => onResizeStart(e, direction)}

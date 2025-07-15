@@ -7,7 +7,7 @@ import {
   ResizeHandlers,
   ResizeState,
 } from './resize-handle';
-import { getCursorForDirection } from './utils';
+import { getCursorForDirection, getResizeDimensions } from './utils';
 import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
 
@@ -104,94 +104,25 @@ export const Window = ({
       const deltaX = e.clientX - resizeState.startX;
       const deltaY = e.clientY - resizeState.startY;
 
-      let newWidth = resizeState.startWidth;
-      let newHeight = resizeState.startHeight;
-      let newLeft = resizeState.startLeft;
-      let newTop = resizeState.startTop;
-
-      // Calculate new dimensions based on resize direction
-      switch (resizeState.direction) {
-        case 'n':
-          newHeight = Math.max(
-            minHeight,
-            Math.min(maxHeight, resizeState.startHeight - deltaY)
-          );
-          newTop = resizeState.startTop + (resizeState.startHeight - newHeight);
-          break;
-        case 's':
-          newHeight = Math.max(
-            minHeight,
-            Math.min(maxHeight, resizeState.startHeight + deltaY)
-          );
-          break;
-        case 'e':
-          newWidth = Math.max(
-            minWidth,
-            Math.min(maxWidth, resizeState.startWidth + deltaX)
-          );
-          break;
-        case 'w':
-          newWidth = Math.max(
-            minWidth,
-            Math.min(maxWidth, resizeState.startWidth - deltaX)
-          );
-          newLeft = resizeState.startLeft + (resizeState.startWidth - newWidth);
-          break;
-        case 'ne':
-          newHeight = Math.max(
-            minHeight,
-            Math.min(maxHeight, resizeState.startHeight - deltaY)
-          );
-          newTop = resizeState.startTop + (resizeState.startHeight - newHeight);
-          newWidth = Math.max(
-            minWidth,
-            Math.min(maxWidth, resizeState.startWidth + deltaX)
-          );
-          break;
-        case 'nw':
-          newHeight = Math.max(
-            minHeight,
-            Math.min(maxHeight, resizeState.startHeight - deltaY)
-          );
-          newTop = resizeState.startTop + (resizeState.startHeight - newHeight);
-          newWidth = Math.max(
-            minWidth,
-            Math.min(maxWidth, resizeState.startWidth - deltaX)
-          );
-          newLeft = resizeState.startLeft + (resizeState.startWidth - newWidth);
-          break;
-        case 'se':
-          newHeight = Math.max(
-            minHeight,
-            Math.min(maxHeight, resizeState.startHeight + deltaY)
-          );
-          newWidth = Math.max(
-            minWidth,
-            Math.min(maxWidth, resizeState.startWidth + deltaX)
-          );
-          break;
-        case 'sw':
-          newHeight = Math.max(
-            minHeight,
-            Math.min(maxHeight, resizeState.startHeight + deltaY)
-          );
-          newWidth = Math.max(
-            minWidth,
-            Math.min(maxWidth, resizeState.startWidth - deltaX)
-          );
-          newLeft = resizeState.startLeft + (resizeState.startWidth - newWidth);
-          break;
-      }
+      const { x, y, width, height } = getResizeDimensions({
+        resizeState,
+        deltaX,
+        deltaY,
+        minHeight,
+        maxHeight,
+        minWidth,
+        maxWidth,
+      });
 
       // Ensure window doesn't go off-screen
-      newLeft = Math.max(0, Math.min(window.innerWidth - newWidth, newLeft));
-      newTop = Math.max(0, Math.min(window.innerHeight - newHeight, newTop));
+      const newLeft = Math.max(0, Math.min(window.innerWidth - width, x));
+      const newTop = Math.max(0, Math.min(window.innerHeight - height, y));
 
       onWindowResize?.(id, {
         x: newLeft,
         y: newTop,
-        width: newWidth,
-        height: newHeight,
+        width,
+        height,
       });
     },
     [resizeState, minWidth, minHeight, maxWidth, maxHeight, onWindowResize, id]
