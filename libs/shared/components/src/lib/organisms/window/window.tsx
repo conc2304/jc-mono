@@ -242,14 +242,14 @@ export const Window = ({
 
         height: (theme) =>
           !maximized
-            ? height
+            ? undefined
             : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`, // Subtract taskbar height and some extra for padding
       }}
       style={{
         left: x,
         top: y,
         width: maximized ? '100%' : width,
-
+        height: !maximized ? height : undefined,
         zIndex: zIndex,
       }}
       onClick={() => bringToFront(id)}
