@@ -17,6 +17,7 @@ export const TaskBar = ({ windows = [], minimizeWindow }: TaskBarProps) => {
         bottom: 0,
         left: 0,
         right: 0,
+        height: (theme) => theme.mixins.taskbar.height,
         background: (theme) => alpha(theme.palette.info.light, 0.9),
         backdropFilter: 'blur(4px)',
         display: 'flex',

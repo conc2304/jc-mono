@@ -199,8 +199,8 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
               maximized: !w.maximized,
               x: w.maximized ? 200 : 0,
               y: w.maximized ? 100 : 0,
-              width: w.maximized ? 400 : window.innerWidth || 800,
-              height: w.maximized ? 300 : window.innerHeight || 600,
+              // width: w.maximized ? 400 : window.innerWidth || 800, // document.window
+              // height: w.maximized ? 300 : window.innerHeight - || 600, // sub app bar height
             }
           : w
       )

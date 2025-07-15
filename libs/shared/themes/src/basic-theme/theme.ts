@@ -35,7 +35,18 @@ export const createThemeFromOptions = ({
       },
     },
     direction: 'ltr',
-    // mixins: {},
+    mixins: {
+      taskbar: {
+        height: '3.5rem',
+        minHeight: 45,
+      },
+      window: {
+        titlebar: {
+          height: '2.5rem',
+          minHeight: 40,
+        },
+      },
+    },
     palette,
     typography,
   };

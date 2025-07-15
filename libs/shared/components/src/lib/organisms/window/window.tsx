@@ -239,24 +239,21 @@ export const Window = ({
         background: 'transparent',
         overflow: 'hidden',
         visibility: minimized ? 'hidden' : undefined,
-        // border: (theme) => `1px solid ${theme.palette.divider}`,
-        // borderRadius: 1,
-        // boxShadow: (theme) => theme.shadows[isActive ? 8 : 2],
+
+        height: (theme) =>
+          !maximized
+            ? height
+            : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`, // Subtract taskbar height and some extra for padding
       }}
       style={{
         left: x,
         top: y,
-        width: width,
-        height: height,
+        width: maximized ? '100%' : width,
+
         zIndex: zIndex,
       }}
       onClick={() => bringToFront(id)}
     >
-      {/* Resize Handles */}
-      {/* {resizable && !maximized && (
-        <ResizeHandlers onResizeStart={handleResizeStart} handleSize={2} />
-      )} */}
-
       <WindowTitleBar
         title={title}
         id={id}
@@ -271,7 +268,8 @@ export const Window = ({
       <Box
         data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
         sx={{
-          height: 'calc(100% - 40px)', // Subtract title bar height
+          height: ({ mixins }) =>
+            `calc(100% - ${mixins.window.titlebar.height})`, // Subtract title bar height
           overflow: 'auto',
           padding: '8px',
           m: 0,

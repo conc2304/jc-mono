@@ -23,7 +23,13 @@ export const WindowControls = ({
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        height: (theme) => theme.mixins.window.titlebar.height,
+      }}
+    >
       <AugmentedIconButton
         {...buttonProps}
         color="info"
