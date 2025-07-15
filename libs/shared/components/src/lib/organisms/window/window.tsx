@@ -212,33 +212,3 @@ export const Window = ({
     </Box>
   );
 };
-
-// Hook for managing window dimensions
-export const useWindowResize = () => {
-  const [windows, setWindows] = useState<Map<string, WindowMetaData>>(
-    new Map()
-  );
-
-  const updateWindowDimensions = useCallback(
-    (
-      id: string,
-      dimensions: { x: number; y: number; width: number; height: number }
-    ) => {
-      setWindows((prev) => {
-        const newWindows = new Map(prev);
-        const window = newWindows.get(id);
-        if (window) {
-          newWindows.set(id, { ...window, ...dimensions });
-        }
-        return newWindows;
-      });
-    },
-    []
-  );
-
-  return {
-    windows,
-    updateWindowDimensions,
-    setWindows,
-  };
-};

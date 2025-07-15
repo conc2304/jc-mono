@@ -1,4 +1,4 @@
-import { useWindowManager, useWindowState, Window } from '@jc/ui-components';
+import { useWindowState, Window } from '@jc/ui-components';
 
 export const WindowsRenderer = () => {
   const { windows } = useWindowState();

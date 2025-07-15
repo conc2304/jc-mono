@@ -25,7 +25,6 @@ export const DesktopIcon = ({
         position: 'absolute',
         cursor: 'pointer',
         width: '4.375rem',
-        // transition: 'all 200ms',
         transition: (theme) =>
           theme.transitions.create(['transform', 'filter'], {
             duration: theme.transitions.duration.standard,
@@ -83,9 +82,6 @@ export const DesktopIcon = ({
               theme.transitions.create(['border'], {
                 duration: theme.transitions.duration.standard,
               }),
-            // border: isDragging
-            //   ? '1px solid rgba(255, 255, 255, 1)'
-            //   : '1px solid rgba(255, 255, 255, 0)',
 
             '&[data-augmented-ui]': {
               '--aug-tr': '6px',
