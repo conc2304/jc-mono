@@ -1,7 +1,12 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Box } from '@mui/material';
+import { Box, darken } from '@mui/material';
 
-import { ResizeDirection, ResizeHandlers, ResizeState } from './resize-handle';
+import {
+  ResizeDirection,
+  ResizeHandle,
+  ResizeHandlers,
+  ResizeState,
+} from './resize-handle';
 import { getCursorForDirection } from './utils';
 import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
@@ -68,6 +73,7 @@ export const Window = ({
   // Handle resize start
   const handleResizeStart = useCallback(
     (e: React.MouseEvent, direction: ResizeDirection) => {
+      if (e.button === 2) return; // ignore right click
       if (!resizable || maximized) return;
 
       e.preventDefault();
@@ -92,6 +98,7 @@ export const Window = ({
   // Handle resize move
   const handleResizeMove = useCallback(
     (e: MouseEvent) => {
+      if (e.button === 2) return; // ignore right click
       if (!resizeState.isResizing || !resizeState.direction) return;
 
       const deltaX = e.clientX - resizeState.startX;
@@ -216,9 +223,12 @@ export const Window = ({
         document.body.style.userSelect = '';
       };
     }
-  }, [resizeState.isResizing, handleResizeMove, handleResizeEnd]);
-
-  // Resize handle component
+  }, [
+    resizeState.isResizing,
+    resizeState.direction,
+    handleResizeMove,
+    handleResizeEnd,
+  ]);
 
   return (
     <Box
@@ -226,17 +236,12 @@ export const Window = ({
       className="Window--root"
       sx={{
         position: 'absolute',
-        background: (theme) => theme.palette.background.paper,
+        background: 'transparent',
         overflow: 'hidden',
         visibility: minimized ? 'hidden' : undefined,
-        border: (theme) => `1px solid ${theme.palette.divider}`,
-        borderRadius: 1,
-        boxShadow: (theme) => theme.shadows[isActive ? 8 : 2],
-        '&:focus': {
-          outline: '2px solid',
-          outlineColor: (theme) => theme.palette.primary.main,
-          outlineOffset: -2,
-        },
+        // border: (theme) => `1px solid ${theme.palette.divider}`,
+        // borderRadius: 1,
+        // boxShadow: (theme) => theme.shadows[isActive ? 8 : 2],
       }}
       style={{
         left: x,
@@ -248,12 +253,10 @@ export const Window = ({
       onClick={() => bringToFront(id)}
     >
       {/* Resize Handles */}
-      {resizable && !maximized && (
+      {/* {resizable && !maximized && (
         <ResizeHandlers onResizeStart={handleResizeStart} handleSize={2} />
-      )}
+      )} */}
 
-      {/* Title Bar */}
-      {/* <WindowControls /> */}
       <WindowTitleBar
         title={title}
         id={id}
@@ -264,91 +267,43 @@ export const Window = ({
         maximizeWindow={maximizeWindow}
         closeWindow={closeWindow}
       />
-      {/* <Box
-        className="TitleBar--root"
-        sx={{
-          background: (theme) =>
-            isActive
-              ? theme.palette.primary.dark
-              : darken(theme.palette.primary.dark, 0.5),
-          color: (theme) =>
-            alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
-          p: 0.25,
-        }}
-      >
-        <Box
-          onMouseDown={(e) => onWindowMouseDown(e, id)}
-          sx={{
-            cursor: 'move',
-            m: 0.1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'relative',
-          }}
-        >
-          <Box
-            className="flex items-center space-x-2"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              ml: 0.5,
-            }}
-          >
-            {icon}
-            <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-              {title}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <AugmentedIconButton
-              color="info"
-              size="small"
-              shape="buttonRight"
-              disableRipple
-              onClick={(e) => {
-                e.stopPropagation();
-                minimizeWindow(id);
-              }}
-            >
-              <Minimize2 />
-            </AugmentedIconButton>
-            <AugmentedIconButton
-              color="info"
-              size="small"
-              shape="buttonRight"
-              disableRipple
-              onClick={(e) => {
-                e.stopPropagation();
-                maximizeWindow(id);
-              }}
-            >
-              <Maximize2 />
-            </AugmentedIconButton>
-            <AugmentedIconButton
-              color="error"
-              size="small"
-              shape="buttonRight"
-              disableRipple
-              onClick={(e) => {
-                e.stopPropagation();
-                closeWindow(id);
-              }}
-            >
-              <X />
-            </AugmentedIconButton>
-          </Box>
-        </Box>
-      </Box> */}
 
-      {/* Window Content */}
       <Box
+        data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
         sx={{
           height: 'calc(100% - 40px)', // Subtract title bar height
           overflow: 'auto',
+          padding: '8px',
+          m: 0,
+          background: (theme) => theme.palette.background.paper,
+          '&[data-augmented-ui]': {
+            '--aug-tl': (theme) => theme.spacing(2),
+            '--aug-bl': '8px',
+            '--aug-br': '8px',
+            '--aug-b': '6px',
+            '--aug-b-extend1': '50%',
+            '--aug-border-all': '1px',
+            '--aug-border-bg': (theme) =>
+              isActive
+                ? theme.palette.primary.light
+                : darken(theme.palette.primary.light, 0.5),
+          },
         }}
       >
         {windowContent}
+
+        <ResizeHandlers onResizeStart={handleResizeStart} handleSize={3} />
+        {/* for the Augmented Notch at bottom  */}
+        <ResizeHandle
+          direction="s"
+          style={{
+            bottom: 6,
+            left: '25%',
+            right: '25%',
+            height: '4px',
+          }}
+          onResizeStart={handleResizeStart}
+        />
       </Box>
     </Box>
   );

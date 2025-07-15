@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { alpha, Box, darken, Typography } from '@mui/material';
+import { alpha, Box, darken, Theme, Typography } from '@mui/material';
 
 import { WindowControls } from '../window-controls';
 
@@ -31,31 +31,51 @@ export const WindowTitleBar = ({
     <Box
       className="TitleBar--root"
       sx={{
-        background: (theme) =>
-          isActive
-            ? theme.palette.primary.dark
-            : darken(theme.palette.primary.dark, 0.5),
         color: (theme) => alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
-        p: 0.25,
+        m: 0,
       }}
     >
       <Box
+        className="Titlebar--move-handler"
         onMouseDown={(e) => onWindowMouseDown(e, id)}
         sx={{
           cursor: 'move',
-          m: 0.1,
+          m: 0,
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'end',
           justifyContent: 'space-between',
           position: 'relative',
         }}
       >
         <Box
-          className="flex items-center space-x-2"
+          className="TitleBar--name"
+          data-augmented-ui="border tr-2-clip-y tl-clip"
           sx={{
             display: 'flex',
             alignItems: 'center',
-            ml: 0.5,
+            height: '35px',
+            justifyContent: 'center',
+            ml: 2,
+            pt: 0.5,
+            pl: 1.5,
+            pr: 2.5,
+            background: (theme) =>
+              isActive
+                ? theme.palette.primary.dark
+                : darken(theme.palette.primary.dark, 0.5),
+
+            '&[data-augmented-ui]': {
+              '--aug-tr': '5px',
+              '--aug-tl': '5px',
+              '--aug-bl': '5px',
+              '--aug-br': '5px',
+              '--aug-border-all': '1px',
+              '--aug-border-bottom': '-1px',
+              '--aug-border-bg': (theme) =>
+                isActive
+                  ? theme.palette.primary.light
+                  : darken(theme.palette.primary.light, 0.5),
+            },
           }}
         >
           {icon}
@@ -63,50 +83,41 @@ export const WindowTitleBar = ({
             {title}
           </Typography>
         </Box>
-        <WindowControls
-          id={id}
-          minimizeWindow={minimizeWindow}
-          maximizeWindow={maximizeWindow}
-          closeWindow={closeWindow}
-        />
-        {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AugmentedIconButton
-            color="info"
-            size="small"
-            shape="buttonRight"
-            disableRipple
-            onClick={(e) => {
-              e.stopPropagation();
-              minimizeWindow(id);
-            }}
-          >
-            <Minimize2 />
-          </AugmentedIconButton>
-          <AugmentedIconButton
-            color="info"
-            size="small"
-            shape="buttonRight"
-            disableRipple
-            onClick={(e) => {
-              e.stopPropagation();
-              maximizeWindow(id);
-            }}
-          >
-            <Maximize2 />
-          </AugmentedIconButton>
-          <AugmentedIconButton
-            color="error"
-            size="small"
-            shape="buttonRight"
-            disableRipple
-            onClick={(e) => {
-              e.stopPropagation();
-              closeWindow(id);
-            }}
-          >
-            <X />
-          </AugmentedIconButton>
-        </Box> */}
+        <Box
+          data-augmented-ui="border tl-2-clip-y tr-clip"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            height: '35px',
+            pt: 0.5,
+            pr: 0.5,
+            pl: 1,
+            background: (theme) =>
+              isActive
+                ? theme.palette.primary.dark
+                : darken(theme.palette.primary.dark, 0.5),
+
+            '&[data-augmented-ui]': {
+              '--aug-tr': '5px',
+              '--aug-tl': '5px',
+              '--aug-bl': '5px',
+              '--aug-br': '5px',
+              '--aug-border-all': '1px',
+              '--aug-border-bottom': '-1px',
+              '--aug-border-bg': (theme) =>
+                isActive
+                  ? theme.palette.primary.light
+                  : darken(theme.palette.primary.light, 0.5),
+            },
+          }}
+        >
+          <WindowControls
+            id={id}
+            minimizeWindow={minimizeWindow}
+            maximizeWindow={maximizeWindow}
+            closeWindow={closeWindow}
+          />
+        </Box>
       </Box>
     </Box>
   );

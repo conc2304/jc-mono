@@ -40,6 +40,7 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     iconId: string
   ) => {
     e.preventDefault();
+    if (e.button === 2) return; // ignore right click
 
     dragRef.current = {
       startX: e.clientX,
@@ -65,7 +66,8 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     }
   };
 
-  const handleIconMouseMove = (e) => {
+  const handleIconMouseMove = (e: MouseEvent) => {
+    if (e.button === 2) return; // ignore right click
     if (!draggedIcon) return;
 
     const deltaX = e.clientX - dragRef.current.startX;
@@ -81,6 +83,7 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
   };
 
   const handleWindowMouseMove = (e: MouseEvent) => {
+    if (e.button === 2) return; // ignore right click
     if (!draggedWindow) return;
 
     const deltaX = e.clientX - dragRef.current.startX;
@@ -189,17 +192,17 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
 
   const maximizeWindow = (windowId: string) => {
     setWindows((prev) =>
-      prev.map((window) =>
-        window.id === windowId
+      prev.map((w) =>
+        w.id === windowId
           ? {
-              ...window,
-              maximized: !window.maximized,
-              x: window.maximized ? 200 : 0,
-              y: window.maximized ? 100 : 0,
-              width: window.maximized ? 400 : window.innerWidth || 800,
-              height: window.maximized ? 300 : window.innerHeight || 600,
+              ...w,
+              maximized: !w.maximized,
+              x: w.maximized ? 200 : 0,
+              y: w.maximized ? 100 : 0,
+              width: w.maximized ? 400 : window.innerWidth || 800,
+              height: w.maximized ? 300 : window.innerHeight || 600,
             }
-          : window
+          : w
       )
     );
   };
@@ -209,6 +212,8 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
     windowId: string
   ) => {
     e.preventDefault();
+    if (e.button === 2) return; // ignore right click
+
     const windowElement = e.currentTarget;
     const rect = windowElement.getBoundingClientRect();
 
@@ -246,6 +251,8 @@ export const DesktopOS = ({ desktopIcons }: DesktopOSProps) => {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      if (e.button === 2) return; // ignore right click
+
       if (draggedIcon) {
         handleIconMouseMove(e);
       }

@@ -12,8 +12,6 @@ export const TaskBar = ({ windows = [], minimizeWindow }: TaskBarProps) => {
   return (
     <Box
       className="TaskBar--root"
-      // className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm p-2 flex items-center space-x-2">
-
       sx={{
         position: 'absolute',
         bottom: 0,

@@ -15,7 +15,7 @@ export interface ResizeState {
   startTop: number;
 }
 
-const ResizeHandle = ({
+export const ResizeHandle = ({
   direction,
   style,
   onResizeStart,
@@ -31,7 +31,7 @@ const ResizeHandle = ({
       ...style,
       cursor: getCursorForDirection(direction),
       '&:hover': {
-        backgroundColor: (theme) => alpha(theme.palette.info.main, 0.1),
+        backgroundColor: (theme) => alpha(theme.palette.info.main, 0.5),
       },
     }}
     onMouseDown={(e) => onResizeStart(e, direction)}
@@ -45,6 +45,7 @@ export const ResizeHandlers = ({
   handleSize?: number;
   onResizeStart: (e: React.MouseEvent, direction: ResizeDirection) => void;
 }) => {
+  const cornerScale = 2.5;
   return (
     <>
       {/* Edge handles */}
@@ -105,8 +106,8 @@ export const ResizeHandlers = ({
         style={{
           top: 0,
           right: 0,
-          width: handleSize * 2,
-          height: handleSize * 2,
+          width: handleSize * cornerScale,
+          height: handleSize * cornerScale,
         }}
         onResizeStart={onResizeStart}
       />
@@ -115,8 +116,8 @@ export const ResizeHandlers = ({
         style={{
           bottom: 0,
           left: 0,
-          width: handleSize * 2,
-          height: handleSize * 2,
+          width: handleSize * cornerScale,
+          height: handleSize * cornerScale,
         }}
         onResizeStart={onResizeStart}
       />
@@ -125,8 +126,8 @@ export const ResizeHandlers = ({
         style={{
           bottom: 0,
           right: 0,
-          width: handleSize * 2,
-          height: handleSize * 2,
+          width: handleSize * cornerScale,
+          height: handleSize * cornerScale,
         }}
         onResizeStart={onResizeStart}
       />

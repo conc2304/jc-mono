@@ -31,6 +31,7 @@ export const DesktopIcon = ({
       sx={{
         position: 'absolute',
         cursor: 'pointer',
+        width: '4.375rem',
         // transition: 'all 200ms',
         transition: (theme) =>
           theme.transitions.create(['transform', 'filter'], {
@@ -68,6 +69,7 @@ export const DesktopIcon = ({
       >
         <Box
           className="DesktopIcon--icon"
+          data-augmented-ui={'tl-clip bl-clip br-clip tr-2-clip-x border'}
           sx={{
             p: 0.2,
             display: 'flex',
@@ -81,21 +83,58 @@ export const DesktopIcon = ({
                 palette.mode === 'light'
                   ? palette.common.black
                   : palette.common.white,
-                0.05
+                !isDragging ? 0.01 : 0.1
               ),
             backdropFilter: 'blur(4px)',
             transition: (theme) =>
               theme.transitions.create(['border'], {
                 duration: theme.transitions.duration.standard,
               }),
-            border: isDragging
-              ? '1px solid rgba(255, 255, 255, 1)'
-              : '1px solid rgba(255, 255, 255, 0)',
+            // border: isDragging
+            //   ? '1px solid rgba(255, 255, 255, 1)'
+            //   : '1px solid rgba(255, 255, 255, 0)',
+
+            '&[data-augmented-ui]': {
+              '--aug-tr': '6px',
+              '--aug-tl': '5px',
+              '--aug-bl': '5px',
+              '--aug-br': '5px',
+              '--aug-border-all': '1.5px',
+              '--aug-border-bg': (theme) =>
+                !isDragging ? 'transparent' : theme.palette.primary.main,
+            },
           }}
         >
           {icon}
         </Box>
-        <Typography variant="body2" color="textPrimary">
+        <Typography
+          variant="body2"
+          color={!isDragging ? 'textPrimary' : 'textDisabled'}
+          sx={{
+            mt: 0.25,
+            width: '110%',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-0%, -0%)',
+            textAlign: 'center',
+            p: 0.125,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            wordBreak: 'break-word',
+            borderRadius: 1,
+            background: (theme) =>
+              !isDragging
+                ? 'transparent'
+                : // ? 'transparent'
+                  alpha(
+                    theme.palette.getContrastText(theme.palette.text.primary),
+                    0.8
+                  ),
+          }}
+        >
           {name}
         </Typography>
       </Box>
