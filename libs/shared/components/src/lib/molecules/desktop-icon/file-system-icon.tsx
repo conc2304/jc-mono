@@ -62,20 +62,14 @@ export const FileSystemIcon = ({
       </Box>
       <Box
         className="FileSystemIcon--text"
-        sx={{ display: 'flex', alignItems: 'center' }}
+        // sx={{ display: 'flex', alignItems: 'center' }}
       >
-        {tagContent && (
-          <Box component={'span'} sx={{ mr: 0.25 }}>
-            {tagContent}
-          </Box>
-        )}
-
         <Typography
           variant="body2"
           color={!isActive ? 'textPrimary' : 'textDisabled'}
           sx={{
             mt: 0.25,
-            width: '125%',
+            width: '135%',
             top: '50%',
             left: '50%',
             transform: 'translate(-0%, -0%)',
@@ -97,6 +91,12 @@ export const FileSystemIcon = ({
                   ),
           }}
         >
+          {tagContent && (
+            <Box component={'span'} sx={{ mr: 0.25 }}>
+              {tagContent}
+            </Box>
+          )}
+
           {name}
         </Typography>
       </Box>

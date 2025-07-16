@@ -27,14 +27,20 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
   const handleItemClick = (item: FileSystemItem, event: React.MouseEvent) => {
     event.preventDefault();
     if (event.button === 2) return;
+    context?.selectItem(item.id, true);
+  };
 
-    if (event.ctrlKey || event.metaKey) {
-      context?.selectItem(item.id, true);
+  const handleItemDoubleClick = (
+    item: FileSystemItem,
+    event: React.MouseEvent
+  ) => {
+    if (event.button === 2) return;
+
+    if (item.type === 'folder') {
+      context?.navigateToPath(item.path);
     } else {
-      context?.selectItem(item.id, false);
-      if (item.type === 'folder') {
-        context?.navigateToPath(item.path);
-      }
+      // TODO OPEN FILE
+      console.log('OPEN FILE', { item });
     }
   };
 
@@ -73,6 +79,7 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
               key={item.id}
               hover
               selected={context?.selectedItems.includes(item.id)}
+              onDoubleClick={(e) => handleItemDoubleClick(item, e)}
               onClick={(e) => handleItemClick(item, e)}
               draggable
               onDragStart={() => handleDragStart(item)}
@@ -82,7 +89,6 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
             >
               <TableCell>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  {/* <FileIcon item={item} size={16} /> */}
                   {item.icon}
                   {item.name}
                   {item.metadata.favorite && <Star size={12} color="gold" />}
@@ -106,26 +112,23 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
 
   if (context?.viewMode === 'icons') {
     return (
-      // <FileSystemIcon
-      //   // data-augmented-ui-reset
-      //   name={'AXE'}
-      //   icon={<AxeIcon />}
-      //   isActive={false}
-      //   // tagContent={item.metadata.favorite && <Star size={12} color="gold" />}
-      // />
       <Grid container spacing={2} sx={{ p: 2 }}>
         {items.map((item) => (
           <Grid key={item.id}>
-            <FileSystemIcon
-              // data-augmented-ui-reset
-              name={item.name}
-              icon={item.icon}
-              isActive={context?.selectedItems.includes(item.id)}
-              tagContent={
-                item.metadata.favorite && <Star size={12} color="gold" />
-              }
-            />
-            {/* {item.name} */}
+            <Box
+              onDoubleClick={(e) => handleItemDoubleClick(item, e)}
+              onClick={(e) => handleItemClick(item, e)}
+            >
+              <FileSystemIcon
+                // data-augmented-ui-reset
+                name={item.name}
+                icon={item.icon}
+                isActive={context?.selectedItems.includes(item.id)}
+                tagContent={
+                  item.metadata.favorite && <Star size={12} color="gold" />
+                }
+              />
+            </Box>
           </Grid>
         ))}
       </Grid>
@@ -140,6 +143,7 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
           key={item.id}
           // button
           // selected={context?.selectedItems.includes(item.id)}
+          onDoubleClick={(e) => handleItemDoubleClick(item, e)}
           onClick={(e) => handleItemClick(item, e)}
           draggable
           onDragStart={() => handleDragStart(item)}
