@@ -19,9 +19,10 @@ interface FileManagerProps {
 export const FileManager = ({
   fileSystemItems,
   initialPath,
-  folderContents,
+  folderContents: folderContentsProp,
 }: FileManagerProps) => {
-  const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(false);
+  const [folderContents, setFolderContents] = useState(folderContentsProp);
+  const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
   const [currentPath, setCurrentPath] = useState(initialPath);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -30,8 +31,19 @@ export const FileManager = ({
   const [draggedItems, setDraggedItems] = useState<string[]>([]);
 
   const navigateToPath = (path: string) => {
+    console.log({ path });
     setCurrentPath(path);
     setSelectedItems([]);
+    if (path === '/') {
+      setFolderContents(fileSystemItems);
+    } else {
+      const targetFolder = fileSystemItems.find(
+        (item) => item.path === path && item.type === 'folder'
+      );
+      if (targetFolder && targetFolder.children) {
+        setFolderContents(targetFolder.children);
+      }
+    }
   };
 
   const selectItem = (id: string, multi = false) => {
@@ -56,14 +68,17 @@ export const FileManager = ({
   };
 
   // Get current directory items
-  const getCurrentItems = () => {
+  const getFolderItems = () => {
     // Filter items based on current path and sort them
     const items = folderContents.filter((item) => {
       if (currentPath === '/') {
+        console.log(!item.parentId);
         return !item.parentId; // Root level items
       }
       return item.path.startsWith(currentPath) && item.path !== currentPath;
     });
+
+    console.log({ items });
 
     // Sort items
     items.sort((a, b) => {
@@ -92,7 +107,7 @@ export const FileManager = ({
 
   const contextValue = {
     fs: fileSystemItems,
-    items: getCurrentItems(),
+    items: getFolderItems(),
     currentPath,
     selectedItems,
     viewMode,
@@ -120,7 +135,7 @@ export const FileManager = ({
           />
 
           <Box sx={{ flex: 1, overflow: 'auto' }}>
-            <FileListView items={getCurrentItems()} />
+            <FileListView items={getFolderItems()} />
           </Box>
 
           <Box
