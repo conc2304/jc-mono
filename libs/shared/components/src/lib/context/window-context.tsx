@@ -313,7 +313,6 @@ export const WindowProvider: React.FC<{
 
   const updateWindowTitle = useCallback(
     (id: string, name: string, icon: ReactNode) => {
-      console.log('Update Window Title', name);
       setWindows((prev) =>
         prev.map((window) =>
           window.id === id

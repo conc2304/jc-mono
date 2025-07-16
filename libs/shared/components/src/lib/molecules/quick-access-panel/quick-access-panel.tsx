@@ -12,14 +12,15 @@ import { ChevronDown, ChevronRight, List } from 'lucide-react';
 
 import { quickAccessItems } from './mockData';
 import { FileSystemContext } from '../../context';
-// Quick Access Panel
+
+interface QuickAccessPanelProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
 export const QuickAccessPanel = ({
   collapsed,
   onToggle,
-}: {
-  collapsed: boolean;
-  onToggle: () => void;
-}) => {
+}: QuickAccessPanelProps) => {
   const context = useContext(FileSystemContext);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([
     'folders',

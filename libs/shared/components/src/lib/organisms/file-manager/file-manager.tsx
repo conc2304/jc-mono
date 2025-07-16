@@ -26,6 +26,7 @@ export const FileManager = ({
 }: FileManagerProps) => {
   const [folderContents, setFolderContents] = useState(folderContentsProp);
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
+  const [previewCollapsed, setPreviewCollapsed] = useState(true);
   const [currentPath, setCurrentPath] = useState(initialPath);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -77,7 +78,6 @@ export const FileManager = ({
     // Filter items based on current path and sort them
     const items = folderContents.filter((item) => {
       if (currentPath === '/') {
-        console.log(!item.parentId);
         return !item.parentId; // Root level items
       }
       return item.path.startsWith(currentPath) && item.path !== currentPath;
@@ -139,28 +139,26 @@ export const FileManager = ({
             onToggle={() => setQuickAccessCollapsed(!quickAccessCollapsed)}
           />
 
-          <Box sx={{ flex: 1, overflow: 'auto' }}>
+          <Box sx={{ flex: 2, overflow: 'auto' }}>
             <FileListView items={getFolderItems()} />
           </Box>
 
           <Box
-            sx={{
-              width: 300,
-              borderLeft: 1,
-              borderColor: 'divider',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
+            className="PreviewPanel--container"
+            sx={{ flexShrink: 0, display: 'flex', minHeight: 0 }}
           >
-            <Typography
+            {/* <Typography
               variant="subtitle2"
               sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}
             >
               Preview
-            </Typography>
-            <Box sx={{ flex: 1, overflow: 'hidden' }}>
-              <PreviewPanel />
-            </Box>
+            </Typography> */}
+            {/* <Box sx={{ flex: 1, overflow: 'hidden' }}> */}
+            <PreviewPanel
+              collapsed={previewCollapsed}
+              onToggle={() => setPreviewCollapsed(!previewCollapsed)}
+            />
+            {/* </Box> */}
           </Box>
         </Box>
       </Box>
