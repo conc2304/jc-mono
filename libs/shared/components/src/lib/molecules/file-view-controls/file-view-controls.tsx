@@ -7,7 +7,13 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { ArrowUpDown, Grid3x3, LayoutGrid, ListIcon } from 'lucide-react';
+import {
+  ArrowUpDown,
+  Grid3x3,
+  LayoutGrid,
+  LayoutList,
+  ListIcon,
+} from 'lucide-react';
 
 import { FileSystemContext } from '../../context';
 import { SortBy, ViewMode } from '../../types';
@@ -19,10 +25,9 @@ export const ViewControls = () => {
   );
 
   const viewModeIcons = {
-    list: <ListIcon size={16} />,
-    details: <LayoutGrid size={16} />,
-    'large-icons': <Grid3x3 size={16} />,
-    'small-icons': <Grid3x3 size={16} />,
+    details: <ListIcon size={16} />,
+    list: <LayoutList size={16} />,
+    icons: <LayoutGrid size={16} />,
   };
 
   return (

@@ -102,75 +102,44 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
     );
   }
 
-  if (context?.viewMode === 'large-icons') {
-    return (
-      <Grid container spacing={2} sx={{ p: 2 }}>
-        {items.map((item) => (
-          <Grid
-            // item
-            key={item.id}
-          >
-            <Card
-              sx={{
-                width: 120,
-                cursor: 'pointer',
-                border: context?.selectedItems.includes(item.id) ? 2 : 0,
-                borderColor: 'primary.main',
-              }}
-              onDoubleClick={(e) => handleItemClick(item, e)}
-              draggable
-              onDragStart={() => handleDragStart(item)}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(item, e)}
-            >
-              <CardContent sx={{ textAlign: 'center', p: 1 }}>
-                {item.icon}
-                <Typography
-                  variant="caption"
-                  display="block"
-                  sx={{ mt: 1, wordBreak: 'break-word' }}
-                >
-                  {item.name}
-                </Typography>
-                {item.metadata.favorite && (
-                  <Star size={12} color="gold" style={{ marginTop: 4 }} />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  }
-
-  // List and small-icons view
+  // if (context?.viewMode === 'icons') {
+  // fallback to icon view mode
   return (
-    <List>
+    <Grid container spacing={2} sx={{ p: 2 }}>
       {items.map((item) => (
-        <ListItem
+        <Grid
+          // item
           key={item.id}
-          // selected={context?.selectedItems.includes(item.id)}
-          onDoubleClick={(e) => handleItemClick(item, e)}
-          // draggable    // todo make draggle
-          onDragStart={() => handleDragStart(item)}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(item, e)}
-          // secondaryAction={
-          //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          //     {item.metadata.tags.map((tag) => (
-          //       <Chip key={tag} label={tag} size="small" variant="outlined" />
-          //     ))}
-          //     {item.metadata.favorite && <Star size={16} color="gold" />}
-          //   </Box>
-          // }
         >
-          <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText
-            primary={item.name}
-            secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
-          />
-        </ListItem>
+          <Card
+            sx={{
+              width: 120,
+              cursor: 'pointer',
+              border: context?.selectedItems.includes(item.id) ? 2 : 0,
+              borderColor: 'primary.main',
+            }}
+            onDoubleClick={(e) => handleItemClick(item, e)}
+            draggable
+            onDragStart={() => handleDragStart(item)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(item, e)}
+          >
+            <CardContent sx={{ textAlign: 'center', p: 1 }}>
+              {item.icon}
+              <Typography
+                variant="caption"
+                display="block"
+                sx={{ mt: 1, wordBreak: 'break-word' }}
+              >
+                {item.name}
+              </Typography>
+              {item.metadata.favorite && (
+                <Star size={12} color="gold" style={{ marginTop: 4 }} />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
       ))}
-    </List>
+    </Grid>
   );
 };

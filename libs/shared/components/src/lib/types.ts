@@ -63,6 +63,6 @@ export interface QuickAccessItem {
   category?: string;
 }
 
-export type ViewMode = 'list' | 'details' | 'large-icons' | 'small-icons';
+export type ViewMode = 'list' | 'details' | 'icons';
 export type SortBy = 'name' | 'date' | 'size' | 'type';
 export type SortOrder = 'asc' | 'desc';
