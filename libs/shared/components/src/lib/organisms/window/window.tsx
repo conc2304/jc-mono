@@ -172,6 +172,7 @@ export const Window = ({
       <WindowTitleBar title={title} id={id} isActive={isActive} icon={icon} />
 
       <Box
+        className="WindowContent--root"
         data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
         sx={{
           height: ({ mixins }) =>
@@ -194,7 +195,14 @@ export const Window = ({
           },
         }}
       >
-        {windowContent}
+        <Box
+          sx={{
+            height: '100%',
+          }}
+          className="Window--content"
+        >
+          {windowContent}
+        </Box>
 
         <ResizeHandlers onResizeStart={handleResizeStart} handleSize={3} />
         {/* for the Augmented Notch at bottom  */}

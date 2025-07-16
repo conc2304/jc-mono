@@ -15,13 +15,13 @@ import {
   Typography,
 } from '@mui/material';
 import { Box, Grid } from '@mui/system';
-import { Star } from 'lucide-react';
+import { AxeIcon, Star } from 'lucide-react';
 
 import { FileSystemContext } from '../../context';
 import { FileSystemItem } from '../../types';
+import { FileSystemIcon } from '../desktop-icon';
 
-export // File List Views
-const FileListView = ({ items }: { items: FileSystemItem[] }) => {
+export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
 
   const handleItemClick = (item: FileSystemItem, event: React.MouseEvent) => {
@@ -55,6 +55,7 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
     }
   };
 
+  console.log({ context });
   if (context?.viewMode === 'details') {
     return (
       <Table size="small">
@@ -72,7 +73,7 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
               key={item.id}
               hover
               selected={context?.selectedItems.includes(item.id)}
-              onDoubleClick={(e) => handleItemClick(item, e)}
+              onClick={(e) => handleItemClick(item, e)}
               draggable
               onDragStart={() => handleDragStart(item)}
               onDragOver={handleDragOver}
@@ -81,6 +82,7 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
             >
               <TableCell>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {/* <FileIcon item={item} size={16} /> */}
                   {item.icon}
                   {item.name}
                   {item.metadata.favorite && <Star size={12} color="gold" />}
@@ -102,44 +104,95 @@ const FileListView = ({ items }: { items: FileSystemItem[] }) => {
     );
   }
 
-  // if (context?.viewMode === 'icons') {
-  // fallback to icon view mode
+  if (context?.viewMode === 'icons') {
+    return (
+      // <FileSystemIcon
+      //   // data-augmented-ui-reset
+      //   name={'AXE'}
+      //   icon={<AxeIcon />}
+      //   isActive={false}
+      //   // tagContent={item.metadata.favorite && <Star size={12} color="gold" />}
+      // />
+      <Grid container spacing={2} sx={{ p: 2 }}>
+        {items.map((item) => (
+          <Grid key={item.id}>
+            <FileSystemIcon
+              // data-augmented-ui-reset
+              name={item.name}
+              icon={item.icon}
+              isActive={context?.selectedItems.includes(item.id)}
+              tagContent={
+                item.metadata.favorite && <Star size={12} color="gold" />
+              }
+            />
+            {/* {item.name} */}
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
+
+  // List and small-icons view
   return (
-    <Grid container spacing={2} sx={{ p: 2 }}>
+    <List>
       {items.map((item) => (
-        <Grid
-          // item
+        <ListItem
           key={item.id}
+          // button
+          // selected={context?.selectedItems.includes(item.id)}
+          onClick={(e) => handleItemClick(item, e)}
+          draggable
+          onDragStart={() => handleDragStart(item)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(item, e)}
+          // secondaryAction={
+          //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          //     {item.metadata.tags.map((tag) => (
+          //       <Chip key={tag} label={tag} size="small" variant="outlined" />
+          //     ))}
+          //     {item.metadata.favorite && <Star size={16} color="gold" />}
+          //   </Box>
+          // }
         >
-          <Card
-            sx={{
-              width: 120,
-              cursor: 'pointer',
-              border: context?.selectedItems.includes(item.id) ? 2 : 0,
-              borderColor: 'primary.main',
-            }}
-            onDoubleClick={(e) => handleItemClick(item, e)}
-            draggable
-            onDragStart={() => handleDragStart(item)}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(item, e)}
-          >
-            <CardContent sx={{ textAlign: 'center', p: 1 }}>
-              {item.icon}
-              <Typography
-                variant="caption"
-                display="block"
-                sx={{ mt: 1, wordBreak: 'break-word' }}
-              >
-                {item.name}
-              </Typography>
-              {item.metadata.favorite && (
-                <Star size={12} color="gold" style={{ marginTop: 4 }} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+          <ListItemIcon>
+            {/* <FileIcon item={item} /> */}
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText
+            primary={item.name}
+            secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
+          />
+        </ListItem>
       ))}
-    </Grid>
+    </List>
   );
 };
+
+//            <Card
+//               sx={{
+//                 width: 120,
+//                 cursor: 'pointer',
+//                 border: context?.selectedItems.includes(item.id) ? 2 : 0,
+//                 borderColor: 'primary.main',
+//               }}
+//               onClick={(e) => handleItemClick(item, e)}
+//               draggable
+//               onDragStart={() => handleDragStart(item)}
+//               onDragOver={handleDragOver}
+//               onDrop={(e) => handleDrop(item, e)}
+//             >
+//               <CardContent sx={{ textAlign: 'center', p: 1 }}>
+//                 {/* <FileIcon item={item} size={48} /> */}
+//                 {item.icon}
+//                 <Typography
+//                   variant="caption"
+//                   display="block"
+//                   sx={{ mt: 1, wordBreak: 'break-word' }}
+//                 >
+//                   {item.name}
+//                 </Typography>
+//                 {item.metadata.favorite && (
+//                   <Star size={12} color="gold" style={{ marginTop: 4 }} />
+//                 )}
+//               </CardContent>
+//             </Card>

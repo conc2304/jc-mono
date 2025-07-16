@@ -272,3 +272,26 @@ export const remToPixels = (rem: string) => {
     parseFloat(getComputedStyle(document.documentElement).fontSize)
   );
 };
+
+// Custom Cursor Logic
+// TODO get Cursor Files
+export const CURSOR_PATHS = {
+  default: '/assets/cursors/default.cur',
+  pointer: '/assets/cursors/pointer.cur',
+  text: '/assets/cursors/text.cur',
+  grab: '/assets/cursors/grab.cur',
+  grabbing: '/assets/cursors/grabbing.cur',
+  resizeHorizontal: '/assets/cursors/resize-horizontal.cur',
+  resizeVertical: '/assets/cursors/resize-vertical.cur',
+  notAllowed: '/assets/cursors/not-allowed.cur',
+  crosshair: '/assets/cursors/crosshair.cur',
+  move: '/assets/cursors/move.cur',
+  help: '/assets/cursors/help.cur',
+  wait: '/assets/cursors/wait.cur',
+} as const;
+
+export type CursorType = keyof typeof CURSOR_PATHS;
+
+export const getCursorUrl = (cursorType: CursorType, fallback = 'auto') => {
+  return `url('${CURSOR_PATHS[cursorType]}'), ${fallback}`;
+};

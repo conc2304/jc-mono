@@ -36,14 +36,14 @@ export const PreviewPanel = ({ collapsed, onToggle }: PreviewPanelProps) => {
           justifyContent: 'end',
         }}
       >
-        <IconButton onClick={onToggle} size="small">
-          {collapsed ? <ChevronLeft /> : <ChevronDown />}
-        </IconButton>
         {!collapsed && (
           <Typography variant="subtitle2" component="span" sx={{ ml: 1 }}>
             Preview
           </Typography>
         )}
+        <IconButton onClick={onToggle} size="small">
+          {collapsed ? <ChevronLeft /> : <ChevronDown />}
+        </IconButton>
       </Box>
 
       {!collapsed &&

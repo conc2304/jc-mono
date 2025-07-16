@@ -10,10 +10,11 @@ export const BreadcrumbNavigation = () => {
   const pathSegments = context?.currentPath.split('/').filter(Boolean) || [];
   const segments = ['Home', ...pathSegments];
 
-  console.log({ pathSegments, segments });
-
   return (
-    <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+    <Box
+      className="Breadcrumb--root"
+      sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}
+    >
       <Breadcrumbs separator={<ChevronRight size={16} />}>
         <Link
           component="button"

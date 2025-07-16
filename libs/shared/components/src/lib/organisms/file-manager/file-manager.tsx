@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { Computer } from 'lucide-react';
 
 import { FileSystemContext } from '../../context';
@@ -35,7 +35,6 @@ export const FileManager = ({
   const [draggedItems, setDraggedItems] = useState<string[]>([]);
 
   const navigateToPath = (path: string) => {
-    console.log({ path });
     setCurrentPath(path);
     setSelectedItems([]);
     if (path === '/') {
@@ -83,8 +82,6 @@ export const FileManager = ({
       return item.path.startsWith(currentPath) && item.path !== currentPath;
     });
 
-    console.log({ items });
-
     // Sort items
     items.sort((a, b) => {
       let comparison = 0;
@@ -129,7 +126,10 @@ export const FileManager = ({
 
   return (
     <FileSystemContext.Provider value={contextValue}>
-      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box
+        className="FileManager--root"
+        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      >
         <BreadcrumbNavigation />
         <ViewControls />
 
@@ -147,18 +147,10 @@ export const FileManager = ({
             className="PreviewPanel--container"
             sx={{ flexShrink: 0, display: 'flex', minHeight: 0 }}
           >
-            {/* <Typography
-              variant="subtitle2"
-              sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}
-            >
-              Preview
-            </Typography> */}
-            {/* <Box sx={{ flex: 1, overflow: 'hidden' }}> */}
             <PreviewPanel
               collapsed={previewCollapsed}
               onToggle={() => setPreviewCollapsed(!previewCollapsed)}
             />
-            {/* </Box> */}
           </Box>
         </Box>
       </Box>

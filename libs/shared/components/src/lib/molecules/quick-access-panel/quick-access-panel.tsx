@@ -36,6 +36,7 @@ export const QuickAccessPanel = ({
 
   return (
     <Box
+      className="QuickAccessPanel--root"
       sx={{
         width: collapsed ? 48 : 250,
         height: '100%',

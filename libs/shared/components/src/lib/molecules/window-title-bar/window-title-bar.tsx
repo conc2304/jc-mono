@@ -30,6 +30,7 @@ export const WindowTitleBar = ({
       <Box
         className="Titlebar--move-handler"
         onMouseDown={(e) => handleWindowMouseDown(e, id)}
+        draggable={true}
         sx={{
           cursor: 'move',
           m: 0,
