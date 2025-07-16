@@ -46,11 +46,6 @@ export const TaskBar = () => {
             mx: 1,
             opacity: window.minimized ? 0.6 : 1,
           }}
-          className={`flex items-center space-x-2 px-3 py-1 rounded text-sm ${
-            window.minimized
-              ? 'bg-gray-600 text-gray-300'
-              : 'bg-gray-700 text-white hover:bg-gray-600'
-          }`}
         >
           {window.icon}
           <Typography component="span" variant="body2" sx={{ ml: 0.25 }}>

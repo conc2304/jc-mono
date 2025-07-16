@@ -11,12 +11,7 @@ import { useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
 import { FileManager } from '../organisms/file-manager';
-import {
-  // DesktopIconMetaData,
-  WindowMetaData,
-  IconPosition,
-  FileSystemItem,
-} from '../types';
+import { WindowMetaData, IconPosition, FileSystemItem } from '../types';
 
 interface DragRef {
   startX: number;
@@ -25,8 +20,20 @@ interface DragRef {
   elementY: number;
 }
 
+// Extended WindowMetaData to include animation states
+interface AnimatedWindowMetaData extends WindowMetaData {
+  isOpening?: boolean;
+  isClosing?: boolean;
+  animationState?:
+    | 'normal'
+    | 'opening'
+    | 'closing'
+    | 'minimizing'
+    | 'maximizing';
+}
+
 interface WindowState {
-  windows: WindowMetaData[];
+  windows: AnimatedWindowMetaData[];
   draggedWindow: string | null;
   windowZIndex: number;
   iconPositions: Record<string, IconPosition>;
@@ -53,6 +60,10 @@ interface WindowActions {
     windowId: string
   ) => void;
 
+  // Animation callbacks
+  onWindowAnimationComplete: (windowId: string) => void;
+  onWindowCloseAnimationComplete: (windowId: string) => void;
+
   // Icon management
   handleIconMouseDown: (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -60,7 +71,7 @@ interface WindowActions {
   ) => void;
 
   // State setters (for internal use)
-  setWindows: React.Dispatch<React.SetStateAction<WindowMetaData[]>>;
+  setWindows: React.Dispatch<React.SetStateAction<AnimatedWindowMetaData[]>>;
   setIconPositions: React.Dispatch<
     React.SetStateAction<Record<string, IconPosition>>
   >;
@@ -68,6 +79,7 @@ interface WindowActions {
   setDraggedIcon: React.Dispatch<React.SetStateAction<string | null>>;
   setWindowZIndex: React.Dispatch<React.SetStateAction<number>>;
 }
+
 const clamp = (num: number, min: number, max: number) => {
   return Math.min(Math.max(num, min), max);
 };
@@ -85,7 +97,7 @@ export const WindowProvider: React.FC<{
 }> = ({ children, fileSystemItems, defaultIconPositions = {} }) => {
   const theme = useTheme();
 
-  const [windows, setWindows] = useState<WindowMetaData[]>([]);
+  const [windows, setWindows] = useState<AnimatedWindowMetaData[]>([]);
   const [draggedWindow, setDraggedWindow] = useState<string | null>(null);
   const [windowZIndex, setWindowZIndex] = useState(theme.zIndex.window);
   const [iconPositions, setIconPositions] =
@@ -99,6 +111,16 @@ export const WindowProvider: React.FC<{
     elementY: 0,
   });
 
+  // Animation timeouts ref to cleanup if needed
+  const animationTimeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      animationTimeouts.current.forEach((timeout) => clearTimeout(timeout));
+    };
+  }, []);
+
   // Snap to grid utility
   const snapToGrid = useCallback((x: number, y: number) => {
     const gridSize = 20;
@@ -108,11 +130,44 @@ export const WindowProvider: React.FC<{
     };
   }, []);
 
-  // Icon drag handlers
+  // Animation callback handlers
+  const onWindowAnimationComplete = useCallback((windowId: string) => {
+    setWindows((prev) =>
+      prev.map((window) =>
+        window.id === windowId
+          ? {
+              ...window,
+              isOpening: false,
+              animationState: 'normal',
+            }
+          : window
+      )
+    );
+
+    // Clear timeout if it exists
+    const timeout = animationTimeouts.current.get(windowId);
+    if (timeout) {
+      clearTimeout(timeout);
+      animationTimeouts.current.delete(windowId);
+    }
+  }, []);
+
+  const onWindowCloseAnimationComplete = useCallback((windowId: string) => {
+    setWindows((prev) => prev.filter((w) => w.id !== windowId));
+
+    // Clear timeout if it exists
+    const timeout = animationTimeouts.current.get(windowId);
+    if (timeout) {
+      clearTimeout(timeout);
+      animationTimeouts.current.delete(windowId);
+    }
+  }, []);
+
+  // Icon drag handlers (unchanged)
   const handleIconMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, iconId: string) => {
       e.preventDefault();
-      if (e.button === 2) return; // ignore right click
+      if (e.button === 2) return;
 
       dragRef.current = {
         startX: e.clientX,
@@ -144,7 +199,7 @@ export const WindowProvider: React.FC<{
 
   const handleIconMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (e.button === 2) return; // ignore right click
+      if (e.button === 2) return;
       if (!draggedIcon) return;
 
       const deltaX = e.clientX - dragRef.current.startX;
@@ -171,7 +226,12 @@ export const WindowProvider: React.FC<{
         [draggedIcon]: { x: newX, y: newY },
       }));
     },
-    [draggedIcon]
+    [
+      draggedIcon,
+      theme.mixins.desktopIcon.width,
+      theme.mixins.desktopIcon.maxHeight,
+      theme.mixins.taskbar.height,
+    ]
   );
 
   // Window management functions
@@ -198,10 +258,11 @@ export const WindowProvider: React.FC<{
       if (!fsItem) return;
 
       const id = `window-${itemId}`;
-      // check if window already open
+
+      // Check if window already exists
       const currWindow = windows.find((window) => window.id === id);
       if (currWindow) {
-        // bring it to the front
+        // Window exists - restore if minimized and bring to front
         setWindows((prev) =>
           prev.map((window) =>
             window.id === id
@@ -210,12 +271,14 @@ export const WindowProvider: React.FC<{
                   minimized: false,
                   zIndex: windowZIndex + 1,
                   isActive: true,
+                  animationState: window.minimized ? 'opening' : 'normal',
                 }
               : { ...window, isActive: false }
           )
         );
       } else {
-        const newWindow: WindowMetaData = {
+        // Create new window with opening animation
+        const newWindow: AnimatedWindowMetaData = {
           id,
           title: fsItem.name,
           icon: fsItem.icon,
@@ -232,27 +295,57 @@ export const WindowProvider: React.FC<{
             (name: string, icon: ReactNode) => updateWindowTitle(id, name, icon)
           ),
           isActive: true,
+          isOpening: true,
+          animationState: 'opening',
         };
 
         setWindows((prev) => [
           ...prev.map((window) => ({ ...window, isActive: false })),
           newWindow,
         ]);
+
+        // Set timeout as fallback in case animation callback doesn't fire
+        const timeout = setTimeout(() => {
+          onWindowAnimationComplete(id);
+        }, 350); // Slightly longer than animation duration
+
+        animationTimeouts.current.set(id, timeout);
       }
 
       setWindowZIndex(windowZIndex + 1);
     },
-    [fileSystemItems, windows, windowZIndex]
+    [fileSystemItems, windows, windowZIndex, onWindowAnimationComplete]
   );
 
-  const closeWindow = useCallback((windowId: string) => {
-    setWindows((prev) => prev.filter((w) => w.id !== windowId));
-  }, []);
+  const closeWindow = useCallback(
+    (windowId: string) => {
+      // Start closing animation
+      setWindows((prev) =>
+        prev.map((window) =>
+          window.id === windowId
+            ? {
+                ...window,
+                isClosing: true,
+                animationState: 'closing',
+              }
+            : window
+        )
+      );
+
+      // Set timeout as fallback in case animation callback doesn't fire
+      const timeout = setTimeout(() => {
+        onWindowCloseAnimationComplete(windowId);
+      }, 350); // Slightly longer than animation duration
+
+      animationTimeouts.current.set(windowId, timeout);
+    },
+    [onWindowCloseAnimationComplete]
+  );
 
   const minimizeWindow = useCallback(
     (windowId: string) => {
       const current = windows.find(({ id }) => windowId === id);
-      const isOpening = !!current?.minimized;
+      const isRestoring = !!current?.minimized;
 
       setWindows((prev) =>
         prev.map((window) => {
@@ -260,15 +353,29 @@ export const WindowProvider: React.FC<{
             ? {
                 ...window,
                 minimized: !window.minimized,
-                isActive: isOpening,
-                zIndex: isOpening ? windowZIndex + 1 : window.zIndex,
+                isActive: isRestoring,
+                zIndex: isRestoring ? windowZIndex + 1 : window.zIndex,
+                animationState: isRestoring ? 'opening' : 'minimizing',
               }
-            : { ...window, isActive: isOpening ? false : window.isActive };
+            : { ...window, isActive: isRestoring ? false : window.isActive };
         })
       );
 
-      if (isOpening) {
+      if (isRestoring) {
         setWindowZIndex(windowZIndex + 1);
+
+        // Reset animation state after minimize/restore animation
+        const timeout = setTimeout(() => {
+          setWindows((prev) =>
+            prev.map((window) =>
+              window.id === windowId
+                ? { ...window, animationState: 'normal' }
+                : window
+            )
+          );
+        }, 300);
+
+        animationTimeouts.current.set(`${windowId}-minimize`, timeout);
       }
     },
     [windows, windowZIndex]
@@ -284,11 +391,25 @@ export const WindowProvider: React.FC<{
               x: w.maximized ? 200 : 0,
               y: w.maximized ? 100 : 0,
               width: w.maximized ? 400 : window.innerWidth || 800,
-              height: w.maximized ? 300 : (window.innerHeight || 600) - 100, // subtract taskbar height
+              height: w.maximized ? 300 : (window.innerHeight || 600) - 100,
+              animationState: 'maximizing',
             }
           : w
       )
     );
+
+    // Reset animation state after maximize animation
+    const timeout = setTimeout(() => {
+      setWindows((prev) =>
+        prev.map((window) =>
+          window.id === windowId
+            ? { ...window, animationState: 'normal' }
+            : window
+        )
+      );
+    }, 300);
+
+    animationTimeouts.current.set(`${windowId}-maximize`, timeout);
   }, []);
 
   const updateWindow = useCallback(
@@ -333,7 +454,11 @@ export const WindowProvider: React.FC<{
   const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, windowId: string) => {
       e.preventDefault();
-      if (e.button === 2) return; // ignore right click
+      if (e.button === 2) return;
+
+      // Don't allow dragging during animations
+      const window = windows.find((w) => w.id === windowId);
+      if (window?.animationState && window.animationState !== 'normal') return;
 
       const windowElement = e.currentTarget;
       const rect = windowElement.getBoundingClientRect();
@@ -348,12 +473,12 @@ export const WindowProvider: React.FC<{
       setDraggedWindow(windowId);
       bringToFront(windowId);
     },
-    [bringToFront]
+    [bringToFront, windows]
   );
 
   const handleWindowMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (e.button === 2) return; // ignore right click
+      if (e.button === 2) return;
       if (!draggedWindow) return;
 
       const deltaX = e.clientX - dragRef.current.startX;
@@ -372,16 +497,20 @@ export const WindowProvider: React.FC<{
       const newY = clamp(
         dragRef.current.elementY + deltaY,
         0,
-        window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding // just a little extra padding
+        window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding
       );
 
       setWindows((prev) =>
-        prev.map((w: WindowMetaData) =>
+        prev.map((w: AnimatedWindowMetaData) =>
           w.id === draggedWindow ? { ...w, x: newX, y: newY } : w
         )
       );
     },
-    [draggedWindow]
+    [
+      draggedWindow,
+      theme.mixins.taskbar.height,
+      theme.mixins.window.titlebar.height,
+    ]
   );
 
   const handleWindowMouseUp = useCallback(() => {
@@ -391,7 +520,7 @@ export const WindowProvider: React.FC<{
   // Mouse event listeners
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (e.button === 2) return; // ignore right click
+      if (e.button === 2) return;
 
       if (draggedIcon) {
         handleIconMouseMove(e);
@@ -443,6 +572,8 @@ export const WindowProvider: React.FC<{
     updateWindow,
     handleWindowMouseDown,
     handleIconMouseDown,
+    onWindowAnimationComplete,
+    onWindowCloseAnimationComplete,
 
     // State setters
     setWindows,
@@ -468,7 +599,7 @@ export const useWindowManager = () => {
   return context;
 };
 
-// Convenience hooks for specific functionality
+// Updated convenience hooks
 export const useWindowActions = () => {
   const {
     openWindow,
@@ -478,6 +609,8 @@ export const useWindowActions = () => {
     bringToFront,
     updateWindow,
     updateWindowTitle,
+    onWindowAnimationComplete,
+    onWindowCloseAnimationComplete,
   } = useWindowManager();
 
   return {
@@ -488,6 +621,8 @@ export const useWindowActions = () => {
     bringToFront,
     updateWindow,
     updateWindowTitle,
+    onWindowAnimationComplete,
+    onWindowCloseAnimationComplete,
   };
 };
 
@@ -514,7 +649,6 @@ const getWindowContent = (
   updateWindowCallback: (name: string, icon: ReactNode) => void
 ): ReactNode => {
   if (fsItem.type === 'folder') {
-    // For folders: render FileManager with folder contents
     return (
       <FileManager
         initialPath={fsItem.path}

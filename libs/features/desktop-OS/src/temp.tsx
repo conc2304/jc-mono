@@ -1,179 +1,406 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Box, darken, Fade, Grow, Slide } from '@mui/material';
 
-// Simple file type components
-const PDFViewer = ({ file }: { file: FileSystemItem }) => (
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h6">PDF Viewer</Typography>
-    <Typography>Viewing: {file.name}</Typography>
-    {/* Your PDF viewer implementation */}
-  </Box>
-);
+import {
+  ResizeDirection,
+  ResizeHandle,
+  ResizeHandlers,
+  ResizeState,
+} from './resize-handle';
+import { getCursorForDirection, getResizeDimensions } from './utils';
+import { useWindowManager } from '../../context';
+import { WindowTitleBar } from '../../molecules';
+import { WindowMetaData } from '../../types';
 
-const TextEditor = ({ file }: { file: FileSystemItem }) => (
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h6">Text Editor</Typography>
-    <Typography>Editing: {file.name}</Typography>
-    {/* Your text editor implementation */}
-  </Box>
-);
-
-const ImageViewer = ({ file }: { file: FileSystemItem }) => (
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h6">Image Viewer</Typography>
-    <Typography>Viewing: {file.name}</Typography>
-    {/* Your image viewer implementation */}
-  </Box>
-);
-
-const CodeEditor = ({ file }: { file: FileSystemItem }) => (
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h6">Code Editor</Typography>
-    <Typography>Editing: {file.name}</Typography>
-    {/* Your code editor implementation */}
-  </Box>
-);
-
-// Default file viewer
-const DefaultFileViewer = ({ file }: { file: FileSystemItem }) => (
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h6">File: {file.name}</Typography>
-    <Typography color="text.secondary">
-      No specific viewer for .{file.extension} files
-    </Typography>
-  </Box>
-);
-
-// File type registry - map extensions to components
-const FILE_TYPE_COMPONENTS: Record<
-  string,
-  React.ComponentType<{ file: FileSystemItem }>
-> = {
-  pdf: PDFViewer,
-  txt: TextEditor,
-  md: TextEditor,
-  jpg: ImageViewer,
-  jpeg: ImageViewer,
-  png: ImageViewer,
-  gif: ImageViewer,
-  js: CodeEditor,
-  ts: CodeEditor,
-  jsx: CodeEditor,
-  tsx: CodeEditor,
-  css: CodeEditor,
-  html: CodeEditor,
-};
-
-// Simple content creator function
-export const createWindowContent = (
-  fsItem: FileSystemItem,
-  fileSystemItems: FileSystemItem[]
-) => {
-  if (fsItem.type === 'folder') {
-    // For folders: render FileManager with folder contents
-    return (
-      <FileManager
-        initialPath={fsItem.path}
-        folderContents={fsItem.children || []}
-        fileSystemItems={fileSystemItems}
-      />
-    );
-  } else {
-    // For files: render the appropriate component
-    const FileComponent =
-      FILE_TYPE_COMPONENTS[fsItem.extension || ''] || DefaultFileViewer;
-    return <FileComponent file={fsItem} />;
-  }
-};
-
-// Updated FileManager props to accept folder contents
-interface FileManagerProps {
-  initialPath: string;
-  folderContents: FileSystemItem[];
-  fileSystemItems: FileSystemItem[]; // For navigation context
+interface WindowProps extends WindowMetaData {
+  isActive: boolean;
+  minWidth?: number;
+  minHeight?: number;
+  maxWidth?: number;
+  maxHeight?: number;
+  resizable?: boolean;
+  isOpening?: boolean; // Add this prop to track if window is opening
+  onAnimationComplete?: () => void; // Callback when animation completes
 }
 
-// Your simplified openWindow function
-export const createOpenWindowFunction = (
-  fileSystemItems: FileSystemItem[],
-  windows: WindowMetaData[],
-  windowZIndex: number,
-  setWindows: React.Dispatch<React.SetStateAction<WindowMetaData[]>>,
-  setWindowZIndex: React.Dispatch<React.SetStateAction<number>>
-) => {
-  return useCallback(
-    (itemId: string) => {
-      const fsItem = fileSystemItems?.find((i) => i.id === itemId);
-      if (!fsItem) return;
+// Window state type for animations
+type WindowAnimationState =
+  | 'opening'
+  | 'normal'
+  | 'minimizing'
+  | 'maximizing'
+  | 'closing';
 
-      const id = `window-${itemId}`;
-      const currWindow = windows.find((window) => window.id === id);
+export const Window = ({
+  id,
+  title,
+  icon,
+  x,
+  y,
+  width,
+  height,
+  zIndex,
+  minimized,
+  maximized,
+  isActive = true,
+  windowContent,
+  minWidth = 200,
+  minHeight = 150,
+  maxWidth = window.innerWidth,
+  maxHeight = window.innerHeight,
+  resizable = true,
+  isOpening = false,
+  onAnimationComplete,
+}: WindowProps) => {
+  const { updateWindow, bringToFront } = useWindowManager();
 
-      if (currWindow) {
-        // Restore existing window
-        setWindows((prev) =>
-          prev.map((window) =>
-            window.id === id
-              ? {
-                  ...window,
-                  minimized: false,
-                  zIndex: windowZIndex + 1,
-                  isActive: true,
-                }
-              : { ...window, isActive: false }
-          )
-        );
-      } else {
-        // Create new window
-        const newWindow: WindowMetaData = {
-          id,
-          title: fsItem.name,
-          icon: fsItem.icon,
-          x: 200 + windows.length * 30,
-          y: 100 + windows.length * 30,
-          width: fsItem.type === 'folder' ? 800 : 600,
-          height: fsItem.type === 'folder' ? 600 : 400,
-          zIndex: windowZIndex + 1,
-          minimized: false,
-          maximized: false,
-          windowContent: createWindowContent(fsItem, fileSystemItems),
-          isActive: true,
-        };
+  // Animation state management
+  const [animationState, setAnimationState] =
+    useState<WindowAnimationState>('normal');
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showWindow, setShowWindow] = useState(!isOpening);
 
-        setWindows((prev) => [
-          ...prev.map((window) => ({ ...window, isActive: false })),
-          newWindow,
-        ]);
+  // Store previous state for restore animations
+  const previousState = useRef({ x, y, width, height });
+
+  const [resizeState, setResizeState] = useState<ResizeState>({
+    isResizing: false,
+    direction: null,
+    startX: 0,
+    startY: 0,
+    startWidth: 0,
+    startHeight: 0,
+    startLeft: 0,
+    startTop: 0,
+  });
+
+  const windowRef = useRef<HTMLDivElement>(null);
+
+  // Handle window opening animation
+  useEffect(() => {
+    if (isOpening) {
+      setAnimationState('opening');
+      setIsAnimating(true);
+      setShowWindow(true);
+
+      const timer = setTimeout(() => {
+        setAnimationState('normal');
+        setIsAnimating(false);
+        onAnimationComplete?.();
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpening, onAnimationComplete]);
+
+  // Handle minimize/maximize state changes with animations
+  useEffect(() => {
+    if (minimized && animationState !== 'minimizing') {
+      // Store current state before minimizing
+      previousState.current = { x, y, width, height };
+      setAnimationState('minimizing');
+      setIsAnimating(true);
+
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 250);
+
+      return () => clearTimeout(timer);
+    } else if (maximized && animationState !== 'maximizing') {
+      // Store current state before maximizing
+      if (animationState === 'normal') {
+        previousState.current = { x, y, width, height };
       }
+      setAnimationState('maximizing');
+      setIsAnimating(true);
 
-      setWindowZIndex(windowZIndex + 1);
+      const timer = setTimeout(() => {
+        setAnimationState('normal');
+        setIsAnimating(false);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    } else if (
+      !minimized &&
+      !maximized &&
+      (animationState === 'minimizing' || animationState === 'maximizing')
+    ) {
+      // Restore from minimized/maximized
+      setAnimationState('normal');
+      setIsAnimating(true);
+
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [minimized, maximized, animationState, x, y, width, height]);
+
+  // Get animation styles based on current state
+  const getAnimationStyles = () => {
+    const baseTransition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+    switch (animationState) {
+      case 'opening':
+        return {
+          transform: 'scale(0.8)',
+          opacity: 0,
+          transition: baseTransition,
+          animation: 'windowOpen 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+        };
+      case 'minimizing':
+        return {
+          transform: 'scale(0.3) translateY(50vh)',
+          opacity: 0.7,
+          transition: 'all 0.25s ease-in-out',
+        };
+      case 'maximizing':
+        return {
+          transition: baseTransition,
+        };
+      case 'closing':
+        return {
+          transform: 'scale(0.8)',
+          opacity: 0,
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        };
+      default:
+        return {
+          transform: 'scale(1)',
+          opacity: 1,
+          transition: isAnimating ? baseTransition : 'none',
+        };
+    }
+  };
+
+  // Handle resize start
+  const handleResizeStart = useCallback(
+    (e: React.MouseEvent, direction: ResizeDirection) => {
+      if (e.button === 2) return; // ignore right click
+      if (!resizable || maximized || isAnimating) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      bringToFront(id);
+
+      setResizeState({
+        isResizing: true,
+        direction,
+        startX: e.clientX,
+        startY: e.clientY,
+        startWidth: width,
+        startHeight: height,
+        startLeft: x,
+        startTop: y,
+      });
     },
-    [fileSystemItems, windows, windowZIndex]
+    [resizable, maximized, isAnimating, bringToFront, id, width, height, x, y]
   );
-};
 
-// Usage example in your component:
-export const ExampleUsage = () => {
-  const [windows, setWindows] = useState<WindowMetaData[]>([]);
-  const [windowZIndex, setWindowZIndex] = useState(1000);
+  // Handle resize move
+  const handleResizeMove = useCallback(
+    (e: MouseEvent) => {
+      if (e.button === 2) return; // ignore right click
+      if (!resizeState.isResizing || !resizeState.direction || isAnimating)
+        return;
 
-  const openWindow = createOpenWindowFunction(
-    mockFileSystem,
-    windows,
-    windowZIndex,
-    setWindows,
-    setWindowZIndex
+      const deltaX = e.clientX - resizeState.startX;
+      const deltaY = e.clientY - resizeState.startY;
+
+      const { x, y, width, height } = getResizeDimensions({
+        resizeState,
+        deltaX,
+        deltaY,
+        minHeight,
+        maxHeight,
+        minWidth,
+        maxWidth,
+      });
+
+      // Ensure window doesn't go off-screen
+      const newLeft = Math.max(0, Math.min(window.innerWidth - width, x));
+      const newTop = Math.max(0, Math.min(window.innerHeight - height, y));
+
+      updateWindow?.(id, {
+        x: newLeft,
+        y: newTop,
+        width,
+        height,
+      });
+    },
+    [
+      resizeState,
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight,
+      updateWindow,
+      id,
+      isAnimating,
+    ]
   );
+
+  // Handle resize end
+  const handleResizeEnd = useCallback(() => {
+    setResizeState((prev) => ({
+      ...prev,
+      isResizing: false,
+      direction: null,
+    }));
+  }, []);
+
+  // Add event listeners for resize
+  React.useEffect(() => {
+    if (resizeState.isResizing) {
+      document.addEventListener('mousemove', handleResizeMove);
+      document.addEventListener('mouseup', handleResizeEnd);
+      document.body.style.cursor = getCursorForDirection(
+        resizeState.direction!
+      );
+      document.body.style.userSelect = 'none';
+
+      return () => {
+        document.removeEventListener('mousemove', handleResizeMove);
+        document.removeEventListener('mouseup', handleResizeEnd);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      };
+    }
+  }, [
+    resizeState.isResizing,
+    resizeState.direction,
+    handleResizeMove,
+    handleResizeEnd,
+  ]);
+
+  // Method to close window with animation
+  const closeWindow = useCallback(() => {
+    setAnimationState('closing');
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      // Call your window manager's close function here
+      // closeWindow(id);
+    }, 300);
+  }, [id]);
+
+  if (!showWindow) return null;
 
   return (
-    <div>
-      {/* Your desktop icons */}
-      {mockFileSystem.map((item) => (
-        <DesktopIcon key={item.id} onDoubleClick={() => openWindow(item.id)}>
-          {item.icon}
-          {item.name}
-        </DesktopIcon>
-      ))}
-    </div>
+    <>
+      {/* Add keyframes CSS */}
+      <style>
+        {`
+          @keyframes windowOpen {
+            from {
+              transform: scale(0.8);
+              opacity: 0;
+            }
+            to {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
+
+      <Box
+        ref={windowRef}
+        className="Window--root"
+        sx={{
+          position: 'absolute',
+          background: 'transparent',
+          overflow: 'hidden',
+          visibility:
+            minimized && animationState !== 'minimizing' ? 'hidden' : 'visible',
+          pointerEvents:
+            isAnimating && animationState !== 'normal' ? 'none' : 'auto',
+
+          height: (theme) =>
+            !maximized
+              ? undefined
+              : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`,
+
+          // Add animation styles
+          ...getAnimationStyles(),
+        }}
+        style={{
+          left: x,
+          top: y,
+          width: maximized ? '100%' : width,
+          height: !maximized ? height : undefined,
+          zIndex: zIndex,
+        }}
+        onClick={() => !isAnimating && bringToFront(id)}
+      >
+        <WindowTitleBar
+          title={title}
+          id={id}
+          isActive={isActive}
+          icon={icon}
+          onClose={closeWindow} // Pass the animated close function
+        />
+
+        <Fade
+          in={!minimized || animationState === 'minimizing'}
+          timeout={animationState === 'minimizing' ? 250 : 300}
+        >
+          <Box
+            className="WindowContent--root"
+            data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
+            sx={{
+              height: ({ mixins }) =>
+                `calc(100% - ${mixins.window.titlebar.height})`,
+              overflow: 'auto',
+              padding: '8px',
+              m: 0,
+              background: (theme) => theme.palette.background.paper,
+              '&[data-augmented-ui]': {
+                '--aug-tl': (theme) => theme.spacing(2),
+                '--aug-bl': '8px',
+                '--aug-br': '8px',
+                '--aug-b': '6px',
+                '--aug-b-extend1': '50%',
+                '--aug-border-all': '1px',
+                '--aug-border-bg': (theme) =>
+                  isActive
+                    ? theme.palette.primary.light
+                    : darken(theme.palette.primary.light, 0.5),
+              },
+            }}
+          >
+            <Box
+              sx={{
+                height: '100%',
+              }}
+              className="Window--content"
+            >
+              {windowContent}
+            </Box>
+
+            {resizable && !maximized && (
+              <>
+                <ResizeHandlers
+                  onResizeStart={handleResizeStart}
+                  handleSize={3}
+                />
+                <ResizeHandle
+                  direction="s"
+                  style={{
+                    bottom: 6,
+                    left: '25%',
+                    right: '25%',
+                    height: '4px',
+                  }}
+                  onResizeStart={(e) => handleResizeStart(e, 's')}
+                />
+              </>
+            )}
+          </Box>
+        </Fade>
+      </Box>
+    </>
   );
 };

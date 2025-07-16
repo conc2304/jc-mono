@@ -24,6 +24,16 @@ export interface WindowMetaData {
   maximized: boolean;
   windowContent: ReactNode;
   isActive: boolean;
+
+  // Animation Props
+  isOpening?: boolean;
+  isClosing?: boolean;
+  animationState?:
+    | 'normal'
+    | 'opening'
+    | 'closing'
+    | 'minimizing'
+    | 'maximizing';
 }
 
 export interface FileSystemItem {
