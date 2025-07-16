@@ -41,6 +41,7 @@ interface WindowActions {
   minimizeWindow: (windowId: string) => void;
   maximizeWindow: (windowId: string) => void;
   bringToFront: (windowId: string) => void;
+  updateWindowTitle: (windowId: string, name: string, icon: ReactNode) => void;
 
   // Window positioning/resizing
   updateWindow: (
@@ -197,9 +198,7 @@ export const WindowProvider: React.FC<{
       if (!fsItem) return;
 
       const id = `window-${itemId}`;
-      const type = fsItem.type;
       // check if window already open
-      const Temp_RenderFileContent = () => <div>Temporary Content</div>;
       const currWindow = windows.find((window) => window.id === id);
       if (currWindow) {
         // bring it to the front
@@ -227,7 +226,11 @@ export const WindowProvider: React.FC<{
           zIndex: windowZIndex + 1,
           minimized: false,
           maximized: false,
-          windowContent: getWindowContent(fsItem, fileSystemItems),
+          windowContent: getWindowContent(
+            fsItem,
+            fileSystemItems,
+            (name: string, icon: ReactNode) => updateWindowTitle(id, name, icon)
+          ),
           isActive: true,
         };
 
@@ -299,6 +302,25 @@ export const WindowProvider: React.FC<{
             ? {
                 ...window,
                 ...dimensions,
+              }
+            : window
+        )
+      );
+      return '';
+    },
+    []
+  );
+
+  const updateWindowTitle = useCallback(
+    (id: string, name: string, icon: ReactNode) => {
+      console.log('Update Window Title', name);
+      setWindows((prev) =>
+        prev.map((window) =>
+          window.id === id
+            ? {
+                ...window,
+                title: name,
+                icon,
               }
             : window
         )
@@ -418,6 +440,7 @@ export const WindowProvider: React.FC<{
     minimizeWindow,
     maximizeWindow,
     bringToFront,
+    updateWindowTitle,
     updateWindow,
     handleWindowMouseDown,
     handleIconMouseDown,
@@ -455,6 +478,7 @@ export const useWindowActions = () => {
     maximizeWindow,
     bringToFront,
     updateWindow,
+    updateWindowTitle,
   } = useWindowManager();
 
   return {
@@ -464,6 +488,7 @@ export const useWindowActions = () => {
     maximizeWindow,
     bringToFront,
     updateWindow,
+    updateWindowTitle,
   };
 };
 
@@ -486,7 +511,8 @@ export const useWindowDrag = () => {
 
 const getWindowContent = (
   fsItem: FileSystemItem,
-  fileSystemItems: FileSystemItem[]
+  fileSystemItems: FileSystemItem[],
+  updateWindowCallback: (name: string, icon: ReactNode) => void
 ): ReactNode => {
   if (fsItem.type === 'folder') {
     // For folders: render FileManager with folder contents
@@ -495,6 +521,7 @@ const getWindowContent = (
         initialPath={fsItem.path}
         folderContents={fsItem.children || []}
         fileSystemItems={fileSystemItems}
+        updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
       />
     );
   } else {

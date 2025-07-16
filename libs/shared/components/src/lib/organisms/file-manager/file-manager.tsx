@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { Computer } from 'lucide-react';
 
 import { FileSystemContext } from '../../context';
 import {
@@ -15,11 +16,13 @@ interface FileManagerProps {
   initialPath: string;
   folderContents: FileSystemItem[];
   fileSystemItems: FileSystemItem[];
+  updateWindowName: (name: string, icon: ReactNode) => void;
 }
 export const FileManager = ({
   fileSystemItems,
   initialPath,
   folderContents: folderContentsProp,
+  updateWindowName,
 }: FileManagerProps) => {
   const [folderContents, setFolderContents] = useState(folderContentsProp);
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
@@ -36,12 +39,14 @@ export const FileManager = ({
     setSelectedItems([]);
     if (path === '/') {
       setFolderContents(fileSystemItems);
+      updateWindowName('Home', <Computer fontSize={24} />);
     } else {
       const targetFolder = fileSystemItems.find(
         (item) => item.path === path && item.type === 'folder'
       );
       if (targetFolder && targetFolder.children) {
         setFolderContents(targetFolder.children);
+        updateWindowName(targetFolder.name, targetFolder.icon);
       }
     }
   };
