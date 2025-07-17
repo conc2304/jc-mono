@@ -367,7 +367,7 @@ export const NotificationCenter: React.FC = () => {
               '--aug-l-extend1': '50%',
               '--aug-border-all': '1.5px',
               '--aug-border-bg':
-                theme.palette.info[theme.palette.invertedMode ?? 'light'],
+                theme.palette.info[theme.palette.getInvertedMode()],
             },
           })}
         >

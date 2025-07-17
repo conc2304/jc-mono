@@ -21,7 +21,7 @@ export const WindowControls = ({ id }: WindowControlProps) => {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        height: (theme) => theme.mixins.window.titlebar.height,
+        height: (theme) => theme.mixins.window.titleBar.height,
       }}
     >
       <AugmentedIconButton

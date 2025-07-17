@@ -485,7 +485,7 @@ export const WindowProvider: React.FC<{
       const deltaY = e.clientY - dragRef.current.startY;
       const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
       const titlebarHeight = remToPixels(
-        theme.mixins.window.titlebar.height as string
+        theme.mixins.window.titleBar.height as string
       );
       const overflowPadding = 20;
 
@@ -509,7 +509,7 @@ export const WindowProvider: React.FC<{
     [
       draggedWindow,
       theme.mixins.taskbar.height,
-      theme.mixins.window.titlebar.height,
+      theme.mixins.window.titleBar.height,
     ]
   );
 

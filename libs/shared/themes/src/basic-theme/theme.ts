@@ -41,7 +41,7 @@ export const createThemeFromOptions = ({
         minHeight: 45,
       },
       window: {
-        titlebar: {
+        titleBar: {
           height: '2.5rem',
           minHeight: 40,
         },
@@ -63,7 +63,8 @@ export const createThemeFromOptions = ({
     zIndex: { ...theme.zIndex, window: 500 },
   };
 
-  fullTheme.palette.invertedMode = palette.mode === 'light' ? 'dark' : 'light';
+  fullTheme.palette.getInvertedMode = () =>
+    palette.mode === 'light' ? 'dark' : 'light';
 
   return fullTheme;
 };

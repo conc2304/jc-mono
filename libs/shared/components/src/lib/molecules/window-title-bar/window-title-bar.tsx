@@ -46,7 +46,7 @@ export const WindowTitleBar = ({
           sx={{
             display: 'flex',
             alignItems: 'center',
-            height: (theme) => theme.mixins.window.titlebar.height,
+            height: (theme) => theme.mixins.window.titleBar.height,
             justifyContent: 'center',
             ml: 2,
             pt: 0.5,
@@ -81,7 +81,7 @@ export const WindowTitleBar = ({
           sx={{
             display: 'flex',
             alignItems: 'center',
-            height: (theme) => theme.mixins.window.titlebar.height,
+            height: (theme) => theme.mixins.window.titleBar.height,
             pt: 0.5,
             pr: 0.5,
             pl: 1,

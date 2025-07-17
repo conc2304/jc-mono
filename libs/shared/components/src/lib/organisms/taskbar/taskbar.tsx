@@ -72,7 +72,7 @@ export const TaskBar = () => {
           ))}
         </Box>
 
-        <NotificationCenter />
+        {/* <NotificationCenter /> */}
       </Box>
     </Box>
   );

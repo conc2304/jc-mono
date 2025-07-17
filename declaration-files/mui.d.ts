@@ -5,7 +5,7 @@ declare module '@mui/material/styles' {
   interface Mixins {
     taskbar: CSSProperties;
     window: {
-      titlebar: CSSProperties;
+      titleBar: CSSProperties;
     };
     desktopIcon: CSSProperties;
   }
@@ -15,9 +15,9 @@ declare module '@mui/material/styles' {
   }
 
   interface Palette {
-    invertedMode?: 'light' | 'dark';
+    getInvertedMode: () => 'light' | 'dark';
   }
-  interface PaletteOptions {
-    invertedMode?: 'light' | 'dark';
-  }
+  // interface PaletteOptions {
+  //   // invertedMode?: 'light' | 'dark';
+  // }
 }

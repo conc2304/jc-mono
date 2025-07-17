@@ -322,7 +322,7 @@ export const Window = ({
             data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
             sx={{
               height: ({ mixins }) =>
-                `calc(100% - ${mixins.window.titlebar.height})`,
+                `calc(100% - ${mixins.window.titleBar.height})`,
               overflow: 'auto',
               padding: '8px',
               m: 0,
