@@ -274,7 +274,7 @@ export const NotificationCenter: React.FC = () => {
   return (
     <Box sx={{ position: 'relative' }}>
       {/* Collapsed View */}
-      <Paper
+      <Box
         sx={{
           p: 1.5,
           cursor: 'pointer',
@@ -323,17 +323,22 @@ export const NotificationCenter: React.FC = () => {
             <IconButton
               size="small"
               sx={{
-                color: 'white',
+                color: 'text.primary',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 },
               }}
             >
-              {isExpanded ? <ExpandLess /> : <ExpandMore />}
+              <ExpandLess
+                sx={{
+                  transform: `rotate(${isExpanded ? '360deg' : '180deg'})`,
+                  transition: 'transform 200ms ease-in',
+                }}
+              />
             </IconButton>
           </Box>
         </Stack>
-      </Paper>
+      </Box>
 
       {/* Expanded View */}
       <Collapse in={isExpanded}>
@@ -382,7 +387,7 @@ export const NotificationCenter: React.FC = () => {
                   variant="h6"
                   gutterBottom
                   sx={{
-                    color: 'white',
+                    color: 'text.primary',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
@@ -402,14 +407,14 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Current Time
                         </Typography>
                         <Typography
                           variant="body2"
                           sx={{
-                            color: 'white',
+                            color: 'text.primary',
                             fontFamily: 'monospace',
                             fontWeight: 500,
                           }}
@@ -437,14 +442,14 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Timezone
                         </Typography>
                         <Typography
                           variant="body2"
                           sx={{
-                            color: 'white',
+                            color: 'text.primary',
                             fontSize: '0.8rem',
                             fontWeight: 500,
                           }}
@@ -464,13 +469,13 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           CPU Cores
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {metrics.cpuCores} cores
                         </Typography>
@@ -487,7 +492,7 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Connection
                         </Typography>
@@ -514,7 +519,7 @@ export const NotificationCenter: React.FC = () => {
                   variant="h6"
                   gutterBottom
                   sx={{
-                    color: 'white',
+                    color: 'text.primary',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
@@ -535,7 +540,7 @@ export const NotificationCenter: React.FC = () => {
                   >
                     <Typography
                       variant="body2"
-                      sx={{ color: '#9e9e9e', fontWeight: 500 }}
+                      sx={{ color: 'text.secondary', fontWeight: 500 }}
                     >
                       Frames Per Second
                     </Typography>
@@ -566,13 +571,13 @@ export const NotificationCenter: React.FC = () => {
                     <Box>
                       <Typography
                         variant="caption"
-                        sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                        sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                       >
                         DOM Manipulation
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ color: 'white', fontWeight: 500 }}
+                        sx={{ color: 'text.primary', fontWeight: 500 }}
                       >
                         {metrics.domManipulationTime.toFixed(3)}ms
                       </Typography>
@@ -582,13 +587,13 @@ export const NotificationCenter: React.FC = () => {
                     <Box>
                       <Typography
                         variant="caption"
-                        sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                        sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                       >
                         Page Load Time
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ color: 'white', fontWeight: 500 }}
+                        sx={{ color: 'text.primary', fontWeight: 500 }}
                       >
                         {(metrics.pageLoadTime / 1000).toFixed(2)}s
                       </Typography>
@@ -599,13 +604,13 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Memory Usage
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {metrics.memoryUsage.used}MB /{' '}
                           {metrics.memoryUsage.total}MB
@@ -639,7 +644,7 @@ export const NotificationCenter: React.FC = () => {
                   variant="h6"
                   gutterBottom
                   sx={{
-                    color: 'white',
+                    color: 'text.primary',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
@@ -656,13 +661,13 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Session Duration
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {formatDuration(metrics.sessionDuration)}
                         </Typography>
@@ -672,23 +677,17 @@ export const NotificationCenter: React.FC = () => {
 
                   <Grid item xs={6}>
                     <Stack direction="row" alignItems="center" spacing={1}>
-                      <Badge
-                        badgeContent={metrics.clickCount}
-                        color="primary"
-                        max={999}
-                      >
-                        <TouchApp sx={{ fontSize: 20, color: '#ff9800' }} />
-                      </Badge>
+                      <TouchApp sx={{ fontSize: 20, color: '#ff9800' }} />
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
-                          Total Clicks
+                          Clicks
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {metrics.clickCount.toLocaleString()}
                         </Typography>
@@ -697,23 +696,17 @@ export const NotificationCenter: React.FC = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Stack direction="row" alignItems="center" spacing={1}>
-                      <Badge
-                        badgeContent={metrics.keystrokes}
-                        color="secondary"
-                        max={999}
-                      >
-                        <Keyboard sx={{ fontSize: 20, color: '#e91e63' }} />
-                      </Badge>
+                      <Keyboard sx={{ fontSize: 20, color: '#e91e63' }} />
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Keystrokes
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {metrics.keystrokes.toLocaleString()}
                         </Typography>
@@ -732,7 +725,7 @@ export const NotificationCenter: React.FC = () => {
                     variant="h6"
                     gutterBottom
                     sx={{
-                      color: 'white',
+                      color: 'text.primary',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
@@ -748,14 +741,14 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Connection Type
                         </Typography>
                         <Typography
                           variant="body2"
                           sx={{
-                            color: 'white',
+                            color: 'text.primary',
                             fontWeight: 500,
                             textTransform: 'uppercase',
                           }}
@@ -768,13 +761,13 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Download Speed
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {metrics.networkInfo.speed} Mbps
                         </Typography>
@@ -784,13 +777,13 @@ export const NotificationCenter: React.FC = () => {
                       <Box>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#9e9e9e', fontSize: '0.7rem' }}
+                          sx={{ color: 'text.secondary', fontSize: '0.7rem' }}
                         >
                           Round Trip Time
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: 'white', fontWeight: 500 }}
+                          sx={{ color: 'text.primary', fontWeight: 500 }}
                         >
                           {metrics.networkInfo.rtt}ms
                         </Typography>
