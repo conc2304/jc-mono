@@ -1,51 +1,55 @@
 import { ReactNode } from 'react';
 import { alpha, Box, Typography } from '@mui/material';
+import { Property } from 'csstype';
 
 interface FileSystemIconProps {
   icon: ReactNode;
   name: string;
   isActive: boolean;
   tagContent?: ReactNode;
+  iconSize?: Property.Width;
 }
 export const FileSystemIcon = ({
   icon,
   name,
   isActive,
   tagContent,
+  iconSize = '65px',
 }: FileSystemIconProps) => {
   return (
     <Box
       className="FileSystemIcon--root"
-      sx={{
+      sx={(theme) => ({
         p: 0.25,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-      }}
+        position: 'relative',
+        width: theme.mixins.desktopIcon.width,
+        // maxHeight: theme.mixins.desktopIcon.maxHeight,
+      })}
     >
       <Box
         className="FileSystemIcon--icon"
         data-augmented-ui={'tl-clip bl-clip br-clip tr-2-clip-x border'}
-        sx={{
+        sx={(theme) => ({
           p: 0.2,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '50px',
-          height: '50px',
-          backgroundColor: ({ palette }) =>
-            alpha(
-              palette.mode === 'light'
-                ? palette.common.black
-                : palette.common.white,
-              !isActive ? 0.01 : 0.1
-            ),
-          transition: (theme) =>
-            theme.transitions.create(['border'], {
-              duration: theme.transitions.duration.standard,
-            }),
+          width: iconSize,
+          height: iconSize,
+          backgroundColor: alpha(
+            theme.palette.mode === 'light'
+              ? theme.palette.common.black
+              : theme.palette.common.white,
+            !isActive ? 0.01 : 0.1
+          ),
+          transition: theme.transitions.create(['border'], {
+            duration: theme.transitions.duration.standard,
+          }),
 
           '&.FileSystemIcon--icon[data-augmented-ui]': {
             '--aug-tr': '6px',
@@ -53,26 +57,35 @@ export const FileSystemIcon = ({
             '--aug-bl': '5px',
             '--aug-br': '5px',
             '--aug-border-all': '1.5px',
-            '--aug-border-bg': (theme) =>
-              !isActive ? 'transparent' : theme.palette.primary.main,
+            '--aug-border-bg': !isActive
+              ? 'transparent'
+              : theme.palette.primary.main,
           },
-        }}
+        })}
       >
         {icon}
       </Box>
       <Box
         className="FileSystemIcon--text"
-        // sx={{ display: 'flex', alignItems: 'center' }}
+        sx={(theme) => ({
+          display: 'flex',
+          position: 'relative',
+          width: '135%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: !isActive
+            ? 'transparent'
+            : alpha(
+                theme.palette.getContrastText(theme.palette.text.primary),
+                0.8
+              ),
+        })}
       >
         <Typography
           variant="body2"
           color={!isActive ? 'textPrimary' : 'textDisabled'}
           sx={{
             mt: 0.25,
-            width: '135%',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-0%, -0%)',
             textAlign: 'center',
             p: 0.125,
             display: '-webkit-box',
@@ -82,21 +95,10 @@ export const FileSystemIcon = ({
             textOverflow: 'ellipsis',
             wordBreak: 'break-word',
             borderRadius: 1,
-            background: (theme) =>
-              !isActive
-                ? 'transparent'
-                : alpha(
-                    theme.palette.getContrastText(theme.palette.text.primary),
-                    0.8
-                  ),
+            lineHeight: 1.5,
           }}
         >
-          {tagContent && (
-            <Box component={'span'} sx={{ mr: 0.25 }}>
-              {tagContent}
-            </Box>
-          )}
-
+          {tagContent}
           {name}
         </Typography>
       </Box>

@@ -22,15 +22,14 @@ export const DesktopIcon = ({
   return (
     <Box
       className="DesktopIcon--root"
-      sx={{
+      sx={(theme) => ({
         position: 'absolute',
         cursor: 'pointer',
-        width: (theme) => theme.mixins.desktopIcon.width,
-        maxHeight: (theme) => theme.mixins.desktopIcon.maxHeight,
-        transition: (theme) =>
-          theme.transitions.create(['transform', 'filter'], {
-            duration: theme.transitions.duration.standard,
-          }),
+        width: theme.mixins.desktopIcon.width,
+        maxHeight: theme.mixins.desktopIcon.maxHeight,
+        transition: theme.transitions.create(['transform', 'filter'], {
+          duration: theme.transitions.duration.standard,
+        }),
         transform: isDragging ? 'scale(1.1)' : 'scale(1)',
         filter: ({ palette }) => {
           const blurSize = isDragging ? '4px' : '0px';
@@ -42,7 +41,7 @@ export const DesktopIcon = ({
           const [x, y] = !isDragging ? ['0px', '0px'] : ['10px', '10px'];
           return `drop-shadow(${x} ${y} ${blurSize} ${alpha(color, 0.5)})`;
         },
-      }}
+      })}
       style={{
         left: position.x,
         top: position.y,

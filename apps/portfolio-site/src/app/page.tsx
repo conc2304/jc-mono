@@ -2,19 +2,15 @@
 
 import { Box } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
-import { DesktopIconMetaData, FileSystemItem } from '@jc/ui-components';
-import {
-  Folder,
-  CalculatorIcon,
-  SettingsIcon,
-  FileTextIcon,
-  ImageIcon,
-} from 'lucide-react';
+import { FileSystemItem } from '@jc/ui-components';
+import { Folder, FileTextIcon, ImageIcon } from 'lucide-react';
+
+const fontSize = '40px';
 
 const mockFileSystem: FileSystemItem[] = [
   {
     id: '1',
-    icon: <Folder />,
+    icon: <Folder fontSize={fontSize} />,
     name: 'Documents',
     type: 'folder',
     dateModified: new Date('2024-01-15'),
@@ -26,7 +22,7 @@ const mockFileSystem: FileSystemItem[] = [
       {
         id: '2',
         name: 'Resume.pdf',
-        icon: <FileTextIcon fontSize={36} />,
+        icon: <FileTextIcon fontSize={fontSize} />,
         type: 'file',
         size: 245760,
         extension: 'pdf',
@@ -47,7 +43,7 @@ const mockFileSystem: FileSystemItem[] = [
   {
     id: '3',
     name: 'Pictures',
-    icon: <ImageIcon fontSize={36} />,
+    icon: <ImageIcon fontSize={fontSize} />,
     type: 'folder',
     dateModified: new Date('2024-01-20'),
     dateCreated: new Date('2024-01-01'),
@@ -58,9 +54,9 @@ const mockFileSystem: FileSystemItem[] = [
   },
   {
     id: '4',
-    name: 'Projects',
+    name: 'Projects And More Stuff For A Long Folder Name',
     type: 'folder',
-    icon: <Folder />,
+    icon: <Folder fontSize={fontSize} />,
     dateModified: new Date('2024-01-25'),
     dateCreated: new Date('2024-01-01'),
     path: '/Projects',

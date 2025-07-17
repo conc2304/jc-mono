@@ -32,7 +32,18 @@ export const IconsView = ({
               icon={item.icon}
               isActive={!!context?.selectedItems.includes(item.id)}
               tagContent={
-                item.metadata.favorite && <Star size={12} color="gold" />
+                item.metadata.favorite && (
+                  <Star
+                    size={12}
+                    color="gold"
+                    style={{
+                      display: 'inline',
+                      lineHeight: 1.5,
+                      paddingBottom: '2px',
+                      paddingRight: '2px',
+                    }}
+                  />
+                )
               }
             />
           </Box>

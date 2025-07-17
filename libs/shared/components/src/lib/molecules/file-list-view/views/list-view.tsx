@@ -47,7 +47,17 @@ export const ListView = ({
           secondaryAction={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               {item.metadata.tags.map((tag) => (
-                <Chip key={tag} label={tag} size="small" variant="outlined" />
+                <Chip
+                  key={tag}
+                  label={tag}
+                  size="small"
+                  variant="outlined"
+                  slotProps={{
+                    label: {
+                      color: 'textPrimary',
+                    },
+                  }}
+                />
               ))}
               {item.metadata.favorite && <Star size={16} color="gold" />}
             </Box>
@@ -55,14 +65,22 @@ export const ListView = ({
           sx={(theme) => ({
             // TODO
             background: context?.selectedItems.includes(item.id)
-              ? theme.palette.secondary[theme.palette.getInvertedMode()]
-              : undefined,
+              ? theme.palette.primary[theme.palette.getInvertedMode()]
+              : 'transparent',
           })}
         >
           <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText
             primary={item.name}
             secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
+            slotProps={{
+              primary: {
+                color: 'textPrimary',
+              },
+              secondary: {
+                color: 'textSecondary',
+              },
+            }}
           />
         </ListItem>
       ))}
