@@ -13,4 +13,11 @@ declare module '@mui/material/styles' {
   interface ZIndex {
     window: number;
   }
+
+  interface Palette {
+    invertedMode?: 'light' | 'dark';
+  }
+  interface PaletteOptions {
+    invertedMode?: 'light' | 'dark';
+  }
 }

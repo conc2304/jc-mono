@@ -63,5 +63,7 @@ export const createThemeFromOptions = ({
     zIndex: { ...theme.zIndex, window: 500 },
   };
 
+  fullTheme.palette.invertedMode = palette.mode === 'light' ? 'dark' : 'light';
+
   return fullTheme;
 };
