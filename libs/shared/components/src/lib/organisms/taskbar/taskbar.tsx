@@ -62,17 +62,31 @@ export const TaskBar = () => {
                 alignItems: 'center',
                 mx: 1,
                 opacity: window.minimized ? 0.7 : 1,
+                maxWidth: '9.5rem',
               }}
+              startIcon={window.icon}
             >
-              {window.icon}
-              <Typography component="span" variant="body2" sx={{ ml: 0.25 }}>
+              {/* {window.icon} */}
+              <Typography
+                component="span"
+                variant="button"
+                sx={{
+                  ml: 0.25,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  wordBreak: 'break-word',
+                }}
+              >
                 {window.title}
               </Typography>
             </AugmentedButton>
           ))}
         </Box>
 
-        {/* <NotificationCenter /> */}
+        <NotificationCenter />
       </Box>
     </Box>
   );

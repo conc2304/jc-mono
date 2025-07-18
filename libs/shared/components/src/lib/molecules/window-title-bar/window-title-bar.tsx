@@ -17,15 +17,15 @@ export const WindowTitleBar = ({
   icon,
   title,
 }: WindowTitleBarProps) => {
-  const { handleWindowMouseDown, bringToFront } = useWindowManager();
+  const { handleWindowMouseDown } = useWindowManager();
 
   return (
     <Box
       className="TitleBar--root"
-      sx={{
-        color: (theme) => alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
+      sx={(theme) => ({
+        color: alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
         m: 0,
-      }}
+      })}
     >
       <Box
         className="Titlebar--move-handler"
@@ -43,19 +43,19 @@ export const WindowTitleBar = ({
         <Box
           className="TitleBar--name"
           data-augmented-ui="border tr-2-clip-y tl-clip"
-          sx={{
+          sx={(theme) => ({
             display: 'flex',
             alignItems: 'center',
-            height: (theme) => theme.mixins.window.titleBar.height,
+            height: theme.mixins.window.titleBar.height,
             justifyContent: 'center',
+            maxWidth: 0.6,
             ml: 2,
             pt: 0.5,
             pl: 1.5,
             pr: 2.5,
-            background: (theme) =>
-              isActive
-                ? theme.palette.primary.dark
-                : darken(theme.palette.primary.dark, 0.5),
+            background: isActive
+              ? theme.palette.primary.dark
+              : darken(theme.palette.primary.dark, 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
@@ -64,31 +64,41 @@ export const WindowTitleBar = ({
               '--aug-br': '5px',
               '--aug-border-all': '1px',
               '--aug-border-bottom': '-1px',
-              '--aug-border-bg': (theme) =>
-                isActive
-                  ? theme.palette.primary.light
-                  : darken(theme.palette.primary.light, 0.5),
+              '--aug-border-bg': isActive
+                ? theme.palette.primary.light
+                : darken(theme.palette.primary.light, 0.5),
             },
-          }}
+          })}
         >
           {icon}
-          <Typography variant="body2" component="span" sx={{ ml: 1 }}>
+          <Typography
+            variant="body2"
+            component="span"
+            sx={{
+              ml: 1,
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              wordBreak: 'break-word',
+            }}
+          >
             {title}
           </Typography>
         </Box>
         <Box
           data-augmented-ui="border tl-2-clip-y tr-clip"
-          sx={{
+          sx={(theme) => ({
             display: 'flex',
             alignItems: 'center',
-            height: (theme) => theme.mixins.window.titleBar.height,
+            height: theme.mixins.window.titleBar.height,
             pt: 0.5,
             pr: 0.5,
             pl: 1,
-            background: (theme) =>
-              isActive
-                ? theme.palette.primary.dark
-                : darken(theme.palette.primary.dark, 0.5),
+            background: isActive
+              ? theme.palette.primary.dark
+              : darken(theme.palette.primary.dark, 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
@@ -97,12 +107,11 @@ export const WindowTitleBar = ({
               '--aug-br': '5px',
               '--aug-border-all': '1px',
               '--aug-border-bottom': '-1px',
-              '--aug-border-bg': (theme) =>
-                isActive
-                  ? theme.palette.primary.light
-                  : darken(theme.palette.primary.light, 0.5),
+              '--aug-border-bg': isActive
+                ? theme.palette.primary.light
+                : darken(theme.palette.primary.light, 0.5),
             },
-          }}
+          })}
         >
           <WindowControls id={id} />
         </Box>
