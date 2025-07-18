@@ -1,6 +1,5 @@
 'use client';
 
-import { Box } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
 import { FileSystemItem } from '@jc/ui-components';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react';
@@ -67,9 +66,5 @@ const mockFileSystem: FileSystemItem[] = [
 ];
 
 export default function Index() {
-  return (
-    // <Box sx={{ p: 3, minHeight: '100vh', maxHeight: '100vh' }}>
-    <DesktopOS fileSystem={mockFileSystem} />
-    // </Box>
-  );
+  return <DesktopOS fileSystem={mockFileSystem} />;
 }
