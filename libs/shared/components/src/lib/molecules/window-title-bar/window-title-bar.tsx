@@ -9,6 +9,7 @@ type WindowTitleBarProps = {
   id: string;
   icon: ReactNode;
   title: string;
+  onMouseDown: (e: React.MouseEvent<HTMLElement>, windowId: string) => void;
 };
 
 export const WindowTitleBar = ({
@@ -16,7 +17,8 @@ export const WindowTitleBar = ({
   id,
   icon,
   title,
-}: WindowTitleBarProps) => {
+}: // onMouseDown,
+WindowTitleBarProps) => {
   const { handleWindowMouseDown } = useWindowManager();
 
   return (

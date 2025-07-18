@@ -18,6 +18,8 @@ interface DragRef {
   startY: number;
   elementX: number;
   elementY: number;
+  isDragging: boolean;
+  lastUpdateTime: number;
 }
 
 // Extended WindowMetaData to include animation states
@@ -104,15 +106,31 @@ export const WindowProvider: React.FC<{
     useState<Record<string, IconPosition>>(defaultIconPositions);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
 
-  const dragRef = useRef<DragRef>({
+  // Performance-optimized drag refs
+  const windowDragRef = useRef<DragRef>({
     startX: 0,
     startY: 0,
     elementX: 0,
     elementY: 0,
+    isDragging: false,
+    lastUpdateTime: 0,
+  });
+
+  const iconDragRef = useRef<DragRef>({
+    startX: 0,
+    startY: 0,
+    elementX: 0,
+    elementY: 0,
+    isDragging: false,
+    lastUpdateTime: 0,
   });
 
   // Animation timeouts ref to cleanup if needed
   const animationTimeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  // Performance constants
+  const THROTTLE_MS = 16; // ~60fps
+  const ICON_THROTTLE_MS = 12; // Slightly faster for icons
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -163,68 +181,82 @@ export const WindowProvider: React.FC<{
     }
   }, []);
 
-  // Icon drag handlers (unchanged)
+  // Optimized icon drag handlers
   const handleIconMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, iconId: string) => {
       e.preventDefault();
+      console.log('handleIconMouseDown', iconId);
       if (e.button === 2) return;
 
-      dragRef.current = {
+      iconDragRef.current = {
         startX: e.clientX,
         startY: e.clientY,
         elementX: iconPositions[iconId]?.x || 0,
         elementY: iconPositions[iconId]?.y || 0,
+        isDragging: true,
+        lastUpdateTime: 0,
       };
+
+      // Immediate visual feedback
+      const iconElement = e.currentTarget;
+      if (iconElement) {
+        iconElement.style.willChange = 'transform';
+        // iconElement.style.pointerEvents = 'none';
+        iconElement.style.zIndex = '9999';
+      }
 
       setDraggedIcon(iconId);
     },
     [iconPositions]
   );
 
-  const handleIconMouseUp = useCallback(() => {
-    if (draggedIcon) {
-      const currentPos = iconPositions[draggedIcon];
-      if (currentPos) {
-        const snappedPos = snapToGrid(currentPos.x, currentPos.y);
-
-        setIconPositions((prev) => ({
-          ...prev,
-          [draggedIcon]: snappedPos,
-        }));
-      }
-
-      setDraggedIcon(null);
-    }
-  }, [draggedIcon, iconPositions, snapToGrid]);
-
-  const handleIconMouseMove = useCallback(
+  const handleOptimizedIconMouseMove = useCallback(
     (e: MouseEvent) => {
       if (e.button === 2) return;
-      if (!draggedIcon) return;
+      if (!iconDragRef.current.isDragging || !draggedIcon) return;
 
-      const deltaX = e.clientX - dragRef.current.startX;
-      const deltaY = e.clientY - dragRef.current.startY;
+      const now = performance.now();
+      if (now - iconDragRef.current.lastUpdateTime < ICON_THROTTLE_MS) {
+        return;
+      }
 
-      const iconWidth = remToPixels(theme.mixins.desktopIcon.width as string);
-      const iconHeight = remToPixels(
-        theme.mixins.desktopIcon.maxHeight as string
-      );
-      const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
-      const newX = clamp(
-        dragRef.current.elementX + deltaX,
-        0,
-        window.innerWidth - iconWidth
-      );
-      const newY = clamp(
-        dragRef.current.elementY + deltaY,
-        0,
-        window.innerHeight - taskbarHeight - iconHeight
-      );
+      iconDragRef.current.lastUpdateTime = now;
 
-      setIconPositions((prev) => ({
-        ...prev,
-        [draggedIcon]: { x: newX, y: newY },
-      }));
+      requestAnimationFrame(() => {
+        if (!iconDragRef.current.isDragging) return;
+
+        const deltaX = e.clientX - iconDragRef.current.startX;
+        const deltaY = e.clientY - iconDragRef.current.startY;
+
+        const iconWidth = remToPixels(theme.mixins.desktopIcon.width as string);
+        const iconHeight = remToPixels(
+          theme.mixins.desktopIcon.maxHeight as string
+        );
+        const taskbarHeight = remToPixels(
+          theme.mixins.taskbar.height as string
+        );
+
+        const newX = clamp(
+          iconDragRef.current.elementX + deltaX,
+          0,
+          window.innerWidth - iconWidth
+        );
+        const newY = clamp(
+          iconDragRef.current.elementY + deltaY,
+          0,
+          window.innerHeight - taskbarHeight - iconHeight
+        );
+
+        // Direct DOM manipulation for smooth dragging
+        const iconElement = document.querySelector(
+          `[data-icon-id="${draggedIcon}"]`
+        ) as HTMLElement;
+        if (iconElement) {
+          const offsetX = newX - iconDragRef.current.elementX;
+          const offsetY = newY - iconDragRef.current.elementY;
+          iconElement.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }
+      });
     },
     [
       draggedIcon,
@@ -233,6 +265,47 @@ export const WindowProvider: React.FC<{
       theme.mixins.taskbar.height,
     ]
   );
+
+  const handleIconMouseUp = useCallback(() => {
+    if (!draggedIcon || !iconDragRef.current.isDragging) return;
+
+    iconDragRef.current.isDragging = false;
+
+    // Get final position from transform and update state
+    const iconElement = document.querySelector(
+      `[data-icon-id="${draggedIcon}"]`
+    ) as HTMLElement;
+    if (iconElement) {
+      const transform = iconElement.style.transform;
+      const matches = transform.match(
+        /translate\((-?\d+(?:\.\d+)?)px,\s*(-?\d+(?:\.\d+)?)px\)/
+      );
+
+      if (matches) {
+        const deltaX = parseFloat(matches[1]);
+        const deltaY = parseFloat(matches[2]);
+        const newX = iconDragRef.current.elementX + deltaX;
+        const newY = iconDragRef.current.elementY + deltaY;
+
+        // Snap to grid
+        const snappedPos = snapToGrid(newX, newY);
+
+        // Single state update with final position
+        setIconPositions((prev) => ({
+          ...prev,
+          [draggedIcon]: snappedPos,
+        }));
+      }
+
+      // Reset styles
+      iconElement.style.willChange = '';
+      // iconElement.style.pointerEvents = '';
+      iconElement.style.transform = '';
+      iconElement.style.zIndex = '';
+    }
+
+    setDraggedIcon(null);
+  }, [draggedIcon, snapToGrid]);
 
   // Window management functions
   const bringToFront = useCallback((windowId: string) => {
@@ -253,6 +326,8 @@ export const WindowProvider: React.FC<{
 
   const openWindow = useCallback(
     (itemId: string) => {
+      console.log('OPEN WID: ', itemId);
+
       const fsItem =
         fileSystemItems && fileSystemItems.find((i) => i.id === itemId);
       if (!fsItem) return;
@@ -307,7 +382,7 @@ export const WindowProvider: React.FC<{
         // Set timeout as fallback in case animation callback doesn't fire
         const timeout = setTimeout(() => {
           onWindowAnimationComplete(id);
-        }, 350); // Slightly longer than animation duration
+        }, 350);
 
         animationTimeouts.current.set(id, timeout);
       }
@@ -335,7 +410,7 @@ export const WindowProvider: React.FC<{
       // Set timeout as fallback in case animation callback doesn't fire
       const timeout = setTimeout(() => {
         onWindowCloseAnimationComplete(windowId);
-      }, 350); // Slightly longer than animation duration
+      }, 350);
 
       animationTimeouts.current.set(windowId, timeout);
     },
@@ -450,10 +525,11 @@ export const WindowProvider: React.FC<{
     []
   );
 
-  // Window drag handlers
+  // Optimized window drag handlers
   const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, windowId: string) => {
       e.preventDefault();
+
       if (e.button === 2) return;
 
       // Don't allow dragging during animations
@@ -463,12 +539,24 @@ export const WindowProvider: React.FC<{
       const windowElement = e.currentTarget;
       const rect = windowElement.getBoundingClientRect();
 
-      dragRef.current = {
+      windowDragRef.current = {
         startX: e.clientX,
         startY: e.clientY,
         elementX: rect.left,
         elementY: rect.top,
+        isDragging: true,
+        lastUpdateTime: 0,
       };
+
+      // Immediate visual feedback
+      const windowContainer = windowElement.closest(
+        '[data-window-id]'
+      ) as HTMLElement;
+      if (windowContainer) {
+        windowContainer.style.willChange = 'transform';
+        // windowContainer.style.pointerEvents = 'none';
+        windowContainer.style.zIndex = '9999';
+      }
 
       setDraggedWindow(windowId);
       bringToFront(windowId);
@@ -476,35 +564,52 @@ export const WindowProvider: React.FC<{
     [bringToFront, windows]
   );
 
-  const handleWindowMouseMove = useCallback(
+  const handleOptimizedWindowMouseMove = useCallback(
     (e: MouseEvent) => {
       if (e.button === 2) return;
-      if (!draggedWindow) return;
+      if (!windowDragRef.current.isDragging || !draggedWindow) return;
 
-      const deltaX = e.clientX - dragRef.current.startX;
-      const deltaY = e.clientY - dragRef.current.startY;
-      const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
-      const titlebarHeight = remToPixels(
-        theme.mixins.window.titleBar.height as string
-      );
-      const overflowPadding = 20;
+      const now = performance.now();
+      if (now - windowDragRef.current.lastUpdateTime < THROTTLE_MS) {
+        return;
+      }
 
-      const newX = clamp(
-        dragRef.current.elementX + deltaX,
-        0,
-        window.innerWidth - overflowPadding * 3
-      );
-      const newY = clamp(
-        dragRef.current.elementY + deltaY,
-        0,
-        window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding
-      );
+      windowDragRef.current.lastUpdateTime = now;
 
-      setWindows((prev) =>
-        prev.map((w: AnimatedWindowMetaData) =>
-          w.id === draggedWindow ? { ...w, x: newX, y: newY } : w
-        )
-      );
+      requestAnimationFrame(() => {
+        if (!windowDragRef.current.isDragging) return;
+
+        const deltaX = e.clientX - windowDragRef.current.startX;
+        const deltaY = e.clientY - windowDragRef.current.startY;
+        const taskbarHeight = remToPixels(
+          theme.mixins.taskbar.height as string
+        );
+        const titlebarHeight = remToPixels(
+          theme.mixins.window.titleBar.height as string
+        );
+        const overflowPadding = 20;
+
+        const newX = clamp(
+          windowDragRef.current.elementX + deltaX,
+          0,
+          window.innerWidth - overflowPadding * 3
+        );
+        const newY = clamp(
+          windowDragRef.current.elementY + deltaY,
+          0,
+          window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding
+        );
+
+        // Direct DOM manipulation for smooth dragging
+        const windowElement = document.querySelector(
+          `[data-window-id="${draggedWindow}"]`
+        ) as HTMLElement;
+        if (windowElement) {
+          const offsetX = newX - windowDragRef.current.elementX;
+          const offsetY = newY - windowDragRef.current.elementY;
+          windowElement.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }
+      });
     },
     [
       draggedWindow,
@@ -514,44 +619,78 @@ export const WindowProvider: React.FC<{
   );
 
   const handleWindowMouseUp = useCallback(() => {
+    if (!draggedWindow || !windowDragRef.current.isDragging) return;
+
+    windowDragRef.current.isDragging = false;
+
+    // Get final position from transform and update state
+    const windowElement = document.querySelector(
+      `[data-window-id="${draggedWindow}"]`
+    ) as HTMLElement;
+    if (windowElement) {
+      const transform = windowElement.style.transform;
+      const matches = transform.match(
+        /translate\((-?\d+(?:\.\d+)?)px,\s*(-?\d+(?:\.\d+)?)px\)/
+      );
+
+      if (matches) {
+        const deltaX = parseFloat(matches[1]);
+        const deltaY = parseFloat(matches[2]);
+        const newX = windowDragRef.current.elementX + deltaX;
+        const newY = windowDragRef.current.elementY + deltaY;
+
+        // Single state update with final position
+        setWindows((prev) =>
+          prev.map((window) =>
+            window.id === draggedWindow
+              ? { ...window, x: newX, y: newY }
+              : window
+          )
+        );
+      }
+
+      // Reset styles
+      windowElement.style.willChange = '';
+      // windowElement.style.pointerEvents = '';
+      windowElement.style.transform = '';
+      windowElement.style.zIndex = '';
+    }
+
     setDraggedWindow(null);
-  }, []);
+  }, [draggedWindow]);
 
-  // Mouse event listeners
+  // Mouse event listeners with optimized handlers
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (e.button === 2) return;
-
-      if (draggedIcon) {
-        handleIconMouseMove(e);
-      }
-      if (draggedWindow) {
-        handleWindowMouseMove(e);
-      }
-    };
-
-    const handleMouseUp = () => {
-      handleIconMouseUp();
-      handleWindowMouseUp();
-    };
-
-    if (draggedIcon || draggedWindow) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+    if (draggedIcon) {
+      document.addEventListener('mousemove', handleOptimizedIconMouseMove, {
+        passive: true,
+      });
+      document.addEventListener('mouseup', handleIconMouseUp, {
+        passive: true,
+      });
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mousemove', handleOptimizedIconMouseMove);
+      document.removeEventListener('mouseup', handleIconMouseUp);
     };
-  }, [
-    draggedIcon,
-    draggedWindow,
-    handleIconMouseMove,
-    handleWindowMouseMove,
-    handleIconMouseUp,
-    handleWindowMouseUp,
-  ]);
+  }, [draggedIcon, handleOptimizedIconMouseMove, handleIconMouseUp]);
+
+  useEffect(() => {
+    if (draggedWindow) {
+      document.addEventListener('mousemove', handleOptimizedWindowMouseMove, {
+        passive: true,
+      });
+      document.addEventListener('mouseup', handleWindowMouseUp, {
+        passive: true,
+      });
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleOptimizedWindowMouseMove);
+      document.removeEventListener('mouseup', handleWindowMouseUp);
+    };
+  }, [draggedWindow, handleOptimizedWindowMouseMove, handleWindowMouseUp]);
 
   const contextValue: WindowContextValue = {
     // State

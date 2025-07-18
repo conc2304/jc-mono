@@ -1,19 +1,18 @@
-import { useWindowState, Window } from '@jc/ui-components';
+import { memo } from 'react';
+import { Window } from '@jc/ui-components';
 
-export const WindowsRenderer = () => {
-  const { windows } = useWindowState();
+import { useOptimizedDragSystem } from '../hooks';
+
+export const WindowsRenderer = memo(() => {
+  const { windows } = useOptimizedDragSystem();
+
   return (
     <>
-      {windows &&
-        windows.map((windowMetaData) => (
-          <Window
-            {...windowMetaData}
-            minWidth={300}
-            minHeight={200}
-            resizable
-            key={windowMetaData.id}
-          />
-        ))}
+      {windows.map((window) => (
+        <Window key={window.id} {...window} />
+      ))}
     </>
   );
-};
+});
+
+WindowsRenderer.displayName = 'WindowRenderer';

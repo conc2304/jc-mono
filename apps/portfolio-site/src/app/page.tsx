@@ -68,8 +68,8 @@ const mockFileSystem: FileSystemItem[] = [
 
 export default function Index() {
   return (
-    <Box sx={{ p: 3, minHeight: '100vh', maxHeight: '100vh' }}>
-      <DesktopOS fileSystem={mockFileSystem} />
-    </Box>
+    // <Box sx={{ p: 3, minHeight: '100vh', maxHeight: '100vh' }}>
+    <DesktopOS fileSystem={mockFileSystem} />
+    // </Box>
   );
 }
