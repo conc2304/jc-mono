@@ -26,7 +26,7 @@ export const FileSystemIcon = ({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        width: theme.mixins.desktopIcon.width,
+        // width: theme.mixins.desktopIcon.width,
         // maxHeight: theme.mixins.desktopIcon.maxHeight,
       })}
     >
@@ -39,8 +39,10 @@ export const FileSystemIcon = ({
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          width: iconSize,
-          height: iconSize,
+          // width: iconSize,
+          // height: iconSize,
+          width: theme.mixins.desktopIcon.width,
+          height: theme.mixins.desktopIcon.width,
           backgroundColor: alpha(
             theme.palette.mode === 'light'
               ? theme.palette.common.black
@@ -68,9 +70,11 @@ export const FileSystemIcon = ({
       <Box
         className="FileSystemIcon--text"
         sx={(theme) => ({
-          display: 'flex',
+          // display: 'flex',
           position: 'relative',
-          width: '135%',
+          // width: '150%',
+          width: `calc(${theme.mixins.desktopIcon.width} * 1.5)`,
+
           alignItems: 'center',
           justifyContent: 'center',
           background: !isActive
@@ -79,6 +83,7 @@ export const FileSystemIcon = ({
                 theme.palette.getContrastText(theme.palette.text.primary),
                 0.8
               ),
+          borderRadius: 1,
         })}
       >
         <Typography
@@ -94,8 +99,6 @@ export const FileSystemIcon = ({
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             wordBreak: 'break-word',
-            borderRadius: 1,
-            lineHeight: 1.5,
           }}
         >
           {tagContent}

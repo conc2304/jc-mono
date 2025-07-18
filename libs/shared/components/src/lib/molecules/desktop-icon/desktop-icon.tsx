@@ -28,8 +28,8 @@ export const DesktopIcon = React.memo<DesktopIconProps>(
         sx={(theme) => ({
           position: 'absolute',
           cursor: 'pointer',
-          width: theme.mixins.desktopIcon.width,
-          maxHeight: theme.mixins.desktopIcon.maxHeight,
+          // width: theme.mixins.desktopIcon.width,
+          // maxHeight: theme.mixins.desktopIcon.maxHeight,
           // Performance optimizations
           contain: 'layout style paint',
           willChange: effectiveIsDragging ? 'transform' : 'auto',

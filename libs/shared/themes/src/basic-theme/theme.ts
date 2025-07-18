@@ -50,6 +50,9 @@ export const createThemeFromOptions = ({
         width: '4.375rem',
         maxHeight: '5.625rem',
       },
+      paper: {
+        opacity: 0.6,
+      },
     },
     palette,
     typography,

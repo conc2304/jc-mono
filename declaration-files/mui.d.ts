@@ -8,6 +8,7 @@ declare module '@mui/material/styles' {
       titleBar: CSSProperties;
     };
     desktopIcon: CSSProperties;
+    paper: CSSProperties;
   }
 
   interface ZIndex {

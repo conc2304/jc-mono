@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Box, darken, Fade } from '@mui/material';
+import { alpha, Box, darken, Fade } from '@mui/material';
 
 import {
   ResizeDirection,
@@ -292,7 +292,7 @@ export const Window = React.memo(
           ref={windowRef}
           className="Window--root"
           data-window-id={id} // Required for optimized drag system
-          sx={{
+          sx={(theme) => ({
             position: 'absolute',
             background: 'transparent',
             overflow: 'hidden',
@@ -301,15 +301,14 @@ export const Window = React.memo(
             // Performance optimizations
             willChange: isDragging ? 'transform' : 'auto',
             contain: 'layout style paint',
-
-            height: (theme) =>
-              !maximized
-                ? undefined
-                : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`,
+            backdropFilter: 'blur(4px)',
+            height: !maximized
+              ? undefined
+              : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`,
 
             // Apply animation styles
             ...getAnimationStyles(),
-          }}
+          })}
           style={{
             left: x,
             top: y,
@@ -334,26 +333,27 @@ export const Window = React.memo(
             <Box
               className="WindowContent--root"
               data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
-              sx={{
-                height: ({ mixins }) =>
-                  `calc(100% - ${mixins.window.titleBar.height})`,
+              sx={(theme) => ({
+                height: `calc(100% - ${theme.mixins.window.titleBar.height})`,
                 overflow: 'auto',
                 padding: '8px',
                 m: 0,
-                background: (theme) => theme.palette.background.paper,
+                background: alpha(
+                  theme.palette.background.paper,
+                  Number(theme.mixins.paper.opacity) || 1
+                ),
                 '&[data-augmented-ui]': {
-                  '--aug-tl': (theme) => theme.spacing(2),
+                  '--aug-tl': theme.spacing(2),
                   '--aug-bl': '8px',
                   '--aug-br': '8px',
                   '--aug-b': '6px',
                   '--aug-b-extend1': '50%',
                   '--aug-border-all': '1px',
-                  '--aug-border-bg': (theme) =>
-                    isActive
-                      ? theme.palette.primary.light
-                      : darken(theme.palette.primary.light, 0.5),
+                  '--aug-border-bg': isActive
+                    ? theme.palette.primary.light
+                    : darken(theme.palette.primary.light, 0.5),
                 },
-              }}
+              })}
             >
               <Box
                 sx={{

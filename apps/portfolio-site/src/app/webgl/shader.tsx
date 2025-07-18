@@ -27,22 +27,6 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
   autoResize = false,
   style = {},
 }) => {
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const glRef = useRef<WebGLRenderingContext | null>(null);
-  // const programRef = useRef<WebGLProgram | null>(null);
-  // const colorsLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const angleLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const numColorsLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const timeLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const scrollSpeedLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const scaleLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const mouseLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const resolutionLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const mouseInteractionLocationRef = useRef<WebGLUniformLocation | null>(null);
-  // const animationFrameRef = useRef<number | null>(null);
-  // const startTimeRef = useRef<number | null>(null);
-  // const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
-
   // State for dynamic dimensions when autoResize is enabled
   const [dynamicWidth, setDynamicWidth] = React.useState(width);
   const [dynamicHeight, setDynamicHeight] = React.useState(height);
@@ -331,9 +315,9 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
   );
 
   const handleMouseLeave = React.useCallback(() => {
-    // Reset mouse position to center when mouse leaves
-    mousePositionRef.current = { x: internalWidth / 2, y: internalHeight / 2 };
-  }, [internalWidth, internalHeight]);
+    // Reset mouse position to offscreen when mouse leaves
+    mousePositionRef.current = { x: -1000, y: -1000 };
+  }, []);
 
   // Initialize WebGL
   useEffect(() => {
