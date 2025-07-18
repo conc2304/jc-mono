@@ -111,8 +111,8 @@ export const DesktopOSSingleComponent = ({
         sx={{
           width: '100vw',
           height: '100vh',
-          background: (theme) =>
-            `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
+          // background: (theme) =>
+          //   `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
           position: 'relative',
           overflow: 'hidden',
           contain: 'layout style paint',

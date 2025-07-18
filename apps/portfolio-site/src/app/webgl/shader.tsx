@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { CSSProperties, useEffect, useRef } from 'react';
 
 interface ColorShaderProps {
   colors: string[];
@@ -8,9 +8,12 @@ interface ColorShaderProps {
   scrollSpeed?: number; // Speed of scrolling (default: 1.0)
   scale?: number; // Scale/zoom factor (default: 1.0, higher = thicker bands)
   mouseInteraction?: boolean; // Enable mouse displacement effects (default: true)
+  resolution?: number; // Resolution multiplier (default: 1.0, 0.5 = half resolution)
+  isBackground?: boolean; // Optimizes for background use (uses document mouse events)
+  style?: CSSProperties;
 }
 
-const ColorShader: React.FC<ColorShaderProps> = ({
+export const ColorShader: React.FC<ColorShaderProps> = ({
   colors,
   angle = 0,
   width = 400,
@@ -18,6 +21,9 @@ const ColorShader: React.FC<ColorShaderProps> = ({
   scrollSpeed = 1.0,
   scale = 1.0,
   mouseInteraction = true,
+  resolution = 1.0,
+  isBackground = false,
+  style = {},
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
@@ -34,6 +40,10 @@ const ColorShader: React.FC<ColorShaderProps> = ({
   const animationFrameRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
+
+  // Calculate internal resolution
+  const internalWidth = Math.max(1, Math.floor(width * resolution));
+  const internalHeight = Math.max(1, Math.floor(height * resolution));
 
   // Convert hex color to RGB values
   const hexToRgb = (hex: string): [number, number, number] => {
@@ -267,15 +277,19 @@ const ColorShader: React.FC<ColorShaderProps> = ({
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      mousePositionRef.current = { x, y };
+      // Scale mouse coordinates to match internal resolution
+      const scaledX = (x / width) * internalWidth;
+      const scaledY = (y / height) * internalHeight;
+
+      mousePositionRef.current = { x: scaledX, y: scaledY };
     },
-    [mouseInteraction]
+    [mouseInteraction, width, height, internalWidth, internalHeight]
   );
 
   const handleMouseLeave = React.useCallback(() => {
     // Reset mouse position to center when mouse leaves
-    mousePositionRef.current = { x: width / 2, y: height / 2 };
-  }, [width, height]);
+    mousePositionRef.current = { x: internalWidth / 2, y: internalHeight / 2 };
+  }, [internalWidth, internalHeight]);
 
   // Initialize WebGL
   useEffect(() => {
@@ -289,6 +303,10 @@ const ColorShader: React.FC<ColorShaderProps> = ({
     }
 
     glRef.current = gl;
+
+    // Set canvas internal resolution
+    canvas.width = internalWidth;
+    canvas.height = internalHeight;
 
     // Create shaders
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -345,8 +363,8 @@ const ColorShader: React.FC<ColorShaderProps> = ({
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-    // Set viewport
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    // Set viewport to internal resolution
+    gl.viewport(0, 0, internalWidth, internalHeight);
 
     // Clean up shaders (they're linked to the program now)
     gl.deleteShader(vertexShader);
@@ -357,7 +375,51 @@ const ColorShader: React.FC<ColorShaderProps> = ({
         gl.deleteProgram(program);
       }
     };
-  }, []);
+  }, [internalWidth, internalHeight]);
+
+  // Update viewport when resolution changes
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const gl = glRef.current;
+    const program = programRef.current;
+
+    if (!canvas || !gl || !program) return;
+
+    // Update canvas internal resolution
+    canvas.width = internalWidth;
+    canvas.height = internalHeight;
+
+    // Update viewport
+    gl.viewport(0, 0, internalWidth, internalHeight);
+
+    // Force a re-render with current settings
+    const colorsLocation = colorsLocationRef.current;
+    const angleLocation = angleLocationRef.current;
+    const numColorsLocation = numColorsLocationRef.current;
+    const scaleLocation = scaleLocationRef.current;
+
+    if (
+      colorsLocation &&
+      angleLocation &&
+      numColorsLocation &&
+      scaleLocation &&
+      colors.length > 0
+    ) {
+      gl.useProgram(program);
+
+      // Re-apply all current uniform values
+      const rgbArray = colorsToRgbArray(colors);
+      gl.uniform3fv(colorsLocation, rgbArray);
+      gl.uniform1f(angleLocation, angle);
+      gl.uniform1i(numColorsLocation, colors.length);
+      gl.uniform1f(scaleLocation, scale);
+
+      // Clear and redraw
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+  }, [internalWidth, internalHeight, colors, angle, scale]);
 
   // Animation loop for scrolling
   const animate = React.useCallback(
@@ -397,7 +459,7 @@ const ColorShader: React.FC<ColorShaderProps> = ({
         mousePositionRef.current.x,
         mousePositionRef.current.y
       );
-      gl.uniform2f(resolutionLocation, width, height);
+      gl.uniform2f(resolutionLocation, internalWidth, internalHeight);
       gl.uniform1i(mouseInteractionLocation, mouseInteraction ? 1 : 0);
 
       // Redraw
@@ -405,7 +467,7 @@ const ColorShader: React.FC<ColorShaderProps> = ({
 
       animationFrameRef.current = requestAnimationFrame(animate);
     },
-    [scrollSpeed, width, height, mouseInteraction]
+    [scrollSpeed, internalWidth, internalHeight, mouseInteraction]
   );
 
   // Start animation loop
@@ -452,17 +514,55 @@ const ColorShader: React.FC<ColorShaderProps> = ({
     gl.uniform1f(scaleLocation, scale);
   }, [colors, angle, scale]);
 
+  // Alternative mouse tracking using document events for background use
+  useEffect(() => {
+    if (!mouseInteraction || !isBackground) return;
+
+    const handleDocumentMouseMove = (event: MouseEvent) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+
+      // Check if mouse is over the canvas area
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        // Scale mouse coordinates to match internal resolution
+        const scaledX = (x / width) * internalWidth;
+        const scaledY = (y / height) * internalHeight;
+        mousePositionRef.current = { x: scaledX, y: scaledY };
+      }
+    };
+
+    // Use document-level event listeners for background canvases
+    document.addEventListener('mousemove', handleDocumentMouseMove);
+
+    return () => {
+      document.removeEventListener('mousemove', handleDocumentMouseMove);
+    };
+  }, [
+    mouseInteraction,
+    isBackground,
+    width,
+    height,
+    internalWidth,
+    internalHeight,
+  ]);
+
   return (
     <canvas
       ref={canvasRef}
-      width={width}
-      height={height}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={isBackground ? undefined : handleMouseMove}
+      onMouseLeave={isBackground ? undefined : handleMouseLeave}
       style={{
-        border: '1px solid #ccc',
-        display: 'block',
-        cursor: mouseInteraction ? 'none' : 'default',
+        width: `${width}px`,
+        height: `${height}px`,
+        imageRendering: resolution < 1 ? 'pixelated' : 'auto',
+        // Automatically set pointer-events for background use
+        pointerEvents: isBackground ? 'none' : 'auto',
+        ...style,
       }}
     />
   );
@@ -475,6 +575,8 @@ const ColorShaderExample: React.FC = () => {
   const [scrollSpeed, setScrollSpeed] = React.useState(1.0);
   const [scale, setScale] = React.useState(1.0);
   const [mouseInteraction, setMouseInteraction] = React.useState(true);
+  const [resolution, setResolution] = React.useState(1.0);
+  const [isBackground, setIsBackground] = React.useState(false);
 
   const addColor = () => {
     const randomColor =
@@ -497,13 +599,21 @@ const ColorShaderExample: React.FC = () => {
     setColors(newColors);
   };
 
+  const getResolutionLabel = (res: number): string => {
+    if (res >= 1) return 'Full';
+    if (res >= 0.75) return 'High';
+    if (res >= 0.5) return 'Medium';
+    if (res >= 0.25) return 'Low';
+    return 'Lowest';
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">
         WebGL Interactive Scrolling Gradient Shader
       </h2>
 
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
         <div>
           <h3 className="text-lg font-semibold mb-3">Colors</h3>
           <div className="space-y-2">
@@ -671,41 +781,128 @@ const ColorShaderExample: React.FC = () => {
             </p>
           </div>
         </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Resolution</h3>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium">
+              {getResolutionLabel(resolution)} ({(resolution * 100).toFixed(0)}
+              %)
+            </label>
+            <input
+              type="range"
+              min="0.25"
+              max="1"
+              step="0.25"
+              value={resolution}
+              onChange={(e) => setResolution(Number(e.target.value))}
+              className="w-full"
+            />
+            <div className="grid grid-cols-2 gap-1">
+              <button
+                onClick={() => setResolution(0.5)}
+                className="px-1 py-0.5 text-xs bg-gray-500 text-white rounded"
+              >
+                50%
+              </button>
+              <button
+                onClick={() => setResolution(1)}
+                className="px-1 py-0.5 text-xs bg-gray-500 text-white rounded"
+              >
+                100%
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Background Mode</h3>
+          <div className="space-y-2">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={isBackground}
+                onChange={(e) => setIsBackground(e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm">Background Mode</span>
+            </label>
+            <p className="text-xs text-gray-600">
+              {isBackground
+                ? 'Uses document mouse events, sets pointer-events: none'
+                : 'Uses canvas mouse events (normal mode)'}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-4">
+      {isBackground && (
+        <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
+          <p className="text-sm text-yellow-800">
+            <strong>Background Mode Demo:</strong> The canvas below has
+            pointer-events: none and uses document-level mouse tracking. Mouse
+            over this entire area to see the effect work even though the canvas
+            can't receive direct mouse events.
+          </p>
+        </div>
+      )}
+
+      <div className="mb-4 relative">
         <ColorShader
           colors={colors}
           angle={angle}
           scrollSpeed={scrollSpeed}
           scale={scale}
           mouseInteraction={mouseInteraction}
+          resolution={resolution}
+          isBackground={isBackground}
           width={800}
           height={400}
+          style={
+            isBackground
+              ? {
+                  position: 'absolute',
+                  zIndex: -1,
+                }
+              : {}
+          }
         />
+        {isBackground && (
+          <div className="relative z-10 p-4 bg-white/80 backdrop-blur-sm rounded border-2 border-dashed border-gray-300">
+            <h3 className="text-lg font-semibold mb-2">
+              Content Over Background
+            </h3>
+            <p className="text-sm text-gray-700">
+              This content is positioned over the background shader. Move your
+              mouse around this area and you'll see the shader responding even
+              though it's behind this content with z-index: -1 and
+              pointer-events: none.
+            </p>
+            <button className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Clickable Button
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="text-sm text-gray-600 space-y-1">
         <p>
-          <strong>Interactive Features:</strong>
+          <strong>Performance Features:</strong>
         </p>
         <p>
-          • Move your mouse over the gradient to create dynamic displacement
-          effects
+          • <strong>Resolution Control:</strong> Lower resolution values (e.g.,
+          0.5) render at half the pixel density but maintain full visual size
         </p>
         <p>
-          • Noise-based distortion creates swirl and turbulence around the mouse
-          cursor
+          • <strong>Perfect for Backgrounds:</strong> Use 50% resolution for
+          smooth performance without visible quality loss
         </p>
         <p>
-          • Exponential falloff creates stronger effects closer to the mouse
+          • <strong>Interactive Features:</strong> All previous features remain:
+          mouse effects, animated scrolling, scalable bands
         </p>
         <p>
-          • All previous features: animated scrolling, scalable bands, seamless
-          looping
-        </p>
-        <p>
-          • Toggle mouse interaction on/off for performance or visual preference
+          • <strong>Tip:</strong> For website backgrounds, try 25-50% resolution
+          for optimal performance
         </p>
       </div>
     </div>

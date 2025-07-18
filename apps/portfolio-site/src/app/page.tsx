@@ -1,8 +1,11 @@
 'use client';
 
+import { alpha, darken, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
 import { FileSystemItem } from '@jc/ui-components';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react';
+
+import { ColorShader } from './webgl/shader';
 
 const fontSize = '40px';
 
@@ -64,7 +67,39 @@ const mockFileSystem: FileSystemItem[] = [
     children: [],
   },
 ];
+// background: (theme) =>
+//   `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
 
 export default function Index() {
-  return <DesktopOS fileSystem={mockFileSystem} />;
+  const theme = useTheme();
+  return (
+    <>
+      <ColorShader
+        key={theme.palette.mode}
+        colors={[
+          theme.palette.background.default,
+          darken(theme.palette.primary[theme.palette.mode], 0.5),
+          darken(theme.palette.secondary.dark, 0.5),
+          theme.palette.background.default,
+        ]}
+        resolution={0.1}
+        scrollSpeed={0.02}
+        scale={0.75}
+        angle={135}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        isBackground
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: -1,
+          opacity: 0.3,
+        }}
+      />
+      <DesktopOS fileSystem={mockFileSystem} />
+    </>
+  );
 }
