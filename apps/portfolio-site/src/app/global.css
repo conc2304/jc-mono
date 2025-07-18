@@ -57,3 +57,12 @@ pre {
   overflow: scroll;
   padding: 0.5rem 0.75rem;
 }
+
+/* @keyframes scroll-gradient {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateX(70.7px) translateY(70.7px);
+  }
+} */

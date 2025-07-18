@@ -21,6 +21,7 @@ export const TaskBar = () => {
         display: 'flex',
         alignItems: 'center',
         p: 0.5,
+        zIndex: theme.zIndex.appBar,
       })}
     >
       <AugmentedButton
@@ -86,7 +87,7 @@ export const TaskBar = () => {
           ))}
         </Box>
 
-        {/* <NotificationCenter /> */}
+        <NotificationCenter />
       </Box>
     </Box>
   );

@@ -31,15 +31,15 @@ const DesktopContent = () => {
   return (
     <Box
       className="DesktopOS--root"
-      sx={{
+      sx={(theme) => ({
         width: '100vw',
         height: '100vh',
-        background: (theme) =>
-          `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
+        // background: (theme) =>
+        //   `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         position: 'relative',
         overflow: 'hidden',
         contain: 'layout style paint',
-      }}
+      })}
     >
       {/* Desktop Icons */}
       {desktopIcons.map((icon) => {
