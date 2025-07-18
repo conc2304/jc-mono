@@ -89,6 +89,7 @@ export default function Index() {
         width={window.innerWidth}
         height={window.innerHeight}
         isBackground
+        autoResize
         style={{
           position: 'absolute',
           top: 0,

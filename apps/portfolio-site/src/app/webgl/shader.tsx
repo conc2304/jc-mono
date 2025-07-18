@@ -10,6 +10,7 @@ interface ColorShaderProps {
   mouseInteraction?: boolean; // Enable mouse displacement effects (default: true)
   resolution?: number; // Resolution multiplier (default: 1.0, 0.5 = half resolution)
   isBackground?: boolean; // Optimizes for background use (uses document mouse events)
+  autoResize?: boolean; // Automatically resize to window dimensions when isBackground is true
   style?: CSSProperties;
 }
 
@@ -23,8 +24,32 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
   mouseInteraction = true,
   resolution = 1.0,
   isBackground = false,
+  autoResize = false,
   style = {},
 }) => {
+  // const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const glRef = useRef<WebGLRenderingContext | null>(null);
+  // const programRef = useRef<WebGLProgram | null>(null);
+  // const colorsLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const angleLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const numColorsLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const timeLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const scrollSpeedLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const scaleLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const mouseLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const resolutionLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const mouseInteractionLocationRef = useRef<WebGLUniformLocation | null>(null);
+  // const animationFrameRef = useRef<number | null>(null);
+  // const startTimeRef = useRef<number | null>(null);
+  // const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
+
+  // State for dynamic dimensions when autoResize is enabled
+  const [dynamicWidth, setDynamicWidth] = React.useState(width);
+  const [dynamicHeight, setDynamicHeight] = React.useState(height);
+
+  // Use dynamic dimensions when autoResize is enabled, otherwise use props
+  const actualWidth = autoResize && isBackground ? dynamicWidth : width;
+  const actualHeight = autoResize && isBackground ? dynamicHeight : height;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
@@ -42,8 +67,8 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
   const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
 
   // Calculate internal resolution
-  const internalWidth = Math.max(1, Math.floor(width * resolution));
-  const internalHeight = Math.max(1, Math.floor(height * resolution));
+  const internalWidth = Math.max(1, Math.floor(actualWidth * resolution));
+  const internalHeight = Math.max(1, Math.floor(actualHeight * resolution));
 
   // Convert hex color to RGB values
   const hexToRgb = (hex: string): [number, number, number] => {
@@ -265,6 +290,25 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
     return program;
   };
 
+  // Window resize handler for background mode
+  useEffect(() => {
+    if (!autoResize || !isBackground) return;
+
+    const handleResize = () => {
+      setDynamicWidth(window.innerWidth);
+      setDynamicHeight(window.innerHeight);
+    };
+
+    // Set initial size
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [autoResize, isBackground]);
   // Mouse event handlers
   const handleMouseMove = React.useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -278,12 +322,12 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
       const y = event.clientY - rect.top;
 
       // Scale mouse coordinates to match internal resolution
-      const scaledX = (x / width) * internalWidth;
-      const scaledY = (y / height) * internalHeight;
+      const scaledX = (x / actualWidth) * internalWidth;
+      const scaledY = (y / actualHeight) * internalHeight;
 
       mousePositionRef.current = { x: scaledX, y: scaledY };
     },
-    [mouseInteraction, width, height, internalWidth, internalHeight]
+    [mouseInteraction, actualWidth, actualHeight, internalWidth, internalHeight]
   );
 
   const handleMouseLeave = React.useCallback(() => {
@@ -530,8 +574,8 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
 
       if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
         // Scale mouse coordinates to match internal resolution
-        const scaledX = (x / width) * internalWidth;
-        const scaledY = (y / height) * internalHeight;
+        const scaledX = (x / actualWidth) * internalWidth;
+        const scaledY = (y / actualHeight) * internalHeight;
         mousePositionRef.current = { x: scaledX, y: scaledY };
       }
     };
@@ -545,8 +589,8 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
   }, [
     mouseInteraction,
     isBackground,
-    width,
-    height,
+    actualWidth,
+    actualHeight,
     internalWidth,
     internalHeight,
   ]);
@@ -557,8 +601,8 @@ export const ColorShader: React.FC<ColorShaderProps> = ({
       onMouseMove={isBackground ? undefined : handleMouseMove}
       onMouseLeave={isBackground ? undefined : handleMouseLeave}
       style={{
-        width: `${width}px`,
-        height: `${height}px`,
+        width: `${actualWidth}px`,
+        height: `${actualHeight}px`,
         imageRendering: resolution < 1 ? 'pixelated' : 'auto',
         // Automatically set pointer-events for background use
         pointerEvents: isBackground ? 'none' : 'auto',
@@ -577,6 +621,7 @@ const ColorShaderExample: React.FC = () => {
   const [mouseInteraction, setMouseInteraction] = React.useState(true);
   const [resolution, setResolution] = React.useState(1.0);
   const [isBackground, setIsBackground] = React.useState(false);
+  const [autoResize, setAutoResize] = React.useState(false);
 
   const addColor = () => {
     const randomColor =
@@ -826,9 +871,21 @@ const ColorShaderExample: React.FC = () => {
               />
               <span className="text-sm">Background Mode</span>
             </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={autoResize}
+                onChange={(e) => setAutoResize(e.target.checked)}
+                disabled={!isBackground}
+                className="rounded disabled:opacity-50"
+              />
+              <span className="text-sm">Auto Resize</span>
+            </label>
             <p className="text-xs text-gray-600">
               {isBackground
-                ? 'Uses document mouse events, sets pointer-events: none'
+                ? autoResize
+                  ? 'Uses document events + auto-resizes to window size'
+                  : 'Uses document events, fixed size'
                 : 'Uses canvas mouse events (normal mode)'}
             </p>
           </div>
@@ -855,6 +912,7 @@ const ColorShaderExample: React.FC = () => {
           mouseInteraction={mouseInteraction}
           resolution={resolution}
           isBackground={isBackground}
+          autoResize={autoResize}
           width={800}
           height={400}
           style={
@@ -893,8 +951,12 @@ const ColorShaderExample: React.FC = () => {
           0.5) render at half the pixel density but maintain full visual size
         </p>
         <p>
-          • <strong>Perfect for Backgrounds:</strong> Use 50% resolution for
-          smooth performance without visible quality loss
+          • <strong>Auto Resize:</strong> When enabled with background mode,
+          automatically resizes to match window dimensions
+        </p>
+        <p>
+          • <strong>Perfect for Websites:</strong> Use autoResize + background
+          mode for full-screen responsive backgrounds
         </p>
         <p>
           • <strong>Interactive Features:</strong> All previous features remain:
