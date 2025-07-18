@@ -353,8 +353,8 @@ export const NotificationCenter: React.FC = () => {
             mr: 1,
             width: 420, // nice
             p: 2,
-            maxHeight: 650,
-            // overflow: '',
+            pt: 0,
+            maxHeight: '66vh',
             backgroundColor: alpha(theme.palette.background.paper, 0.5),
             color: 'text.primary',
             zIndex: theme.zIndex.modal,
