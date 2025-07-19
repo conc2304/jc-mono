@@ -14,6 +14,7 @@ interface GradientShaderProps {
   isBackground?: boolean; // Optimizes for background use (uses document mouse events)
   autoResize?: boolean; // Automatically resize to window dimensions when isBackground is true
   style?: CSSProperties;
+  className?: string;
 }
 
 export const GradientShader = ({
@@ -28,6 +29,7 @@ export const GradientShader = ({
   isBackground = false,
   autoResize = false,
   style = {},
+  className = 'Canvas--GradientShader',
 }: GradientShaderProps) => {
   // State for dynamic dimensions when autoResize is enabled
   const [dynamicWidth, setDynamicWidth] = React.useState(width);
@@ -56,6 +58,7 @@ export const GradientShader = ({
   const internalWidth = Math.max(1, Math.floor(actualWidth * resolution));
   const internalHeight = Math.max(1, Math.floor(actualHeight * resolution));
 
+  // TODO - accept all colors formats and convert
   // Convert hex color to RGB values
   const hexToRgb = (hex: string): [number, number, number] => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -428,6 +431,7 @@ export const GradientShader = ({
 
   return (
     <canvas
+      className={className}
       ref={canvasRef}
       onMouseMove={isBackground ? undefined : handleMouseMove}
       onMouseLeave={isBackground ? undefined : handleMouseLeave}

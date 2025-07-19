@@ -1,6 +1,6 @@
 'use client';
 
-import { darken, useTheme } from '@mui/material';
+import { darken, rgbToHex, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
 import { FileSystemItem, GradientShader } from '@jc/ui-components';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react';
@@ -72,18 +72,25 @@ const mockFileSystem: FileSystemItem[] = [
 
 export default function Index() {
   const theme = useTheme();
+
+  const bgColors = [
+    theme.palette.background.default,
+    rgbToHex(darken(theme.palette.primary[theme.palette.mode], 0.5)),
+    rgbToHex(darken(theme.palette.secondary.dark, 0.5)),
+    theme.palette.background.default,
+    rgbToHex(darken(theme.palette.primary[theme.palette.getInvertedMode()], 1)),
+  ];
+
+  const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
+
   return (
     <>
       <GradientShader
-        key={theme.palette.primary.main}
-        colors={[
-          theme.palette.background.default,
-          darken(theme.palette.primary[theme.palette.mode], 0.5),
-          darken(theme.palette.secondary.dark, 0.5),
-          theme.palette.background.default,
-        ]}
-        resolution={0.1}
-        scrollSpeed={0.02}
+        className={key}
+        key={key}
+        colors={bgColors}
+        resolution={0.5}
+        scrollSpeed={0.04}
         scale={0.75}
         angle={135}
         width={window.innerWidth}
