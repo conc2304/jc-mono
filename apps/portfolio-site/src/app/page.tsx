@@ -75,7 +75,7 @@ export default function Index() {
   return (
     <>
       <GradientShader
-        key={theme.palette.mode}
+        key={theme.palette.primary.main}
         colors={[
           theme.palette.background.default,
           darken(theme.palette.primary[theme.palette.mode], 0.5),

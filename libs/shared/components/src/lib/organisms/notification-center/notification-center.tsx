@@ -4,7 +4,6 @@ import {
   Paper,
   Typography,
   Chip,
-  Divider,
   Grid,
   LinearProgress,
   IconButton,
@@ -12,8 +11,6 @@ import {
   Card,
   CardContent,
   Avatar,
-  Tooltip,
-  Badge,
   Stack,
   darken,
   CardProps,
@@ -23,7 +20,6 @@ import {
   Memory,
   Speed,
   Visibility,
-  ExpandMore,
   ExpandLess,
   Wifi,
   WifiOff,
@@ -272,15 +268,41 @@ export const NotificationCenter: React.FC = () => {
   const performanceStatus = getPerformanceStatus();
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box
+      sx={(theme) => ({
+        position: 'relative',
+
+        // border: '1px solid white',
+      })}
+    >
       {/* Collapsed View */}
       <Box
-        sx={{
+        data-augmented-ui="border bl-2-clip-x tl-2-clip-x"
+        sx={(theme) => ({
           p: 1.5,
           cursor: 'pointer',
           color: 'text.primary',
           minWidth: 320,
-        }}
+          pl: 1.25,
+          // height: '100%',
+          height: theme.mixins.taskbar.height,
+
+          bgcolor: alpha(theme.palette.background.paper, 0.5),
+          '&[data-augmented-ui]': {
+            '--aug-bl': '7px',
+            '--aug-tl': '7px',
+            '--aug-tl-extend2': '25px',
+            '--aug-bl-extend1': '25px',
+            '--aug-border-all': '1px',
+            '--aug-border-right': '0px',
+            '--aug-border-bg': theme.palette.background.paper,
+
+            '&:hover': {
+              '--aug-border-bg':
+                theme.palette.info[theme.palette.getInvertedMode()],
+            },
+          },
+        })}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" alignItems="center" spacing={2}>

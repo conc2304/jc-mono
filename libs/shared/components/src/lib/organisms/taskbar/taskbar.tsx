@@ -20,7 +20,7 @@ export const TaskBar = () => {
         background: alpha(theme.palette.primary[theme.palette.mode], 0.9),
         display: 'flex',
         alignItems: 'center',
-        p: 0.5,
+        p: 0,
         zIndex: theme.zIndex.appBar,
       })}
     >
@@ -28,12 +28,12 @@ export const TaskBar = () => {
         shape="buttonLeft"
         size="medium"
         variant="contained"
-        sx={{ ml: 1 }}
+        sx={{ ml: 2.5 }}
       >
         Start
       </AugmentedButton>
 
-      <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+      <Divider orientation="vertical" flexItem sx={{ mx: 2.5 }} />
       <Box
         className="Taskbar--right"
         sx={{
@@ -61,13 +61,12 @@ export const TaskBar = () => {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                mx: 1,
+                mr: 1,
                 opacity: window.minimized ? 0.7 : 1,
                 maxWidth: '9.5rem',
               }}
               startIcon={window.icon}
             >
-              {/* {window.icon} */}
               <Typography
                 component="span"
                 variant="button"
