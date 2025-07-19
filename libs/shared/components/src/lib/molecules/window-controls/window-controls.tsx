@@ -6,14 +6,18 @@ import { useWindowActions } from '../../context';
 
 type WindowControlProps = {
   id: string;
+  isActive: boolean;
 };
 
-export const WindowControls = ({ id }: WindowControlProps) => {
+export const WindowControls = ({ id, isActive }: WindowControlProps) => {
   const { minimizeWindow, maximizeWindow, closeWindow } = useWindowActions();
   const buttonProps: AugmentedIconButtonProps = {
     size: 'small',
     shape: 'buttonRight',
     disableRipple: true,
+    sx: {
+      '& svg': { strokeWidth: '2px !important' },
+    },
   };
 
   return (
@@ -22,6 +26,7 @@ export const WindowControls = ({ id }: WindowControlProps) => {
         display: 'flex',
         alignItems: 'center',
         height: theme.mixins.window.titleBar.height,
+        opacity: isActive ? 1 : 0.6,
       })}
     >
       <AugmentedIconButton
@@ -42,7 +47,7 @@ export const WindowControls = ({ id }: WindowControlProps) => {
           maximizeWindow(id);
         }}
       >
-        <Maximize2 />
+        <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
       </AugmentedIconButton>
       <AugmentedIconButton
         {...buttonProps}

@@ -14,6 +14,9 @@ import {
   Stack,
   darken,
   CardProps,
+  Grow,
+  Slide,
+  Fade,
 } from '@mui/material';
 import {
   AccessTime,
@@ -29,7 +32,7 @@ import {
   Keyboard,
   Timeline,
 } from '@mui/icons-material';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, duration, styled } from '@mui/material/styles';
 
 // Type definitions
 interface NetworkInfo {
@@ -111,6 +114,7 @@ export const NotificationCenter: React.FC = () => {
   const domTimerRef = useRef<number>(0);
   const clickCountRef = useRef<number>(0);
   const keystrokeRef = useRef<number>(0);
+  const slideTargetRef = useRef<Element>(null);
 
   // FPS Counter
   useEffect(() => {
@@ -269,11 +273,10 @@ export const NotificationCenter: React.FC = () => {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         position: 'relative',
-
-        // border: '1px solid white',
-      })}
+      }}
+      ref={slideTargetRef}
     >
       {/* Collapsed View */}
       <Box
@@ -363,7 +366,13 @@ export const NotificationCenter: React.FC = () => {
       </Box>
 
       {/* Expanded View */}
-      <Collapse in={isExpanded}>
+
+      <Slide
+        in={isExpanded}
+        unmountOnExit
+        // easing={'ease-in'}
+        // timeout={duration.enteringScreen}
+      >
         <Paper
           data-augmented-ui="border tl-2-clip-y bl-2-clip-x clip-tl l-clip-y "
           className="NotificationCenter--expanded-view"
@@ -376,7 +385,7 @@ export const NotificationCenter: React.FC = () => {
             width: 420, // nice
             p: 2,
             pt: 0,
-            maxHeight: '66vh',
+            // maxHeight: '66vh',
             backgroundColor: alpha(theme.palette.background.paper, 0.5),
             color: 'text.primary',
             zIndex: theme.zIndex.modal,
@@ -817,7 +826,7 @@ export const NotificationCenter: React.FC = () => {
             )}
           </Box>
         </Paper>
-      </Collapse>
+      </Slide>
     </Box>
   );
 };

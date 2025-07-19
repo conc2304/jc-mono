@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import { alpha, Box, darken, Typography } from '@mui/material';
+import { alpha, Box, darken, lighten, Typography } from '@mui/material';
 
 import { useWindowManager } from '../../context';
 import { WindowControls } from '../window-controls';
+import { blend } from '@mui/system';
 
 type WindowTitleBarProps = {
   isActive?: boolean;
@@ -56,8 +57,8 @@ WindowTitleBarProps) => {
             pl: 1.5,
             pr: 2.5,
             background: isActive
-              ? theme.palette.primary.dark
-              : darken(theme.palette.primary.dark, 0.5),
+              ? theme.palette.primary[theme.palette.mode]
+              : darken(theme.palette.primary[theme.palette.mode], 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
@@ -67,8 +68,11 @@ WindowTitleBarProps) => {
               '--aug-border-all': '1px',
               '--aug-border-bottom': '-1px',
               '--aug-border-bg': isActive
-                ? theme.palette.primary.light
-                : darken(theme.palette.primary.light, 0.5),
+                ? theme.palette.primary[theme.palette.getInvertedMode()]
+                : darken(
+                    theme.palette.primary[theme.palette.getInvertedMode()],
+                    0.5
+                  ),
             },
           })}
         >
@@ -98,9 +102,22 @@ WindowTitleBarProps) => {
             pt: 0.5,
             pr: 0.5,
             pl: 1,
+
             background: isActive
-              ? theme.palette.primary.dark
-              : darken(theme.palette.primary.dark, 0.5),
+              ? alpha(
+                  theme.palette.background.paper,
+                  Number(theme.mixins.paper?.opacity || 1)
+                )
+              : blend(
+                  theme.palette.background.paper,
+                  theme.palette.primary.main,
+                  0.3,
+                  1
+                ),
+
+            // background: isActive
+            //   ? theme.palette.primary.dark
+            //   : darken(theme.palette.primary.dark, 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
@@ -115,7 +132,7 @@ WindowTitleBarProps) => {
             },
           })}
         >
-          <WindowControls id={id} />
+          <WindowControls id={id} isActive={!!isActive} />
         </Box>
       </Box>
     </Box>
