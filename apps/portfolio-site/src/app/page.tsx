@@ -1,11 +1,11 @@
 'use client';
 
-import { alpha, darken, useTheme } from '@mui/material';
+import { darken, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
-import { FileSystemItem } from '@jc/ui-components';
+import { FileSystemItem, GradientShader } from '@jc/ui-components';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react';
 
-import { ColorShader } from './webgl/shader';
+// import { ColorShader } from './webgl/shader';
 
 const fontSize = '40px';
 
@@ -74,7 +74,7 @@ export default function Index() {
   const theme = useTheme();
   return (
     <>
-      <ColorShader
+      <GradientShader
         key={theme.palette.mode}
         colors={[
           theme.palette.background.default,
