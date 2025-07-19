@@ -102,22 +102,14 @@ WindowTitleBarProps) => {
             pt: 0.5,
             pr: 0.5,
             pl: 1,
+            transition: theme.transitions.create(['background']),
 
             background: isActive
               ? alpha(
                   theme.palette.background.paper,
                   Number(theme.mixins.paper?.opacity || 1)
                 )
-              : blend(
-                  theme.palette.background.paper,
-                  theme.palette.primary.main,
-                  0.3,
-                  1
-                ),
-
-            // background: isActive
-            //   ? theme.palette.primary.dark
-            //   : darken(theme.palette.primary.dark, 0.5),
+              : darken(theme.palette.primary[theme.palette.mode], 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
