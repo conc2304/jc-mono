@@ -7,32 +7,38 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import { Typography, Box } from '@mui/material';
 
+// Example boot messages with hover functionality
 const bootMessages = [
   'Initializing system...',
-  'Loading kernel modules...',
+  ['Loading kernel modules...', 'Injecting backdoor...'],
   'Starting network services...',
-  'Mounting file systems...',
+  ['Mounting file systems...', 'Accessing classified data...'],
   'Starting user services...',
-  'System boot complete.',
+  ['System boot complete.', 'Welcome, Agent Smith.'],
   '',
   'Welcome to Terminal OS v2.1.0',
-  'Type "help" for available commands.',
+  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
 ];
 
 // Register plugins
 gsap.registerPlugin(useGSAP, TextPlugin);
 
+// Type definitions for boot messages
+type BootMessage = string | [string] | [string, string];
+
 interface BootTextProps {
-  bootMessages: string[];
+  bootMessages: BootMessage[];
   className?: string;
   autoStart?: boolean;
   typeSpeed?: number;
   lineDelay?: number;
   cursorChar?: string;
-  scrambleChars?: number; // Number of characters to cycle through
-  scrambleDuration?: number; // Duration of scrambling per character
-  charDelay?: number; // Delay between starting each character's animation
-  scrambleCharSet?: string; // Set of characters to use for scrambling
+  scrambleChars?: number;
+  scrambleDuration?: number;
+  charDelay?: number;
+  scrambleCharSet?: string;
+  hoverScrambleChars?: number; // Number of characters to cycle through on hover
+  hoverScrambleDuration?: number; // Duration of scrambling on hover
   onComplete?: () => void;
   onProgress?: (current: number, total: number, message: string) => void;
 }
@@ -48,11 +54,14 @@ const BootTextInner: React.FC<BootTextProps> = ({
   scrambleDuration = 0.8,
   charDelay = 0.05,
   scrambleCharSet = '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+  hoverScrambleChars = 6,
+  hoverScrambleDuration = 0.4,
   onComplete,
   onProgress,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const currentLineRef = useRef<number>(0);
+  const hoverAnimationsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
 
   // Store callbacks in refs to avoid dependency issues
   const onCompleteRef = useRef(onComplete);
@@ -61,6 +70,155 @@ const BootTextInner: React.FC<BootTextProps> = ({
   // Update refs when callbacks change
   onCompleteRef.current = onComplete;
   onProgressRef.current = onProgress;
+
+  // Helper function to normalize boot messages
+  const normalizeBootMessage = (message: BootMessage): [string, string?] => {
+    if (typeof message === 'string') {
+      return [message];
+    }
+    if (Array.isArray(message)) {
+      if (message.length === 1) {
+        return [message[0]];
+      }
+      if (message.length >= 2) {
+        return [message[0], message[1]];
+      }
+    }
+    return [''];
+  };
+
+  // Function to get random character from scramble set
+  const getRandomChar = () => {
+    return scrambleCharSet[Math.floor(Math.random() * scrambleCharSet.length)];
+  };
+
+  // Function to create hover scrambling animation
+  const createHoverScrambleAnimation = (
+    messageIndex: number,
+    fromText: string,
+    toText: string,
+    duration: number = hoverScrambleDuration,
+    scrambleCount: number = hoverScrambleChars
+  ) => {
+    const textElement = containerRef.current?.querySelector(
+      `.boot-text-${messageIndex}`
+    ) as HTMLElement;
+
+    if (!textElement) return gsap.timeline();
+
+    const tl = gsap.timeline();
+
+    // Get all character spans
+    const charElements = textElement.querySelectorAll(
+      `[class*="char-${messageIndex}-"]`
+    ) as NodeListOf<HTMLElement>;
+
+    // Calculate the maximum length to handle different text lengths
+    const maxLength = Math.max(fromText.length, toText.length);
+
+    // Ensure we have enough character elements
+    const currentLength = charElements.length;
+    if (currentLength < maxLength) {
+      // Add more character spans if needed
+      for (let i = currentLength; i < maxLength; i++) {
+        const charSpan = document.createElement('span');
+        charSpan.className = `char-${messageIndex}-${i}`;
+        charSpan.style.display = 'inline-block';
+        charSpan.style.width = 'auto';
+        charSpan.style.overflow = 'hidden';
+        charSpan.style.whiteSpace = 'nowrap';
+        charSpan.style.verticalAlign = 'text-top';
+        charSpan.textContent = ' ';
+        textElement.appendChild(charSpan);
+      }
+    }
+
+    // Update charElements to include new spans
+    const allCharElements = textElement.querySelectorAll(
+      `[class*="char-${messageIndex}-"]`
+    ) as NodeListOf<HTMLElement>;
+
+    // Animate each character position
+    for (let i = 0; i < maxLength; i++) {
+      const charElement = allCharElements[i];
+      if (!charElement) continue;
+
+      const fromChar = i < fromText.length ? fromText[i] : '';
+      const toChar = i < toText.length ? toText[i] : '';
+
+      // If characters are the same, skip scrambling
+      if (fromChar === toChar) {
+        continue;
+      }
+
+      const charSelector = `.char-${messageIndex}-${i}`;
+      const startTime = i * 0.02; // Slight stagger for effect
+
+      // Create scrambling sequence
+      const scrambleInterval = duration / scrambleCount;
+
+      for (let j = 0; j < scrambleCount; j++) {
+        const scrambledChar =
+          j === scrambleCount - 1 ? toChar : getRandomChar();
+
+        tl.to(
+          charSelector,
+          {
+            duration: scrambleInterval,
+            text: {
+              value: scrambledChar,
+              rtl: false,
+            },
+            ease: 'none',
+          },
+          startTime + j * scrambleInterval
+        );
+      }
+    }
+
+    // Hide extra characters if target text is shorter
+    if (toText.length < fromText.length) {
+      for (let i = toText.length; i < fromText.length; i++) {
+        const charSelector = `.char-${messageIndex}-${i}`;
+        tl.set(charSelector, { text: { value: '', rtl: false } }, 0);
+      }
+    }
+
+    return tl;
+  };
+
+  // Function to handle hover events
+  const handleMessageHover = useCallback(
+    (messageIndex: number, isHovering: boolean) => {
+      const [defaultMessage, hiddenMessage] = normalizeBootMessage(
+        bootMessages[messageIndex]
+      );
+
+      // Only proceed if there's a hidden message
+      if (!hiddenMessage) return;
+
+      // Kill any existing hover animation for this message
+      const existingAnimation = hoverAnimationsRef.current.get(messageIndex);
+      if (existingAnimation) {
+        existingAnimation.kill();
+      }
+
+      const fromText = isHovering ? defaultMessage : hiddenMessage;
+      const toText = isHovering ? hiddenMessage : defaultMessage;
+
+      // Create and store the new animation
+      const hoverAnimation = createHoverScrambleAnimation(
+        messageIndex,
+        fromText,
+        toText
+      );
+      hoverAnimationsRef.current.set(messageIndex, hoverAnimation);
+
+      // Play the animation
+      hoverAnimation.play();
+    },
+    [bootMessages, hoverScrambleChars, hoverScrambleDuration]
+  );
 
   useGSAP(
     () => {
@@ -75,18 +233,35 @@ const BootTextInner: React.FC<BootTextProps> = ({
 
       // Create message blocks for each boot message
       const messageBlocks: HTMLDivElement[] = [];
-      bootMessages.forEach((message, index) => {
+      bootMessages.forEach((messageData, index) => {
+        const [defaultMessage, hiddenMessage] =
+          normalizeBootMessage(messageData);
+
         const messageBlock = document.createElement('div');
         messageBlock.className = `boot-message boot-message-${index}`;
         messageBlock.style.fontFamily = '"JetBrains Mono", monospace';
         messageBlock.style.color = '#00ff41';
         messageBlock.style.fontSize = '14px';
-        // messageBlock.style.lineHeight = '1.6';
         messageBlock.style.whiteSpace = 'pre-wrap';
         messageBlock.style.display = 'flex';
         messageBlock.style.alignItems = 'flexstart';
+        messageBlock.style.minHeight = defaultMessage === '' ? '1.6em' : 'auto';
 
-        messageBlock.style.minHeight = message === '' ? '1.6em' : 'auto'; // Preserve empty lines
+        // Add hover functionality if there's a hidden message
+        if (hiddenMessage) {
+          messageBlock.style.cursor = 'pointer';
+          messageBlock.style.transition = 'background-color 0.2s ease';
+
+          messageBlock.addEventListener('mouseenter', () => {
+            messageBlock.style.backgroundColor = 'rgba(0, 255, 65, 0.05)';
+            handleMessageHover(index, true);
+          });
+
+          messageBlock.addEventListener('mouseleave', () => {
+            messageBlock.style.backgroundColor = 'transparent';
+            handleMessageHover(index, false);
+          });
+        }
 
         const textElement = document.createElement('span');
         textElement.className = `boot-text-${index}`;
@@ -97,13 +272,13 @@ const BootTextInner: React.FC<BootTextProps> = ({
         messageBlocks.push(messageBlock);
       });
 
-      // Create cursor element (only show on current active line)
+      // Create cursor element
       const cursorElement = document.createElement('span');
       cursorElement.className = 'boot-cursor';
       cursorElement.textContent = cursorChar;
       cursorElement.style.marginLeft = '4px';
       cursorElement.style.color = '#00ff41';
-      cursorElement.style.marginTop = '-2px'; // move the cursor up to match text for this character "█"
+      cursorElement.style.marginTop = '-2px';
 
       // Cursor animation
       let cursor = gsap
@@ -126,13 +301,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         })
         .pause();
 
-      // Function to get random character from scramble set
-      const getRandomChar = () => {
-        return scrambleCharSet[
-          Math.floor(Math.random() * scrambleCharSet.length)
-        ];
-      };
-
       // Function to create scrambling animation for a single character
       const createScrambleAnimation = (
         textSelector: string,
@@ -142,9 +310,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       ) => {
         const tl = gsap.timeline();
 
-        // Skip scrambling for spaces to keep them clean
         if (targetChar === ' ') {
-          // Start width animation and set text immediately for spaces
           tl.set(textSelector, {
             width: 'auto',
           }).set(
@@ -160,12 +326,10 @@ const BootTextInner: React.FC<BootTextProps> = ({
           return tl;
         }
 
-        // Start by setting width to auto to reveal the character span
         tl.set(textSelector, {
           width: 'auto',
         });
 
-        // Create scrambling effect
         const scrambleInterval = scrambleDuration / scrambleChars;
 
         for (let i = 0; i < scrambleChars; i++) {
@@ -194,7 +358,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         const tl = gsap.timeline();
 
         if (message === '') {
-          // Handle empty messages quickly
           tl.set(`.boot-text-${messageIndex}`, {
             text: { value: '', rtl: false },
           });
@@ -204,34 +367,29 @@ const BootTextInner: React.FC<BootTextProps> = ({
           return tl;
         }
 
-        // Create individual character elements for better control
         const messageBlock = messageBlocks[messageIndex];
         const textElement = messageBlock.querySelector(
           `.boot-text-${messageIndex}`
         ) as HTMLElement;
 
-        // Clear the text element and create spans for each character
         textElement.innerHTML = '';
         const charElements: HTMLSpanElement[] = [];
 
         for (let i = 0; i < message.length; i++) {
           const charSpan = document.createElement('span');
           charSpan.className = `char-${messageIndex}-${i}`;
-          charSpan.textContent = ' '; // Start with space
+          charSpan.textContent = ' ';
 
-          // Set initial styles - start with width 0 and hidden overflow
           charSpan.style.display = 'inline-block';
           charSpan.style.width = '0';
           charSpan.style.overflow = 'hidden';
           charSpan.style.whiteSpace = 'nowrap';
-
           charSpan.style.verticalAlign = 'text-top';
 
           textElement.appendChild(charSpan);
           charElements.push(charSpan);
         }
 
-        // Animate each character with staggered delay
         message.split('').forEach((char, charIndex) => {
           const charSelector = `.char-${messageIndex}-${charIndex}`;
           const startTime = charIndex * charDelay;
@@ -243,15 +401,12 @@ const BootTextInner: React.FC<BootTextProps> = ({
             message.length
           );
 
-          // Add character animation at staggered time
           tl.add(charAnimation, startTime);
         });
 
-        // Calculate when the entire message will be complete
         const totalDuration =
           (message.length - 1) * charDelay + scrambleDuration;
 
-        // Add completion callback at the right time
         if (onMessageComplete) {
           tl.call(onMessageComplete, [], totalDuration);
         }
@@ -260,38 +415,41 @@ const BootTextInner: React.FC<BootTextProps> = ({
       };
 
       // Animate each message sequentially
-      bootMessages.forEach((message, index) => {
+      bootMessages.forEach((messageData, index) => {
+        const [defaultMessage] = normalizeBootMessage(messageData);
         const textSelector = `.boot-text-${index}`;
         const messageBlock = messageBlocks[index];
 
         // Add cursor to current line
         masterTimeline.call(() => {
-          // Remove cursor from previous line
           const prevCursor = container.querySelector('.boot-cursor');
           if (prevCursor) {
             prevCursor.remove();
           }
 
-          // Add cursor to current line
           const newCursor = cursorElement.cloneNode(true) as HTMLElement;
           messageBlock.appendChild(newCursor);
 
-          // Start cursor blinking
           if (cursor.paused()) {
             cursor.play();
           }
         });
 
         // Create the scrambling message animation
-        const messageAnimation = createMessageAnimation(message, index, () => {
-          // Notify progress after each line completes
-          onProgressRef.current?.(index + 1, bootMessages.length, message);
-        });
+        const messageAnimation = createMessageAnimation(
+          defaultMessage,
+          index,
+          () => {
+            onProgressRef.current?.(
+              index + 1,
+              bootMessages.length,
+              defaultMessage
+            );
+          }
+        );
 
-        // Add the message animation to master timeline
         masterTimeline.add(messageAnimation);
 
-        // Add delay between lines (except for last message)
         if (index < bootMessages.length - 1) {
           masterTimeline.set({}, {}, `+=${lineDelay}`);
         }
@@ -305,7 +463,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         }
       });
 
-      // Start the animation
       masterTimeline.play();
     },
     {
@@ -320,6 +477,8 @@ const BootTextInner: React.FC<BootTextProps> = ({
         scrambleDuration,
         charDelay,
         scrambleCharSet,
+        hoverScrambleChars,
+        hoverScrambleDuration,
       ],
     }
   );
@@ -353,14 +512,13 @@ const BootTextInner: React.FC<BootTextProps> = ({
           pointerEvents: 'none',
         },
 
-        // Terminal-like styling
         boxShadow: 'inset 0 0 20px rgba(0,255,65,0.1)',
 
-        // Style for individual message blocks
         '& .boot-message': {
           display: 'block',
           margin: 0,
-          padding: 0,
+          padding: '2px 4px',
+          borderRadius: '2px',
         },
       }}
     >
@@ -381,7 +539,6 @@ export const BootTextExample: React.FC = () => {
   });
   const [isComplete, setIsComplete] = React.useState(false);
 
-  // Use useCallback to prevent function recreation on every render
   const handleProgress = useCallback(
     (current: number, total: number, message: string) => {
       setProgress({ current, total, message });
@@ -411,10 +568,9 @@ export const BootTextExample: React.FC = () => {
           fontFamily: '"JetBrains Mono", monospace',
         }}
       >
-        Boot Sequence Demo
+        Boot Sequence Demo with Hover Messages
       </Typography>
 
-      {/* Progress Display */}
       <Box
         sx={{
           textAlign: 'center',
@@ -426,6 +582,12 @@ export const BootTextExample: React.FC = () => {
         <Typography variant="body2">
           Progress: {progress.current}/{progress.total}
           {progress.message && ` - ${progress.message}`}
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ marginTop: '10px', color: '#ffff00' }}
+        >
+          Hover over lines to reveal hidden messages!
         </Typography>
         <div
           style={{
@@ -463,12 +625,14 @@ export const BootTextExample: React.FC = () => {
       <BootText
         bootMessages={bootMessages}
         typeSpeed={1.8}
-        lineDelay={2}
+        lineDelay={1.2}
         cursorChar="█"
         scrambleChars={12}
         scrambleDuration={0.6}
         charDelay={0.05}
         scrambleCharSet="!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        hoverScrambleChars={8}
+        hoverScrambleDuration={0.5}
         onProgress={handleProgress}
         onComplete={handleBootComplete}
       />
