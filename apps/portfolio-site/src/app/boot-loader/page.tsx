@@ -24,7 +24,9 @@ export default function Index() {
           {/* <Box
             sx={{ position: 'relative', margin: '0 auto', textAlign: 'center' }}
           >
-            <GlitchText variant="h1">STUFF THAT HAS STUFF</GlitchText>
+            <GlitchText intensity="low" variant="h1">
+              STUFF THAT HAS STUFF
+            </GlitchText>
           </Box> */}
           <BootTextExample />
         </Box>

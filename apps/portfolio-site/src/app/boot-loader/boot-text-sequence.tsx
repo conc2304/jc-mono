@@ -7,6 +7,18 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import { Typography, Box } from '@mui/material';
 
+const bootMessages = [
+  'Initializing system...',
+  'Loading kernel modules...',
+  'Starting network services...',
+  'Mounting file systems...',
+  'Starting user services...',
+  'System boot complete.',
+  '',
+  'Welcome to Terminal OS v2.1.0',
+  'Type "help" for available commands.',
+];
+
 // Register plugins
 gsap.registerPlugin(useGSAP, TextPlugin);
 
@@ -196,18 +208,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
 // Memoize the component to prevent unnecessary re-renders
 export const BootText = memo(BootTextInner);
 
-const bootMessages = [
-  'Initializing system...',
-  'Loading kernel modules...',
-  'Starting network services...',
-  'Mounting file systems...',
-  'Starting user services...',
-  'System boot complete.',
-  '',
-  'Welcome to Terminal OS v2.1.0',
-  'Type "help" for available commands.',
-];
-
 // Example usage component with progress tracking
 export const BootTextExample: React.FC = () => {
   const [progress, setProgress] = React.useState({
@@ -221,7 +221,6 @@ export const BootTextExample: React.FC = () => {
   const handleProgress = useCallback(
     (current: number, total: number, message: string) => {
       setProgress({ current, total, message });
-      console.log(`Progress: ${current}/${total} - "${message}"`);
     },
     []
   );

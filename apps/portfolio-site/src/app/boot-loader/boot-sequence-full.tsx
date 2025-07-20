@@ -154,7 +154,7 @@ export const CyberpunkBootSequence: React.FC<
   const statusRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const bootMessages: string[] = [
+    const bootMessages: [string,string][] = [
       '> INITIALIZING QUANTUM CORE...',
       '> LOADING NEURAL PATHWAYS...',
       '> DECRYPTING MEMORY BANKS...',
@@ -174,48 +174,10 @@ export const CyberpunkBootSequence: React.FC<
       // Create timeline
       const tl = gsap.timeline();
 
-      // Initial setup
-      gsap.set(
-        [
-          titleRef.current,
-          subtitleRef.current,
-          bootTextRef.current,
-          progressRef.current,
-          statusRef.current,
-        ],
-        {
-          opacity: 0,
-        }
-      );
 
-      // Title animation with glitch
-      tl.to(titleRef.current, {
-        opacity: 1,
-        duration: 0.5,
-        ease: 'power2.out',
-      }).to(
-        titleRef.current,
-        {
-          scale: 1.02,
-          duration: 0.1,
-          yoyo: true,
-          repeat: 1,
-          ease: 'power2.inOut',
-        },
-        '+=0.2'
-      );
 
-      // Subtitle
-      tl.to(
-        subtitleRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-        },
-        '-=0.3'
-      );
+
+
 
       // Boot text animation
       tl.to(
@@ -281,54 +243,13 @@ export const CyberpunkBootSequence: React.FC<
               },
             }
           );
-        } else {
-          // Show progress bar
-          gsap.to(progressRef.current, {
-            opacity: 1,
-            duration: 0.5,
-            delay: 0.5,
-            onComplete: () => {
-              // Animate progress fill
-              const progressFill = progressRef.current?.querySelector(
-                '.MuiLinearProgress-bar'
-              );
-              if (progressFill) {
-                gsap.to(progressFill, {
-                  width: '100%',
-                  duration: 2,
-                  ease: 'power2.out',
-                  onComplete: () => {
-                    // Show final status
-                    gsap.to(statusRef.current, {
-                      opacity: 1,
-                      scale: 1,
-                      duration: 0.8,
-                      ease: 'back.out(1.7)',
-                    });
-                  },
-                });
-              }
-            },
-          });
-        }
+
       };
 
       // Start boot sequence after initial animations
       setTimeout(animateBootText, 2000);
 
-      // Random background glitches
-      setInterval(() => {
-        if (Math.random() < 0.1) {
-          const container = containerRef.current;
-          gsap.to(container, {
-            filter: 'brightness(1.3) contrast(1.2) hue-rotate(5deg)',
-            duration: 0.05,
-            yoyo: true,
-            repeat: 1,
-            ease: 'power2.inOut',
-          });
-        }
-      }, 1000);
+
 
       // Random text glitches on existing text
       setInterval(() => {
