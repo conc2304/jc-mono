@@ -563,7 +563,7 @@ export const BootTextExample: React.FC = () => {
       }}
     >
       <Box sx={{ margin: '0 auto', textAlign: 'center' }}>
-        <GlitchText variant="h6" sx={{ textAlign: 'center', margin: '0 auto' }}>
+        <GlitchText variant="h6" sx={{ textAlign: 'center', margin: ' auto' }}>
           CLYZBY_OS V.0.1
         </GlitchText>
       </Box>

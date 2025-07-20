@@ -11,6 +11,7 @@ interface GlitchTextProps extends TypographyProps {
   triggerOnHover?: boolean;
   autoGlitch?: boolean;
   autoGlitchInterval?: number;
+  scrambleOnLeave?: boolean;
 }
 
 interface IntensitySettings {
@@ -27,12 +28,15 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
   triggerOnHover = true,
   autoGlitch = false,
   autoGlitchInterval = 3000,
+  scrambleOnLeave = true,
   ...typographyProps
 }) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLSpanElement>(null);
   const isGlitching = useRef<boolean>(false);
+  const isScrambling = useRef<boolean>(false);
   const sx = typographyProps.sx || {};
+
   useEffect(() => {
     const setupGlitchEffects = () => {
       const text = textRef.current;
@@ -98,7 +102,7 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
       };
 
       const performGlitch = (): void => {
-        if (isGlitching.current) return;
+        if (isGlitching.current || isScrambling.current) return;
         isGlitching.current = true;
 
         const settings = getIntensitySettings();
@@ -263,15 +267,130 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
           );
       };
 
+      // New scramble effect for mouse leave
+      const performScrambleLeave = (): void => {
+        // First, interrupt any ongoing glitch animation
+        if (
+          isGlitching.current &&
+          container &&
+          (container as any)._glitchTimeline
+        ) {
+          (container as any)._glitchTimeline.kill();
+          isGlitching.current = false;
+          // Clean up any existing layers
+          const existingLayers = container.querySelectorAll('.glitch-layer');
+          existingLayers.forEach((layer) => layer.remove());
+        }
+
+        if (isScrambling.current) return;
+        isScrambling.current = true;
+
+        // Kill any existing animations on the text and container
+        gsap.killTweensOf(text);
+        gsap.killTweensOf(container);
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isScrambling.current = false;
+            // Ensure we're back to original state
+            if (text) {
+              text.textContent = originalText;
+              text.style.fontFamily = '';
+              text.style.color = '';
+              text.style.textShadow = '';
+            }
+            gsap.set([text, container], {
+              scale: 1,
+              rotationX: 0,
+              rotationY: 0,
+              filter: 'none',
+              opacity: 1,
+              x: 0,
+              y: 0,
+            });
+          },
+        });
+
+        // Shorter, snappier scramble effect
+        const scrambleText = (): string => {
+          const chars = originalText.split('');
+          const scrambledChars = chars.map((char) => {
+            if (char === ' ') return ' ';
+            return Math.random() < 0.7
+              ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
+              : char;
+          });
+          return scrambledChars.join('');
+        };
+
+        // Quick scale down effect
+        tl.to(text, {
+          duration: 0.08,
+          scale: 0.95,
+          ease: 'power2.inOut',
+        });
+
+        // Fast scramble sequence (fewer frames for quicker effect)
+        const scrambleFrames = 5;
+        for (let i = 0; i < scrambleFrames; i++) {
+          tl.call(
+            () => {
+              if (text) {
+                text.textContent = scrambleText();
+
+                // Subtle color shift on scramble
+                if (Math.random() < 0.4) {
+                  text.style.color = `hsl(${
+                    Math.random() * 60 + 180
+                  }, 60%, 60%)`;
+                }
+              }
+            },
+            [],
+            0.1 + i * 0.05
+          );
+        }
+
+        // Restore to original text and style
+        tl.call(
+          () => {
+            if (text) {
+              text.textContent = originalText;
+              text.style.color = '';
+              text.style.fontFamily = '';
+              text.style.textShadow = '';
+            }
+          },
+          [],
+          0.1 + scrambleFrames * 0.05
+        ).to(
+          text,
+          {
+            duration: 0.25,
+            scale: 1,
+            ease: 'back.out(1.5)',
+          },
+          0.1 + scrambleFrames * 0.05
+        );
+      };
+
       // Setup event listeners
       let cleanup: (() => void) | undefined;
 
       if (triggerOnHover) {
         const handleMouseEnter = () => performGlitch();
+        const handleMouseLeave = () => {
+          if (scrambleOnLeave) {
+            performScrambleLeave();
+          }
+        };
+
         container.addEventListener('mouseenter', handleMouseEnter);
+        container.addEventListener('mouseleave', handleMouseLeave);
 
         cleanup = () => {
           container.removeEventListener('mouseenter', handleMouseEnter);
+          container.removeEventListener('mouseleave', handleMouseLeave);
         };
       }
 
@@ -296,7 +415,13 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
     const cleanup = setupGlitchEffects();
     return cleanup;
-  }, [intensity, triggerOnHover, autoGlitch, autoGlitchInterval]);
+  }, [
+    intensity,
+    triggerOnHover,
+    autoGlitch,
+    autoGlitchInterval,
+    scrambleOnLeave,
+  ]);
 
   return (
     <Typography
