@@ -525,7 +525,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         },
       }}
     >
-      {/* Content will be dynamically generated */}
+      {/* NOTE - Content will be dynamically generated here */}
     </Box>
   );
 };
