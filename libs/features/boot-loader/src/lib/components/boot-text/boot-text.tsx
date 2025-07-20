@@ -5,9 +5,10 @@ import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
-import { Box } from '@mui/system';
+import { alpha, Box } from '@mui/system';
 import { BootMessage } from '../../types';
 import { Property } from 'csstype';
+import { useTheme } from '@mui/material';
 
 // Register plugins
 gsap.registerPlugin(useGSAP, TextPlugin);
@@ -53,6 +54,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
   onComplete,
   onProgress,
 }) => {
+  const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const currentLineRef = useRef<number>(0);
   const hoverAnimationsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
@@ -235,7 +237,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         messageBlock.className = `boot-message boot-message-${index}`;
         messageBlock.style.fontFamily = '"JetBrains Mono", monospace';
         messageBlock.style.color = '#00ff41';
-        messageBlock.style.fontSize = '14px';
+        messageBlock.style.fontSize = '18px';
         messageBlock.style.whiteSpace = 'pre-wrap';
         messageBlock.style.display = 'flex';
         messageBlock.style.alignItems = 'flexstart';
@@ -486,20 +488,21 @@ const BootTextInner: React.FC<BootTextProps> = ({
     <Box
       ref={containerRef}
       className={`boot-text-container ${className}`}
-      sx={{
+      sx={(theme) => ({
         fontFamily: '"JetBrains Mono", monospace',
-        backgroundColor: '#0a0a0a',
-        color: '#00ff41',
+        backgroundColor: alpha(theme.palette.background.paper, 0.5),
+        color: theme.palette.primary.main,
         padding: '20px',
         maxWidth: '500px',
         // borderRadius: '8px',
         margin: '0 auto',
         border: '1px solid #333',
         minHeight: '200px',
-        fontSize: '14px',
+        fontSize: '18px',
         lineHeight: 1.4,
         overflow: 'hidden',
         position: 'relative',
+        backdropFilter: 'blur(4px)',
 
         '&::before': {
           content: '""',
@@ -521,7 +524,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
           padding: '2px 4px',
           borderRadius: '2px',
         },
-      }}
+      })}
     >
       {/* NOTE - Content will be dynamically generated here */}
     </Box>

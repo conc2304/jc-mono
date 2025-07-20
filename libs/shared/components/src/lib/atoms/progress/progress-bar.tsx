@@ -1,0 +1,293 @@
+import { Box } from '@mui/material';
+import React, { useRef, useEffect, useState } from 'react';
+
+export const ProgressBar = ({
+  progress = 0,
+  indeterminate = false,
+  width = 300,
+  height = 120,
+  color = '#00ff88',
+  glowColor = '#00ffff',
+  backgroundColor = 'rgba(0, 0, 0, 0.8)',
+  borderColor = '#00ff88',
+  showPercentage = true,
+  showLabel = true,
+  label = 'PROCESSING',
+  energyLines = true,
+  pulseEffect = true,
+  gridPattern = true,
+  className = '',
+}) => {
+  const containerRef = useRef(null);
+  const progressRef = useRef(progress);
+  const animationRef = useRef(null);
+
+  // Update progress ref when prop changes
+  useEffect(() => {
+    progressRef.current = Math.max(0, Math.min(100, progress));
+  }, [progress]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+
+    // Animation loop for indeterminate and pulse effects
+    const animate = () => {
+      const currentProgress = indeterminate
+        ? (Math.sin(Date.now() * 0.003) + 1) * 50 // Smooth oscillation 0-100%
+        : progressRef.current;
+
+      // Update progress fill
+      const progressFill = container.querySelector('.progress-fill');
+      if (progressFill) {
+        progressFill.style.width = `${currentProgress}%`;
+
+        // Dynamic glow intensity
+        const glowIntensity = currentProgress / 100;
+        progressFill.style.boxShadow = `
+          0 0 ${10 + glowIntensity * 20}px ${glowColor},
+          inset 0 0 ${8 + glowIntensity * 12}px rgba(255, 255, 255, ${
+          glowIntensity * 0.2
+        })
+        `;
+      }
+
+      // Update border glow
+      const mainContainer = container.querySelector('.main-container');
+      if (mainContainer && pulseEffect) {
+        const glowIntensity = currentProgress / 100;
+        const pulseGlow = Math.sin(Date.now() * 0.004) * 0.3 + 0.7;
+        mainContainer.style.boxShadow = `
+          0 0 ${5 + glowIntensity * 15 * pulseGlow}px ${color},
+          inset 0 0 ${3 + glowIntensity * 8}px rgba(0, 255, 136, ${
+          glowIntensity * 0.1
+        })
+        `;
+      }
+
+      // Update energy lines
+      if (energyLines) {
+        const lines = container.querySelectorAll('.energy-line');
+        lines.forEach((line, index) => {
+          const delay = index * 0.3;
+          const flow = Math.sin(Date.now() * 0.005 + delay) * 0.5 + 0.5;
+          line.style.opacity = 0.2 + flow * 0.6;
+          line.style.transform = `translateX(${flow * 100 - 50}%)`;
+        });
+      }
+
+      if (indeterminate || pulseEffect || energyLines) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animate();
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [indeterminate, pulseEffect, energyLines, color, glowColor]);
+
+  // Update static progress when not indeterminate
+  useEffect(() => {
+    if (!indeterminate && containerRef.current) {
+      const progressFill = containerRef.current.querySelector('.progress-fill');
+      if (progressFill) {
+        progressFill.style.width = `${progress}%`;
+
+        const glowIntensity = progress / 100;
+        progressFill.style.boxShadow = `
+          0 0 ${10 + glowIntensity * 20}px ${glowColor},
+          inset 0 0 ${8 + glowIntensity * 12}px rgba(255, 255, 255, ${
+          glowIntensity * 0.2
+        })
+        `;
+      }
+    }
+  }, [progress, indeterminate, glowColor]);
+
+  return (
+    <Box className={`flat-scifi-progress ${className}`} ref={containerRef}>
+      <Box
+        className="main-container"
+        sx={{
+          width: `${width}px`,
+          height: `${height}px`,
+          background: backgroundColor,
+          border: `2px solid ${borderColor}`,
+          borderRadius: '8px',
+          position: 'relative',
+          overflow: 'hidden',
+          backdropFilter: 'blur(10px)',
+          transition: 'all 0.3s ease-out',
+        }}
+      >
+        {/* Grid Pattern Background */}
+        {gridPattern && (
+          <div
+            className="grid-pattern"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: `
+                linear-gradient(${color}22 1px, transparent 1px),
+                linear-gradient(90deg, ${color}22 1px, transparent 1px)
+              `,
+              backgroundSize: '20px 20px',
+              opacity: 0.3,
+            }}
+          />
+        )}
+
+        {/* Energy Lines */}
+        {energyLines && (
+          <>
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="energy-line"
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '1px',
+                  background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
+                  top: `${25 + i * 25}%`,
+                  left: 0,
+                  opacity: 0.3,
+                  transition: 'all 0.3s ease-out',
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Progress Fill */}
+        <div
+          className="progress-fill"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: `${indeterminate ? 50 : progress}%`,
+            background: `linear-gradient(90deg,
+              rgba(0, 255, 136, 0.8) 0%,
+              rgba(0, 255, 255, 0.6) 50%,
+              rgba(255, 255, 255, 0.4) 100%
+            )`,
+            boxShadow: `0 0 20px ${glowColor}`,
+            transition: indeterminate ? 'none' : 'width 0.3s ease-out',
+            borderRadius: '6px',
+          }}
+        />
+
+        {/* Corner Decorations */}
+        <div
+          className="corner-decoration top-left"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: '8px',
+            width: '12px',
+            height: '12px',
+            border: `1px solid ${color}`,
+            borderBottom: 'none',
+            borderRight: 'none',
+            opacity: 0.6,
+          }}
+        />
+        <div
+          className="corner-decoration top-right"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            right: '8px',
+            width: '12px',
+            height: '12px',
+            border: `1px solid ${color}`,
+            borderBottom: 'none',
+            borderLeft: 'none',
+            opacity: 0.6,
+          }}
+        />
+        <div
+          className="corner-decoration bottom-left"
+          style={{
+            position: 'absolute',
+            bottom: '8px',
+            left: '8px',
+            width: '12px',
+            height: '12px',
+            border: `1px solid ${color}`,
+            borderTop: 'none',
+            borderRight: 'none',
+            opacity: 0.6,
+          }}
+        />
+        <div
+          className="corner-decoration bottom-right"
+          style={{
+            position: 'absolute',
+            bottom: '8px',
+            right: '8px',
+            width: '12px',
+            height: '12px',
+            border: `1px solid ${color}`,
+            borderTop: 'none',
+            borderLeft: 'none',
+            opacity: 0.6,
+          }}
+        />
+
+        {/* Label */}
+        {showLabel && (
+          <div
+            className="progress-label"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '16px',
+              transform: 'translateY(-50%)',
+              color: color,
+              fontSize: `${Math.max(12, height * 0.15)}px`,
+              fontWeight: 'bold',
+              fontFamily: 'JetBrains Mono, monospace',
+              textShadow: `0 0 8px ${color}`,
+              opacity: 0.9,
+              zIndex: 10,
+            }}
+          >
+            {indeterminate ? 'LOADING...' : label}
+          </div>
+        )}
+
+        {/* Percentage */}
+        {showPercentage && (
+          <div
+            className="progress-percentage"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              right: '16px',
+              transform: 'translateY(-50%)',
+              color: color,
+              fontSize: `${Math.max(14, height * 0.2)}px`,
+              fontWeight: 'bold',
+              fontFamily: 'JetBrains Mono, monospace',
+              textShadow: `0 0 8px ${color}`,
+              zIndex: 10,
+            }}
+          >
+            {indeterminate ? '...' : `${Math.round(progress)}%`}
+          </div>
+        )}
+      </Box>
+    </Box>
+  );
+};

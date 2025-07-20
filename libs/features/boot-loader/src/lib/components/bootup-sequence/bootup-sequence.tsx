@@ -1,5 +1,5 @@
 'use client';
-import { Box } from '@mui/system';
+import { alignItems, Box, flexDirection, justifyContent } from '@mui/system';
 import { BootText } from '../boot-text';
 import { useCallback, useState } from 'react';
 import { GlitchText } from '@jc/ui-components';
@@ -41,30 +41,36 @@ export const BootUpSequence = ({ bootMessages }: BootUpSequenceProps) => {
           // padding: '40px',
           // backgroundColor: '#1a1a1a',
           minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          alignItems: 'center',
         }}
       >
         <Box sx={{ margin: '0 auto', textAlign: 'center', fontSize: '10rem' }}>
           <GlitchText
             variant="h6"
-            sx={{ textAlign: 'center', margin: ' auto' }}
+            sx={{ textAlign: 'center', margin: ' auto', fontSize: '200px' }}
           >
             CLYZBY_OS V.0.1
           </GlitchText>
         </Box>
-        <BootText
-          bootMessages={bootMessages}
-          typeSpeed={1.8}
-          lineDelay={1.2}
-          cursorChar="█"
-          scrambleChars={12}
-          scrambleDuration={0.6}
-          charDelay={0.05}
-          scrambleCharSet={scrambleCharacterSet}
-          hoverScrambleChars={8}
-          hoverScrambleDuration={0.5}
-          onProgress={handleProgress}
-          onComplete={handleBootComplete}
-        />
+        <Box sx={{ minWidth: '400px' }}>
+          <BootText
+            bootMessages={bootMessages}
+            typeSpeed={1.8}
+            lineDelay={1.2}
+            cursorChar="█"
+            scrambleChars={12}
+            scrambleDuration={0.6}
+            charDelay={0.05}
+            scrambleCharSet={scrambleCharacterSet}
+            hoverScrambleChars={8}
+            hoverScrambleDuration={0.5}
+            onProgress={handleProgress}
+            onComplete={handleBootComplete}
+          />
+        </Box>
 
         {/* BOOT PROGRESS */}
         {/* // TODO - Replace Progress Bar */}
