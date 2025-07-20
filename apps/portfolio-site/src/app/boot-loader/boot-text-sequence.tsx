@@ -6,9 +6,10 @@ import { TextPlugin } from 'gsap/TextPlugin';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import { Typography, Box } from '@mui/material';
+import { GlitchText } from '@jc/ui-components';
 
 // Example boot messages with hover functionality
-const bootMessages = [
+const bootMessages: BootMessage[] = [
   'Initializing system...',
   ['Loading kernel modules...', 'Injecting backdoor...'],
   'Starting network services...',
@@ -24,7 +25,7 @@ const bootMessages = [
 gsap.registerPlugin(useGSAP, TextPlugin);
 
 // Type definitions for boot messages
-type BootMessage = string | [string] | [string, string];
+type BootMessage = string | [string] | [string, string]; // [message, hidden message] || message
 
 interface BootTextProps {
   bootMessages: BootMessage[];
@@ -492,7 +493,9 @@ const BootTextInner: React.FC<BootTextProps> = ({
         backgroundColor: '#0a0a0a',
         color: '#00ff41',
         padding: '20px',
-        borderRadius: '8px',
+        maxWidth: '500px',
+        // borderRadius: '8px',
+        margin: '0 auto',
         border: '1px solid #333',
         minHeight: '200px',
         fontSize: '14px',
@@ -552,45 +555,48 @@ export const BootTextExample: React.FC = () => {
   }, []);
 
   return (
-    <div
+    <Box
       style={{
         padding: '40px',
         backgroundColor: '#1a1a1a',
         minHeight: '100vh',
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{
-          color: '#00ff41',
-          textAlign: 'center',
-          marginBottom: '20px',
-          fontFamily: '"JetBrains Mono", monospace',
-        }}
-      >
-        Boot Sequence Demo with Hover Messages
-      </Typography>
+      <Box sx={{ margin: '0 auto', textAlign: 'center' }}>
+        <GlitchText variant="h6" sx={{ textAlign: 'center', margin: '0 auto' }}>
+          CLYZBY_OS V.0.1
+        </GlitchText>
+      </Box>
+      <BootText
+        bootMessages={bootMessages}
+        typeSpeed={1.8}
+        lineDelay={1.2}
+        cursorChar="█"
+        scrambleChars={12}
+        scrambleDuration={0.6}
+        charDelay={0.05}
+        scrambleCharSet="!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        hoverScrambleChars={8}
+        hoverScrambleDuration={0.5}
+        onProgress={handleProgress}
+        onComplete={handleBootComplete}
+      />
 
       <Box
         sx={{
           textAlign: 'center',
-          marginBottom: '20px',
+          // marginBottom: '20px',
           fontFamily: '"JetBrains Mono", monospace',
           color: '#00ff41',
+          my: 2.5,
         }}
       >
         <Typography variant="body2">
           Progress: {progress.current}/{progress.total}
           {progress.message && ` - ${progress.message}`}
         </Typography>
-        <Typography
-          variant="body2"
-          sx={{ marginTop: '10px', color: '#ffff00' }}
-        >
-          Hover over lines to reveal hidden messages!
-        </Typography>
-        <div
-          style={{
+        <Box
+          sx={{
             width: '300px',
             height: '4px',
             backgroundColor: '#333',
@@ -611,7 +617,7 @@ export const BootTextExample: React.FC = () => {
               transition: 'width 0.3s ease',
             }}
           />
-        </div>
+        </Box>
         {isComplete && (
           <Typography
             variant="body2"
@@ -621,21 +627,6 @@ export const BootTextExample: React.FC = () => {
           </Typography>
         )}
       </Box>
-
-      <BootText
-        bootMessages={bootMessages}
-        typeSpeed={1.8}
-        lineDelay={1.2}
-        cursorChar="█"
-        scrambleChars={12}
-        scrambleDuration={0.6}
-        charDelay={0.05}
-        scrambleCharSet="!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        hoverScrambleChars={8}
-        hoverScrambleDuration={0.5}
-        onProgress={handleProgress}
-        onComplete={handleBootComplete}
-      />
-    </div>
+    </Box>
   );
 };

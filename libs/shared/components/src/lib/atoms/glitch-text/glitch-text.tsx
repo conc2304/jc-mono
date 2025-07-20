@@ -27,13 +27,12 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
   triggerOnHover = true,
   autoGlitch = false,
   autoGlitchInterval = 3000,
-  component,
-  variant,
+  ...typographyProps
 }) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLSpanElement>(null);
   const isGlitching = useRef<boolean>(false);
-
+  const sx = typographyProps.sx || {};
   useEffect(() => {
     const setupGlitchEffects = () => {
       const text = textRef.current;
@@ -314,8 +313,8 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
       }}
     >
       <Typography
-        component={component || 'span'}
-        variant={variant}
+        component={typographyProps.component || 'span'}
+        variant={typographyProps.variant}
         ref={textRef}
         sx={(theme) => ({
           position: 'relative',
@@ -334,6 +333,12 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
           '&:hover': {
             transform: 'scale(1.05)',
+          },
+
+          ...() => {
+            return typeof typographyProps.sx == 'function'
+              ? {}
+              : typographyProps.sx;
           },
         })}
       >

@@ -9,6 +9,9 @@
 	],
 	"settings": {
 		"typescript.tsdk": "node_modules/typescript/lib",
-		"nxConsole.generateAiAgentRules": true
+		"nxConsole.generateAiAgentRules": true,
+		"cSpell.words": [
+			"gsap"
+		]
 	}
 }
