@@ -1,49 +1,23 @@
 import { Box } from '@mui/system';
-import { TorusFieldLoading } from './torus-field';
-import { CyberpunkBootSequence } from './boot-sequence-full';
-import GSAPTextExamples, { GlitchText } from './temp';
-import { BootTextExample } from './boot-text-sequence';
+import { BootMessage, BootUpSequence } from '@jc/boot-loader';
+import { Typography } from '@mui/material';
+
+const bootMessages: BootMessage[] = [
+  'Initializing system...',
+  ['Loading kernel modules...', 'Injecting backdoor...'],
+  'Starting network services...',
+  ['Mounting file systems...', 'Accessing classified data...'],
+  'Starting user services...',
+  ['System boot complete.', 'Welcome, Agent Smith.'],
+  '',
+  'Welcome to Terminal OS v2.1.0',
+  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
+];
 
 export default function Index() {
   return (
     <Box>
-      <Box>
-        <Box
-          sx={{
-            opacity: 0.5,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1,
-          }}
-        >
-          {/* <CyberpunkBootSequence /> */}
-          {/* <GSAPTextExamples /> */}
-          {/* <Box
-            sx={{ position: 'relative', margin: '0 auto', textAlign: 'center' }}
-          >
-            <GlitchText intensity="low" variant="h1">
-              STUFF THAT HAS STUFF
-            </GlitchText>
-          </Box> */}
-          <BootTextExample />
-        </Box>
-        <Box
-          sx={{
-            opacity: 1,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 0,
-          }}
-        >
-          {/* <TorusFieldLoading /> */}
-        </Box>
-      </Box>
+      <BootUpSequence bootMessages={bootMessages} />8
     </Box>
   );
 }

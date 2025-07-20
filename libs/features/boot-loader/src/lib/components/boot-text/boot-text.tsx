@@ -5,27 +5,12 @@ import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
-import { Typography, Box } from '@mui/material';
-import { GlitchText } from '@jc/ui-components';
-
-// Example boot messages with hover functionality
-const bootMessages: BootMessage[] = [
-  'Initializing system...',
-  ['Loading kernel modules...', 'Injecting backdoor...'],
-  'Starting network services...',
-  ['Mounting file systems...', 'Accessing classified data...'],
-  'Starting user services...',
-  ['System boot complete.', 'Welcome, Agent Smith.'],
-  '',
-  'Welcome to Terminal OS v2.1.0',
-  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
-];
+import { Box } from '@mui/system';
+import { BootMessage } from '../../types';
+import { Property } from 'csstype';
 
 // Register plugins
 gsap.registerPlugin(useGSAP, TextPlugin);
-
-// Type definitions for boot messages
-type BootMessage = string | [string] | [string, string]; // [message, hidden message] || message
 
 interface BootTextProps {
   bootMessages: BootMessage[];
@@ -34,12 +19,16 @@ interface BootTextProps {
   typeSpeed?: number;
   lineDelay?: number;
   cursorChar?: string;
+  cursorAdjustment?: Partial<
+    Record<'top' | 'right' | 'bottom' | 'left', Property.MarginTop>
+  >;
   scrambleChars?: number;
   scrambleDuration?: number;
   charDelay?: number;
   scrambleCharSet?: string;
   hoverScrambleChars?: number; // Number of characters to cycle through on hover
   hoverScrambleDuration?: number; // Duration of scrambling on hover
+
   onComplete?: () => void;
   onProgress?: (current: number, total: number, message: string) => void;
 }
@@ -57,6 +46,10 @@ const BootTextInner: React.FC<BootTextProps> = ({
   scrambleCharSet = '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
   hoverScrambleChars = 6,
   hoverScrambleDuration = 0.4,
+  cursorAdjustment = {
+    left: '4px',
+    top: '-2px',
+  },
   onComplete,
   onProgress,
 }) => {
@@ -277,9 +270,12 @@ const BootTextInner: React.FC<BootTextProps> = ({
       const cursorElement = document.createElement('span');
       cursorElement.className = 'boot-cursor';
       cursorElement.textContent = cursorChar;
-      cursorElement.style.marginLeft = '4px';
-      cursorElement.style.color = '#00ff41';
-      cursorElement.style.marginTop = '-2px';
+      cursorElement.style.color = '#00ff41'; // TODO use theme colors
+
+      cursorElement.style.marginLeft = String(cursorAdjustment?.left ?? '');
+      cursorElement.style.marginTop = String(cursorAdjustment?.top ?? '');
+      cursorElement.style.marginBottom = String(cursorAdjustment?.bottom ?? '');
+      cursorElement.style.marginRight = String(cursorAdjustment?.right ?? '');
 
       // Cursor animation
       let cursor = gsap
@@ -485,6 +481,8 @@ const BootTextInner: React.FC<BootTextProps> = ({
   );
 
   return (
+    // TODO - THEMIFY thhese colors and style
+    // TODO - ADD Augmentations
     <Box
       ref={containerRef}
       className={`boot-text-container ${className}`}
@@ -532,101 +530,3 @@ const BootTextInner: React.FC<BootTextProps> = ({
 
 // Memoize the component to prevent unnecessary re-renders
 export const BootText = memo(BootTextInner);
-
-// Example usage component with progress tracking
-export const BootTextExample: React.FC = () => {
-  const [progress, setProgress] = React.useState({
-    current: 0,
-    total: 0,
-    message: '',
-  });
-  const [isComplete, setIsComplete] = React.useState(false);
-
-  const handleProgress = useCallback(
-    (current: number, total: number, message: string) => {
-      setProgress({ current, total, message });
-    },
-    []
-  );
-
-  const handleBootComplete = useCallback(() => {
-    setIsComplete(true);
-    console.log('Boot sequence complete!');
-  }, []);
-
-  return (
-    <Box
-      style={{
-        padding: '40px',
-        backgroundColor: '#1a1a1a',
-        minHeight: '100vh',
-      }}
-    >
-      <Box sx={{ margin: '0 auto', textAlign: 'center' }}>
-        <GlitchText variant="h6" sx={{ textAlign: 'center', margin: ' auto' }}>
-          CLYZBY_OS V.0.1
-        </GlitchText>
-      </Box>
-      <BootText
-        bootMessages={bootMessages}
-        typeSpeed={1.8}
-        lineDelay={1.2}
-        cursorChar="█"
-        scrambleChars={12}
-        scrambleDuration={0.6}
-        charDelay={0.05}
-        scrambleCharSet="!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        hoverScrambleChars={8}
-        hoverScrambleDuration={0.5}
-        onProgress={handleProgress}
-        onComplete={handleBootComplete}
-      />
-
-      <Box
-        sx={{
-          textAlign: 'center',
-          // marginBottom: '20px',
-          fontFamily: '"JetBrains Mono", monospace',
-          color: '#00ff41',
-          my: 2.5,
-        }}
-      >
-        <Typography variant="body2">
-          Progress: {progress.current}/{progress.total}
-          {progress.message && ` - ${progress.message}`}
-        </Typography>
-        <Box
-          sx={{
-            width: '300px',
-            height: '4px',
-            backgroundColor: '#333',
-            margin: '10px auto',
-            borderRadius: '2px',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              width: `${
-                progress.total > 0
-                  ? (progress.current / progress.total) * 100
-                  : 0
-              }%`,
-              height: '100%',
-              backgroundColor: '#00ff41',
-              transition: 'width 0.3s ease',
-            }}
-          />
-        </Box>
-        {isComplete && (
-          <Typography
-            variant="body2"
-            sx={{ color: '#ffff00', marginTop: '10px' }}
-          >
-            ✓ Boot Complete!
-          </Typography>
-        )}
-      </Box>
-    </Box>
-  );
-};

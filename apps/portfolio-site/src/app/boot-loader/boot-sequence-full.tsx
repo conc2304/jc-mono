@@ -63,7 +63,7 @@ const GridBackground = styled(Box)({
     linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px)
   `,
   backgroundSize: '50px 50px',
-  // animation: `${gridPulse} 4s ease-in-out infinite`,
+  animation: `${gridPulse} 4s ease-in-out infinite`,
 });
 
 const MainTitle = styled(Typography)(({ theme }) => ({

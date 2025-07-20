@@ -1,1 +1,1 @@
-export * from './lib/boot-loader';
+export * from './lib';
