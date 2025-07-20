@@ -26,6 +26,9 @@
     },
     {
       "path": "./libs/features/desktop-OS"
+    },
+    {
+      "path": "./libs/features/boot-loader"
     }
   ]
 }
