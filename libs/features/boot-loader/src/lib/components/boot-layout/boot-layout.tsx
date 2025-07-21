@@ -202,7 +202,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                           theme.palette.info[theme.palette.getInvertedMode()],
                         torusColor: theme.palette.primary.main,
                         particleColor: theme.palette.info.main,
-                        // verticalLineColor: 0xff0000,
                         verticalLineColor: theme.palette.warning.main,
                       }}
                     />
