@@ -216,7 +216,7 @@ export const TorusFieldProgress = ({
     mouseRef.current.clickIntensity = 1.0;
 
     // Progress boost on click
-    setProgress((prev) => Math.min(100, prev + 10));
+    setProgress((prev) => Math.min(100, prev + 2));
   }, []);
 
   const handleMouseUp = useCallback(() => {
