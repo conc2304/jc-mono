@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
-import { useEffect, useState, useRef, ReactNode } from 'react';
+import { useEffect, useState, useRef, ReactNode, useMemo } from 'react';
 import set from 'lodash.set';
 import { useResizeObserver } from './use-resize-observer';
 import { Property } from 'csstype';
 import { wrap } from '../utils';
-import { Box } from '@mui/system';
+
 // Generic radar data types
 export type RadarDataEntry = {
   axis: string;
@@ -18,8 +18,15 @@ export type RadarDataEntry = {
         }
   ) => string;
 };
+export type MetricGroup = RadarDataEntry[];
+export type RadarData = MetricGroup[];
 
-export type RadarData = Array<RadarDataEntry[]>;
+// Transition configuration
+export type TransitionConfig = {
+  duration?: number; // Transition duration in milliseconds
+  ease?: (timeStep: number) => number; // D3 easing function
+  enabled?: boolean; // Whether transitions are enabled
+};
 
 type Props = {
   data?: RadarData;
@@ -44,6 +51,7 @@ type Props = {
     accent?: Property.Color;
     series?: Property.Color[];
   };
+  transitionConfig?: TransitionConfig; // NEW: Transition configuration
 };
 
 export const RadarChart = ({
@@ -64,6 +72,7 @@ export const RadarChart = ({
   title,
   maxTopGroups = 3,
   colors = {},
+  transitionConfig = {}, // NEW: Default empty transition config
 }: Props) => {
   const svgRef = useRef<SVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -83,6 +92,21 @@ export const RadarChart = ({
   };
   const colorScheme = { ...defaultColors, ...colors };
 
+  // Default transition configuration
+
+  const transitionSettings = useMemo(() => {
+    const defaultTransitionConfig: Required<TransitionConfig> = {
+      duration: 50,
+      ease: d3.easeQuadInOut,
+      enabled: true,
+    };
+    return { ...defaultTransitionConfig, ...transitionConfig };
+  }, [
+    transitionConfig?.duration,
+    transitionConfig?.enabled,
+    transitionConfig?.ease,
+  ]);
+
   useEffect(() => {
     // if we dont have data yet dont render
     if (!data || !data.length || !data[0].length) return;
@@ -93,7 +117,6 @@ export const RadarChart = ({
     const { width: svgWidth, height: svgHeight } =
       wrapperRef.current.getBoundingClientRect();
 
-    console.log({ dimensions });
     const innerWidth = svgWidth - marg.left - marg.right;
     const innerHeight = svgHeight - marg.top - marg.bottom;
     setInnerDimensions({ w: innerWidth, h: innerHeight });
@@ -263,10 +286,6 @@ export const RadarChart = ({
       .attr('class', 'radar-wrapper')
       .attr('transform', `translate(${svgWidth / 2}, ${svgHeight / 2})`);
 
-    radarWrapper.selectAll('.radar-area').remove();
-    radarWrapper.selectAll('.radar-circle').remove();
-    radarWrapper.selectAll('.radar-stroke').remove();
-
     // Helper function to get group name from data entry
     const getGroupName = (d: RadarDataEntry[]) => d[0].metricGroupName || '';
 
@@ -274,33 +293,43 @@ export const RadarChart = ({
     const isGroupSelected = (groupName: string) =>
       selectedGroup && selectedGroup.toLowerCase() === groupName.toLowerCase();
 
-    // background of area
-    radarWrapper
+    // Helper function to create transition
+    const createTransition = (selection: any) => {
+      if (transitionSettings.enabled) {
+        return selection
+          .transition()
+          .duration(transitionSettings.duration)
+          .ease(transitionSettings.ease);
+      }
+      return selection;
+    };
+
+    // PROPER D3 ENTER/UPDATE/EXIT PATTERN: background of area
+    const radarAreas = radarWrapper.selectAll('.radar-area').data(
+      (d) => [d],
+      (d) => getGroupName(d)
+    ); // Use group name as key
+
+    // Merge enter and update selections for common operations
+    radarAreas
+      .enter()
       .append('path')
       .attr('class', 'radar-area')
-      // @ts-ignore
-      .merge(radarWrapper)
-      // @ts-ignore
-      .attr('d', radarLineGenerator)
-      .style('fill', (d) => {
-        const groupName = getGroupName(d);
-        return isGroupSelected(groupName)
-          ? colorScheme.accent
-          : colorScale.current
-          ? (colorScale.current(groupName) as string)
-          : 'orange';
-      })
-      .style('fill-opacity', opacityArea)
+      .style('fill-opacity', 0) // Start invisible for enter transition
+      .merge(radarAreas) // Merge with existing elements
       .on('mouseover', function (event: MouseEvent, d) {
         if (!tooltip) return;
 
         //Dim all blobs
         d3.selectAll('.radar-area')
           .transition()
-          .duration(200)
+          .duration(transitionSettings.duration)
           .style('fill-opacity', 0.1);
         //Bring back the hovered over blob
-        d3.select(this).transition().duration(200).style('fill-opacity', 0.5);
+        d3.select(this)
+          .transition()
+          .duration(transitionSettings.duration)
+          .style('fill-opacity', 0.5);
 
         // prep the tooltip
         const groupName = getGroupName(d);
@@ -320,63 +349,117 @@ export const RadarChart = ({
 
         d3.selectAll('.radar-area')
           .transition()
-          .duration(200)
+          .duration(transitionSettings.duration)
           .style('fill-opacity', opacityArea);
         tooltip.classList.remove('active');
-      });
+      })
+      .call((selection) =>
+        createTransition(selection)
+          .attr('d', radarLineGenerator)
+          .style('fill', (d) => {
+            const groupName = getGroupName(d);
+            return isGroupSelected(groupName)
+              ? colorScheme.accent
+              : colorScale.current
+              ? (colorScale.current(groupName) as string)
+              : 'orange';
+          })
+          .style('fill-opacity', opacityArea)
+      );
 
-    //  add outline of shape
-    radarWrapper
+    // Remove exiting areas
+    radarAreas
+      .exit()
+      .call((selection) =>
+        createTransition(selection).style('fill-opacity', 0).remove()
+      );
+
+    // PROPER D3 ENTER/UPDATE/EXIT PATTERN: add outline of shape
+    const radarStrokes = radarWrapper.selectAll('.radar-stroke').data(
+      (d) => [d],
+      (d) => getGroupName(d)
+    ); // Use group name as key
+
+    // Merge enter and update selections
+    radarStrokes
+      .enter()
       .append('path')
       .attr('class', 'radar-stroke')
-      // @ts-ignore
-      .merge(radarWrapper)
-      // @ts-ignore
-      .attr('d', radarLineGenerator)
-      .style('stroke-width', strokeWidth + 'px')
-      .style('stroke', (d) => {
-        const groupName = getGroupName(d);
-        return isGroupSelected(groupName)
-          ? colorScheme.accent
-          : colorScale.current
-          ? (colorScale.current(groupName) as string)
-          : 'orange';
-      })
-      .style('fill', 'none')
-      .style('filter', 'url(#glow)');
+      .style('stroke-opacity', 0) // Start invisible for enter transition
+      .merge(radarStrokes) // Merge with existing elements
+      .call((selection) =>
+        createTransition(selection)
+          .attr('d', radarLineGenerator)
+          .style('stroke-width', strokeWidth + 'px')
+          .style('stroke', (d) => {
+            const groupName = getGroupName(d);
+            return isGroupSelected(groupName)
+              ? colorScheme.accent
+              : colorScale.current
+              ? (colorScale.current(groupName) as string)
+              : 'orange';
+          })
+          .style('fill', 'none')
+          .style('filter', 'url(#glow)')
+          .style('stroke-opacity', 1)
+      );
 
-    // add the data points
-    radarWrapper
-      .selectAll('.radar-circle')
-      .data((d) => d)
+    // Remove exiting strokes
+    radarStrokes
+      .exit()
+      .call((selection) =>
+        createTransition(selection).style('stroke-opacity', 0).remove()
+      );
+
+    // PROPER D3 ENTER/UPDATE/EXIT PATTERN: add the data points
+    const radarCircles = radarWrapper.selectAll('.radar-circle').data(
+      (d) => d,
+      (d: any) => `${getGroupName([d])}-${d.axis}`
+    ); // Use composite key
+
+    // Merge enter and update selections
+    radarCircles
       .enter()
       .append('circle')
       .attr('class', 'radar-circle')
-      //  @ts-ignore
-      .merge(radarWrapper)
-      .attr('r', dotRadius)
-      .attr('cx', (d: { axis: string; value: number }, i: number) => {
-        const axisName = d.axis;
-        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
-        return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
-      })
-      .attr('cy', function (d, i) {
-        const axisName = d.axis;
-        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
-        return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
-      })
-      .style('fill', (d) => {
-        const groupName = d.metricGroupName || '';
-        return isGroupSelected(groupName)
-          ? colorScheme.accent
-          : colorScale.current
-          ? (colorScale.current(groupName) as string)
-          : 'orange';
-      })
-      .style('fill-opacity', 0.8);
+      .attr('r', 0) // Start with radius 0 for enter transition
+      .style('fill-opacity', 0) // Start invisible
+      .merge(radarCircles) // Merge with existing elements
+      .call((selection) =>
+        createTransition(selection)
+          .attr('r', dotRadius)
+          .attr('cx', (d: { axis: string; value: number }, i: number) => {
+            const axisName = d.axis;
+            const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+            return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
+          })
+          .attr('cy', function (d, i) {
+            const axisName = d.axis;
+            const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+            return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
+          })
+          .style('fill', (d) => {
+            const groupName = d.metricGroupName || '';
+            return isGroupSelected(groupName)
+              ? colorScheme.accent
+              : colorScale.current
+              ? (colorScale.current(groupName) as string)
+              : 'orange';
+          })
+          .style('fill-opacity', 0.8)
+      );
 
-    // Radar tooltip
+    // Remove exiting circles
+    radarCircles
+      .exit()
+      .call((selection) =>
+        createTransition(selection)
+          .attr('r', 0)
+          .style('fill-opacity', 0)
+          .remove()
+      );
 
+    // PROPER D3 ENTER/UPDATE/EXIT PATTERN: Radar tooltip (invisible circles)
     const circleWrapper = svgContent
       .selectAll('.circle-wrapper')
       .data(data)
@@ -384,24 +467,20 @@ export const RadarChart = ({
       .attr('class', 'circle-wrapper')
       .attr('transform', `translate(${svgWidth / 2}, ${svgHeight / 2})`);
 
-    circleWrapper
-      .selectAll('.invisible-circle')
-      .data((d) => d)
-      .join('circle')
+    const invisibleCircles = circleWrapper.selectAll('.invisible-circle').data(
+      (d) => d,
+      (d: any) => `${d.metricGroupName}-${d.axis}`
+    ); // Use composite key
+
+    // Merge enter and update selections
+    invisibleCircles
+      .enter()
+      .append('circle')
       .attr('class', 'invisible-circle')
       .attr('r', dotRadius * 1.5)
-      .attr('cx', (d: { axis: string; value: number }, i: number) => {
-        const axisName = d.axis;
-        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
-        return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
-      })
-      .attr('cy', function (d, i) {
-        const axisName = d.axis;
-        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
-        return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
-      })
       .attr('fill', 'none')
       .style('pointer-events', 'all')
+      .merge(invisibleCircles) // Merge with existing elements
       .on('mouseover', function (event, d) {
         if (!tooltip) return;
 
@@ -423,8 +502,31 @@ export const RadarChart = ({
         if (!tooltip) return;
 
         tooltip.classList.remove('active');
-      });
-  }, [data, selectedGroup, maxTopGroups, wrapperRef, dimensions]);
+      })
+      .call((selection) =>
+        createTransition(selection)
+          .attr('cx', (d: { axis: string; value: number }, i: number) => {
+            const axisName = d.axis;
+            const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+            return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
+          })
+          .attr('cy', function (d, i) {
+            const axisName = d.axis;
+            const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+            return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
+          })
+      );
+
+    // Remove exiting invisible circles
+    invisibleCircles.exit().remove();
+  }, [
+    data,
+    selectedGroup,
+    maxTopGroups,
+    wrapperRef,
+    dimensions,
+    transitionSettings,
+  ]);
 
   function backgroundAreaTooltip(groupName: string, data: RadarDataEntry[]) {
     const lineItem = (entry: RadarDataEntry) => `
@@ -478,28 +580,7 @@ export const RadarChart = ({
             <g className="axis-grid" />
           </g>
         </svg>
-        <Box
-          ref={tooltipRef}
-          className="tooltip-ui"
-          sx={{
-            position: 'absolute',
-            backgroundColor: '#000',
-            // border-radius: 8px;
-            // border: 0.5px solid $color-ui-primary;
-            zIndex: 1000,
-            boxShadow: '0px 0px 10px 2px rgb(66 168 162 / 65%)',
-            padding: '2px 8px',
-
-            display: 'none',
-            opacity: 0,
-            transition: 'opacity 300ms ease-in, display 0s 100ms',
-
-            '&.active': {
-              display: 'block',
-              opacity: 1,
-            },
-          }}
-        ></Box>
+        {/* <div ref={tooltipRef} className="tooltip-ui"></div> */}
       </div>
     </div>
   );

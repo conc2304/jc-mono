@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, Grid, useTheme } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Grid,
+  useTheme,
+  lighten,
+  darken,
+} from '@mui/material';
 import { Warning, RadioButtonChecked, Home } from '@mui/icons-material';
 import { TorusFieldProgressMemo } from '../torus-field-progress';
 import { BootText } from '../boot-text';
@@ -41,6 +48,12 @@ import {
   RadarData,
 } from '../radar-chart-widget/radar-chart-widget';
 import { Key } from 'lucide-react';
+import {
+  AnimatedRadarChart,
+  RadarChartExample,
+} from '../radar-chart-widget/animated-radar';
+import { map, range } from 'd3';
+import { remap } from '../utils';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -60,6 +73,16 @@ const scrambleCharacterSet =
 interface SciFiLayoutProps {
   className?: string;
 }
+
+const sampleData: RadarData = [
+  [
+    { axis: 'Performance', value: 80, metricGroupName: 'Team A' },
+    { axis: 'Quality', value: 90, metricGroupName: 'Team A' },
+    { axis: 'Innovation', value: 70, metricGroupName: 'Team A' },
+    { axis: 'Collaboration', value: 85, metricGroupName: 'Team A' },
+    { axis: 'Delivery', value: 75, metricGroupName: 'Team A' },
+  ],
+];
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
   const theme = useTheme();
@@ -101,31 +124,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
   //   return () => clearInterval(interval);
   // }, []);
 
-  const performanceData: RadarData = [
-    [
-      {
-        axis: 'Sales',
-        value: 85,
-        metricGroupName: 'Team A',
-        formatFn: (v: number | { valueOf(): number }) => `${v}%`,
-      },
-      {
-        axis: 'Quality',
-        value: 92,
-        metricGroupName: 'Team A',
-        formatFn: (v: number | { valueOf(): number }) => `${v}%`,
-      },
-      {
-        axis: 'Banana',
-        value: 22,
-        metricGroupName: 'Team A',
-        formatFn: (v: number | { valueOf(): number }) => `${v}%`,
-      },
-      // ... more metrics
-    ],
-    // ... more teams/groups
-  ];
-
   return (
     <BootContainer className={className}>
       <BrowserFrame elevation={0}>
@@ -152,26 +150,38 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Crosshair Display */}
                 <CrosshairDisplay>
-                  {/* // TODO  - FILL THIS IN WITH A WIDGET */}
-                  <RadarChart
-                    id="performance-radar"
-                    data={performanceData}
-                    areValuesNormalized={false}
-                    lineType="curved"
+                  <AnimatedRadarChart
+                    id="animated-radar"
+                    data={sampleData}
+                    animationConfig={{
+                      animationSpeed: 1500,
+                      numTrails: 5,
+                      trailOffset: 400.0,
+                      noiseScale: 1,
+                      trailIntensity: 1,
+                      enableAnimation: true,
+                    }}
+                    levels={5}
                     labelFactor={1.3}
-                    wrapWidth={80}
-                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                    // selectedGroup={selectedTeam}
+                    opacityArea={0.2}
+                    strokeWidth={2}
+                    dotRadius={5}
+                    lineType="curved"
                     colors={{
                       primary: theme.palette.primary.main,
                       accent: theme.palette.warning.main,
-                      series: Object.entries(theme.palette.primary)
-                        .filter(([key, value]) => key !== 'contrastText')
-                        .map(([_, value]) => value),
+                      series: new Array(5).fill('').map((_, i) => {
+                        const fn =
+                          theme.palette.mode === 'light' ? darken : lighten;
+                        return fn(
+                          theme.palette.primary.main,
+                          remap(i, 0, 5, 0.5, 0)
+                        );
+                      }),
                     }}
-                    maxTopGroups={5}
-                    // title="Performance Metrics"
+                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                   />
+                  {/* <RadarChartExample /> */}
                 </CrosshairDisplay>
 
                 {/* Control Panel */}
