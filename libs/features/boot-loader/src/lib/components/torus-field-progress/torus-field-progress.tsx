@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useRef, useEffect, useMemo, memo } from 'react';
+import { useRef, useEffect, useMemo, memo, useState, useCallback } from 'react';
 import * as THREE from 'three';
 
 type SceneElements =
@@ -49,18 +49,17 @@ interface TorusFieldProgressProps {
   colors?: ColorScheme;
 }
 
+interface MouseInteraction {
+  normalized: THREE.Vector2; // -1 to 1 range
+  world3D: THREE.Vector3; // Projected 3D world position
+  isDown: boolean;
+  clickIntensity: number; // 0-1, fades over time
+  distanceFromCenter: number; // 0-1
+}
+
 /**
  * Universal color converter that handles multiple input formats
  * and returns a THREE.Color instance
- *
- * Supported formats:
- * - Hex strings: "#ff0000", "#f00", "ff0000", "f00"
- * - RGB strings: "rgb(255, 0, 0)", "rgba(255, 0, 0, 1)"
- * - HSL strings: "hsl(0, 100%, 50%)"
- * - CSS color names: "red", "blue", "green"
- * - Hex numbers: 0xff0000
- * - RGB objects: { r: 1, g: 0, b: 0 } (0-1 range) or { r: 255, g: 0, b: 0 } (0-255 range)
- * - THREE.Color instances: passed through
  */
 const convertToThreeColor = (color: ColorValue): THREE.Color => {
   if (color instanceof THREE.Color) {
@@ -125,9 +124,12 @@ const createColorVariations = (baseColor: THREE.Color) => {
 };
 
 export const TorusFieldProgress = ({
-  progress = 0, // 0-100
+  progress: initialProgress = 0, // 0-100
   colors = {},
 }: TorusFieldProgressProps) => {
+  const [progress, setProgress] = useState(initialProgress);
+  const [mouseDistance, setMouseDistance] = useState(0);
+  const [clickIntensity, setClickIntensity] = useState(0);
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene>(null);
   const rendererRef = useRef<THREE.WebGLRenderer>(null);
@@ -136,6 +138,21 @@ export const TorusFieldProgress = ({
   const particlesRef = useRef<Particle3JS[]>([]);
   const energyBeamRef = useRef<THREE.Group>(null);
   const animationRef = useRef<number>(null);
+
+  // Mouse interaction state
+  const mouseRef = useRef<MouseInteraction>({
+    normalized: new THREE.Vector2(0, 0),
+    world3D: new THREE.Vector3(0, 0, 0),
+    isDown: false,
+    clickIntensity: 0,
+    distanceFromCenter: 0,
+  });
+
+  // Raycaster for 3D mouse projection
+  const raycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
+  const mousePlaneRef = useRef<THREE.Plane>(
+    new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
+  );
 
   // Default colors using various formats to demonstrate flexibility
   const defaultColors: ColorScheme = {
@@ -164,6 +181,52 @@ export const TorusFieldProgress = ({
 
   // Convert 0-100 to 0-1
   const normalizedProgress = Math.max(0, Math.min(100, progress)) / 100;
+
+  // Mouse event handlers
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    if (!mountRef.current) return;
+
+    const rect = mountRef.current.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    mouseRef.current.normalized.set(x, y);
+    mouseRef.current.distanceFromCenter = Math.min(
+      1,
+      mouseRef.current.normalized.length()
+    );
+
+    // Project mouse to 3D world space
+    if (cameraRef.current) {
+      raycasterRef.current.setFromCamera(
+        mouseRef.current.normalized,
+        cameraRef.current
+      );
+      const intersection = new THREE.Vector3();
+      raycasterRef.current.ray.intersectPlane(
+        mousePlaneRef.current,
+        intersection
+      );
+      mouseRef.current.world3D.copy(intersection);
+    }
+  }, []);
+
+  const handleMouseDown = useCallback((event: MouseEvent) => {
+    mouseRef.current.isDown = true;
+    mouseRef.current.clickIntensity = 1.0;
+
+    // Progress boost on click
+    setProgress((prev) => Math.min(100, prev + 10));
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    mouseRef.current.isDown = false;
+  }, []);
+
+  // Update progress when initialProgress prop changes
+  useEffect(() => {
+    setProgress(initialProgress);
+  }, [initialProgress]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -195,6 +258,13 @@ export const TorusFieldProgress = ({
     renderer.setClearColor(processedColors.background);
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
+
+    // Add mouse event listeners
+    const canvas = renderer.domElement;
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('mouseleave', handleMouseUp);
 
     // Clear arrays
     torusRingsRef.current = [];
@@ -251,6 +321,7 @@ export const TorusFieldProgress = ({
 
         torus.userData = {
           originalY: torus.position.y,
+          originalScale: new THREE.Vector3(1, 1, 1),
           index: i,
           radius: radius,
           baseOpacity: 0.6 - i * 0.03,
@@ -264,15 +335,16 @@ export const TorusFieldProgress = ({
         torusRingsRef.current.push(torus);
       }
 
-      // Vertical connecting lines
+      // Vertical connecting lines with more segments for warping
       const verticalLineCount = 32;
       for (let i = 0; i < verticalLineCount; i++) {
         const angle = (i / verticalLineCount) * Math.PI * 2;
         const radius = 8;
 
         const points = [];
-        for (let j = 0; j < 20; j++) {
-          const y = (j - 10) * 0.6;
+        const segmentCount = 40; // More segments for smoother warping
+        for (let j = 0; j < segmentCount; j++) {
+          const y = (j / (segmentCount - 1) - 0.5) * 12;
           const currentRadius = radius * (1 - Math.abs(y) * 0.02);
           points.push(
             new THREE.Vector3(
@@ -299,6 +371,7 @@ export const TorusFieldProgress = ({
           baseColor: processedColors.verticalLine.base.clone(),
           brightColor: processedColors.verticalLine.bright.clone(),
           dimColor: processedColors.verticalLine.dim.clone(),
+          originalPoints: points.map((p) => p.clone()),
         };
         scene.add(line);
         torusRingsRef.current.push(line);
@@ -352,14 +425,15 @@ export const TorusFieldProgress = ({
       energyBeamRef.current = beamGroup;
     };
 
-    // Create particle field
+    // Create particle field with more particles for better interactions
     const createParticleField = () => {
-      const particleCount = 1000;
+      const particleCount = 1500;
       const particleGeometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
       const sizes = new Float32Array(particleCount);
       const originalColors = new Float32Array(particleCount * 3);
+      const originalPositions = new Float32Array(particleCount * 3);
 
       const baseParticleColor = processedColors.particle.base;
 
@@ -369,9 +443,18 @@ export const TorusFieldProgress = ({
         const radius = 2 + Math.random() * 15;
         const height = (Math.random() - 0.5) * 15;
 
-        positions[i * 3] = Math.cos(angle) * radius;
-        positions[i * 3 + 1] = height;
-        positions[i * 3 + 2] = Math.sin(angle) * radius;
+        const x = Math.cos(angle) * radius;
+        const y = height;
+        const z = Math.sin(angle) * radius;
+
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        // Store original positions
+        originalPositions[i * 3] = x;
+        originalPositions[i * 3 + 1] = y;
+        originalPositions[i * 3 + 2] = z;
 
         // Color variation - slight variations of base particle color
         const color = baseParticleColor.clone();
@@ -412,7 +495,11 @@ export const TorusFieldProgress = ({
       });
 
       const particles = new THREE.Points(particleGeometry, particleMaterial);
-      particles.userData = { originalColors, baseOpacity: 0.7 };
+      particles.userData = {
+        originalColors,
+        originalPositions,
+        baseOpacity: 0.7,
+      };
       scene.add(particles);
       particlesRef.current.push(particles);
     };
@@ -440,6 +527,10 @@ export const TorusFieldProgress = ({
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      canvas.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener('mouseleave', handleMouseUp);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -448,7 +539,7 @@ export const TorusFieldProgress = ({
       }
       renderer.dispose();
     };
-  }, [processedColors]); // React to color changes
+  }, [processedColors, handleMouseMove, handleMouseDown, handleMouseUp]);
 
   useEffect(() => {
     // Update existing elements when colors change
@@ -496,7 +587,7 @@ export const TorusFieldProgress = ({
     }
   }, [processedColors]);
 
-  // Animation loop with progress updates
+  // Main animation loop with all mouse interactions
   useEffect(() => {
     if (!sceneRef.current || !rendererRef.current || !cameraRef.current) return;
 
@@ -506,114 +597,315 @@ export const TorusFieldProgress = ({
       const time = Date.now() * 0.001;
       const totalElements = torusRingsRef.current.length;
       const progressThreshold = normalizedProgress * totalElements;
+      const mouse = mouseRef.current;
 
-      // Animate torus rings based on progress
+      // Decay click intensity
+      mouse.clickIntensity = Math.max(0, mouse.clickIntensity - 0.02);
+
+      // Update UI state with current mouse metrics (throttled for performance)
+      if (Math.floor(time * 10) % 2 === 0) {
+        // Update every ~200ms
+        setMouseDistance(Math.round(mouse.distanceFromCenter * 100));
+        setClickIntensity(Math.round(mouse.clickIntensity * 100));
+      }
+
+      // Camera control based on mouse movement
+      if (cameraRef.current) {
+        const baseRadius = 20;
+        const mouseCameraInfluence = 0.3;
+        const autoRotation = time * 0.1;
+        const mouseInfluence = mouse.normalized
+          .clone()
+          .multiplyScalar(mouseCameraInfluence);
+
+        cameraRef.current.position.x =
+          Math.cos(autoRotation + mouseInfluence.x) *
+          (baseRadius + mouse.distanceFromCenter * 5);
+        cameraRef.current.position.z =
+          Math.sin(autoRotation + mouseInfluence.x) *
+          (baseRadius + mouse.distanceFromCenter * 5);
+        cameraRef.current.position.y =
+          8 + Math.sin(time * 0.15) * 3 + mouseInfluence.y * 10;
+
+        // Look-at target influenced by mouse
+        const lookAtTarget = new THREE.Vector3(
+          mouseInfluence.x * 5,
+          mouseInfluence.y * 5,
+          0
+        );
+        cameraRef.current.lookAt(lookAtTarget);
+      }
+
+      // Color shifting based on mouse position
+      const hueShift = mouse.normalized.x * 0.1 + mouse.normalized.y * 0.05;
+      const colorIntensity =
+        1 + mouse.distanceFromCenter * 0.5 + mouse.clickIntensity * 0.5;
+
+      // Animate torus rings with mouse interactions
       torusRingsRef.current.forEach((element, index) => {
         const isActivated = index < progressThreshold;
-        const activationIntensity = isActivated ? 1 : 0.3;
+        const baseActivationIntensity = isActivated ? 1 : 0.3;
 
         if (element.userData.type === 'verticalLine') {
-          // Animate vertical lines
+          // Vertical line warping based on mouse position
+          const positions = element.geometry.attributes.position;
+          const originalPoints = element.userData.originalPoints;
+
+          for (let i = 0; i < originalPoints.length; i++) {
+            const originalPoint = originalPoints[i];
+            const distance = originalPoint.distanceTo(mouse.world3D);
+            const warpInfluence = Math.max(0, 1 - distance / 15); // Influence radius
+            const warpStrength = warpInfluence * (2 + mouse.clickIntensity * 3);
+
+            // Direction from original point to mouse
+            const direction = new THREE.Vector3()
+              .subVectors(mouse.world3D, originalPoint)
+              .normalize()
+              .multiplyScalar(warpStrength * 0.5);
+
+            const newPosition = originalPoint.clone().add(direction);
+            positions.array[i * 3] = newPosition.x;
+            positions.array[i * 3 + 1] = newPosition.y;
+            positions.array[i * 3 + 2] = newPosition.z;
+          }
+          positions.needsUpdate = true;
+
+          // Animate vertical lines with proximity effects
           const intensity =
             Math.sin(time * 2 + element.userData.angle * 2) * 0.5 + 0.5;
-          element.material.opacity =
-            element.userData.baseOpacity *
-            (0.3 + intensity * 0.7) *
-            activationIntensity;
+          const lineDistance = Math.abs(
+            element.userData.angle -
+              Math.atan2(mouse.world3D.z, mouse.world3D.x)
+          );
+          const proximityBoost =
+            Math.max(0, 1 - lineDistance / Math.PI) *
+            mouse.distanceFromCenter *
+            2;
 
-          if (isActivated) {
+          const finalIntensity =
+            baseActivationIntensity * (0.3 + intensity * 0.7 + proximityBoost);
+          element.material.opacity =
+            element.userData.baseOpacity * finalIntensity;
+
+          // Color and brightness based on mouse proximity
+          if (proximityBoost > 0.3) {
+            element.material.color
+              .copy(element.userData.brightColor)
+              .multiplyScalar(colorIntensity);
+          } else if (isActivated) {
             element.material.color.copy(element.userData.brightColor);
-            element.material.opacity *= 1.5;
           } else {
             element.material.color.copy(element.userData.dimColor);
           }
         } else if (element.userData.type === 'torus') {
-          // Animate horizontal torus rings
-          element.rotation.z = time * 0.5 + element.userData.index * 0.2;
+          // Torus ring scaling and effects based on mouse proximity
+          const ringWorldPos = new THREE.Vector3();
+          element.getWorldPosition(ringWorldPos);
+          const distanceToMouse = ringWorldPos.distanceTo(mouse.world3D);
+          const proximityInfluence = Math.max(0, 1 - distanceToMouse / 12);
 
-          // Pulsing effect
+          // Enhanced rotation
+          element.rotation.z =
+            time * 0.5 +
+            element.userData.index * 0.2 +
+            mouse.normalized.x * 0.3;
+
+          // Pulsing effect with mouse influence
           const pulseIntensity =
             Math.sin(time * 3 + element.userData.index * 0.5) * 0.3 + 0.7;
+          const mouseBoost =
+            proximityInfluence * (1 + mouse.clickIntensity * 2);
           element.material.opacity =
-            element.userData.baseOpacity * pulseIntensity * activationIntensity;
+            element.userData.baseOpacity *
+            pulseIntensity *
+            (baseActivationIntensity + mouseBoost);
 
-          // Floating motion
+          // Floating motion with mouse influence
           element.position.y =
             element.userData.originalY +
-            Math.sin(time * 2 + element.userData.index * 0.8) * 0.2;
+            Math.sin(time * 2 + element.userData.index * 0.8) * 0.2 +
+            mouse.normalized.y * proximityInfluence * 2;
 
-          if (isActivated) {
-            element.material.color.copy(element.userData.brightColor);
-            element.scale.setScalar(
-              1 + Math.sin(time * 4 + element.userData.index * 0.3) * 0.1
+          // Scaling based on mouse proximity
+          const scaleMultiplier =
+            1 + proximityInfluence * (0.3 + mouse.clickIntensity * 0.5);
+          element.scale
+            .copy(element.userData.originalScale)
+            .multiplyScalar(
+              scaleMultiplier +
+                Math.sin(time * 4 + element.userData.index * 0.3) * 0.05
             );
+
+          // Color effects
+          if (proximityInfluence > 0.2) {
+            element.material.color
+              .copy(element.userData.brightColor)
+              .multiplyScalar(colorIntensity);
+          } else if (isActivated) {
+            element.material.color.copy(element.userData.brightColor);
           } else {
             element.material.color.copy(element.userData.dimColor);
-            element.scale.setScalar(1);
           }
         }
       });
 
-      // Animate energy beam based on progress
+      // Energy beam interactions
       if (energyBeamRef.current) {
-        energyBeamRef.current.rotation.y = time * 0.8;
-        energyBeamRef.current.children.forEach((beam) => {
+        const beamTilt = mouse.normalized.clone().multiplyScalar(0.3);
+        energyBeamRef.current.rotation.y = time * 0.8 + beamTilt.x;
+        energyBeamRef.current.rotation.x = beamTilt.y;
+
+        energyBeamRef.current.children.forEach((beam, index) => {
           const scaleY =
-            0.3 + normalizedProgress * 0.7 + Math.sin(time * 4) * 0.1;
-          beam.scale.y = scaleY;
+            0.3 +
+            normalizedProgress * 0.7 +
+            Math.sin(time * 4) * 0.1 +
+            mouse.distanceFromCenter * 0.3 +
+            mouse.clickIntensity * 0.5;
+
+          const scaleXZ =
+            1 + mouse.distanceFromCenter * 0.2 + mouse.clickIntensity * 0.3;
+          beam.scale.set(scaleXZ, scaleY, scaleXZ);
+
           if (beam instanceof THREE.Mesh) {
             beam.material.opacity =
-              beam.userData.baseOpacity * (0.2 + normalizedProgress * 0.8);
+              beam.userData.baseOpacity *
+              (0.2 + normalizedProgress * 0.8 + mouse.distanceFromCenter * 0.3);
           }
         });
       }
 
-      // Animate particles based on progress
+      // Particle attraction and swirling motion
       particlesRef.current.forEach((particles) => {
         particles.rotation.y = time * 0.1;
 
         const positions = particles.geometry.attributes.position.array;
         const colors = particles.geometry.attributes.color.array;
+        const sizes = particles.geometry.attributes.size.array;
         const originalColors = particles.userData.originalColors;
+        const originalPositions = particles.userData.originalPositions;
 
         for (let i = 0; i < positions.length; i += 3) {
-          // Swirling motion
-          const angle = time * 0.5 + i * 0.01;
-          const radius = Math.sqrt(
-            positions[i] * positions[i] + positions[i + 2] * positions[i + 2]
+          const particlePos = new THREE.Vector3(
+            positions[i],
+            positions[i + 1],
+            positions[i + 2]
+          );
+          const originalPos = new THREE.Vector3(
+            originalPositions[i],
+            originalPositions[i + 1],
+            originalPositions[i + 2]
           );
 
-          positions[i] = Math.cos(angle) * radius;
-          positions[i + 2] = Math.sin(angle) * radius;
+          // Mouse attraction
+          const distanceToMouse = particlePos.distanceTo(mouse.world3D);
+          const attractionForce = Math.max(0, 1 - distanceToMouse / 10);
+          const attractionStrength =
+            mouse.distanceFromCenter * 0.1 + mouse.clickIntensity * 0.3;
 
-          // Vertical oscillation
-          positions[i + 1] += Math.sin(time * 2 + i * 0.02) * 0.01;
+          if (attractionForce > 0) {
+            const direction = new THREE.Vector3()
+              .subVectors(mouse.world3D, particlePos)
+              .normalize()
+              .multiplyScalar(attractionStrength * attractionForce);
 
-          // Color intensity based on progress
+            particlePos.add(direction);
+          }
+
+          // Swirling motion around original position
+          const angle = time * 0.5 + i * 0.01;
+          const radius = Math.sqrt(
+            originalPos.x * originalPos.x + originalPos.z * originalPos.z
+          );
+
+          const swirledX = Math.cos(angle) * radius;
+          const swirledZ = Math.sin(angle) * radius;
+
+          // Blend between swirled position and mouse-attracted position
+          const blendFactor = 0.7 + attractionForce * 0.3;
+          positions[i] =
+            originalPos.x * (1 - blendFactor) +
+            (swirledX + (particlePos.x - originalPos.x)) * blendFactor;
+          positions[i + 2] =
+            originalPos.z * (1 - blendFactor) +
+            (swirledZ + (particlePos.z - originalPos.z)) * blendFactor;
+
+          // Vertical oscillation with mouse influence
+          positions[i + 1] =
+            originalPos.y +
+            Math.sin(time * 2 + i * 0.02) * 0.3 +
+            mouse.normalized.y * attractionForce * 2;
+
+          // Color intensity based on progress and mouse influence
           const baseIntensity = 0.3 + normalizedProgress * 0.7;
           const pulseIntensity = Math.sin(time * 3 + i * 0.1) * 0.2;
-          const finalIntensity = baseIntensity + pulseIntensity;
+          const mouseColorBoost =
+            attractionForce * (1 + mouse.clickIntensity * 2);
+          const finalIntensity =
+            (baseIntensity + pulseIntensity) * (1 + mouseColorBoost);
 
-          colors[i] = Math.min(1, originalColors[i] * finalIntensity);
-          colors[i + 1] = Math.min(1, originalColors[i + 1] * finalIntensity);
-          colors[i + 2] = Math.min(1, originalColors[i + 2] * finalIntensity);
+          // Apply hue shifting near mouse
+          let r = originalColors[i];
+          let g = originalColors[i + 1];
+          let b = originalColors[i + 2];
+
+          if (attractionForce > 0.1) {
+            // Shift towards complementary colors when near mouse
+            const shiftAmount = attractionForce * hueShift;
+            r = Math.min(1, r * (1 + shiftAmount));
+            g = Math.min(1, g * (1 - shiftAmount * 0.5));
+            b = Math.min(1, b * (1 + shiftAmount * 0.3));
+          }
+
+          colors[i] = Math.min(1, r * finalIntensity * colorIntensity);
+          colors[i + 1] = Math.min(1, g * finalIntensity * colorIntensity);
+          colors[i + 2] = Math.min(1, b * finalIntensity * colorIntensity);
+
+          // Size variation based on mouse proximity
+          const baseSizeIndex = Math.floor(i / 3);
+          const baseSize = 1 + Math.random() * 2;
+          const sizeMultiplier =
+            1 + attractionForce * (0.5 + mouse.clickIntensity);
+          sizes[baseSizeIndex] = baseSize * sizeMultiplier;
         }
 
         particles.geometry.attributes.position.needsUpdate = true;
         particles.geometry.attributes.color.needsUpdate = true;
+        particles.geometry.attributes.size.needsUpdate = true;
+
+        // Overall particle opacity
         particles.material.opacity =
-          particles.userData.baseOpacity * (0.2 + normalizedProgress * 0.8);
+          particles.userData.baseOpacity *
+          (0.2 + normalizedProgress * 0.8 + mouse.distanceFromCenter * 0.2);
       });
 
-      // Camera orbital motion
-      const cameraRadius = 20;
-      if (cameraRef.current) {
-        cameraRef.current.position.x = Math.cos(time * 0.1) * cameraRadius;
-        cameraRef.current.position.z = Math.sin(time * 0.1) * cameraRadius;
-        cameraRef.current.position.y = 8 + Math.sin(time * 0.15) * 3;
-        cameraRef.current.lookAt(0, 0, 0);
+      // Field distortion effect - create ripple waves from mouse position
+      if (mouse.clickIntensity > 0) {
+        const rippleTime = (1 - mouse.clickIntensity) * 5; // Ripple spreads over time
+        const rippleRadius = rippleTime * 8;
+
+        // Apply ripple effect to all scene elements
+        torusRingsRef.current.forEach((element) => {
+          if (element.userData.type === 'torus') {
+            const elementPos = new THREE.Vector3();
+            element.getWorldPosition(elementPos);
+            const distanceFromRipple = Math.abs(
+              elementPos.distanceTo(mouse.world3D) - rippleRadius
+            );
+
+            if (distanceFromRipple < 2) {
+              const rippleIntensity = (2 - distanceFromRipple) / 2;
+              const rippleScale =
+                1 + rippleIntensity * mouse.clickIntensity * 0.3;
+              element.scale.multiplyScalar(rippleScale);
+              element.material.opacity *=
+                1 + rippleIntensity * mouse.clickIntensity;
+            }
+          }
+        });
       }
 
+      // Render the scene
       if (rendererRef.current && sceneRef.current && cameraRef.current) {
         rendererRef.current.render(sceneRef.current, cameraRef.current);
       }
@@ -635,9 +927,62 @@ export const TorusFieldProgress = ({
         width: '100%',
         height: '100%',
         overflow: 'hidden',
+        cursor: 'pointer',
+        userSelect: 'none',
       }}
     >
-      <Box ref={mountRef} sx={{ width: '100%', height: '100%' }} />
+      <Box
+        ref={mountRef}
+        sx={{
+          width: '100%',
+          height: '100%',
+          '&:hover': {
+            cursor: 'crosshair',
+          },
+        }}
+      />
+
+      {/* Progress indicator */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          color: 'white',
+          fontFamily: 'monospace',
+          fontSize: '14px',
+          background: 'rgba(0, 0, 0, 0.5)',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        Progress: {Math.round(progress)}%
+        <br />
+        Click to boost (+10%)
+      </Box>
+
+      {/* Mouse interaction indicator */}
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 16,
+          right: 16,
+          color: 'white',
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          background: 'rgba(0, 0, 0, 0.5)',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          backdropFilter: 'blur(10px)',
+          opacity: mouseDistance > 10 ? 1 : 0.5,
+          transition: 'opacity 0.3s ease',
+        }}
+      >
+        Mouse Distance: {mouseDistance}%
+        <br />
+        Click Intensity: {clickIntensity}%
+      </Box>
     </Box>
   );
 };

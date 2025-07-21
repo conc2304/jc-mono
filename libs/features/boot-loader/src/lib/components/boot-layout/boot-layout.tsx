@@ -22,6 +22,7 @@ import {
   RadarDisplay,
   RightDisplay,
   RightDisplayInner,
+  ScanlinesOverlay,
   SliderGradient,
   SliderInner,
   SpinningShape,
@@ -35,6 +36,7 @@ import {
   WarningStripe,
   WarningStripes,
 } from './sub-components';
+import { TrailingRadarChart } from '../radar-chart-widget/radar-chart-widget';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -122,6 +124,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 {/* Crosshair Display */}
                 <CrosshairDisplay>
                   {/* // TODO  - FILL THIS IN WITH A WIDGET */}
+                  <TrailingRadarChart />
                 </CrosshairDisplay>
 
                 {/* Control Panel */}
@@ -129,6 +132,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                   {/* Slider */}
                   <ControlSlider>
                     <SliderInner>
+                      <ScanlinesOverlay />
                       <SliderGradient />
                       {/* TODO - maybe switch to progress */}
                     </SliderInner>
@@ -194,6 +198,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 {/* Main Scanner */}
                 <RadarDisplay>
                   <Box width="100%" height="100%">
+                    <ScanlinesOverlay />
+
                     <TorusFieldProgressMemo
                       progress={(progress.current / progress.total) * 100}
                       colors={{

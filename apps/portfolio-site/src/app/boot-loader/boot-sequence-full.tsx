@@ -17,14 +17,6 @@ import { GlitchText } from '@jc/ui-components';
 gsap.registerPlugin(TextPlugin);
 
 // Keyframe animations
-const scanlines = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(4px);
-  }
-`;
 
 const gridPulse = keyframes`
   0%, 100% {
@@ -44,6 +36,16 @@ const MainContainer = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
 }));
+
+const scanlines = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+`;
+
 
 const ScanlinesOverlay = styled(Box)({
   position: 'absolute',

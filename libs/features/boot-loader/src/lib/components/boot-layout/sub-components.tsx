@@ -142,7 +142,7 @@ export const RadarDisplay = styled(Box)(({ theme }) => ({
   backgroundColor: 'transparent',
   position: 'relative',
   overflow: 'hidden',
-  padding: theme.spacing(1),
+  padding: theme.spacing(0),
 }));
 
 export const pulse = keyframes`
@@ -304,3 +304,22 @@ export const Footer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   fontSize: '0.75rem',
 }));
+
+const scanlines = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+`;
+
+export const ScanlinesOverlay = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  pointerEvents: 'none',
+  // background: 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.41) 100%)',
+  background: 'linear-gradient(transparent 50%, rgba(0, 255, 136, 0.03) 50%)',
+  backgroundSize: '100% 4px',
+  animation: `${scanlines} 0.1s linear infinite`,
+});
