@@ -256,7 +256,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 <RadarDisplay>
                   <Box width="100%" height="100%">
                     <ScanlinesOverlay />
-
                     <TorusFieldProgressMemo
                       progress={(progress.current / progress.total) * 100}
                       progressMessage={progress.message}
@@ -270,17 +269,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                       }}
                     />
                   </Box>
-                  {/* <Typography
-                    variant="caption"
-                    sx={{
-                      position: 'absolute',
-                      top: 12,
-                      left: 12,
-                      color: 'primary.main',
-                    }}
-                  >
-                    TARGET ACQUISITION
-                  </Typography> */}
                 </RadarDisplay>
 
                 {/* Status Bar */}

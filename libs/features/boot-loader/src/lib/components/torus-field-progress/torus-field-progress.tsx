@@ -945,7 +945,7 @@ export const TorusFieldProgress = ({
       {/* Progress indicator */}
 
       <Typography
-        variant="caption"
+        variant="h6"
         sx={{
           position: 'absolute',
           top: 12,
