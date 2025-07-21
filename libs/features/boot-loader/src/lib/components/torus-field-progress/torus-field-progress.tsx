@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo, memo } from 'react';
 import * as THREE from 'three';
 
 type SceneElements =
@@ -26,12 +26,108 @@ type Particle3JS = THREE.Points<
   THREE.Object3DEventMap
 >;
 
+// Universal color type - accepts any common color format
+type ColorValue =
+  | string
+  | number
+  | THREE.Color
+  | { r: number; g: number; b: number };
+
+interface ColorScheme {
+  backgroundColor?: ColorValue;
+  beamColor?: ColorValue;
+  torusColor?: ColorValue;
+  particleColor?: ColorValue;
+  verticalLineColor?: ColorValue;
+}
+
+interface TorusFieldProgressProps {
+  progress?: number; // 0-100
+  showControls?: boolean;
+  title?: string;
+  subtitle?: string;
+  colors?: ColorScheme;
+}
+
+/**
+ * Universal color converter that handles multiple input formats
+ * and returns a THREE.Color instance
+ *
+ * Supported formats:
+ * - Hex strings: "#ff0000", "#f00", "ff0000", "f00"
+ * - RGB strings: "rgb(255, 0, 0)", "rgba(255, 0, 0, 1)"
+ * - HSL strings: "hsl(0, 100%, 50%)"
+ * - CSS color names: "red", "blue", "green"
+ * - Hex numbers: 0xff0000
+ * - RGB objects: { r: 1, g: 0, b: 0 } (0-1 range) or { r: 255, g: 0, b: 0 } (0-255 range)
+ * - THREE.Color instances: passed through
+ */
+const convertToThreeColor = (color: ColorValue): THREE.Color => {
+  if (color instanceof THREE.Color) {
+    return color.clone();
+  }
+
+  if (typeof color === 'number') {
+    return new THREE.Color(color);
+  }
+
+  if (typeof color === 'string') {
+    // Handle various string formats
+    const trimmed = color.trim();
+
+    // Hex without # prefix
+    if (/^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/.test(trimmed)) {
+      return new THREE.Color(`#${trimmed}`);
+    }
+
+    // All other string formats (hex with #, rgb, hsl, color names)
+    return new THREE.Color(trimmed);
+  }
+
+  if (
+    typeof color === 'object' &&
+    'r' in color &&
+    'g' in color &&
+    'b' in color
+  ) {
+    // Handle RGB objects - detect if values are 0-1 or 0-255 range
+    const { r, g, b } = color;
+    if (r <= 1 && g <= 1 && b <= 1) {
+      // 0-1 range
+      return new THREE.Color(r, g, b);
+    } else {
+      // 0-255 range
+      return new THREE.Color(r / 255, g / 255, b / 255);
+    }
+  }
+
+  // Fallback to white if conversion fails
+  console.warn('Invalid color format, defaulting to white:', color);
+  return new THREE.Color(0xffffff);
+};
+
+/**
+ * Creates color variations for different states (activated, dimmed, bright)
+ */
+const createColorVariations = (baseColor: THREE.Color) => {
+  const brightColor = baseColor.clone().multiplyScalar(1.5);
+  // Manually clamp RGB values to [0, 1] range
+  brightColor.r = Math.min(1, brightColor.r);
+  brightColor.g = Math.min(1, brightColor.g);
+  brightColor.b = Math.min(1, brightColor.b);
+
+  return {
+    base: baseColor.clone(),
+    bright: brightColor,
+    dim: baseColor.clone().multiplyScalar(0.3),
+    glow: baseColor.clone().multiplyScalar(0.8),
+  };
+};
+
 export const TorusFieldProgress = ({
   progress = 0, // 0-100
-  showControls = false,
-  title = 'QUANTUM FIELD',
-  subtitle = 'INITIALIZATION',
-}) => {
+  colors = {},
+}: TorusFieldProgressProps) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene>(null);
   const rendererRef = useRef<THREE.WebGLRenderer>(null);
@@ -40,6 +136,31 @@ export const TorusFieldProgress = ({
   const particlesRef = useRef<Particle3JS[]>([]);
   const energyBeamRef = useRef<THREE.Group>(null);
   const animationRef = useRef<number>(null);
+
+  // Default colors using various formats to demonstrate flexibility
+  const defaultColors: ColorScheme = {
+    backgroundColor: 0x220000, // Hex number
+    beamColor: '#ff0000', // Hex string
+    torusColor: 'rgb(255, 0, 0)', // RGB string
+    particleColor: { r: 255, g: 0, b: 0 }, // RGB object (0-255)
+    verticalLineColor: 'red', // CSS color name
+  };
+
+  // Convert all colors to THREE.Color instances and create variations
+  const processedColors = useMemo(() => {
+    const merged = { ...defaultColors, ...colors };
+    return {
+      background: convertToThreeColor(merged.backgroundColor!),
+      beam: createColorVariations(convertToThreeColor(merged.beamColor!)),
+      torus: createColorVariations(convertToThreeColor(merged.torusColor!)),
+      particle: createColorVariations(
+        convertToThreeColor(merged.particleColor!)
+      ),
+      verticalLine: createColorVariations(
+        convertToThreeColor(merged.verticalLineColor!)
+      ),
+    };
+  }, [colors]);
 
   // Convert 0-100 to 0-1
   const normalizedProgress = Math.max(0, Math.min(100, progress)) / 100;
@@ -54,8 +175,8 @@ export const TorusFieldProgress = ({
 
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
-    scene.fog = new THREE.Fog(0x000000, 10, 50);
+    scene.background = processedColors.background.clone();
+    scene.fog = new THREE.Fog(processedColors.background, 10, 50);
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(
@@ -71,7 +192,7 @@ export const TorusFieldProgress = ({
       mountRef.current.clientWidth,
       mountRef.current.clientHeight
     );
-    renderer.setClearColor(0x000000);
+    renderer.setClearColor(processedColors.background);
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
 
@@ -79,25 +200,37 @@ export const TorusFieldProgress = ({
     torusRingsRef.current = [];
     particlesRef.current = [];
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+    // Lighting - derived from torus color
+    const ambientLight = new THREE.AmbientLight(
+      processedColors.torus.dim.getHex(),
+      0.2
+    );
     scene.add(ambientLight);
 
-    const pointLight1 = new THREE.PointLight(0x00ffff, 2, 100);
+    const pointLight1 = new THREE.PointLight(
+      processedColors.torus.base.getHex(),
+      2,
+      100
+    );
     pointLight1.position.set(0, 15, 0);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0xffffff, 1, 50);
+    const pointLight2 = new THREE.PointLight(
+      processedColors.beam.base.getHex(),
+      1,
+      50
+    );
     pointLight2.position.set(0, -15, 0);
     scene.add(pointLight2);
 
     // Create torus field structure
     const createTorusField = () => {
+      console.log('CreateTorus Field');
       // Main torus rings (horizontal)
       const ringCount = 12;
       for (let i = 0; i < ringCount; i++) {
         const radius = 3 + i * 0.8;
-        const tubeRadius = 0.02;
+        const tubeRadius = 0.075;
 
         const torusGeometry = new THREE.TorusGeometry(
           radius,
@@ -106,7 +239,7 @@ export const TorusFieldProgress = ({
           64
         );
         const torusMaterial = new THREE.MeshBasicMaterial({
-          color: 0x00ffff,
+          color: processedColors.torus.base.clone(),
           transparent: true,
           opacity: 0.6 - i * 0.03,
           wireframe: false,
@@ -122,6 +255,9 @@ export const TorusFieldProgress = ({
           radius: radius,
           baseOpacity: 0.6 - i * 0.03,
           type: 'torus',
+          baseColor: processedColors.torus.base.clone(),
+          brightColor: processedColors.torus.bright.clone(),
+          dimColor: processedColors.torus.dim.clone(),
         };
 
         scene.add(torus);
@@ -149,7 +285,7 @@ export const TorusFieldProgress = ({
 
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
         const lineMaterial = new THREE.LineBasicMaterial({
-          color: 0x00ffff,
+          color: processedColors.verticalLine.base.clone(),
           transparent: true,
           opacity: 0.3,
         });
@@ -160,6 +296,9 @@ export const TorusFieldProgress = ({
           angle,
           baseOpacity: 0.3,
           index: i + ringCount,
+          baseColor: processedColors.verticalLine.base.clone(),
+          brightColor: processedColors.verticalLine.bright.clone(),
+          dimColor: processedColors.verticalLine.dim.clone(),
         };
         scene.add(line);
         torusRingsRef.current.push(line);
@@ -173,16 +312,19 @@ export const TorusFieldProgress = ({
       // Core beam
       const coreGeometry = new THREE.CylinderGeometry(0.1, 0.1, 20, 8);
       const coreMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
+        color: processedColors.beam.base.clone(),
         transparent: true,
         opacity: 0.8,
         blending: THREE.AdditiveBlending,
       });
       const coreBeam = new THREE.Mesh(coreGeometry, coreMaterial);
-      coreBeam.userData = { baseOpacity: 0.8 };
+      coreBeam.userData = {
+        baseOpacity: 0.8,
+        baseColor: processedColors.beam.base.clone(),
+      };
       beamGroup.add(coreBeam);
 
-      // Outer glow layers
+      // Outer glow layers - derived from beam color
       for (let i = 0; i < 3; i++) {
         const glowGeometry = new THREE.CylinderGeometry(
           0.2 + i * 0.1,
@@ -191,8 +333,12 @@ export const TorusFieldProgress = ({
           8
         );
         const baseOpacity = 0.2 / (i + 1);
+        const glowColor = processedColors.beam.glow.clone();
+        // Slight variation for each layer
+        glowColor.multiplyScalar(1 - i * 0.1);
+
         const glowMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color().setHSL(0.5 + i * 0.1, 1, 0.5),
+          color: glowColor,
           transparent: true,
           opacity: baseOpacity,
           blending: THREE.AdditiveBlending,
@@ -215,6 +361,8 @@ export const TorusFieldProgress = ({
       const sizes = new Float32Array(particleCount);
       const originalColors = new Float32Array(particleCount * 3);
 
+      const baseParticleColor = processedColors.particle.base;
+
       for (let i = 0; i < particleCount; i++) {
         // Distribute particles in a torus-like field
         const angle = Math.random() * Math.PI * 2;
@@ -225,9 +373,11 @@ export const TorusFieldProgress = ({
         positions[i * 3 + 1] = height;
         positions[i * 3 + 2] = Math.sin(angle) * radius;
 
-        // Color variation
-        const color = new THREE.Color();
-        color.setHSL(0.5 + Math.random() * 0.2, 1, 0.5 + Math.random() * 0.5);
+        // Color variation - slight variations of base particle color
+        const color = baseParticleColor.clone();
+        const variation = 0.7 + Math.random() * 0.3;
+        color.multiplyScalar(variation);
+
         colors[i * 3] = color.r;
         colors[i * 3 + 1] = color.g;
         colors[i * 3 + 2] = color.b;
@@ -298,7 +448,53 @@ export const TorusFieldProgress = ({
       }
       renderer.dispose();
     };
-  }, [mountRef]); // Only run once on mount
+  }, [processedColors]); // React to color changes
+
+  useEffect(() => {
+    // Update existing elements when colors change
+    if (sceneRef.current) {
+      sceneRef.current.background = processedColors.background.clone();
+      sceneRef.current.fog = new THREE.Fog(processedColors.background, 10, 50);
+    }
+
+    if (rendererRef.current) {
+      rendererRef.current.setClearColor(processedColors.background);
+    }
+
+    // Update all torus elements
+    torusRingsRef.current.forEach((element) => {
+      if (element.userData.type === 'torus') {
+        element.material.color.copy(processedColors.torus.base);
+        element.userData.baseColor = processedColors.torus.base.clone();
+        element.userData.brightColor = processedColors.torus.bright.clone();
+        element.userData.dimColor = processedColors.torus.dim.clone();
+      } else if (element.userData.type === 'verticalLine') {
+        element.material.color.copy(processedColors.verticalLine.base);
+        element.userData.baseColor = processedColors.verticalLine.base.clone();
+        element.userData.brightColor =
+          processedColors.verticalLine.bright.clone();
+        element.userData.dimColor = processedColors.verticalLine.dim.clone();
+      }
+    });
+
+    // Update energy beam
+    if (energyBeamRef.current) {
+      energyBeamRef.current.children.forEach((beam, index) => {
+        if (beam instanceof THREE.Mesh) {
+          if (index === 0) {
+            // Core beam
+            beam.material.color.copy(processedColors.beam.base);
+            beam.userData.baseColor = processedColors.beam.base.clone();
+          } else {
+            // Glow layers
+            const glowColor = processedColors.beam.glow.clone();
+            glowColor.multiplyScalar(1 - (index - 1) * 0.1);
+            beam.material.color.copy(glowColor);
+          }
+        }
+      });
+    }
+  }, [processedColors]);
 
   // Animation loop with progress updates
   useEffect(() => {
@@ -326,10 +522,10 @@ export const TorusFieldProgress = ({
             activationIntensity;
 
           if (isActivated) {
-            element.material.color.setHSL(0.3, 1, 0.7);
+            element.material.color.copy(element.userData.brightColor);
             element.material.opacity *= 1.5;
           } else {
-            element.material.color.setHSL(0.5, 0.8, 0.4);
+            element.material.color.copy(element.userData.dimColor);
           }
         } else if (element.userData.type === 'torus') {
           // Animate horizontal torus rings
@@ -347,12 +543,12 @@ export const TorusFieldProgress = ({
             Math.sin(time * 2 + element.userData.index * 0.8) * 0.2;
 
           if (isActivated) {
-            element.material.color.setHSL(0.3, 1, 0.8);
+            element.material.color.copy(element.userData.brightColor);
             element.scale.setScalar(
               1 + Math.sin(time * 4 + element.userData.index * 0.3) * 0.1
             );
           } else {
-            element.material.color.setHSL(0.5, 0.8, 0.5);
+            element.material.color.copy(element.userData.dimColor);
             element.scale.setScalar(1);
           }
         }
@@ -445,3 +641,7 @@ export const TorusFieldProgress = ({
     </Box>
   );
 };
+
+TorusFieldProgress.displayName = 'TorusFieldProgress';
+
+export const TorusFieldProgressMemo = memo(TorusFieldProgress);

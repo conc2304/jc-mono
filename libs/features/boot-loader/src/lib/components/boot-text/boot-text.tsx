@@ -40,7 +40,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
   autoStart = true,
   typeSpeed = 2,
   lineDelay = 0.5,
-  textColor = '#00ff41',
+  textColor = '#ffffff',
   cursorChar = '_',
   scrambleChars = 8,
   scrambleDuration = 0.8,
@@ -267,13 +267,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       // Create cursor element
       const cursorElement = document.createElement('span');
       cursorElement.className = 'boot-cursor';
-      cursorElement.textContent = cursorChar;
-      cursorElement.style.color = textColor;
-
-      cursorElement.style.marginLeft = String(cursorAdjustment?.left ?? '');
-      cursorElement.style.marginTop = String(cursorAdjustment?.top ?? '');
-      cursorElement.style.marginBottom = String(cursorAdjustment?.bottom ?? '');
-      cursorElement.style.marginRight = String(cursorAdjustment?.right ?? '');
+      cursorElement.textContent = ' ' + cursorChar;
 
       // Cursor animation
       let cursor = gsap
@@ -479,7 +473,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
   );
 
   return (
-    // TODO - THEMIFY thhese colors and style
     // TODO - ADD Augmentations
     <Box
       ref={containerRef}
@@ -492,6 +485,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         width: '100%',
         height: '100%',
         border: `1px solid ${textColor}`,
+
         minHeight: '200px',
         fontSize: '16px',
         lineHeight: 1.4,
@@ -514,7 +508,15 @@ const BootTextInner: React.FC<BootTextProps> = ({
             color: textColor,
             whiteSpace: 'pre-wrap',
             display: 'flex',
-            alignItems: 'flexstart',
+            alignItems: 'flex-start',
+          },
+
+          '& .boot-cursor': {
+            color: textColor,
+            marginLeft: String(cursorAdjustment?.left ?? ''),
+            marginTop: String(cursorAdjustment?.top ?? ''),
+            marginBottom: String(cursorAdjustment?.bottom ?? ''),
+            marginRight: String(cursorAdjustment?.right ?? ''),
           },
         },
 

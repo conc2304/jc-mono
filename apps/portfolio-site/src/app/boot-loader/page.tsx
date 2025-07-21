@@ -1,6 +1,5 @@
 import { Box } from '@mui/system';
-import { BootMessage, BootUpSequence, BootLayout } from '@jc/boot-loader';
-import { Typography } from '@mui/material';
+import { BootMessage, BootLayout } from '@jc/boot-loader';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
