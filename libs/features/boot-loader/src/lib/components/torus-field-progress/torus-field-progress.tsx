@@ -295,7 +295,6 @@ export const TorusFieldProgress = ({
 
     // Create torus field structure
     const createTorusField = () => {
-      console.log('CreateTorus Field');
       // Main torus rings (horizontal)
       const ringCount = 12;
       for (let i = 0; i < ringCount; i++) {

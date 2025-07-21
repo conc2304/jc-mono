@@ -1,437 +1,506 @@
-'use client';
-
-import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
-import { Paper, Container } from '@mui/material';
-import { styled } from '@mui/material/styles';
-
-const StyledContainer = styled(Container)(({ theme }) => ({
-  height: '100%',
-  width: '100%',
-  backgroundColor: '#121212',
-  color: '#ffffff',
-  border: ' 1px solid cyan',
-  // padding: theme.spacing(4),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  padding: 0,
-}));
-
-const ChartContainer = styled(Paper)(({ theme }) => ({
-  backgroundColor: 'white',
-  border: '2px solid red',
-  borderRadius: theme.spacing(1),
-  // padding: theme.spacing(4),
-  width: '100%',
-  height: '100%',
-}));
-
-export const TrailingRadarChart = ({
-  numTails = 4,
-  lagSeconds = 1,
-  autoStart = true,
-  startColor = '#22c55e',
-  endColor = '#ef4444',
-  baseOpacity = 0.6,
-}) => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isAnimating, setIsAnimating] = useState(autoStart);
-  const [animationSpeed, setAnimationSpeed] = useState(2000);
-  const [tailCount, setTailCount] = useState(numTails);
-
-  // Master data sequence that all layers follow
-  const [dataSequence, setDataSequence] = useState([]);
-  const [currentStep, setCurrentStep] = useState(0);
-
-  // Define the data categories
-  const categories = [
-    'Performance',
-    'Security',
-    'Scalability',
-    'Usability',
-    'Reliability',
-    'Maintainability',
-  ];
-
-  const maxValue = 100;
-  const levels = 5;
-
-  // Generate random data
-  const generateRandomData = () => {
-    return categories.map((category) => ({
-      category,
-      value: Math.random() * maxValue,
-    }));
-  };
-
-  // Initialize data sequence with enough steps for all tails
-  useEffect(() => {
-    const initialSequence = Array.from({ length: tailCount + 10 }, () =>
-      generateRandomData()
-    );
-    setDataSequence(initialSequence);
-  }, [tailCount]);
-
-  // Color interpolator for layers
-  const colorInterpolator = d3.interpolate(startColor, endColor);
-
-  // Get data for each layer based on current step and lag
-  const getLayerData = (layerIndex, step) => {
-    const lagSteps = Math.floor((lagSeconds * 1000) / animationSpeed);
-    const layerStep = Math.max(0, step - layerIndex * lagSteps);
-
-    if (layerStep >= dataSequence.length) {
-      return dataSequence[dataSequence.length - 1] || generateRandomData();
-    }
-
-    return dataSequence[layerStep] || generateRandomData();
-  };
-
-  // Get target data for smooth transitions
-  const getLayerTargetData = (layerIndex, step) => {
-    const lagSteps = Math.floor((lagSeconds * 1000) / animationSpeed);
-    const layerStep = Math.max(0, step - layerIndex * lagSteps);
-    const nextStep = layerStep + 1;
-
-    if (nextStep >= dataSequence.length) {
-      // Generate new data and extend sequence
-      const newData = generateRandomData();
-      setDataSequence((prev) => [...prev, newData]);
-      return newData;
-    }
-
-    return dataSequence[nextStep] || generateRandomData();
-  };
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const width = containerRef.current.clientWidth;
-    const height = containerRef.current.clientHeight;
-
-    const margin = { top: 50, right: 50, bottom: 50, left: 50 };
-    const radius =
-      Math.min(
-        width - margin.left - margin.right,
-        height - margin.top - margin.bottom
-      ) / 1.25;
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
-
-    // Set up the SVG
-    const container = svg
-      .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', `translate(${width / 2}, ${height / 2})`);
-
-    // Angle for each axis
-    const angleSlice = (Math.PI * 2) / categories.length;
-
-    // Scale for radius
-    const rScale = d3.scaleLinear().domain([0, maxValue]).range([0, radius]);
-
-    // Create background circles (levels)
-    const axisGrid = container.append('g').attr('class', 'axisWrapper');
-
-    axisGrid
-      .selectAll('.levels')
-      .data(d3.range(1, levels + 1).reverse())
-      .enter()
-      .append('circle')
-      .attr('class', 'gridCircle')
-      .attr('r', (d) => (radius / levels) * d)
-      .style('fill', 'none')
-      .style('stroke', '#424242')
-      .style('stroke-width', '1px')
-      .style('opacity', 0.5);
-
-    // Add level labels
-    axisGrid
-      .selectAll('.axisLabel')
-      .data(d3.range(1, levels + 1).reverse())
-      .enter()
-      .append('text')
-      .attr('class', 'axisLabel')
-      .attr('x', 4)
-      .attr('y', (d) => (-d * radius) / levels)
-      .attr('dy', '0.4em')
-      .style('font-size', '10px')
-      .style('fill', '#9e9e9e')
-      .style('font-family', 'monospace')
-      .text((d) => ((maxValue * d) / levels).toFixed(0));
-
-    // Create axes
-    const axis = axisGrid
-      .selectAll('.axis')
-      .data(categories)
-      .enter()
-      .append('g')
-      .attr('class', 'axis');
-
-    // Add axis lines
-    axis
-      .append('line')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr(
-        'x2',
-        (d, i) =>
-          rScale(maxValue * 1.1) * Math.cos(angleSlice * i - Math.PI / 2)
-      )
-      .attr(
-        'y2',
-        (d, i) =>
-          rScale(maxValue * 1.1) * Math.sin(angleSlice * i - Math.PI / 2)
-      )
-      .attr('class', 'line')
-      .style('stroke', '#616161')
-      .style('stroke-width', '2px')
-      .style('opacity', 0.6);
-
-    // // Add axis labels
-    // axis
-    //   .append('text')
-    //   .attr('class', 'legend')
-    //   .style('font-size', '14px')
-    //   .style('fill', '#f5f5f5')
-    //   .style('font-family', 'monospace')
-    //   .style('font-weight', 'bold')
-    //   .attr('text-anchor', 'middle')
-    //   .attr('dy', '0.35em')
-    //   .attr(
-    //     'x',
-    //     (d, i) =>
-    //       rScale(maxValue * 1.25) * Math.cos(angleSlice * i - Math.PI / 2)
-    //   )
-    //   .attr(
-    //     'y',
-    //     (d, i) =>
-    //       rScale(maxValue * 1.25) * Math.sin(angleSlice * i - Math.PI / 2)
-    //   )
-    //   .text((d) => d);
-
-    // Function to create path data
-    const radarLine = d3
-      .lineRadial()
-      .angle((d, i) => i * angleSlice)
-      .radius((d) => rScale(d.value))
-      .curve(d3.curveLinearClosed);
-
-    // Create layers data
-    const layersData = Array.from({ length: tailCount }, (_, i) => ({
-      index: i,
-      current: getLayerData(i, currentStep),
-      target: getLayerTargetData(i, currentStep),
-    }));
-
-    // Create layer groups (reverse order so first layer is on top)
-    const layerGroups = container
-      .selectAll('.layer')
-      .data(layersData.slice().reverse())
-      .enter()
-      .append('g')
-      .attr('class', (d) => `layer layer-${d.index}`);
-
-    // Add radar areas for each layer
-    const radarPaths = layerGroups
-      .append('path')
-      .datum((d) => d.current)
-      .attr('d', radarLine)
-      .style('stroke-width', (d) => 2.5 - d.index * 0.2)
-      .style('stroke', (d) => {
-        const normalizedIndex = d.index / Math.max(1, tailCount - 1);
-        return colorInterpolator(normalizedIndex);
-      })
-      // .style('fill', (d) => {
-      //   const normalizedIndex = d.index / Math.max(1, tailCount - 1);
-      //   return colorInterpolator(normalizedIndex);
-      // })
-      // .style('fill-opacity', (d) => {
-      //   // Make all layers translucent with decreasing opacity for tails
-      //   const fadeAmount = (tailCount - 1 - d.index) / tailCount;
-      //   return baseOpacity * (0.3 + fadeAmount * 0.7);
-      // })
-      .style('stroke-opacity', (d) => {
-        // Stroke opacity follows similar pattern but stays more visible
-        const fadeAmount = (tailCount - 1 - d.index) / tailCount;
-        return baseOpacity * (0.5 + fadeAmount * 0.5);
-      })
-      .style('filter', (d) => {
-        const normalizedIndex = d.index / Math.max(1, tailCount - 1);
-        const color = colorInterpolator(normalizedIndex);
-        const intensity = (tailCount - d.index) * 2;
-        return `drop-shadow(0 0 ${intensity}px ${color})`;
-      });
-
-    // Add data points for each layer
-    const dotGroups = layerGroups
-      .selectAll('.radarCircle')
-      .data((d) => d.current)
-      .enter()
-      .append('circle')
-      .attr('class', 'radarCircle')
-      .attr('r', (d, i, nodes) => {
-        const layerData = d3.select(nodes[i].parentNode).datum();
-        return 2.5 + (tailCount - 1 - layerData.index) * 0.3;
-      })
-      .attr(
-        'cx',
-        (d, i) => rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2)
-      )
-      .attr(
-        'cy',
-        (d, i) => rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2)
-      )
-      .style('fill', (d, i, nodes) => {
-        const layerData = d3.select(nodes[i].parentNode).datum();
-        const normalizedIndex = layerData.index / Math.max(1, tailCount - 1);
-        return colorInterpolator(normalizedIndex);
-      })
-      .style('stroke', '#000')
-      .style('stroke-width', 0.5)
-      .style('opacity', (d, i, nodes) => {
-        const layerData = d3.select(nodes[i].parentNode).datum();
-        const fadeAmount = (tailCount - 1 - layerData.index) / tailCount;
-        return baseOpacity * (0.4 + fadeAmount * 0.6);
-      });
-
-    // Add value labels for the front layer only
-    if (tailCount > 0) {
-      const frontLayerData = getLayerData(0, currentStep);
-      container
-        .selectAll('.valueLabel')
-        .data(frontLayerData)
-        .enter()
-        .append('text')
-        .attr('class', 'valueLabel')
-        .style('font-size', '11px')
-        .style('fill', '#fff')
-        .style('font-family', 'monospace')
-        .style('font-weight', 'bold')
-        .style('text-anchor', 'middle')
-        .style('opacity', 0.8)
-        .attr(
-          'x',
-          (d, i) =>
-            (rScale(d.value) + 20) * Math.cos(angleSlice * i - Math.PI / 2)
-        )
-        .attr(
-          'y',
-          (d, i) =>
-            (rScale(d.value) + 20) * Math.sin(angleSlice * i - Math.PI / 2)
-        )
-        .attr('dy', '0.35em')
-        .text((d) => d.value.toFixed(0));
-    }
-
-    // Animation function
-    const animateAllLayers = () => {
-      if (!isAnimating) return;
-
-      layersData.forEach((layerData, reversedIndex) => {
-        const actualIndex = tailCount - 1 - reversedIndex;
-        const interpolators = layerData.current.map((d, i) =>
-          d3.interpolate(d.value, layerData.target[i].value)
-        );
-
-        const layerGroup = d3.select(`.layer-${actualIndex}`);
-        const layerPath = layerGroup.select('path');
-        const layerDots = layerGroup.selectAll('.radarCircle');
-
-        const transition = d3
-          .transition()
-          .duration(animationSpeed)
-          .ease(d3.easeQuadInOut);
-
-        transition.tween(`radar-${actualIndex}`, () => {
-          return (t) => {
-            const interpolatedData = layerData.current.map((d, i) => ({
-              ...d,
-              value: interpolators[i](t),
-            }));
-
-            // Update path
-            layerPath.datum(interpolatedData).attr('d', radarLine);
-
-            // Update dots
-            layerDots
-              .data(interpolatedData)
-              .attr(
-                'cx',
-                (d, i) =>
-                  rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2)
-              )
-              .attr(
-                'cy',
-                (d, i) =>
-                  rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2)
-              );
-          };
-        });
-
-        // Update labels for front layer
-        if (actualIndex === 0) {
-          const labels = container.selectAll('.valueLabel');
-          transition.tween('labels', () => {
-            return (t) => {
-              const interpolatedData = layerData.current.map((d, i) => ({
-                ...d,
-                value: interpolators[i](t),
-              }));
-
-              labels
-                .data(interpolatedData)
-                .attr(
-                  'x',
-                  (d, i) =>
-                    (rScale(d.value) + 20) *
-                    Math.cos(angleSlice * i - Math.PI / 2)
-                )
-                .attr(
-                  'y',
-                  (d, i) =>
-                    (rScale(d.value) + 20) *
-                    Math.sin(angleSlice * i - Math.PI / 2)
-                )
-                .text((d) => d.value.toFixed(0));
-            };
-          });
+import { useEffect, useState, useRef, ReactNode } from 'react';
+import set from 'lodash.set';
+import { useResizeObserver } from './use-resize-observer';
+import { Property } from 'csstype';
+import { wrap } from '../utils';
+import { Box } from '@mui/system';
+// Generic radar data types
+export type RadarDataEntry = {
+  axis: string;
+  value: number;
+  metricGroupName?: string;
+  formatFn?: (
+    n:
+      | number
+      | {
+          valueOf(): number;
         }
+  ) => string;
+};
+
+export type RadarData = Array<RadarDataEntry[]>;
+
+type Props = {
+  data?: RadarData;
+  id: string;
+  margin?: { top?: number; right?: number; bottom?: number; left?: number };
+  levels?: number; // How many levels or inner circles should there be drawn
+  labelFactor?: number; // How much farther than the radius of the outer circle should the labels be placed
+  wrapWidth?: number; // The number of pixels after which a label needs to be given a new line
+  opacityArea?: number; // The opacity of the area of the blob
+  dotRadius?: number; // The size of the colored circles of each blog
+  opacityCircles?: number; // The opacity of the circles of each blob
+  strokeWidth?: number; // The width of the stroke around each blob
+  roundStrokes?: boolean; // If true the area and stroke will follow a round path (cardinal-closed)
+  color?: readonly string[]; // Color array
+  lineType?: 'curved' | 'linear';
+  areValuesNormalized?: boolean; // If true, all of the values for the different metrics are on the same scale, if false they each have a different scale on their axis
+  selectedGroup?: string | 'ALL'; // Generic selected group instead of selectedState
+  title?: string | ReactNode;
+  maxTopGroups?: number; // Maximum number of top groups to highlight (default: 3)
+  colors?: {
+    primary?: Property.Color;
+    accent?: Property.Color;
+    series?: Property.Color[];
+  };
+};
+
+export const RadarChart = ({
+  data,
+  id,
+  margin = {}, // The margins of the SVG
+  levels = 3, // How many levels or inner circles should there be drawn
+  labelFactor = 1.25, // How much farther than the radius of the outer circle should the labels be placed
+  wrapWidth = 60, // The number of pixels after which a label needs to be given a new line
+  opacityArea = 0.15, // The opacity of the area of the blob
+  dotRadius = 4, // The size of the colored circles of each blog
+  opacityCircles = 0.1, // The opacity of the circles of each blob
+  strokeWidth = 2, // The width of the stroke around each blob
+  color = d3.schemeCategory10, // Color function
+  lineType = 'linear',
+  areValuesNormalized = true,
+  selectedGroup = 'ALL',
+  title,
+  maxTopGroups = 3,
+  colors = {},
+}: Props) => {
+  const svgRef = useRef<SVGElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null); // Parent of SVG
+  const dimensions = useResizeObserver(wrapperRef);
+
+  const colorScale = useRef<d3.ScaleOrdinal<string, unknown, never>>(null);
+
+  const [innerDimension, setInnerDimensions] = useState({ w: 0, h: 0 });
+  const defaultMargin = { top: 0, right: 0, bottom: 0, left: 0 };
+  const marg = { ...defaultMargin, margin };
+
+  const defaultColors = {
+    primary: 'red',
+    accent: 'orange',
+    series: ['white', 'cyan', 'blue'],
+  };
+  const colorScheme = { ...defaultColors, ...colors };
+
+  useEffect(() => {
+    // if we dont have data yet dont render
+    if (!data || !data.length || !data[0].length) return;
+    if (!wrapperRef.current || !dimensions) return;
+
+    const svg = d3.select(svgRef.current);
+
+    const { width: svgWidth, height: svgHeight } =
+      wrapperRef.current.getBoundingClientRect();
+
+    console.log({ dimensions });
+    const innerWidth = svgWidth - marg.left - marg.right;
+    const innerHeight = svgHeight - marg.top - marg.bottom;
+    setInnerDimensions({ w: innerWidth, h: innerHeight });
+
+    const tooltip = tooltipRef.current;
+
+    svg.attr('width', svgWidth).attr('height', svgHeight);
+    const svgContent = svg
+      .select('.content')
+      .attr('transform', `translate(${0}, ${0})`);
+
+    // Configure the Chart
+    const axisNames = data[0].map((d) => d.axis);
+    const axisQty = axisNames.length;
+    const diameter = Math.min(innerWidth, innerHeight);
+    const radius = diameter / 2 / (labelFactor * 1.2);
+
+    const angleSize = (Math.PI * 2) / axisQty;
+
+    const getMaxByAxis = (axisName: string, data: RadarData) => {
+      return d3.max(data, (i) => {
+        return d3.max(
+          i.map((o) => {
+            if (o.axis === axisName) return o.value;
+            return 0;
+          })
+        );
       });
     };
 
-    animateAllLayers();
-  }, [
-    currentStep,
-    isAnimating,
-    animationSpeed,
-    tailCount,
-    lagSeconds,
-    startColor,
-    endColor,
-    dataSequence,
-    baseOpacity,
-    containerRef,
-  ]);
+    // add all of the scales to this map for getting later
+    const axisScaleMap: Record<
+      string,
+      d3.ScaleLinear<number, number, never>
+    > = {};
+    axisNames.forEach((axisName) => {
+      const axisMax = getMaxByAxis(axisName, data);
+      const axisScale = d3
+        .scaleLinear()
+        .range([0, radius])
+        .domain([0, axisMax === 0 ? 100 : axisMax]);
+      set(axisScaleMap, axisName, axisScale);
+    });
 
-  // Animation step controller
-  useEffect(() => {
-    if (!isAnimating || dataSequence.length === 0) return;
+    const domainMax = d3.max(data, (i) => d3.max(i.map((j) => j.value)));
+    const rScale = d3
+      .scaleLinear()
+      .range([0, radius])
+      .domain([0, domainMax === 0 ? 100 : domainMax]);
 
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => prev + 1);
-    }, animationSpeed);
+    const colorSeries = colorScheme.series;
+    // not sure why it has to be in this order
+    colorScale.current = d3
+      .scaleOrdinal()
+      .range([colorSeries[2], colorSeries[0], colorSeries[1]]);
 
-    return () => clearInterval(interval);
-  }, [isAnimating, animationSpeed, dataSequence.length]);
+    const colorDomain = [...data]
+      .filter((entry) => {
+        const groupName = entry[0].metricGroupName || '';
+        const isGroupSelected =
+          selectedGroup &&
+          selectedGroup.toLowerCase() === groupName.toLowerCase();
+
+        // filter out the selected group if its not one of the top groups
+        if (data.length > maxTopGroups && isGroupSelected) {
+          return false;
+        }
+        return true;
+      })
+      .map((entry) => entry[0].metricGroupName || '');
+
+    colorScale.current.domain(colorDomain);
+
+    //Draw the background circles
+    const axisGrid = svg.select('.axis-grid');
+
+    // Draw the radial axis circles
+    axisGrid
+      .selectAll('.gridCircle')
+      .data(d3.range(1, levels + 1).reverse())
+      .join('circle')
+      .attr('class', 'gridCircle')
+      .attr('r', (d, i) => (radius / levels) * d)
+      .attr('cx', svgWidth / 2)
+      .attr('cy', svgHeight / 2)
+      .style('fill', 'black')
+      .style('fill-opacity', opacityCircles)
+      .style('stroke', colorScheme.primary)
+      .style('stroke-opacity', 0.2)
+      .style('filter', 'url(#glow)');
+
+    // Label the Axis Markers
+    const getTextAnchorValue = (_, i: number) => {
+      const x = Math.cos(angleSize * i - Math.PI / 2);
+      const y = Math.sin(angleSize * i - Math.PI / 2);
+
+      if (y === 1 || y === -1) return 'middle';
+      if (x > 0) return 'start';
+      if (x < 0) return 'end';
+      return 'middle';
+    };
+
+    axisGrid
+      .selectAll('.axis-label')
+      .data(axisNames)
+      .join('text')
+      .attr('class', 'axis-label')
+      .attr('text-anchor', getTextAnchorValue)
+      .attr('dy', '0.35em')
+      .attr(
+        'x',
+        (d, i) =>
+          svgWidth / 2 +
+          radius * labelFactor * Math.cos(angleSize * i - Math.PI / 2)
+      )
+      .attr(
+        'y',
+        (d, i) =>
+          svgHeight / 2 +
+          radius * labelFactor * Math.sin(angleSize * i - Math.PI / 2)
+      )
+      .style('font-size', '12px')
+      .style('fill', colorScheme.primary)
+      .style('fill-opacity', 0.8)
+      .text(function (d) {
+        return d;
+      })
+      .call(wrap, wrapWidth);
+
+    //Create the straight lines radiating outward from the center
+    axisGrid
+      .selectAll('.line')
+      .data(axisNames)
+      .join('line')
+      .attr('x1', svgWidth / 2)
+      .attr('y1', svgHeight / 2)
+      .attr('x2', function (d, i) {
+        return svgWidth / 2 + radius * Math.cos(angleSize * i - Math.PI / 2);
+      })
+      .attr('y2', function (d, i) {
+        return svgHeight / 2 + radius * Math.sin(angleSize * i - Math.PI / 2);
+      })
+      .attr('class', 'line')
+      .attr('mix-blend-mode', 'multiply')
+      .style('stroke', colorScheme.primary)
+      .style('stroke-opacity', '0.4')
+      .style('stroke-width', '0.5px');
+
+    // Draw the Radar Points and Lines
+    const radarLineGenerator = d3
+      .lineRadial()
+      .curve(
+        lineType === 'linear' ? d3.curveLinearClosed : d3.curveCardinalClosed
+      )
+      //@ts-ignore
+      .radius((d: { axis: string; value: number }) => {
+        const thisScale = areValuesNormalized ? rScale : axisScaleMap[d.axis];
+        return thisScale(d.value);
+      })
+      .angle((d, i) => i * angleSize);
+
+    // add a wrapper for each item
+    const radarWrapper = svgContent
+      .selectAll('.radar-wrapper')
+      .data(data)
+      .join('g')
+      .attr('class', 'radar-wrapper')
+      .attr('transform', `translate(${svgWidth / 2}, ${svgHeight / 2})`);
+
+    radarWrapper.selectAll('.radar-area').remove();
+    radarWrapper.selectAll('.radar-circle').remove();
+    radarWrapper.selectAll('.radar-stroke').remove();
+
+    // Helper function to get group name from data entry
+    const getGroupName = (d: RadarDataEntry[]) => d[0].metricGroupName || '';
+
+    // Helper function to check if group is selected
+    const isGroupSelected = (groupName: string) =>
+      selectedGroup && selectedGroup.toLowerCase() === groupName.toLowerCase();
+
+    // background of area
+    radarWrapper
+      .append('path')
+      .attr('class', 'radar-area')
+      // @ts-ignore
+      .merge(radarWrapper)
+      // @ts-ignore
+      .attr('d', radarLineGenerator)
+      .style('fill', (d) => {
+        const groupName = getGroupName(d);
+        return isGroupSelected(groupName)
+          ? colorScheme.accent
+          : colorScale.current
+          ? (colorScale.current(groupName) as string)
+          : 'orange';
+      })
+      .style('fill-opacity', opacityArea)
+      .on('mouseover', function (event: MouseEvent, d) {
+        if (!tooltip) return;
+
+        //Dim all blobs
+        d3.selectAll('.radar-area')
+          .transition()
+          .duration(200)
+          .style('fill-opacity', 0.1);
+        //Bring back the hovered over blob
+        d3.select(this).transition().duration(200).style('fill-opacity', 0.5);
+
+        // prep the tooltip
+        const groupName = getGroupName(d);
+
+        tooltip.innerHTML = backgroundAreaTooltip(groupName, d);
+        const tWidth = 240;
+        tooltip.style.width = `${tWidth}px`;
+        const tooltipXPos = innerWidth - tWidth / 4;
+
+        tooltip.style.left = `${tooltipXPos}px`;
+        tooltip.style.top = `${0}px`;
+        tooltip.classList.add('active');
+      })
+      .on('mouseout', function () {
+        //Bring back all blobs
+        if (!tooltip) return;
+
+        d3.selectAll('.radar-area')
+          .transition()
+          .duration(200)
+          .style('fill-opacity', opacityArea);
+        tooltip.classList.remove('active');
+      });
+
+    //  add outline of shape
+    radarWrapper
+      .append('path')
+      .attr('class', 'radar-stroke')
+      // @ts-ignore
+      .merge(radarWrapper)
+      // @ts-ignore
+      .attr('d', radarLineGenerator)
+      .style('stroke-width', strokeWidth + 'px')
+      .style('stroke', (d) => {
+        const groupName = getGroupName(d);
+        return isGroupSelected(groupName)
+          ? colorScheme.accent
+          : colorScale.current
+          ? (colorScale.current(groupName) as string)
+          : 'orange';
+      })
+      .style('fill', 'none')
+      .style('filter', 'url(#glow)');
+
+    // add the data points
+    radarWrapper
+      .selectAll('.radar-circle')
+      .data((d) => d)
+      .enter()
+      .append('circle')
+      .attr('class', 'radar-circle')
+      //  @ts-ignore
+      .merge(radarWrapper)
+      .attr('r', dotRadius)
+      .attr('cx', (d: { axis: string; value: number }, i: number) => {
+        const axisName = d.axis;
+        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+        return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
+      })
+      .attr('cy', function (d, i) {
+        const axisName = d.axis;
+        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+        return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
+      })
+      .style('fill', (d) => {
+        const groupName = d.metricGroupName || '';
+        return isGroupSelected(groupName)
+          ? colorScheme.accent
+          : colorScale.current
+          ? (colorScale.current(groupName) as string)
+          : 'orange';
+      })
+      .style('fill-opacity', 0.8);
+
+    // Radar tooltip
+
+    const circleWrapper = svgContent
+      .selectAll('.circle-wrapper')
+      .data(data)
+      .join('g')
+      .attr('class', 'circle-wrapper')
+      .attr('transform', `translate(${svgWidth / 2}, ${svgHeight / 2})`);
+
+    circleWrapper
+      .selectAll('.invisible-circle')
+      .data((d) => d)
+      .join('circle')
+      .attr('class', 'invisible-circle')
+      .attr('r', dotRadius * 1.5)
+      .attr('cx', (d: { axis: string; value: number }, i: number) => {
+        const axisName = d.axis;
+        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+        return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
+      })
+      .attr('cy', function (d, i) {
+        const axisName = d.axis;
+        const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
+        return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
+      })
+      .attr('fill', 'none')
+      .style('pointer-events', 'all')
+      .on('mouseover', function (event, d) {
+        if (!tooltip) return;
+
+        const newX = parseFloat(d3.select(this).attr('cx')) + 20;
+        const newY = parseFloat(d3.select(this).attr('cy')) - 16;
+
+        const groupName = d.metricGroupName || 'Unknown';
+        const formattedValue = d.formatFn
+          ? d.formatFn(d.value)
+          : d.value.toString();
+
+        tooltip.innerHTML = `<div><span>${groupName}</span>: ${formattedValue}</div>`;
+        tooltip.style.left = `${newX + svgWidth / 2}px`;
+        tooltip.style.top = `${newY + svgHeight / 2}px`;
+        tooltip.style.width = '150px';
+        tooltip.classList.add('active');
+      })
+      .on('mouseout', function () {
+        if (!tooltip) return;
+
+        tooltip.classList.remove('active');
+      });
+  }, [data, selectedGroup, maxTopGroups, wrapperRef, dimensions]);
+
+  function backgroundAreaTooltip(groupName: string, data: RadarDataEntry[]) {
+    const lineItem = (entry: RadarDataEntry) => `
+    <div>
+      <strong>${entry.axis}:</strong>
+      <span>${entry.formatFn ? entry.formatFn(entry.value) : entry.value}</span>
+    </div>`;
+
+    const tableData = data.map(lineItem).toString().replaceAll('</div>,', '');
+    return (
+      `
+      <div>
+        <div class="text-center"><strong>${groupName}</strong></div>` +
+      tableData +
+      `</div>`
+    );
+  }
 
   return (
-    <StyledContainer>
-      <ChartContainer elevation={0} ref={containerRef}>
-        <svg ref={svgRef}></svg>
-      </ChartContainer>
-    </StyledContainer>
+    <div
+      style={{ width: '100%', height: '100%', position: 'relative' }}
+      className={`${id}-wrapper radar-chart position-relative d-flex flex-column justify-content-center`}
+    >
+      {title && (
+        <div
+          className="radar-title"
+          style={{ position: 'relative', top: 0, left: 10, fontSize: '14px' }}
+        >
+          {title}
+        </div>
+      )}
+      <div
+        ref={wrapperRef}
+        style={{ width: '100%', height: '100%', position: 'relative' }}
+        className={`${id}-wrapper radar-chart position-relative`}
+      >
+        <svg ref={svgRef}>
+          <defs>
+            <clipPath id={`${id}`}>
+              <rect x="0" y="0" width={innerDimension.w} height="100%" />
+            </clipPath>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <g className="content" clipPath={`url(#${id})`}>
+            <g className="axis-grid" />
+          </g>
+        </svg>
+        <Box
+          ref={tooltipRef}
+          className="tooltip-ui"
+          sx={{
+            position: 'absolute',
+            backgroundColor: '#000',
+            // border-radius: 8px;
+            // border: 0.5px solid $color-ui-primary;
+            zIndex: 1000,
+            boxShadow: '0px 0px 10px 2px rgb(66 168 162 / 65%)',
+            padding: '2px 8px',
+
+            display: 'none',
+            opacity: 0,
+            transition: 'opacity 300ms ease-in, display 0s 100ms',
+
+            '&.active': {
+              display: 'block',
+              opacity: 1,
+            },
+          }}
+        ></Box>
+      </div>
+    </div>
   );
 };

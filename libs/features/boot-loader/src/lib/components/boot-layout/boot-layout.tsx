@@ -36,7 +36,11 @@ import {
   WarningStripe,
   WarningStripes,
 } from './sub-components';
-import { TrailingRadarChart } from '../radar-chart-widget/radar-chart-widget';
+import {
+  RadarChart,
+  RadarData,
+} from '../radar-chart-widget/radar-chart-widget';
+import { Key } from 'lucide-react';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -97,6 +101,31 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
   //   return () => clearInterval(interval);
   // }, []);
 
+  const performanceData: RadarData = [
+    [
+      {
+        axis: 'Sales',
+        value: 85,
+        metricGroupName: 'Team A',
+        formatFn: (v: number | { valueOf(): number }) => `${v}%`,
+      },
+      {
+        axis: 'Quality',
+        value: 92,
+        metricGroupName: 'Team A',
+        formatFn: (v: number | { valueOf(): number }) => `${v}%`,
+      },
+      {
+        axis: 'Banana',
+        value: 22,
+        metricGroupName: 'Team A',
+        formatFn: (v: number | { valueOf(): number }) => `${v}%`,
+      },
+      // ... more metrics
+    ],
+    // ... more teams/groups
+  ];
+
   return (
     <BootContainer className={className}>
       <BrowserFrame elevation={0}>
@@ -124,7 +153,25 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 {/* Crosshair Display */}
                 <CrosshairDisplay>
                   {/* // TODO  - FILL THIS IN WITH A WIDGET */}
-                  <TrailingRadarChart />
+                  <RadarChart
+                    id="performance-radar"
+                    data={performanceData}
+                    areValuesNormalized={false}
+                    lineType="curved"
+                    labelFactor={1.3}
+                    wrapWidth={80}
+                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    // selectedGroup={selectedTeam}
+                    colors={{
+                      primary: theme.palette.primary.main,
+                      accent: theme.palette.warning.main,
+                      series: Object.entries(theme.palette.primary)
+                        .filter(([key, value]) => key !== 'contrastText')
+                        .map(([_, value]) => value),
+                    }}
+                    maxTopGroups={5}
+                    // title="Performance Metrics"
+                  />
                 </CrosshairDisplay>
 
                 {/* Control Panel */}
