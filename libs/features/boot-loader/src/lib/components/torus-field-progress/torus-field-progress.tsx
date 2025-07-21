@@ -60,14 +60,17 @@ export const TorusFieldProgress = ({
 
     const camera = new THREE.PerspectiveCamera(
       75,
-      window.innerWidth / window.innerHeight,
+      mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       1000
     );
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(
+      mountRef.current.clientWidth,
+      mountRef.current.clientHeight
+    );
     renderer.setClearColor(0x000000);
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
@@ -274,9 +277,14 @@ export const TorusFieldProgress = ({
 
     // Handle resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      if (!mountRef.current) return;
+      camera.aspect =
+        mountRef.current?.clientWidth / mountRef.current?.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(
+        mountRef.current?.clientWidth,
+        mountRef.current?.clientHeight
+      );
     };
     window.addEventListener('resize', handleResize);
 
@@ -290,7 +298,7 @@ export const TorusFieldProgress = ({
       }
       renderer.dispose();
     };
-  }, []); // Only run once on mount
+  }, [mountRef]); // Only run once on mount
 
   // Animation loop with progress updates
   useEffect(() => {
@@ -432,13 +440,8 @@ export const TorusFieldProgress = ({
         height: '100%',
         overflow: 'hidden',
       }}
-      // className="relative w-full h-screen bg-black overflow-hidden"
     >
-      <Box
-        ref={mountRef}
-        sx={{ width: '100%', height: '100%' }}
-        // className="w-full h-full"
-      />
+      <Box ref={mountRef} sx={{ width: '100%', height: '100%' }} />
     </Box>
   );
 };

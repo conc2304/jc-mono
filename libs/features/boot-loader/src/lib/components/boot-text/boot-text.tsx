@@ -8,7 +8,6 @@ import '@fontsource/jetbrains-mono/700.css';
 import { alpha, Box } from '@mui/system';
 import { BootMessage } from '../../types';
 import { Property } from 'csstype';
-import { useTheme } from '@mui/material';
 
 // Register plugins
 gsap.registerPlugin(useGSAP, TextPlugin);
@@ -19,6 +18,7 @@ interface BootTextProps {
   autoStart?: boolean;
   typeSpeed?: number;
   lineDelay?: number;
+  textColor?: Property.Color;
   cursorChar?: string;
   cursorAdjustment?: Partial<
     Record<'top' | 'right' | 'bottom' | 'left', Property.MarginTop>
@@ -40,6 +40,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
   autoStart = true,
   typeSpeed = 2,
   lineDelay = 0.5,
+  textColor = '#00ff41',
   cursorChar = '_',
   scrambleChars = 8,
   scrambleDuration = 0.8,
@@ -54,7 +55,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
   onComplete,
   onProgress,
 }) => {
-  const theme = useTheme();
+  // const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const currentLineRef = useRef<number>(0);
   const hoverAnimationsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
@@ -235,12 +236,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
 
         const messageBlock = document.createElement('div');
         messageBlock.className = `boot-message boot-message-${index}`;
-        messageBlock.style.fontFamily = '"JetBrains Mono", monospace';
-        messageBlock.style.color = '#00ff41';
-        messageBlock.style.fontSize = '18px';
-        messageBlock.style.whiteSpace = 'pre-wrap';
-        messageBlock.style.display = 'flex';
-        messageBlock.style.alignItems = 'flexstart';
+
         messageBlock.style.minHeight = defaultMessage === '' ? '1.6em' : 'auto';
 
         // Add hover functionality if there's a hidden message
@@ -272,7 +268,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       const cursorElement = document.createElement('span');
       cursorElement.className = 'boot-cursor';
       cursorElement.textContent = cursorChar;
-      cursorElement.style.color = '#00ff41'; // TODO use theme colors
+      cursorElement.style.color = textColor;
 
       cursorElement.style.marginLeft = String(cursorAdjustment?.left ?? '');
       cursorElement.style.marginTop = String(cursorAdjustment?.top ?? '');
@@ -490,19 +486,17 @@ const BootTextInner: React.FC<BootTextProps> = ({
       className={`boot-text-container ${className}`}
       sx={(theme) => ({
         fontFamily: '"JetBrains Mono", monospace',
-        backgroundColor: alpha(theme.palette.background.paper, 0.5),
-        color: theme.palette.primary.main,
-        padding: '20px',
-        maxWidth: '500px',
-        // borderRadius: '8px',
-        margin: '0 auto',
-        border: '1px solid #333',
+        backgroundColor: theme.palette.background.paper,
+        color: textColor,
+        padding: 2.5,
+        width: '100%',
+        height: '100%',
+        border: `1px solid ${textColor}`,
         minHeight: '200px',
-        fontSize: '18px',
+        fontSize: '16px',
         lineHeight: 1.4,
         overflow: 'hidden',
         position: 'relative',
-        backdropFilter: 'blur(4px)',
 
         '&::before': {
           content: '""',
@@ -514,9 +508,17 @@ const BootTextInner: React.FC<BootTextProps> = ({
           background:
             'radial-gradient(ellipse at center, rgba(0,255,65,0.03) 0%, transparent 70%)',
           pointerEvents: 'none',
+
+          '& .boot-message': {
+            fontFamily: '"JetBrains Mono", monospace',
+            color: textColor,
+            whiteSpace: 'pre-wrap',
+            display: 'flex',
+            alignItems: 'flexstart',
+          },
         },
 
-        boxShadow: 'inset 0 0 20px rgba(0,255,65,0.1)',
+        boxShadow: `inset 0 0 20px ${alpha(textColor, 0.1)}`,
 
         '& .boot-message': {
           display: 'block',

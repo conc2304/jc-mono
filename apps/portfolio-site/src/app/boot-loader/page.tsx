@@ -1,5 +1,5 @@
 import { Box } from '@mui/system';
-import { BootMessage, BootUpSequence } from '@jc/boot-loader';
+import { BootMessage, BootUpSequence, BootLayout } from '@jc/boot-loader';
 import { Typography } from '@mui/material';
 
 const bootMessages: BootMessage[] = [
@@ -17,7 +17,8 @@ const bootMessages: BootMessage[] = [
 export default function Index() {
   return (
     <Box>
-      <BootUpSequence bootMessages={bootMessages} />8
+      {/* <BootUpSequence bootMessages={bootMessages} /> */}
+      <BootLayout />
     </Box>
   );
 }
