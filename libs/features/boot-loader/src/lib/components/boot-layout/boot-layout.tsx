@@ -259,6 +259,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
 
                     <TorusFieldProgressMemo
                       progress={(progress.current / progress.total) * 100}
+                      progressMessage={progress.message}
                       colors={{
                         backgroundColor: theme.palette.background.paper,
                         beamColor:
@@ -269,7 +270,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                       }}
                     />
                   </Box>
-                  <Typography
+                  {/* <Typography
                     variant="caption"
                     sx={{
                       position: 'absolute',
@@ -279,29 +280,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                     }}
                   >
                     TARGET ACQUISITION
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      position: 'absolute',
-                      top: 12,
-                      right: 12,
-                      color: 'primary.main',
-                    }}
-                  >
-                    {dataValues.temp.toFixed(1)}°
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      position: 'absolute',
-                      bottom: 12,
-                      right: 12,
-                      color: 'primary.main',
-                    }}
-                  >
-                    {dataValues.oxygen.toFixed(1)}%
-                  </Typography>
+                  </Typography> */}
                 </RadarDisplay>
 
                 {/* Status Bar */}

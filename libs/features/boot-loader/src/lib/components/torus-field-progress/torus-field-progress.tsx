@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useRef, useEffect, useMemo, memo, useState, useCallback } from 'react';
 import * as THREE from 'three';
 
@@ -43,10 +43,8 @@ interface ColorScheme {
 
 interface TorusFieldProgressProps {
   progress?: number; // 0-100
-  showControls?: boolean;
-  title?: string;
-  subtitle?: string;
   colors?: ColorScheme;
+  progressMessage?: string;
 }
 
 interface MouseInteraction {
@@ -125,6 +123,7 @@ const createColorVariations = (baseColor: THREE.Color) => {
 
 export const TorusFieldProgress = ({
   progress: initialProgress = 0, // 0-100
+  progressMessage,
   colors = {},
 }: TorusFieldProgressProps) => {
   const [progress, setProgress] = useState(initialProgress);
@@ -211,12 +210,14 @@ export const TorusFieldProgress = ({
     }
   }, []);
 
+  const clickBoostValue = 2;
+
   const handleMouseDown = useCallback((event: MouseEvent) => {
     mouseRef.current.isDown = true;
     mouseRef.current.clickIntensity = 1.0;
 
     // Progress boost on click
-    setProgress((prev) => Math.min(100, prev + 2));
+    setProgress((prev) => Math.min(100, prev + clickBoostValue));
   }, []);
 
   const handleMouseUp = useCallback(() => {
@@ -942,46 +943,49 @@ export const TorusFieldProgress = ({
       />
 
       {/* Progress indicator */}
-      <Box
+
+      <Typography
+        variant="caption"
         sx={{
           position: 'absolute',
-          top: 16,
-          left: 16,
-          color: 'white',
-          fontFamily: 'monospace',
-          fontSize: '14px',
-          background: 'rgba(0, 0, 0, 0.5)',
-          padding: '8px 12px',
-          borderRadius: '4px',
-          backdropFilter: 'blur(10px)',
+          top: 12,
+          left: 12,
+          color: 'primary.main',
         }}
       >
-        Progress: {Math.round(progress)}%
+        {progressMessage !== undefined
+          ? progressMessage
+          : 'INITIALIZING BOOT SEQUENCE'}
+      </Typography>
+
+      <Typography
+        variant="caption"
+        sx={{
+          position: 'absolute',
+          bottom: 12,
+          left: 12,
+          color: 'primary.main',
+        }}
+      >
+        Progress: {isNaN(Math.round(progress)) ? 0 : Math.round(progress)}%
         <br />
-        Click to boost (+10%)
-      </Box>
+        Click to boost (+{clickBoostValue}%)
+      </Typography>
 
       {/* Mouse interaction indicator */}
-      <Box
+      <Typography
+        variant="caption"
         sx={{
           position: 'absolute',
-          bottom: 16,
-          right: 16,
-          color: 'white',
-          fontFamily: 'monospace',
-          fontSize: '12px',
-          background: 'rgba(0, 0, 0, 0.5)',
-          padding: '8px 12px',
-          borderRadius: '4px',
-          backdropFilter: 'blur(10px)',
-          opacity: mouseDistance > 10 ? 1 : 0.5,
-          transition: 'opacity 0.3s ease',
+          bottom: 12,
+          right: 12,
+          color: 'primary.main',
         }}
       >
-        Mouse Distance: {mouseDistance}%
+        Mouse Distance: <strong>{mouseDistance}%</strong>
         <br />
-        Click Intensity: {clickIntensity}%
-      </Box>
+        Click Intensity: <strong>{clickIntensity}%</strong>
+      </Typography>
     </Box>
   );
 };
