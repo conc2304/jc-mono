@@ -54,7 +54,7 @@ interface ProjectMedia {
   videos?: Array<{
     url: string;
     title?: string;
-    type?: 'demo' | 'process' | 'final';
+    type?: 'demo' | 'process' | 'final' | 'inspiration';
     thumbnail?: string;
     caption?: string;
   }>;
