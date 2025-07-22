@@ -1,6 +1,6 @@
 import { ProjectData } from '@jc/ui-components';
 
-const verdantiaProject: ProjectData = {
+export const verdantiaProject: ProjectData = {
   // =============================================================================
   // CORE PROJECT INFORMATION
   // =============================================================================

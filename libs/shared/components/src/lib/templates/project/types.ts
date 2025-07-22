@@ -72,11 +72,11 @@ interface ProjectLinks {
 }
 
 interface ProjectContent {
-  overview?: string; // main project description
-  process?: string; // how it was made
-  results?: string; // outcomes, impact, metrics
-  challenges?: string; // what was difficult
-  learnings?: string; // what you discovered/learned
+  overview?: string | string[]; // main project description
+  process?: string | string[]; // how it was made
+  results?: string | string[]; // outcomes, impact, metrics
+  challenges?: string | string[]; // what was difficult
+  learnings?: string | string[]; // what you discovered/learned
 }
 
 interface ProjectMetadata {
