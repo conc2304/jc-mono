@@ -10,12 +10,12 @@ import {
 } from '../../molecules';
 import { ViewControls } from '../../molecules/file-view-controls';
 import { PreviewPanel } from '../../molecules/preview-panel';
-import { FileSystemItem, SortBy, SortOrder, ViewMode } from '../../types';
+import { BaseFileSystemItem, SortBy, SortOrder, ViewMode } from '../../types';
 
 interface FileManagerProps {
   initialPath: string;
-  folderContents: FileSystemItem[];
-  fileSystemItems: FileSystemItem[];
+  folderContents: BaseFileSystemItem[];
+  fileSystemItems: BaseFileSystemItem[];
   updateWindowName: (name: string, icon: ReactNode) => void;
 }
 export const FileManager = ({

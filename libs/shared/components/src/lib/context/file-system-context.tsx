@@ -1,10 +1,10 @@
 import { createContext } from 'react';
 
-import { FileSystemItem, SortBy, SortOrder, ViewMode } from '../types';
+import { BaseFileSystemItem, SortBy, SortOrder, ViewMode } from '../types';
 
 export const FileSystemContext = createContext<{
-  fs: FileSystemItem[];
-  items: FileSystemItem[];
+  fs: BaseFileSystemItem[];
+  items: BaseFileSystemItem[];
   currentPath: string;
   selectedItems: string[];
   viewMode: ViewMode;

@@ -11,15 +11,18 @@ import {
 import { Star } from 'lucide-react';
 
 import { FileSystemContext } from '../../../context';
-import { FileSystemItem } from '../../../types';
+import { BaseFileSystemItem } from '../../../types';
 
 interface ListViewProps {
-  items: FileSystemItem[];
-  onItemClick: (item: FileSystemItem, event: React.MouseEvent) => void;
-  onItemDoubleClick: (item: FileSystemItem, event: React.MouseEvent) => void;
-  onDragStart: (item: FileSystemItem) => void;
-  onDragOver: (targetItem: FileSystemItem, e: React.DragEvent) => void;
-  onDrop: (targetItem: FileSystemItem, e: React.DragEvent) => void;
+  items: BaseFileSystemItem[];
+  onItemClick: (item: BaseFileSystemItem, event: React.MouseEvent) => void;
+  onItemDoubleClick: (
+    item: BaseFileSystemItem,
+    event: React.MouseEvent
+  ) => void;
+  onDragStart: (item: BaseFileSystemItem) => void;
+  onDragOver: (targetItem: BaseFileSystemItem, e: React.DragEvent) => void;
+  onDrop: (targetItem: BaseFileSystemItem, e: React.DragEvent) => void;
 }
 export const ListView = ({
   items,

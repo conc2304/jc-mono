@@ -2,14 +2,14 @@
 
 import { darken, rgbToHex, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
-import { FileSystemItem, GradientShader } from '@jc/ui-components';
+import { BaseFileSystemItem, GradientShader } from '@jc/ui-components';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react';
 
 // import { ColorShader } from './webgl/shader';
 
 const fontSize = '40px';
 
-const mockFileSystem: FileSystemItem[] = [
+const mockFileSystem: BaseFileSystemItem[] = [
   {
     id: '1',
     icon: <Folder fontSize={fontSize} />,

@@ -2,13 +2,13 @@ import { useCallback, useContext } from 'react';
 
 import { IconsView, ListView, DetailsView } from './views';
 import { FileSystemContext } from '../../context';
-import { FileSystemItem } from '../../types';
+import { BaseFileSystemItem } from '../../types';
 
-export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
+export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
 
   const handleItemClick = useCallback(
-    (item: FileSystemItem, event: React.MouseEvent) => {
+    (item: BaseFileSystemItem, event: React.MouseEvent) => {
       event.preventDefault();
       if (event.button === 2) return;
       context?.selectItem(item.id, true);
@@ -17,7 +17,7 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
   );
 
   const handleItemDoubleClick = useCallback(
-    (item: FileSystemItem, event: React.MouseEvent) => {
+    (item: BaseFileSystemItem, event: React.MouseEvent) => {
       if (event.button === 2) return;
 
       if (item.type === 'folder') {
@@ -31,13 +31,13 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
   );
 
   const handleDragStart = useCallback(
-    (item: FileSystemItem) => {
+    (item: BaseFileSystemItem) => {
       context?.setDraggedItems([item.id]);
     },
     [context]
   );
   const handleDragOver = useCallback(
-    (targetItem: FileSystemItem, e: React.DragEvent) => {
+    (targetItem: BaseFileSystemItem, e: React.DragEvent) => {
       e.preventDefault();
       if (e.button === 2) return; // ignore right click
       // TODO
@@ -45,7 +45,7 @@ export const FileListView = ({ items }: { items: FileSystemItem[] }) => {
     []
   );
   const handleDrop = useCallback(
-    (targetItem: FileSystemItem, e: React.DragEvent) => {
+    (targetItem: BaseFileSystemItem, e: React.DragEvent) => {
       e.preventDefault();
       if (e.button === 2) return; // ignore right click
       if (targetItem.type === 'folder' && context?.draggedItems) {

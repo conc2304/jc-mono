@@ -9,9 +9,9 @@ import {
   Star,
 } from 'lucide-react';
 
-import { FileSystemItem, QuickAccessItem } from '../../types';
+import { BaseFileSystemItem, QuickAccessItem } from '../../types';
 
-export const mockFileSystem: FileSystemItem[] = [
+export const mockFileSystem: BaseFileSystemItem[] = [
   {
     id: '1',
     icon: <Folder />,

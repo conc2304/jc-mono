@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 
-import { FileSystemItem } from '../../types';
+import { BaseFileSystemItem } from '../../types';
 
 // Simple file type components
-export const PDFViewer = ({ file }: { file: FileSystemItem }) => (
+export const PDFViewer = ({ file }: { file: BaseFileSystemItem }) => (
   <Box sx={{ p: 2 }}>
     <Typography variant="h6">PDF Viewer</Typography>
     <Typography>Viewing: {file.name}</Typography>
@@ -11,7 +11,7 @@ export const PDFViewer = ({ file }: { file: FileSystemItem }) => (
   </Box>
 );
 
-export const TextEditor = ({ file }: { file: FileSystemItem }) => (
+export const TextEditor = ({ file }: { file: BaseFileSystemItem }) => (
   <Box sx={{ p: 2 }}>
     <Typography variant="h6">Text Editor</Typography>
     <Typography>Editing: {file.name}</Typography>
@@ -19,7 +19,7 @@ export const TextEditor = ({ file }: { file: FileSystemItem }) => (
   </Box>
 );
 
-export const ImageViewer = ({ file }: { file: FileSystemItem }) => (
+export const ImageViewer = ({ file }: { file: BaseFileSystemItem }) => (
   <Box sx={{ p: 2 }}>
     <Typography variant="h6">Image Viewer</Typography>
     <Typography>Viewing: {file.name}</Typography>
@@ -27,7 +27,7 @@ export const ImageViewer = ({ file }: { file: FileSystemItem }) => (
   </Box>
 );
 
-export const CodeEditor = ({ file }: { file: FileSystemItem }) => (
+export const CodeEditor = ({ file }: { file: BaseFileSystemItem }) => (
   <Box sx={{ p: 2 }}>
     <Typography variant="h6">Code Editor</Typography>
     <Typography>Editing: {file.name}</Typography>
@@ -36,7 +36,7 @@ export const CodeEditor = ({ file }: { file: FileSystemItem }) => (
 );
 
 // Default file viewer
-export const DefaultFileViewer = ({ file }: { file: FileSystemItem }) => (
+export const DefaultFileViewer = ({ file }: { file: BaseFileSystemItem }) => (
   <Box sx={{ p: 2 }}>
     <Typography variant="h6">File: {file.name}</Typography>
     <Typography color="text.secondary">

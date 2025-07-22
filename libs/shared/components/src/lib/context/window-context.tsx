@@ -11,7 +11,12 @@ import { useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
 import { FileManager } from '../organisms/file-manager';
-import { WindowMetaData, IconPosition, FileSystemItem } from '../types';
+import {
+  WindowMetaData,
+  IconPosition,
+  FileSystemItem,
+  FileData,
+} from '../types';
 
 interface DragRef {
   startX: number;
@@ -788,6 +793,7 @@ const getWindowContent = (
   updateWindowCallback: (name: string, icon: ReactNode) => void
 ): ReactNode => {
   if (fsItem.type === 'folder') {
+    // File Browser
     return (
       <FileManager
         initialPath={fsItem.path}
@@ -797,6 +803,19 @@ const getWindowContent = (
       />
     );
   } else {
-    return <div>DEFAULT FILE CONTENT</div>;
+    // open file
+    return renderFile(fsItem);
   }
 };
+
+// Utility function to render a file
+export function renderFile<TData extends FileData, TProps>(
+  file: FileSystemItem<TData, TProps>
+): ReactNode | null {
+  if (!file.fileData || !file.renderer) {
+    return null;
+  }
+
+  const { component: Component, props = {} } = file.renderer;
+  return <Component {...file.fileData} {...(props as TProps)} />;
+}

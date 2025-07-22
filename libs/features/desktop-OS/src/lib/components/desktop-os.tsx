@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import {
   DesktopIcon,
-  FileSystemItem,
+  BaseFileSystemItem,
   IconPosition,
   TaskBar,
   useWindowManager,
@@ -13,7 +13,7 @@ import {
 import { generateDefaultIconPositions } from '../utils';
 
 type DesktopOSProps = {
-  fileSystem?: FileSystemItem[];
+  fileSystem?: BaseFileSystemItem[];
   iconArrangement?: 'linear' | 'grid' | 'circular';
   customIconPositions?: Record<string, IconPosition>;
 };

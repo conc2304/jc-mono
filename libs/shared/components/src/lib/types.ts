@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { Component, ComponentType, ReactNode } from 'react';
 
 export interface DesktopIconMetaData {
   id: string;
@@ -36,8 +36,41 @@ export interface WindowMetaData {
     | 'maximizing';
 }
 
-export interface FileSystemItem {
-  // TODO - replace DesktopIcon with this
+// type FileData = {
+//   id: string
+//   fileName: string,
+//   content: string,
+//   imgUrl: string
+// }
+
+// type ExampleComponentProps = {
+//   dense: boolean
+// }
+
+// type ComponentProps = ExampleComponentProps & FileData;
+
+// const exampleComponent = ({
+//   id,
+//   fileName,
+//   content,
+//   imgUrl,
+//   dense,
+// }: ComponentProps) => {
+//   return (
+//     <div>
+//       <h1>{fileName}</h1>
+//       <img url={imgUrl} />
+//       <p className={dense ? 'dense' : 'regular'}>{content}</p>
+//     </div>
+//   );
+// };
+export interface FileSystemItemNewAdditions<DataType, RenderProps> {
+  fileData?: DataType;
+  renderer?: Component<RenderProps, DataType>;
+  rendererProps?: RenderProps;
+}
+
+export interface BaseFileSystemItem {
   id: string;
   name: string;
   type: 'file' | 'folder';
@@ -49,7 +82,7 @@ export interface FileSystemItem {
   mimeType?: string;
   path: string;
   parentId?: string;
-  children?: FileSystemItem[];
+  children?: BaseFileSystemItem[];
   permissions: {
     read: boolean;
     write: boolean;
@@ -62,6 +95,28 @@ export interface FileSystemItem {
     thumbnail?: string;
     customProperties?: Record<string, any>;
   };
+}
+
+// Generic file data interface that can be extended
+export interface FileData {
+  id: string;
+  fileName: string;
+}
+
+// Renderer configuration
+export interface FileRenderer<TData extends FileData, TProps = {}> {
+  component: ComponentType<TData & TProps>;
+  props?: TProps;
+}
+
+// Generic FileSystemItem
+export interface FileSystemItem<TData extends FileData = FileData, TProps = {}>
+  extends BaseFileSystemItem {
+  // File-specific data (only for files, not folders)
+  fileData?: TData;
+
+  // Renderer configuration (only for files with data)
+  renderer?: FileRenderer<TData, TProps>;
 }
 
 export interface QuickAccessItem {
