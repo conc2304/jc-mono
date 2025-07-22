@@ -479,12 +479,10 @@ const BootTextInner: React.FC<BootTextProps> = ({
       className={`boot-text-container ${className}`}
       sx={(theme) => ({
         fontFamily: '"JetBrains Mono", monospace',
-        backgroundColor: theme.palette.background.paper,
         color: textColor,
         padding: 2.5,
         width: '100%',
         height: '100%',
-        border: `1px solid ${textColor}`,
 
         minHeight: '200px',
         fontSize: '16px',

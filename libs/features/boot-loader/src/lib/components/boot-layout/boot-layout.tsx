@@ -23,7 +23,6 @@ import {
   ControlIcon,
   ControlSlider,
   RadarChartBox,
-  DataPanel,
   Footer,
   MultiplexText,
   TorusLoaderCardAug,
@@ -42,11 +41,12 @@ import {
   WarningPanel,
   WarningStripe,
   WarningStripes,
-} from './sub-components';
+} from './atoms';
 import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
 import * as d3 from 'd3';
 import { remap } from '../utils';
+import { DataPanel } from './molecules';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -105,18 +105,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
     console.log('Boot sequence complete!');
   }, []);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setDataValues((prev) => ({
-  //       temp: 23.7 + Math.sin(Date.now() / 1000) * 0.5,
-  //       pressure: 101.3 + Math.cos(Date.now() / 1500) * 0.2,
-  //       oxygen: 98.2 + Math.sin(Date.now() / 2000) * 0.3,
-  //     }));
-  //   }, 50);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-
   return (
     <BootContainer className={className}>
       <BrowserFrame elevation={0}>
@@ -128,7 +116,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             <TrafficLight color={theme.palette.success.main} />
           </Box> */}
           <AddressBar>
-            CT14 | USERNAME: GABRIEL-CORTEZ | PASSWORD: *******
+            CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD: *******
           </AddressBar>
           <Typography variant="caption" sx={{ color: 'primary.main' }}>
             MAINFRAME-RESEARCH
@@ -141,7 +129,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             {/* Left Panel */}
             <Grid size={{ xs: 3 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
-                {/* Crosshair Display */}
+                {/* Radar Display */}
                 <RadarChartBox>
                   <AnimatedRadarChart
                     id="animated-radar"
@@ -157,7 +145,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                     }}
                     levels={5}
                     labelFactor={1}
-                    opacityArea={0.2}
+                    opacityArea={0.1}
                     strokeWidth={1}
                     dotRadius={5}
                     lineType="curved"
@@ -302,58 +290,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             <Grid size={{ xs: 3 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Data Display */}
-                <DataPanel elevation={0}>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: 'primary.main', mb: 1, display: 'block' }}
-                  >
-                    SYS STATUS
-                  </Typography>
-                  <Box display="flex" flexDirection="column" gap={0.5}>
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'primary.main' }}
-                      >
-                        TEMP:
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'primary.main' }}
-                      >
-                        {dataValues.temp.toFixed(1)}°
-                      </Typography>
-                    </Box>
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'primary.main' }}
-                      >
-                        PRES:
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'primary.main' }}
-                      >
-                        {dataValues.pressure.toFixed(1)}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'primary.main' }}
-                      >
-                        O2:
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'primary.main' }}
-                      >
-                        {dataValues.oxygen.toFixed(1)}%
-                      </Typography>
-                    </Box>
-                  </Box>
-                </DataPanel>
+                <DataPanel />
 
                 {/* Additional Panels */}
                 <Box display="flex" flexDirection="column" gap={1} flex={1}>
@@ -383,21 +320,41 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                   </StatusButton>
                 </Box>
 
-                <BootText
-                  bootMessages={bootMessages}
-                  typeSpeed={1.8}
-                  lineDelay={1.2}
-                  cursorChar="█"
-                  scrambleChars={12}
-                  textColor={theme.palette.primary.main}
-                  scrambleDuration={0.6}
-                  charDelay={0.05}
-                  scrambleCharSet={scrambleCharacterSet}
-                  hoverScrambleChars={8}
-                  hoverScrambleDuration={0.5}
-                  onProgress={handleProgress}
-                  onComplete={handleBootComplete}
-                />
+                <Box
+                  data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
+                  sx={(theme) => ({
+                    height: '100%',
+                    '&[data-augmented-ui]': {
+                      '--aug-bl': '0.5rem',
+                      '--aug-br': '0.5rem',
+                      '--aug-tl': '0.5rem',
+                      '--aug-tr1': '1rem',
+                      '--aug-tr2': '2rem',
+                      '--aug-tr-extend2': '25%',
+
+                      '--aug-border-all': '1px',
+                      '--aug-border-bg': theme.palette.primary.main,
+                    },
+                  })}
+                >
+                  <BootText
+                    bootMessages={bootMessages}
+                    typeSpeed={1.8}
+                    lineDelay={1.2}
+                    cursorChar="█"
+                    scrambleChars={12}
+                    textColor={
+                      theme.palette.primary[theme.palette.getInvertedMode()]
+                    }
+                    scrambleDuration={0.6}
+                    charDelay={0.05}
+                    scrambleCharSet={scrambleCharacterSet}
+                    hoverScrambleChars={8}
+                    hoverScrambleDuration={0.5}
+                    onProgress={handleProgress}
+                    onComplete={handleBootComplete}
+                  />
+                </Box>
               </Box>
             </Grid>
           </Grid>
