@@ -1,4 +1,11 @@
-import { Box, Paper, Typography, styled, keyframes } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Typography,
+  styled,
+  keyframes,
+  BoxProps,
+} from '@mui/material';
 
 export const BootContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -41,7 +48,7 @@ export const AddressBar = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-export const CrosshairDisplay = styled(Box)(({ theme }) => ({
+const RadarChartBox1 = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
   height: 192,
   backgroundColor: theme.palette.background.paper,
@@ -50,6 +57,8 @@ export const CrosshairDisplay = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
 }));
+
+export const RadarChartBox = (props: BoxProps) => <RadarChartBox {...props} />;
 
 export const CrosshairContainer = styled(Box)({
   position: 'relative',
@@ -136,14 +145,32 @@ export const WarningStripe = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.warning.main,
 }));
 
-export const RadarDisplay = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
+export const TorusLoaderBox = styled(Box)(({ theme }) => ({
   height: '100%',
+  width: '100%',
   backgroundColor: 'transparent',
   position: 'relative',
   overflow: 'hidden',
   padding: theme.spacing(0),
+
+  '&[data-augmented-ui]': {
+    '--aug-bl': '8px',
+    '--aug-br': '8px',
+    '--aug-tl': '8px',
+    '--aug-b': '8px',
+    '--aug-b-extend1': '50%',
+    '--aug-tr-extend1': '50%',
+    '--aug-border-all': '1px',
+    '--aug-border-bg': theme.palette.primary.main,
+  },
 }));
+
+export const TorusLoaderCardAug = (props: BoxProps) => (
+  <TorusLoaderBox
+    data-augmented-ui="border bl-clip b-clip-x br-clip tl-clip tr-2-clip-x "
+    {...props}
+  />
+);
 
 export const pulse = keyframes`
   0%, 100% {

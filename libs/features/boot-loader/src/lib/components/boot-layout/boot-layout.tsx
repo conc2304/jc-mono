@@ -22,11 +22,11 @@ import {
   BrowserHeader,
   ControlIcon,
   ControlSlider,
-  CrosshairDisplay,
+  RadarChartBox,
   DataPanel,
   Footer,
   MultiplexText,
-  RadarDisplay,
+  TorusLoaderCardAug,
   RightDisplay,
   RightDisplayInner,
   ScanlinesOverlay,
@@ -43,16 +43,9 @@ import {
   WarningStripe,
   WarningStripes,
 } from './sub-components';
-import {
-  RadarChart,
-  RadarData,
-} from '../radar-chart-widget/radar-chart-widget';
-import { Key } from 'lucide-react';
-import {
-  AnimatedRadarChart,
-  RadarChartExample,
-} from '../radar-chart-widget/animated-radar';
-import { map, range } from 'd3';
+import { RadarData } from '../radar-chart-widget/radar-chart-widget';
+import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
+import * as d3 from 'd3';
 import { remap } from '../utils';
 
 const bootMessages: BootMessage[] = [
@@ -76,11 +69,11 @@ interface SciFiLayoutProps {
 
 const sampleData: RadarData = [
   [
-    { axis: 'Performance', value: 80, metricGroupName: 'Team A' },
-    { axis: 'Quality', value: 90, metricGroupName: 'Team A' },
-    { axis: 'Innovation', value: 70, metricGroupName: 'Team A' },
-    { axis: 'Collaboration', value: 85, metricGroupName: 'Team A' },
-    { axis: 'Delivery', value: 75, metricGroupName: 'Team A' },
+    { axis: '', value: 80, metricGroupName: '1' },
+    { axis: '', value: 90, metricGroupName: '1' },
+    { axis: '', value: 70, metricGroupName: '1' },
+    { axis: '', value: 85, metricGroupName: '1' },
+    { axis: '', value: 75, metricGroupName: '1' },
   ],
 ];
 
@@ -149,40 +142,42 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             <Grid size={{ xs: 3 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Crosshair Display */}
-                <CrosshairDisplay>
+                <RadarChartBox>
                   <AnimatedRadarChart
                     id="animated-radar"
                     data={sampleData}
                     animationConfig={{
                       animationSpeed: 1500,
-                      numTrails: 5,
-                      trailOffset: 400.0,
+                      numTrails: 3,
+                      trailOffset: 50.0,
                       noiseScale: 1,
-                      trailIntensity: 1,
+                      trailIntensity: 0.5,
                       enableAnimation: true,
+                      easing: d3.easeSinInOut,
                     }}
                     levels={5}
-                    labelFactor={1.3}
+                    labelFactor={1}
                     opacityArea={0.2}
-                    strokeWidth={2}
+                    strokeWidth={1}
                     dotRadius={5}
                     lineType="curved"
                     colors={{
                       primary: theme.palette.primary.main,
                       accent: theme.palette.warning.main,
-                      series: new Array(5).fill('').map((_, i) => {
+                      // series number should be at least number of trails
+                      series: new Array(3).fill('').map((_, i) => {
                         const fn =
                           theme.palette.mode === 'light' ? darken : lighten;
                         return fn(
-                          theme.palette.primary.main,
-                          remap(i, 0, 5, 0.5, 0)
+                          theme.palette.primary[theme.palette.mode],
+                          remap(i, 0, 3, 0, 0.5)
                         );
                       }),
                     }}
                     margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                   />
                   {/* <RadarChartExample /> */}
-                </CrosshairDisplay>
+                </RadarChartBox>
 
                 {/* Control Panel */}
                 <Box flex={1} display="flex" flexDirection="column" gap={1}>
@@ -253,23 +248,21 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             <Grid size={{ xs: 6 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Main Scanner */}
-                <RadarDisplay>
-                  <Box width="100%" height="100%">
-                    <ScanlinesOverlay />
-                    <TorusFieldProgressMemo
-                      progress={(progress.current / progress.total) * 100}
-                      progressMessage={progress.message}
-                      colors={{
-                        backgroundColor: theme.palette.background.paper,
-                        beamColor:
-                          theme.palette.info[theme.palette.getInvertedMode()],
-                        torusColor: theme.palette.primary.main,
-                        particleColor: theme.palette.info.main,
-                        verticalLineColor: theme.palette.warning.main,
-                      }}
-                    />
-                  </Box>
-                </RadarDisplay>
+                <TorusLoaderCardAug>
+                  <ScanlinesOverlay />
+                  <TorusFieldProgressMemo
+                    progress={(progress.current / progress.total) * 100}
+                    progressMessage={progress.message}
+                    colors={{
+                      backgroundColor: theme.palette.background.paper,
+                      beamColor:
+                        theme.palette.info[theme.palette.getInvertedMode()],
+                      torusColor: theme.palette.primary.main,
+                      particleColor: theme.palette.info.main,
+                      verticalLineColor: theme.palette.warning.main,
+                    }}
+                  />
+                </TorusLoaderCardAug>
 
                 {/* Status Bar */}
                 <StatusBar>
