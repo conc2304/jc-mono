@@ -292,6 +292,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 {/* Data Display */}
                 <DataPanel />
 
+                {/* TODO Find Something more interesting */}
+
                 {/* Additional Panels */}
                 <Box display="flex" flexDirection="column" gap={1} flex={1}>
                   <StatusButton>
@@ -364,6 +366,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
         <BottomPanel>
           <Grid container columns={12} spacing={4}>
             {/* Large Text Display */}
+            {/* TODO UPDATE THIS TEXT */}
             <Grid size={8}>
               <MultiplexText>MULTIPLEX</MultiplexText>
               <SystemsText>SYSTEMS</SystemsText>
