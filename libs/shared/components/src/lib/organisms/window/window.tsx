@@ -335,7 +335,8 @@ export const Window = React.memo(
               sx={(theme) => ({
                 height: `calc(100% - ${theme.mixins.window.titleBar.height})`,
                 overflow: 'auto',
-                padding: '8px',
+                p: 0.5,
+                pt: 0,
                 m: 0,
                 background: alpha(
                   theme.palette.background.paper,
@@ -355,12 +356,16 @@ export const Window = React.memo(
               })}
             >
               <Box
+                className="Window--content"
                 sx={{
                   height: '100%',
                   // Disable pointer events on content during drag for better performance
                   pointerEvents: isDragging ? 'none' : 'auto',
+                  // '& > *': {
+                  maxHeight: '100%',
+                  overflow: 'auto',
+                  // },
                 }}
-                className="Window--content"
               >
                 {/* Only render content when not minimized or during minimize animation */}
                 {(!minimized || animationState === 'minimizing') &&

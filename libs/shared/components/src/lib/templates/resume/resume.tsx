@@ -43,10 +43,7 @@ export const ResumeComponent = ({
   } = resumeData;
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ py: 4, maxHeight: '100%', overflow: 'auto' }}
-    >
+    <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         {/* Header Section */}
         <Box textAlign="center" mb={4}>
@@ -75,10 +72,7 @@ export const ResumeComponent = ({
               <LocationOn fontSize="small" color="action" />
               <Typography variant="body2">{contactInfo.location}</Typography>
             </Box>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <Phone fontSize="small" color="action" />
-              <Typography variant="body2">{contactInfo.phone}</Typography>
-            </Box>
+
             <Box display="flex" alignItems="center" gap={0.5}>
               <Email fontSize="small" color="action" />
               <Link href={`mailto:${contactInfo.email}`} variant="body2">
