@@ -36,40 +36,6 @@ export interface WindowMetaData {
     | 'maximizing';
 }
 
-// type FileData = {
-//   id: string
-//   fileName: string,
-//   content: string,
-//   imgUrl: string
-// }
-
-// type ExampleComponentProps = {
-//   dense: boolean
-// }
-
-// type ComponentProps = ExampleComponentProps & FileData;
-
-// const exampleComponent = ({
-//   id,
-//   fileName,
-//   content,
-//   imgUrl,
-//   dense,
-// }: ComponentProps) => {
-//   return (
-//     <div>
-//       <h1>{fileName}</h1>
-//       <img url={imgUrl} />
-//       <p className={dense ? 'dense' : 'regular'}>{content}</p>
-//     </div>
-//   );
-// };
-export interface FileSystemItemNewAdditions<DataType, RenderProps> {
-  fileData?: DataType;
-  renderer?: Component<RenderProps, DataType>;
-  rendererProps?: RenderProps;
-}
-
 export interface BaseFileSystemItem {
   id: string;
   name: string;
@@ -97,20 +63,14 @@ export interface BaseFileSystemItem {
   };
 }
 
-// Generic file data interface that can be extended
-export interface FileData {
-  id: string;
-  fileName: string;
-}
-
 // Renderer configuration
-export interface FileRenderer<TData extends FileData, TProps = {}> {
+export interface FileRenderer<TData = {}, TProps = {}> {
   component: ComponentType<TData & TProps>;
   props?: TProps;
 }
 
 // Generic FileSystemItem
-export interface FileSystemItem<TData extends FileData = FileData, TProps = {}>
+export interface FileSystemItem<TData = {}, TProps = {}>
   extends BaseFileSystemItem {
   // File-specific data (only for files, not folders)
   fileData?: TData;

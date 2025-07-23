@@ -11,12 +11,8 @@ import { useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
 import { FileManager } from '../organisms/file-manager';
-import {
-  WindowMetaData,
-  IconPosition,
-  FileSystemItem,
-  FileData,
-} from '../types';
+import { WindowMetaData, IconPosition, FileSystemItem } from '../types';
+import { findFileSystemItemByIdWithPath } from '../utils';
 
 interface DragRef {
   startX: number;
@@ -50,7 +46,7 @@ interface WindowState {
 
 interface WindowActions {
   // Window management
-  openWindow: (iconId: string) => void;
+  openWindow: (fsId: string) => void;
   closeWindow: (windowId: string) => void;
   minimizeWindow: (windowId: string) => void;
   maximizeWindow: (windowId: string) => void;
@@ -190,7 +186,6 @@ export const WindowProvider: React.FC<{
   const handleIconMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, iconId: string) => {
       e.preventDefault();
-      console.log('handleIconMouseDown', iconId);
       if (e.button === 2) return;
 
       iconDragRef.current = {
@@ -206,7 +201,6 @@ export const WindowProvider: React.FC<{
       const iconElement = e.currentTarget;
       if (iconElement) {
         iconElement.style.willChange = 'transform';
-        // iconElement.style.pointerEvents = 'none';
         iconElement.style.zIndex = '9999';
       }
 
@@ -333,10 +327,10 @@ export const WindowProvider: React.FC<{
     (itemId: string) => {
       console.log('OPEN WID: ', itemId);
 
-      const fsItem =
-        fileSystemItems && fileSystemItems.find((i) => i.id === itemId);
-      if (!fsItem) return;
+      const result = findFileSystemItemByIdWithPath(fileSystemItems, itemId);
+      if (!result) return;
 
+      const fsItem = result.item;
       const id = `window-${itemId}`;
 
       // Check if window already exists
@@ -470,6 +464,7 @@ export const WindowProvider: React.FC<{
               maximized: !w.maximized,
               x: w.maximized ? 200 : 0,
               y: w.maximized ? 100 : 0,
+              zIndex: w.maximized ? theme.zIndex.modal : windowZIndex,
               width: w.maximized ? 400 : window.innerWidth || 800,
               height: w.maximized ? 300 : (window.innerHeight || 600) - 100,
               animationState: 'maximizing',
@@ -809,7 +804,7 @@ const getWindowContent = (
 };
 
 // Utility function to render a file
-export function renderFile<TData extends FileData, TProps>(
+export function renderFile<TData = {}, TProps = {}>(
   file: FileSystemItem<TData, TProps>
 ): ReactNode | null {
   if (!file.fileData || !file.renderer) {

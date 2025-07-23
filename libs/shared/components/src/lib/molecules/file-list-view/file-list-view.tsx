@@ -1,11 +1,12 @@
 import { useCallback, useContext } from 'react';
 
 import { IconsView, ListView, DetailsView } from './views';
-import { FileSystemContext } from '../../context';
+import { FileSystemContext, useWindowActions } from '../../context';
 import { BaseFileSystemItem } from '../../types';
 
 export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
+  const { openWindow } = useWindowActions();
 
   const handleItemClick = useCallback(
     (item: BaseFileSystemItem, event: React.MouseEvent) => {
@@ -25,6 +26,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
       } else {
         // TODO OPEN FILE
         console.log('OPEN FILE', { item });
+        openWindow(item.id);
       }
     },
     [context]

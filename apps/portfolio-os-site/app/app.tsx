@@ -20,23 +20,23 @@ export function App() {
   ];
 
   const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
-  const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+  // const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
-  const cursorConfig: CursorTrailConfig = {
-    floorHeight: taskbarHeight,
-    trailLength: 6,
-    trailDecayRate: 0.1,
-    wallBounce: 0.5,
-    groundBounce: 0.3,
-    returnDuration: 300,
-    returnGlowColor: theme.palette.primary.main,
-    cursorColor: theme.palette.primary.main,
-    returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
-  };
+  // const cursorConfig: CursorTrailConfig = {
+  //   floorHeight: taskbarHeight,
+  //   trailLength: 6,
+  //   trailDecayRate: 0.1,
+  //   wallBounce: 0.5,
+  //   groundBounce: 0.3,
+  //   returnDuration: 300,
+  //   returnGlowColor: theme.palette.primary.main,
+  //   cursorColor: theme.palette.primary.main,
+  //   returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
+  // };
 
   return (
     <>
-      <CursorTrail {...cursorConfig} />
+      {/* <CursorTrail {...cursorConfig} /> */}
       <DesktopOS fileSystem={mockFileSystem} />
       <GradientShader
         className={key}

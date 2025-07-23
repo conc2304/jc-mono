@@ -301,7 +301,6 @@ export const Window = React.memo(
             // Performance optimizations
             willChange: isDragging ? 'transform' : 'auto',
             contain: 'layout style paint',
-            backdropFilter: 'blur(4px)',
             height: !maximized
               ? undefined
               : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`,

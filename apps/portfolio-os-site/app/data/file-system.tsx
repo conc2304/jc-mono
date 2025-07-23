@@ -1,9 +1,42 @@
-import { BaseFileSystemItem } from '@jc/ui-components';
+import {
+  FileSystemItem,
+  Resume,
+  ResumeComponent,
+  ResumeComponentProps,
+} from '@jc/ui-components';
+import { ResumeData } from '@jc/portfolio';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react'; // TODO replace with other icon library
 
 const fontSize = '40px';
 
-export const mockFileSystem: BaseFileSystemItem[] = [
+const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
+  id: '2',
+  name: 'Resume.pdf',
+  icon: <FileTextIcon fontSize={fontSize} />,
+  type: 'file',
+  size: 245760,
+  extension: 'pdf',
+  mimeType: 'application/pdf',
+  dateModified: new Date('2024-01-10'),
+  dateCreated: new Date('2024-01-10'),
+  path: '/Documents/Resume.pdf',
+  parentId: '1',
+  permissions: { read: true, write: true, execute: false },
+  metadata: {
+    tags: ['work', 'important'],
+    favorite: true,
+    description: 'Professional resume',
+  },
+  fileData: ResumeData,
+  renderer: {
+    component: ResumeComponent,
+    props: {
+      variant: 'sm',
+    },
+  },
+};
+
+export const mockFileSystem: FileSystemItem[] = [
   {
     id: '1',
     icon: <Folder fontSize={fontSize} />,
@@ -14,27 +47,7 @@ export const mockFileSystem: BaseFileSystemItem[] = [
     path: '/Documents',
     permissions: { read: true, write: true, execute: true },
     metadata: { tags: [], favorite: true },
-    children: [
-      {
-        id: '2',
-        name: 'Resume.pdf',
-        icon: <FileTextIcon fontSize={fontSize} />,
-        type: 'file',
-        size: 245760,
-        extension: 'pdf',
-        mimeType: 'application/pdf',
-        dateModified: new Date('2024-01-10'),
-        dateCreated: new Date('2024-01-10'),
-        path: '/Documents/Resume.pdf',
-        parentId: '1',
-        permissions: { read: true, write: true, execute: false },
-        metadata: {
-          tags: ['work', 'important'],
-          favorite: true,
-          description: 'Professional resume',
-        },
-      },
-    ],
+    children: [resumeFile],
   },
   {
     id: '3',
