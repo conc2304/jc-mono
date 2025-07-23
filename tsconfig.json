@@ -32,6 +32,12 @@
     },
     {
       "path": "./libs/features/portfolio"
+    },
+    {
+      "path": "./apps/portfolio-os-site-e2e"
+    },
+    {
+      "path": "./apps/portfolio-os-site"
     }
   ]
 }
