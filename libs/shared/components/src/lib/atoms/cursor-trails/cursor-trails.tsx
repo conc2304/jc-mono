@@ -4,9 +4,68 @@ import React, {
   useRef,
   useCallback,
   useMemo,
+  CSSProperties,
 } from 'react';
 
 import { Property } from 'csstype';
+
+// TypeScript interfaces for internal data structures
+interface TrailCursor {
+  x: number;
+  y: number;
+  id: number;
+  vx: number;
+  vy: number;
+  targetIndex: number;
+  followX: number;
+  followY: number;
+}
+
+interface FallingCursor extends TrailCursor {
+  ay: number;
+  bounce: number;
+  friction: number;
+  settled: boolean;
+  rotation?: number;
+  flopStartTime?: number;
+  totalFlops?: number;
+  currentFlop?: number;
+  flopDuration?: number;
+  nextFlopTime?: number;
+  isFlopping?: boolean;
+  groundY?: number;
+  flopY?: number;
+}
+
+interface ReturningCursor extends TrailCursor {
+  startX: number;
+  startY: number;
+  targetX: number;
+  targetY: number;
+  returnStartTime: number;
+  returnDuration: number;
+  settled: boolean;
+  rotation?: number;
+}
+
+interface EnergyPulse {
+  id: number;
+  originX: number;
+  originY: number;
+  startTime: number;
+  radius: number;
+  affectedCursors: Set<number>;
+}
+
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
+interface ScreenDimensions {
+  width: number;
+  height: number;
+}
 
 export interface CursorTrailConfig {
   // Trail settings
@@ -22,6 +81,17 @@ export interface CursorTrailConfig {
   groundBounce?: number;
   groundFriction?: number;
   velocityDamping?: number;
+
+  // Following settings
+  followSpeed?: number;
+  followDamping?: number;
+  trailSpacing?: number;
+
+  // Energy pulse settings (NEW)
+  pulseForce?: number;
+  pulseSpeed?: number;
+  pulseMaxRadius?: number;
+  pulseFalloff?: number;
 
   // Flopping settings
   floorHeight?: number;
@@ -71,7 +141,17 @@ export const CursorTrail = ({
   wallBounce = 0.7,
   groundBounce = 0.7,
   groundFriction = 0.8,
-  velocityDamping = 0.5,
+
+  // Following settings
+  followSpeed = 0.1,
+  followDamping = 0.8,
+  trailSpacing = 30,
+
+  // Energy pulse settings
+  pulseForce = 25,
+  pulseSpeed = 500,
+  pulseMaxRadius = 300,
+  pulseFalloff = 2,
 
   // Flopping settings
   floorHeight = 0,
@@ -110,24 +190,28 @@ export const CursorTrail = ({
   // UI settings
   style = {},
 }) => {
-  const [trail, setTrail] = useState([]);
-  const [isFalling, setIsFalling] = useState(false);
-  const [isReturning, setIsReturning] = useState(false);
-  const trailRef = useRef([]);
-  const fallingCursorsRef = useRef([]);
-  const returningCursorsRef = useRef([]);
-  const animationRef = useRef();
-  const lastPositionsRef = useRef([]);
-  const containerRef = useRef();
+  const [trail, setTrail] = useState<
+    (TrailCursor | FallingCursor | ReturningCursor)[]
+  >([]);
+  const [isFalling, setIsFalling] = useState<boolean>(false);
+  const [isReturning, setIsReturning] = useState<boolean>(false);
+  const trailRef = useRef<TrailCursor[]>([]);
+  const fallingCursorsRef = useRef<FallingCursor[]>([]);
+  const returningCursorsRef = useRef<ReturningCursor[]>([]);
+  const animationRef = useRef<number>(null);
+  const lastPositionsRef = useRef<TrailCursor[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const currentMousePosRef = useRef<MousePosition>({ x: 0, y: 0 });
+  const activePulsesRef = useRef<EnergyPulse[]>([]); // NEW: Track active energy pulses
 
   // Performance optimizations
-  const screenDimensionsRef = useRef({ width: 0, height: 0 });
-  const lastFrameTimeRef = useRef(0);
-  const TARGET_FPS = 60;
-  const FRAME_INTERVAL = 1000 / TARGET_FPS;
+  const screenDimensionsRef = useRef<ScreenDimensions>({ width: 0, height: 0 });
+  const lastFrameTimeRef = useRef<number>(0);
+  const TARGET_FPS: number = 60;
+  const FRAME_INTERVAL: number = 1000 / TARGET_FPS;
 
   // Memoized container styles
-  const containerStyle = useMemo(
+  const containerStyle: CSSProperties = useMemo(
     () => ({
       position: 'fixed',
       top: 0,
@@ -157,17 +241,60 @@ export const CursorTrail = ({
     };
   }, []);
 
+  // NEW: Initialize trail cursors with physics properties
+  const initializeTrailCursor = useCallback(
+    (position: Partial<TrailCursor>, targetIndex: number): TrailCursor => {
+      return {
+        x: position.x || 0,
+        y: position.y || 0,
+        id: position.id || performance.now(),
+        vx: position.vx || 0,
+        vy: position.vy || 0,
+        targetIndex: targetIndex, // Which cursor in the chain this should follow
+        followX: position.x || 0,
+        followY: position.y || 0,
+      };
+    },
+    []
+  );
+
+  // NEW: Handle mouse click for energy pulse
+  const handleMouseClick = useCallback((e: MouseEvent) => {
+    const now = performance.now();
+    const pulseOrigin: MousePosition = { x: e.clientX, y: e.clientY };
+
+    // Create new pulse
+    const newPulse: EnergyPulse = {
+      id: now,
+      originX: pulseOrigin.x,
+      originY: pulseOrigin.y,
+      startTime: now,
+      radius: 0,
+      affectedCursors: new Set<number>(), // Track which cursors have been affected
+    };
+
+    activePulsesRef.current.push(newPulse);
+  }, []);
+
   // Throttled mouse move handler
   const throttledMouseMove = useCallback(
-    (e) => {
+    (e: MouseEvent) => {
       const now = performance.now();
       if (now - lastFrameTimeRef.current < FRAME_INTERVAL) return;
+      if (e)
+        // Update current mouse position
+        currentMousePosRef.current = { x: e.clientX, y: e.clientY };
 
-      const newPosition = {
+      const newPosition: Partial<TrailCursor> = {
+        vx: 0,
+        vy: 0,
         x: e.clientX,
         y: e.clientY,
-        id: now, // Use performance.now for better precision
+        id: now,
       };
+
+      newPosition.x = e.clientX;
+      newPosition.y = e.clientY;
 
       // Calculate velocity based on previous position
       const prevPosition = lastPositionsRef.current[0];
@@ -180,7 +307,7 @@ export const CursorTrail = ({
       }
 
       lastPositionsRef.current = [
-        newPosition,
+        newPosition as TrailCursor,
         ...lastPositionsRef.current.slice(0, velocityHistoryLength - 1),
       ];
 
@@ -201,15 +328,16 @@ export const CursorTrail = ({
               : returningCursorsRef.current;
 
           returningCursorsRef.current = cursorsToReturn.map(
-            (cursor, index) => ({
+            (cursor, index): ReturningCursor => ({
               ...cursor,
               startX: cursor.x,
               startY:
-                cursor.settled && cursor.flopY !== undefined
-                  ? (cursor.groundY || cursor.y) + cursor.flopY
+                cursor.settled && (cursor as FallingCursor).flopY !== undefined
+                  ? ((cursor as FallingCursor).groundY || cursor.y) +
+                    (cursor as FallingCursor).flopY!
                   : cursor.y,
-              targetX: newPosition.x,
-              targetY: newPosition.y,
+              targetX: newPosition.x!,
+              targetY: newPosition.y!,
               returnStartTime: now + index * returnStagger,
               returnDuration: returnDuration + index * returnDurationVariation,
               settled: false,
@@ -223,19 +351,29 @@ export const CursorTrail = ({
         // Update target for returning cursors
         if (isReturning) {
           returningCursorsRef.current.forEach((cursor) => {
-            cursor.targetX = newPosition.x;
-            cursor.targetY = newPosition.y;
+            cursor.targetX = newPosition.x!;
+            cursor.targetY = newPosition.y!;
           });
         }
       } else {
-        // Normal trail mode - limit array operations
-        if (trailRef.current.length >= trailLength) {
-          trailRef.current.pop(); // Remove last element
+        // Normal trail mode - NEW: Initialize cursors with following behavior
+        if (trailRef.current.length === 0) {
+          // First cursor
+          trailRef.current = [initializeTrailCursor(newPosition, -1)]; // -1 means follow mouse directly
+        } else {
+          // Add new cursor if we haven't reached max length
+          if (trailRef.current.length < trailLength) {
+            trailRef.current.push(
+              initializeTrailCursor(newPosition, trailRef.current.length - 1)
+            );
+          }
         }
-        trailRef.current.unshift(newPosition); // Add to beginning
 
-        // Batch state update
-        setTrail([...trailRef.current]);
+        // Update the first cursor's target to current mouse position
+        if (trailRef.current.length > 0) {
+          trailRef.current[0].followX = newPosition.x!;
+          trailRef.current[0].followY = newPosition.y!;
+        }
       }
 
       lastFrameTimeRef.current = now;
@@ -249,21 +387,24 @@ export const CursorTrail = ({
       returnStagger,
       returnDuration,
       returnDurationVariation,
+      initializeTrailCursor,
     ]
   );
 
   const handleMouseLeave = useCallback(() => {
     if (trailRef.current.length > 0) {
       // Convert trail to falling cursors with physics properties
-      fallingCursorsRef.current = trailRef.current.map((cursor) => ({
-        ...cursor,
-        vx: cursor.vx || 0,
-        vy: cursor.vy || 0,
-        ay: gravity,
-        bounce: wallBounce,
-        friction: airResistance,
-        settled: false,
-      }));
+      fallingCursorsRef.current = trailRef.current.map(
+        (cursor): FallingCursor => ({
+          ...cursor,
+          vx: cursor.vx || 0,
+          vy: cursor.vy || 0,
+          ay: gravity,
+          bounce: wallBounce,
+          friction: airResistance,
+          settled: false,
+        })
+      );
       setIsFalling(true);
       trailRef.current = [];
     }
@@ -318,19 +459,22 @@ export const CursorTrail = ({
       // When all cursors have returned, switch to normal trail mode
       if (allReturned) {
         setIsReturning(false);
-        // Convert returning cursors to trail format and merge with new trail
-        const returnedCursors = returningCursorsRef.current.map((cursor) => ({
-          x: cursor.x,
-          y: cursor.y,
-          id: cursor.id,
-          vx: 0,
-          vy: 0,
-        }));
-
-        trailRef.current = [...trailRef.current, ...returnedCursors].slice(
-          0,
-          trailLength
+        // Convert returning cursors to trail format with following behavior
+        const returnedCursors: TrailCursor[] = returningCursorsRef.current.map(
+          (cursor, index) =>
+            initializeTrailCursor(
+              {
+                x: cursor.x,
+                y: cursor.y,
+                id: cursor.id,
+                vx: 0,
+                vy: 0,
+              },
+              index === 0 ? -1 : index - 1
+            )
         );
+
+        trailRef.current = returnedCursors.slice(0, trailLength);
         returningCursorsRef.current = [];
       }
 
@@ -357,17 +501,23 @@ export const CursorTrail = ({
 
           if (
             now > cursor.flopStartTime &&
+            cursor.currentFlop &&
+            cursor.totalFlops &&
             cursor.currentFlop < cursor.totalFlops
           ) {
-            if (!cursor.isFlopping && now >= cursor.nextFlopTime) {
+            if (
+              !cursor.isFlopping &&
+              cursor.nextFlopTime &&
+              now >= cursor.nextFlopTime
+            ) {
               // Start a new flop
               cursor.isFlopping = true;
-              cursor.flopStarted = now;
+              cursor.flopStartTime = now;
               cursor.currentFlop++;
             }
 
-            if (cursor.isFlopping) {
-              const flopElapsed = now - cursor.flopStarted;
+            if (cursor.isFlopping && cursor.flopDuration) {
+              const flopElapsed = now - cursor.flopStartTime;
               const flopProgress = Math.min(
                 flopElapsed / cursor.flopDuration,
                 1
@@ -396,7 +546,11 @@ export const CursorTrail = ({
                 cursor.nextFlopTime = now + delay;
               }
             }
-          } else if (cursor.currentFlop >= cursor.totalFlops) {
+          } else if (
+            cursor.currentFlop &&
+            cursor.totalFlops &&
+            cursor.currentFlop >= cursor.totalFlops
+          ) {
             // All flops done, lie still
             cursor.flopY = 0;
             cursor.rotation = 90;
@@ -446,13 +600,108 @@ export const CursorTrail = ({
       }
 
       setTrail([...fallingCursorsRef.current]);
-    } else if (
-      !isFalling &&
-      !isReturning &&
-      trailRef.current.length > trailLength
-    ) {
-      // Normal trail animation - only filter if needed
-      trailRef.current = trailRef.current.slice(0, trailLength);
+    } else if (!isFalling && !isReturning && trailRef.current.length > 0) {
+      // Process active energy pulses
+      activePulsesRef.current = activePulsesRef.current.filter(
+        (pulse: EnergyPulse) => {
+          const elapsed = now - pulse.startTime;
+          pulse.radius = (elapsed / 1000) * pulseSpeed;
+
+          // Remove pulse if it's exceeded max radius
+          if (pulse.radius > pulseMaxRadius) {
+            return false;
+          }
+
+          // Check each cursor for pulse interaction
+          for (let i = 0; i < trailRef.current.length; i++) {
+            const cursor = trailRef.current[i];
+            const cursorId: number = cursor.id;
+
+            // Skip if this cursor was already affected by this pulse
+            if (pulse.affectedCursors.has(cursorId)) {
+              continue;
+            }
+
+            // Calculate distance from cursor to pulse origin
+            const dx = cursor.x - pulse.originX;
+            const dy = cursor.y - pulse.originY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Check if pulse wave has reached this cursor
+            if (
+              distance <= pulse.radius &&
+              distance > pulse.radius - pulseSpeed / 60
+            ) {
+              // Apply force based on distance (closer = stronger force)
+              const maxForce = pulseForce;
+              const forceMultiplier = Math.max(
+                0,
+                1 - Math.pow(distance / pulseMaxRadius, pulseFalloff)
+              );
+              const force = maxForce * forceMultiplier;
+
+              // Calculate force direction (away from pulse origin)
+              const forceDirection =
+                distance > 0
+                  ? { x: dx / distance, y: dy / distance }
+                  : { x: 1, y: 0 };
+
+              // Apply force to cursor velocity
+              cursor.vx += forceDirection.x * force;
+              cursor.vy += forceDirection.y * force;
+
+              // Mark this cursor as affected by this pulse
+              pulse.affectedCursors.add(cursorId);
+            }
+          }
+
+          return true; // Keep pulse active
+        }
+      );
+
+      // Normal trail animation with following behavior
+      for (let i = 0; i < trailRef.current.length; i++) {
+        const cursor = trailRef.current[i];
+        let targetX: number, targetY: number;
+
+        if (cursor.targetIndex === -1) {
+          // First cursor follows mouse directly
+          targetX = currentMousePosRef.current.x;
+          targetY = currentMousePosRef.current.y;
+        } else if (cursor.targetIndex < trailRef.current.length) {
+          // Other cursors follow the cursor ahead of them
+          const targetCursor = trailRef.current[cursor.targetIndex];
+          const dx = targetCursor.x - cursor.x;
+          const dy = targetCursor.y - cursor.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance > trailSpacing) {
+            // Maintain spacing
+            targetX = targetCursor.x - (dx / distance) * trailSpacing;
+            targetY = targetCursor.y - (dy / distance) * trailSpacing;
+          } else {
+            targetX = cursor.x;
+            targetY = cursor.y;
+          }
+        } else {
+          targetX = cursor.x;
+          targetY = cursor.y;
+        }
+
+        // Apply following physics
+        const dx = targetX - cursor.x;
+        const dy = targetY - cursor.y;
+
+        cursor.vx += dx * followSpeed;
+        cursor.vy += dy * followSpeed;
+
+        cursor.vx *= followDamping;
+        cursor.vy *= followDamping;
+
+        cursor.x += cursor.vx;
+        cursor.y += cursor.vy;
+      }
+
       setTrail([...trailRef.current]);
     }
 
@@ -477,6 +726,14 @@ export const CursorTrail = ({
     groundFriction,
     settlementVelocityThreshold,
     settlementHorizontalThreshold,
+    followSpeed,
+    followDamping,
+    trailSpacing,
+    initializeTrailCursor,
+    pulseForce,
+    pulseSpeed,
+    pulseMaxRadius,
+    pulseFalloff,
   ]);
 
   useEffect(() => {
@@ -485,28 +742,34 @@ export const CursorTrail = ({
 
     document.addEventListener('mousemove', throttledMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('click', handleMouseClick); // NEW: Add click listener
     animationRef.current = requestAnimationFrame(animateTrail);
 
     return () => {
       window.removeEventListener('resize', updateScreenDimensions);
       document.removeEventListener('mousemove', throttledMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('click', handleMouseClick); // NEW: Remove click listener
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [throttledMouseMove, handleMouseLeave, animateTrail]);
+  }, [throttledMouseMove, handleMouseLeave, animateTrail, handleMouseClick]);
 
   // Memoized cursor renderer
   const renderCursor = useCallback(
-    (position, index) => {
+    (
+      position: TrailCursor | FallingCursor | ReturningCursor,
+      index: number
+    ) => {
+      const fallingPos = position as FallingCursor;
       const displayY =
-        position.settled && position.flopY !== undefined
-          ? (position.groundY || position.y) + position.flopY
+        fallingPos.settled && fallingPos.flopY !== undefined
+          ? (fallingPos.groundY || position.y) + fallingPos.flopY
           : position.y;
 
       // Handle different visual states
-      let opacity, transform;
+      let opacity: number, transform: string;
 
       if (isReturning) {
         // Returning cursors - full opacity, slight glow effect
@@ -514,17 +777,17 @@ export const CursorTrail = ({
         transform = 'scale(1)';
       } else if (isFalling) {
         // Falling/settled cursors
-        if (position.settled) {
+        if (fallingPos.settled) {
           opacity =
-            position.currentFlop >= position.totalFlops
+            (fallingPos.currentFlop || 0) >= (fallingPos.totalFlops || 0)
               ? settledOpacity
               : normalOpacity;
         } else {
           opacity = normalOpacity;
         }
 
-        if (position.rotation !== undefined) {
-          transform = `scale(1) rotate(${position.rotation}deg)`;
+        if (fallingPos.rotation !== undefined) {
+          transform = `scale(1) rotate(${fallingPos.rotation}deg)`;
         } else {
           transform = 'scale(1)';
         }
@@ -536,14 +799,14 @@ export const CursorTrail = ({
       }
 
       // Optimized styles object
-      const cursorStyle = {
+      const cursorStyle: React.CSSProperties = {
         position: 'absolute',
         left: position.x - cursorSize / 2,
         top: displayY - cursorSize / 2,
         opacity: opacity,
         transform: transform,
         willChange: 'transform, opacity', // GPU acceleration hint
-        transition: isFalling || isReturning ? 'none' : 'all 0.1s ease-out',
+        transition: isFalling || isReturning ? 'none' : 'none', // Remove transition for smooth following
         filter: isReturning
           ? `drop-shadow(0 0 8px ${returnGlowColor})`
           : 'none',
