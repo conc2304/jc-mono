@@ -1,0 +1,32 @@
+{
+  "migrations": [
+    {
+      "version": "21.3.0-beta.3",
+      "requires": {
+        "jest": ">=30.0.0"
+      },
+      "description": "Rename the CLI option `testPathPattern` to `testPathPatterns`.",
+      "implementation": "./src/migrations/update-21-3-0/rename-test-path-pattern",
+      "package": "@nx/jest",
+      "name": "rename-test-path-pattern"
+    },
+    {
+      "version": "21.3.0-beta.3",
+      "requires": {
+        "jest": ">=30.0.0"
+      },
+      "description": "Replace removed matcher aliases in Jest v30 with their corresponding matcher",
+      "implementation": "./src/migrations/update-21-3-0/replace-removed-matcher-aliases",
+      "package": "@nx/jest",
+      "name": "replace-removed-matcher-aliases"
+    }
+  ],
+  "nx-console": {
+    "initialGitRef": {
+      "ref": "b924a30d00ab1809c5ee4e8db538169cb5daae16",
+      "subject": "save again"
+    },
+    "targetVersion": "latest",
+    "confirmedPackageUpdates": true
+  }
+}
