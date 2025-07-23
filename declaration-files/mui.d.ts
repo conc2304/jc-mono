@@ -1,4 +1,4 @@
-import { CSSProperties } from '@mui/material/styles';
+import { CSSProperties, PaletteMode } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   // Allow for custom mixins to be added
@@ -15,10 +15,17 @@ declare module '@mui/material/styles' {
     window: number;
   }
 
+  type PaletteOptionNames =
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'warning'
+    | 'info'
+    | 'success';
+
   interface Palette {
-    getInvertedMode: () => 'light' | 'dark';
+    getInvertedMode<T extends PaletteOptionNames | undefined = undefined>(
+      paletteColor?: T
+    ): T extends PaletteOptionNames ? string : 'light' | 'dark';
   }
-  // interface PaletteOptions {
-  //   // invertedMode?: 'light' | 'dark';
-  // }
 }

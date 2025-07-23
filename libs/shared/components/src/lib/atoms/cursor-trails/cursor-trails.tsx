@@ -1,7 +1,115 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 
-// TODO MAKE THIS MUI AND TS
-const CursorTrail = () => {
+import { Property } from 'csstype';
+
+export interface CursorTrailConfig {
+  // Trail settings
+  trailLength?: number;
+  trailDecayRate?: number;
+  trailScaleDecay?: number;
+  trailMinScale?: number;
+
+  // Physics settings
+  gravity?: number;
+  airResistance?: number;
+  wallBounce?: number;
+  groundBounce?: number;
+  groundFriction?: number;
+  velocityDamping?: number;
+
+  // Flopping settings
+  floorHeight?: number;
+  flopCountMin?: number;
+  flopCountMax?: number;
+  flopHeightMin?: number;
+  flopHeightMax?: number;
+  flopDuration?: number;
+  flopDelayMin?: number;
+  flopDelayMax?: number;
+  initialFlopDelayMax?: number;
+
+  // Return animation settings
+  returnDuration?: number;
+  returnStagger?: number;
+  returnDurationVariation?: number;
+  returnEaseStrength?: number;
+  returnWobbleAmount?: number;
+
+  // Visual settings
+  cursorSize?: number;
+  normalOpacity?: number;
+  settledOpacity?: number;
+  returnGlowColor?: Property.Color;
+  returnTintColor?: Property.Color;
+  cursorColor?: Property.Color;
+
+  // Velocity settings
+  velocityMultiplier?: number;
+  velocityHistoryLength?: number;
+
+  // Settlement thresholds
+  settlementVelocityThreshold?: number;
+  settlementHorizontalThreshold?: number;
+}
+
+export const CursorTrail = ({
+  // Trail settings
+  trailLength = 8,
+  trailDecayRate = 0.15,
+  trailScaleDecay = 0.1,
+  trailMinScale = 0.3,
+
+  // Physics settings
+  gravity = 0.8,
+  airResistance = 0.98,
+  wallBounce = 0.7,
+  groundBounce = 0.7,
+  groundFriction = 0.8,
+  velocityDamping = 0.5,
+
+  // Flopping settings
+  floorHeight = 0,
+  flopCountMin = 2,
+  flopCountMax = 6,
+  flopHeightMin = 15,
+  flopHeightMax = 25,
+  flopDuration = 400,
+  flopDelayMin = 500,
+  flopDelayMax = 2000,
+  initialFlopDelayMax = 2000,
+
+  // Return animation settings
+  returnDuration = 800,
+  returnStagger = 50,
+  returnDurationVariation = 30,
+  returnEaseStrength = 3,
+  returnWobbleAmount = 5,
+
+  // Visual settings
+  cursorSize = 24,
+  normalOpacity = 1,
+  settledOpacity = 0.6,
+  returnGlowColor = 'rgba(59, 130, 246, 0.5)',
+  returnTintColor = '#dbeafe',
+  cursorColor = 'white',
+
+  // Velocity settings
+  velocityMultiplier = 0.5,
+  velocityHistoryLength = 4,
+
+  // Settlement thresholds
+  settlementVelocityThreshold = 2,
+  settlementHorizontalThreshold = 1,
+
+  // UI settings
+  style = {},
+}) => {
   const [trail, setTrail] = useState([]);
   const [isFalling, setIsFalling] = useState(false);
   const [isReturning, setIsReturning] = useState(false);
@@ -10,20 +118,62 @@ const CursorTrail = () => {
   const returningCursorsRef = useRef([]);
   const animationRef = useRef();
   const lastPositionsRef = useRef([]);
+  const containerRef = useRef();
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
+  // Performance optimizations
+  const screenDimensionsRef = useRef({ width: 0, height: 0 });
+  const lastFrameTimeRef = useRef(0);
+  const TARGET_FPS = 60;
+  const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
+  // Memoized container styles
+  const containerStyle = useMemo(
+    () => ({
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      pointerEvents: 'none',
+      zIndex: 50,
+      willChange: 'transform', // GPU acceleration hint
+      ...style,
+    }),
+    [style]
+  );
+
+  // Memoized SVG path
+  const svgPath = useMemo(
+    () =>
+      'M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L6.35 2.86a.5.5 0 0 0-.85.35Z',
+    []
+  );
+
+  // Cache screen dimensions
+  const updateScreenDimensions = useCallback(() => {
+    screenDimensionsRef.current = {
+      width: window.innerWidth,
+      height: window.innerHeight - floorHeight,
+    };
+  }, []);
+
+  // Throttled mouse move handler
+  const throttledMouseMove = useCallback(
+    (e) => {
+      const now = performance.now();
+      if (now - lastFrameTimeRef.current < FRAME_INTERVAL) return;
+
       const newPosition = {
         x: e.clientX,
         y: e.clientY,
-        id: Date.now(),
+        id: now, // Use performance.now for better precision
       };
 
       // Calculate velocity based on previous position
       const prevPosition = lastPositionsRef.current[0];
       if (prevPosition) {
-        newPosition.vx = (newPosition.x - prevPosition.x) * 0.5; // Damping factor
-        newPosition.vy = (newPosition.y - prevPosition.y) * 0.5;
+        newPosition.vx = (newPosition.x - prevPosition.x) * velocityMultiplier;
+        newPosition.vy = (newPosition.y - prevPosition.y) * velocityMultiplier;
       } else {
         newPosition.vx = 0;
         newPosition.vy = 0;
@@ -31,7 +181,7 @@ const CursorTrail = () => {
 
       lastPositionsRef.current = [
         newPosition,
-        ...lastPositionsRef.current.slice(0, 4),
+        ...lastPositionsRef.current.slice(0, velocityHistoryLength - 1),
       ];
 
       if (isFalling || isReturning) {
@@ -60,8 +210,8 @@ const CursorTrail = () => {
                   : cursor.y,
               targetX: newPosition.x,
               targetY: newPosition.y,
-              returnStartTime: Date.now() + index * 50, // Stagger the return
-              returnDuration: 800 + index * 30, // Varying return speeds
+              returnStartTime: now + index * returnStagger,
+              returnDuration: returnDuration + index * returnDurationVariation,
               settled: false,
               rotation: 0,
             })
@@ -78,295 +228,369 @@ const CursorTrail = () => {
           });
         }
       } else {
-        // Normal trail mode
-        trailRef.current = [newPosition, ...trailRef.current.slice(0, 19)];
+        // Normal trail mode - limit array operations
+        if (trailRef.current.length >= trailLength) {
+          trailRef.current.pop(); // Remove last element
+        }
+        trailRef.current.unshift(newPosition); // Add to beginning
+
+        // Batch state update
         setTrail([...trailRef.current]);
       }
-    };
 
-    const handleMouseLeave = () => {
-      if (trailRef.current.length > 0) {
-        // Convert trail to falling cursors with physics properties
-        fallingCursorsRef.current = trailRef.current.map((cursor, index) => ({
-          ...cursor,
-          vx: cursor.vx || 0,
-          vy: cursor.vy || 0,
-          ay: 0.8, // gravity
-          bounce: 0.7, // bounce damping
-          friction: 0.98, // air resistance
-          settled: false,
-        }));
-        setIsFalling(true);
-        trailRef.current = [];
-      }
-    };
+      lastFrameTimeRef.current = now;
+    },
+    [
+      isFalling,
+      isReturning,
+      trailLength,
+      velocityMultiplier,
+      velocityHistoryLength,
+      returnStagger,
+      returnDuration,
+      returnDurationVariation,
+    ]
+  );
 
-    const handleMouseEnter = () => {
-      // Don't immediately reset - let the mouse move handler trigger the return animation
-    };
+  const handleMouseLeave = useCallback(() => {
+    if (trailRef.current.length > 0) {
+      // Convert trail to falling cursors with physics properties
+      fallingCursorsRef.current = trailRef.current.map((cursor) => ({
+        ...cursor,
+        vx: cursor.vx || 0,
+        vy: cursor.vy || 0,
+        ay: gravity,
+        bounce: wallBounce,
+        friction: airResistance,
+        settled: false,
+      }));
+      setIsFalling(true);
+      trailRef.current = [];
+    }
+  }, [gravity, wallBounce, airResistance]);
 
-    const animateTrail = () => {
-      if (isReturning && returningCursorsRef.current.length > 0) {
-        const now = Date.now();
-        let allReturned = true;
+  const animateTrail = useCallback(() => {
+    const now = performance.now();
 
-        returningCursorsRef.current = returningCursorsRef.current.map(
-          (cursor) => {
-            if (now < cursor.returnStartTime) {
-              allReturned = false;
-              return cursor;
-            }
+    // Frame rate limiting
+    if (now - lastFrameTimeRef.current < FRAME_INTERVAL) {
+      animationRef.current = requestAnimationFrame(animateTrail);
+      return;
+    }
 
-            const elapsed = now - cursor.returnStartTime;
-            const progress = Math.min(elapsed / cursor.returnDuration, 1);
+    const { width: screenWidth, height: screenHeight } =
+      screenDimensionsRef.current;
 
-            // Smooth easing function (ease-out cubic)
-            const easedProgress = 1 - Math.pow(1 - progress, 3);
+    if (isReturning && returningCursorsRef.current.length > 0) {
+      let allReturned = true;
 
-            // Interpolate position
-            cursor.x =
-              cursor.startX + (cursor.targetX - cursor.startX) * easedProgress;
-            cursor.y =
-              cursor.startY + (cursor.targetY - cursor.startY) * easedProgress;
+      // Use for loop for better performance than map
+      for (let i = 0; i < returningCursorsRef.current.length; i++) {
+        const cursor = returningCursorsRef.current[i];
 
-            // Add some organic movement during return
-            const wobble = Math.sin(elapsed * 0.01) * (1 - progress) * 5;
-            cursor.x += wobble;
-
-            if (progress < 1) {
-              allReturned = false;
-            }
-
-            return cursor;
-          }
-        );
-
-        // When all cursors have returned, switch to normal trail mode
-        if (allReturned) {
-          setIsReturning(false);
-          // Convert returning cursors to trail format and merge with new trail
-          const returnedCursors = returningCursorsRef.current.map((cursor) => ({
-            x: cursor.x,
-            y: cursor.y,
-            id: cursor.id,
-            vx: 0,
-            vy: 0,
-          }));
-
-          trailRef.current = [...trailRef.current, ...returnedCursors].slice(
-            0,
-            15
-          );
-          returningCursorsRef.current = [];
+        if (now < cursor.returnStartTime) {
+          allReturned = false;
+          continue;
         }
 
-        setTrail([...returningCursorsRef.current]);
-      } else if (isFalling && fallingCursorsRef.current.length > 0) {
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
+        const elapsed = now - cursor.returnStartTime;
+        const progress = Math.min(elapsed / cursor.returnDuration, 1);
 
-        fallingCursorsRef.current = fallingCursorsRef.current.map((cursor) => {
-          // Handle settled cursors (dead fish flopping)
-          if (cursor.settled) {
-            if (!cursor.flopStartTime) {
-              cursor.flopStartTime = Date.now() + Math.random() * 2000; // Random delay before flopping starts
-              cursor.flopPhase = Math.random() * Math.PI * 2; // Random starting phase
-              cursor.flopIntensity = 0.5 + Math.random() * 0.5; // Random flop intensity
-              cursor.flopSpeed = 2 + Math.random() * 3; // Random flop speed
-              cursor.groundY = cursor.y; // Remember ground position
-            }
+        // Smooth easing function (customizable ease-out)
+        const easedProgress = 1 - Math.pow(1 - progress, returnEaseStrength);
 
-            const now = Date.now();
-            if (now > cursor.flopStartTime) {
-              // Dead fish flopping animation
-              const timeSinceFlop = (now - cursor.flopStartTime) / 1000;
-              const flopDecay = Math.exp(-timeSinceFlop * 0.3); // Gradually reduce flopping
+        // Interpolate position
+        cursor.x =
+          cursor.startX + (cursor.targetX - cursor.startX) * easedProgress;
+        cursor.y =
+          cursor.startY + (cursor.targetY - cursor.startY) * easedProgress;
 
-              // Flopping rotation and position
-              const flopAngle =
-                Math.sin(timeSinceFlop * cursor.flopSpeed + cursor.flopPhase) *
-                cursor.flopIntensity *
-                flopDecay;
-              const flopOffset =
-                Math.sin(
-                  timeSinceFlop * cursor.flopSpeed * 1.5 + cursor.flopPhase
-                ) *
-                3 *
-                flopDecay;
+        // Add some organic movement during return
+        const wobble =
+          Math.sin(elapsed * 0.01) * (1 - progress) * returnWobbleAmount;
+        cursor.x += wobble;
 
-              cursor.rotation = flopAngle * 30; // degrees
-              cursor.flopY = flopOffset;
-              cursor.flopDecay = flopDecay;
-            }
-
-            return cursor;
-          }
-
-          // Apply physics for falling cursors
-          cursor.vy += cursor.ay; // gravity
-          cursor.vx *= cursor.friction; // air resistance
-          cursor.x += cursor.vx;
-          cursor.y += cursor.vy;
-
-          // Bounce off left and right walls
-          if (cursor.x <= 12) {
-            cursor.x = 12;
-            cursor.vx = Math.abs(cursor.vx) * cursor.bounce;
-          } else if (cursor.x >= screenWidth - 12) {
-            cursor.x = screenWidth - 12;
-            cursor.vx = -Math.abs(cursor.vx) * cursor.bounce;
-          }
-
-          // Bounce off ground
-          if (cursor.y >= screenHeight - 24) {
-            cursor.y = screenHeight - 24;
-            cursor.vy = -Math.abs(cursor.vy) * cursor.bounce;
-            cursor.vx *= 0.8; // friction on ground
-
-            // Settle if moving slowly
-            if (Math.abs(cursor.vy) < 2 && Math.abs(cursor.vx) < 1) {
-              cursor.settled = true;
-              cursor.vx = 0;
-              cursor.vy = 0;
-            }
-          }
-
-          // Bounce off ceiling
-          if (cursor.y <= 12) {
-            cursor.y = 12;
-            cursor.vy = Math.abs(cursor.vy) * cursor.bounce;
-          }
-
-          return cursor;
-        });
-
-        setTrail([...fallingCursorsRef.current]);
-      } else if (!isFalling && !isReturning) {
-        // Normal trail animation
-        trailRef.current = trailRef.current.filter((_, index) => index < 15);
-        setTrail([...trailRef.current]);
+        if (progress < 1) {
+          allReturned = false;
+        }
       }
 
-      animationRef.current = requestAnimationFrame(animateTrail);
-    };
+      // When all cursors have returned, switch to normal trail mode
+      if (allReturned) {
+        setIsReturning(false);
+        // Convert returning cursors to trail format and merge with new trail
+        const returnedCursors = returningCursorsRef.current.map((cursor) => ({
+          x: cursor.x,
+          y: cursor.y,
+          id: cursor.id,
+          vx: 0,
+          vy: 0,
+        }));
 
-    document.addEventListener('mousemove', handleMouseMove);
+        trailRef.current = [...trailRef.current, ...returnedCursors].slice(
+          0,
+          trailLength
+        );
+        returningCursorsRef.current = [];
+      }
+
+      setTrail([...returningCursorsRef.current]);
+    } else if (isFalling && fallingCursorsRef.current.length > 0) {
+      // Use for loop for better performance
+      for (let i = 0; i < fallingCursorsRef.current.length; i++) {
+        const cursor = fallingCursorsRef.current[i];
+
+        // Handle settled cursors (dead fish flopping)
+        if (cursor.settled) {
+          if (!cursor.flopStartTime) {
+            cursor.flopStartTime = now + Math.random() * initialFlopDelayMax;
+            cursor.totalFlops =
+              Math.floor(Math.random() * (flopCountMax - flopCountMin + 1)) +
+              flopCountMin;
+            cursor.currentFlop = 0;
+            cursor.flopDuration = flopDuration;
+            cursor.nextFlopTime = cursor.flopStartTime;
+            cursor.isFlopping = false;
+            cursor.groundY = cursor.y;
+            cursor.flopY = 0;
+          }
+
+          if (
+            now > cursor.flopStartTime &&
+            cursor.currentFlop < cursor.totalFlops
+          ) {
+            if (!cursor.isFlopping && now >= cursor.nextFlopTime) {
+              // Start a new flop
+              cursor.isFlopping = true;
+              cursor.flopStarted = now;
+              cursor.currentFlop++;
+            }
+
+            if (cursor.isFlopping) {
+              const flopElapsed = now - cursor.flopStarted;
+              const flopProgress = Math.min(
+                flopElapsed / cursor.flopDuration,
+                1
+              );
+
+              if (flopProgress < 1) {
+                // Parabolic jump motion
+                const jumpHeight =
+                  flopHeightMin +
+                  Math.random() * (flopHeightMax - flopHeightMin);
+                cursor.flopY =
+                  -jumpHeight * 4 * flopProgress * (1 - flopProgress);
+
+                // Slight rotation during flop
+                const rotationVariation = Math.sin(flopProgress * Math.PI) * 20;
+                cursor.rotation = 90 + rotationVariation;
+              } else {
+                // Flop finished
+                cursor.isFlopping = false;
+                cursor.flopY = 0;
+                cursor.rotation = 90; // Back to horizontal
+
+                // Schedule next flop with random delay
+                const delay =
+                  flopDelayMin + Math.random() * (flopDelayMax - flopDelayMin);
+                cursor.nextFlopTime = now + delay;
+              }
+            }
+          } else if (cursor.currentFlop >= cursor.totalFlops) {
+            // All flops done, lie still
+            cursor.flopY = 0;
+            cursor.rotation = 90;
+          }
+
+          continue;
+        }
+
+        // Apply physics for falling cursors
+        cursor.vy += cursor.ay; // gravity
+        cursor.vx *= cursor.friction; // air resistance
+        cursor.x += cursor.vx;
+        cursor.y += cursor.vy;
+
+        // Bounce off left and right walls
+        if (cursor.x <= cursorSize / 2) {
+          cursor.x = cursorSize / 2;
+          cursor.vx = Math.abs(cursor.vx) * cursor.bounce;
+        } else if (cursor.x >= screenWidth - cursorSize / 2) {
+          cursor.x = screenWidth - cursorSize / 2;
+          cursor.vx = -Math.abs(cursor.vx) * cursor.bounce;
+        }
+
+        // Bounce off ground
+        if (cursor.y >= screenHeight - cursorSize - floorHeight) {
+          cursor.y = screenHeight - cursorSize - floorHeight;
+          cursor.vy = -Math.abs(cursor.vy) * groundBounce;
+          cursor.vx *= groundFriction; // friction on ground
+
+          // Settle if moving slowly
+          if (
+            Math.abs(cursor.vy) < settlementVelocityThreshold &&
+            Math.abs(cursor.vx) < settlementHorizontalThreshold
+          ) {
+            cursor.settled = true;
+            cursor.vx = 0;
+            cursor.vy = 0;
+            cursor.rotation = 90; // Lie horizontally on the ground
+          }
+        }
+
+        // Bounce off ceiling
+        if (cursor.y <= cursorSize / 2) {
+          cursor.y = cursorSize / 2;
+          cursor.vy = Math.abs(cursor.vy) * cursor.bounce;
+        }
+      }
+
+      setTrail([...fallingCursorsRef.current]);
+    } else if (
+      !isFalling &&
+      !isReturning &&
+      trailRef.current.length > trailLength
+    ) {
+      // Normal trail animation - only filter if needed
+      trailRef.current = trailRef.current.slice(0, trailLength);
+      setTrail([...trailRef.current]);
+    }
+
+    lastFrameTimeRef.current = now;
+    animationRef.current = requestAnimationFrame(animateTrail);
+  }, [
+    isReturning,
+    isFalling,
+    trailLength,
+    returnEaseStrength,
+    returnWobbleAmount,
+    flopCountMin,
+    flopCountMax,
+    flopHeightMin,
+    flopHeightMax,
+    flopDuration,
+    flopDelayMin,
+    flopDelayMax,
+    initialFlopDelayMax,
+    cursorSize,
+    groundBounce,
+    groundFriction,
+    settlementVelocityThreshold,
+    settlementHorizontalThreshold,
+  ]);
+
+  useEffect(() => {
+    updateScreenDimensions();
+    window.addEventListener('resize', updateScreenDimensions);
+
+    document.addEventListener('mousemove', throttledMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mouseenter', handleMouseEnter);
     animationRef.current = requestAnimationFrame(animateTrail);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', updateScreenDimensions);
+      document.removeEventListener('mousemove', throttledMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseenter', handleMouseEnter);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isFalling, isReturning]);
+  }, [throttledMouseMove, handleMouseLeave, animateTrail]);
 
-  return (
-    <div className="fixed inset-0 pointer-events-none z-50">
-      {trail.map((position, index) => {
-        const isFlopping =
-          position.settled &&
-          position.flopStartTime &&
-          Date.now() > position.flopStartTime;
-        const displayY =
-          position.settled && position.flopY !== undefined
-            ? (position.groundY || position.y) + position.flopY
-            : position.y;
+  // Memoized cursor renderer
+  const renderCursor = useCallback(
+    (position, index) => {
+      const displayY =
+        position.settled && position.flopY !== undefined
+          ? (position.groundY || position.y) + position.flopY
+          : position.y;
 
-        // Handle different visual states
-        let opacity, transform;
+      // Handle different visual states
+      let opacity, transform;
 
-        if (isReturning) {
-          // Returning cursors - full opacity, slight glow effect
-          opacity = 1;
-          transform = 'scale(1)';
-        } else if (isFalling) {
-          // Falling/settled cursors
-          opacity = position.settled
-            ? position.flopDecay
-              ? Math.max(0.3, position.flopDecay)
-              : 0.6
-            : 1;
-          transform = isFlopping
-            ? `scale(1) rotate(${position.rotation || 0}deg)`
-            : 'scale(1)';
+      if (isReturning) {
+        // Returning cursors - full opacity, slight glow effect
+        opacity = normalOpacity;
+        transform = 'scale(1)';
+      } else if (isFalling) {
+        // Falling/settled cursors
+        if (position.settled) {
+          opacity =
+            position.currentFlop >= position.totalFlops
+              ? settledOpacity
+              : normalOpacity;
         } else {
-          // Normal trail mode
-          opacity = Math.max(0, 1 - index * 0.15);
-          transform = `scale(${Math.max(0.3, 1 - index * 0.1)})`;
+          opacity = normalOpacity;
         }
 
-        return (
-          <div
-            key={position.id}
-            className={`absolute ${
-              isFalling || isReturning
-                ? 'transition-none'
-                : 'transition-all duration-100 ease-out'
-            }`}
+        if (position.rotation !== undefined) {
+          transform = `scale(1) rotate(${position.rotation}deg)`;
+        } else {
+          transform = 'scale(1)';
+        }
+      } else {
+        // Normal trail mode
+        opacity = Math.max(0, normalOpacity - index * trailDecayRate);
+        const scale = Math.max(trailMinScale, 1 - index * trailScaleDecay);
+        transform = `scale(${scale})`;
+      }
+
+      // Optimized styles object
+      const cursorStyle = {
+        position: 'absolute',
+        left: position.x - cursorSize / 2,
+        top: displayY - cursorSize / 2,
+        opacity: opacity,
+        transform: transform,
+        willChange: 'transform, opacity', // GPU acceleration hint
+        transition: isFalling || isReturning ? 'none' : 'all 0.1s ease-out',
+        filter: isReturning
+          ? `drop-shadow(0 0 8px ${returnGlowColor})`
+          : 'none',
+      };
+
+      return (
+        <div key={position.id} style={cursorStyle}>
+          <svg
+            width={cursorSize}
+            height={cursorSize}
+            viewBox="0 0 24 24"
+            fill="none"
             style={{
-              left: position.x - 12,
-              top: displayY - 12,
-              opacity: opacity,
-              transform: transform,
-              ...(isReturning && {
-                filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))', // Blue glow during return
-              }),
+              filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25))',
+              willChange: 'transform', // GPU acceleration for SVG
             }}
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="drop-shadow-lg"
-            >
-              <path
-                d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L6.35 2.86a.5.5 0 0 0-.85.35Z"
-                fill={isReturning ? '#dbeafe' : 'white'} // Light blue tint during return
-                stroke="black"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        );
-      })}
+            <path
+              d={svgPath}
+              fill={isReturning ? returnTintColor : cursorColor}
+              stroke="black"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      );
+    },
+    [
+      isReturning,
+      isFalling,
+      normalOpacity,
+      settledOpacity,
+      trailDecayRate,
+      trailMinScale,
+      trailScaleDecay,
+      cursorSize,
+      returnGlowColor,
+      returnTintColor,
+      cursorColor,
+      svgPath,
+    ]
+  );
 
-      {/* Instructions */}
-      <div className="absolute top-8 left-8 bg-black bg-opacity-80 text-white p-4 rounded-lg max-w-sm">
-        <h2 className="text-lg font-bold mb-2">Cursor Trail Demo</h2>
-        <p className="text-sm mb-2">
-          Move your mouse around to see the cursor trail effect!
-        </p>
-        <p className="text-sm mb-2">
-          🌟 <strong>Leave the screen:</strong> Watch cursors fall with physics
-          and bounce!
-        </p>
-        <p className="text-sm mb-2">
-          🐟 <strong>Wait:</strong> After settling, they'll flop around like
-          dead fish!
-        </p>
-        <p className="text-sm mb-2">
-          ✨ <strong>Return your mouse:</strong> Watch them gracefully ease back
-          into following you!
-        </p>
-        <p className="text-xs text-gray-300">
-          Each cursor has unique timing and smooth return animations with a blue
-          glow.
-        </p>
-      </div>
-
-      {/* Background pattern for better visibility */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-      </div>
+  return (
+    <div ref={containerRef} style={containerStyle}>
+      {trail.map(renderCursor)}
     </div>
   );
 };
-
-export default CursorTrail;
