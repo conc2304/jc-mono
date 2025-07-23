@@ -24,8 +24,7 @@ declare module '@mui/material/styles' {
     | 'success';
 
   interface Palette {
-    getInvertedMode<T extends PaletteOptionNames | undefined = undefined>(
-      paletteColor?: T
-    ): T extends PaletteOptionNames ? string : 'light' | 'dark';
+    getInvertedMode(): 'light' | 'dark';
+    getInvertedMode(paletteColor: PaletteOptionNames): string;
   }
 }

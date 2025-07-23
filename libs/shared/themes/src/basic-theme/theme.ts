@@ -74,18 +74,16 @@ export const createThemeFromOptions = ({
     zIndex: { ...theme.zIndex, window: 500 },
   };
 
-  fullTheme.palette.getInvertedMode = (paletteColor: PaletteOptionNames) => {
+  fullTheme.palette.getInvertedMode = ((paletteColor?: PaletteOptionNames) => {
     const invertedMode = theme.palette.mode === 'light' ? 'dark' : 'light';
 
-    // If no parameter, return the inverted mode string
     if (!paletteColor) {
       return invertedMode;
     }
 
-    // If parameter provided, return the color value for that mode
     const color = theme.palette[paletteColor][invertedMode];
     return color;
-  };
+  }) as Palette['getInvertedMode'];
 
   return fullTheme;
 };
