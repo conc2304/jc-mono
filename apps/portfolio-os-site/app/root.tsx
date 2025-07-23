@@ -10,6 +10,7 @@ import {
 import 'augmented-ui/augmented-ui.min.css';
 
 import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
+import { InitColorSchemeScript } from '@mui/material';
 
 export const meta: MetaFunction = () => [
   {
@@ -40,6 +41,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <InitColorSchemeScript defaultMode="system" />
+
         <EnhancedThemeProvider
           themes={enhancedThemes}
           defaultThemeId="neon-cyberpunk"
