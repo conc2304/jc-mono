@@ -1,6 +1,7 @@
 'use client';
 import {
   createTheme,
+  Palette,
   PaletteOptions,
   Theme,
   ThemeOptions,
