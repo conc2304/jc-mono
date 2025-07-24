@@ -100,6 +100,8 @@ export const WindowProvider: React.FC<{
 }> = ({ children, fileSystemItems, defaultIconPositions = {} }) => {
   const theme = useTheme();
 
+  const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+
   const [windows, setWindows] = useState<AnimatedWindowMetaData[]>([]);
   console.log('WP:');
   console.log({ windows });
@@ -234,9 +236,6 @@ export const WindowProvider: React.FC<{
         const iconHeight = remToPixels(
           theme.mixins.desktopIcon.maxHeight as string
         );
-        const taskbarHeight = remToPixels(
-          theme.mixins.taskbar.height as string
-        );
 
         const newX = clamp(
           iconDragRef.current.elementX + deltaX,
@@ -328,8 +327,6 @@ export const WindowProvider: React.FC<{
 
   const openWindow = useCallback(
     (itemId: string) => {
-      console.log('OPEN WID: ', itemId);
-
       const result = findFileSystemItemByIdWithPath(fileSystemItems, itemId);
       if (!result) return;
 
@@ -359,13 +356,14 @@ export const WindowProvider: React.FC<{
           id,
           title: fsItem.name,
           icon: fsItem.icon,
-          x: 200 + windows.length * 30,
-          y: 100 + windows.length * 30,
-          width: 450,
-          height: 300,
+          x: fsItem.type === 'folder' ? 200 + windows.length * 30 : 0,
+          y: fsItem.type === 'folder' ? 100 + windows.length * 30 : 0,
+          width: fsItem.type === 'folder' ? 550 : window.innerWidth,
+          height:
+            fsItem.type === 'folder' ? 400 : window.innerHeight - taskbarHeight,
           zIndex: windowZIndex + 1,
           minimized: false,
-          maximized: false,
+          maximized: fsItem.type !== 'folder',
           windowContent: getWindowContent(
             fsItem,
             fileSystemItems,
@@ -464,9 +462,6 @@ export const WindowProvider: React.FC<{
       const current = windows.find(({ id }) => windowId === id);
       const isMaximizing = !current?.maximized;
 
-      console.log('WINDOW MAXIMIZE');
-      console.log({ windows, windowId, isMaximizing });
-
       setWindows((prev) =>
         prev.map((w) =>
           w.id === windowId
@@ -477,7 +472,9 @@ export const WindowProvider: React.FC<{
                 y: w.maximized ? 100 : 0,
                 zIndex: isMaximizing ? theme.zIndex.modal : windowZIndex + 1,
                 width: w.maximized ? 400 : window.innerWidth || 800,
-                height: w.maximized ? 300 : (window.innerHeight || 600) - 100,
+                height: w.maximized
+                  ? 300
+                  : window.innerHeight - taskbarHeight || 600,
                 animationState: 'maximizing',
               }
             : w
@@ -596,9 +593,7 @@ export const WindowProvider: React.FC<{
 
         const deltaX = e.clientX - windowDragRef.current.startX;
         const deltaY = e.clientY - windowDragRef.current.startY;
-        const taskbarHeight = remToPixels(
-          theme.mixins.taskbar.height as string
-        );
+
         const titlebarHeight = remToPixels(
           theme.mixins.window.titleBar.height as string
         );

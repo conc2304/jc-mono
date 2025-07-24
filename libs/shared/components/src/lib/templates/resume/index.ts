@@ -1,2 +1,2 @@
 export * from './types';
-export * from './resume';
+export * from './resume-template';

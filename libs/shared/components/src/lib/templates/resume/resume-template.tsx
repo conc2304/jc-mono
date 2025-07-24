@@ -42,7 +42,11 @@ export const ResumeTemplate = ({
   } = resumeData;
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container
+      className="ResumeTemplate--root"
+      maxWidth="lg"
+      sx={{ py: 4, height: '100%', overflowY: 'auto' }}
+    >
       <Paper elevation={3} sx={{ p: 4 }}>
         {/* Header Section */}
         <Box textAlign="center" mb={4}>

@@ -109,7 +109,7 @@ const LoadingOverlay = styled(Box)(({ theme }) => ({
 }));
 
 export const ProjectTemplate = ({
-  hasNavigation = '',
+  hasNavigation = false,
   ...project
 }: ProjectTemplateProps & ProjectData) => {
   const theme = useTheme();

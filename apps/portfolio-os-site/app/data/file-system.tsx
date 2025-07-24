@@ -44,7 +44,7 @@ const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
 const lightformProject: FileSystemItem<ProjectData, ProjectTemplateProps> = {
   id: uuidv4(),
   name: 'Lightform.proj',
-  icon: <ImportantDevices fontSize={fontSize} />,
+  icon: <ImportantDevices fontSize="large" />,
   type: 'file',
   size: 245760, // TODO
   mimeType: 'application/pdf',
@@ -62,7 +62,7 @@ const lightformProject: FileSystemItem<ProjectData, ProjectTemplateProps> = {
   renderer: {
     component: ProjectTemplate,
     props: {
-      stuff: '',
+      hasNavigation: false,
     },
   },
 };

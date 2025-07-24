@@ -42,7 +42,7 @@ export const Window = React.memo(
     maximized,
     isActive = true,
     windowContent,
-    minWidth = 400,
+    minWidth = 500,
     minHeight = 250,
     maxWidth = window.innerWidth,
     maxHeight = window.innerHeight,
@@ -356,10 +356,8 @@ export const Window = React.memo(
                   height: '100%',
                   // Disable pointer events on content during drag for better performance
                   pointerEvents: isDragging ? 'none' : 'auto',
-                  // '& > *': {
-                  // maxHeight: '100%',
                   overflow: 'hidden',
-                  // },
+                  backdropFilter: 'blur(4px)',
                 }}
               >
                 {/* Only render content when not minimized or during minimize animation */}
