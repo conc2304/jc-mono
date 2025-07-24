@@ -47,6 +47,7 @@ export const FileManager = ({
       if (targetFolder && targetFolder.children) {
         setFolderContents(targetFolder.children);
         updateWindowName(targetFolder.name, targetFolder.icon);
+        // TODO On navigation update the Windows that are open.
       }
     }
   };

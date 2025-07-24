@@ -7,16 +7,13 @@ import {
   Grid,
   LinearProgress,
   IconButton,
-  Collapse,
   Card,
   CardContent,
   Avatar,
   Stack,
   darken,
   CardProps,
-  Grow,
   Slide,
-  Fade,
 } from '@mui/material';
 import {
   AccessTime,
@@ -32,7 +29,7 @@ import {
   Keyboard,
   Timeline,
 } from '@mui/icons-material';
-import { alpha, duration, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 
 // Type definitions
 interface NetworkInfo {
@@ -372,11 +369,13 @@ export const NotificationCenter: React.FC = () => {
         unmountOnExit
         // easing={'ease-in'}
         // timeout={duration.enteringScreen}
+        direction="left"
       >
         <Paper
           data-augmented-ui="border tl-2-clip-y bl-2-clip-x clip-tl l-clip-y "
           className="NotificationCenter--expanded-view"
           sx={(theme) => ({
+            zIndex: theme.zIndex.appBar - 1,
             position: 'absolute',
             bottom: theme.mixins.taskbar.height,
             right: 1,
@@ -388,7 +387,7 @@ export const NotificationCenter: React.FC = () => {
             // maxHeight: '66vh',
             backgroundColor: alpha(theme.palette.background.paper, 0.5),
             color: 'text.primary',
-            zIndex: theme.zIndex.modal,
+            // zIndex: theme.zIndex.modal,
 
             '&[data-augmented-ui]': {
               '--aug-bl': '8px',
@@ -429,10 +428,7 @@ export const NotificationCenter: React.FC = () => {
                   <Computer sx={{ color: '#64b5f6' }} /> System Information
                 </Typography>
                 <Grid container spacing={2.5}>
-                  <Grid
-                    // item
-                    xs={6}
-                  >
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <AccessTime sx={{ fontSize: 20, color: '#64b5f6' }} />
                       <Box>
@@ -455,10 +451,7 @@ export const NotificationCenter: React.FC = () => {
                       </Box>
                     </Stack>
                   </Grid>
-                  <Grid
-                    // item
-                    xs={6}
-                  >
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Avatar
                         sx={{
@@ -494,7 +487,7 @@ export const NotificationCenter: React.FC = () => {
                       </Box>
                     </Stack>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Memory sx={{ fontSize: 20, color: '#ff9800' }} />
                       <Box>
@@ -513,7 +506,7 @@ export const NotificationCenter: React.FC = () => {
                       </Box>
                     </Stack>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       {metrics.isOnline ? (
                         <Wifi sx={{ fontSize: 20, color: '#4caf50' }} />
@@ -598,7 +591,7 @@ export const NotificationCenter: React.FC = () => {
                 </Box>
 
                 <Grid container spacing={2.5}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box>
                       <Typography
                         variant="caption"
@@ -614,7 +607,7 @@ export const NotificationCenter: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Box>
                       <Typography
                         variant="caption"
@@ -631,7 +624,7 @@ export const NotificationCenter: React.FC = () => {
                     </Box>
                   </Grid>
                   {metrics.memoryUsage && (
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                       <Box>
                         <Typography
                           variant="caption"
@@ -686,7 +679,7 @@ export const NotificationCenter: React.FC = () => {
                   <Timeline sx={{ color: '#9c27b0' }} /> Session Analytics
                 </Typography>
                 <Grid container spacing={2.5}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <AccessTime sx={{ fontSize: 20, color: '#64b5f6' }} />
                       <Box>
@@ -706,7 +699,7 @@ export const NotificationCenter: React.FC = () => {
                     </Stack>
                   </Grid>
 
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <TouchApp sx={{ fontSize: 20, color: '#ff9800' }} />
                       <Box>
@@ -725,7 +718,7 @@ export const NotificationCenter: React.FC = () => {
                       </Box>
                     </Stack>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Keyboard sx={{ fontSize: 20, color: '#e91e63' }} />
                       <Box>
@@ -768,7 +761,7 @@ export const NotificationCenter: React.FC = () => {
                     Information
                   </Typography>
                   <Grid container spacing={2.5}>
-                    <Grid item xs={4}>
+                    <Grid size={{ xs: 4 }}>
                       <Box>
                         <Typography
                           variant="caption"
@@ -788,7 +781,7 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid size={{ xs: 4 }}>
                       <Box>
                         <Typography
                           variant="caption"
@@ -804,7 +797,7 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid size={{ xs: 4 }}>
                       <Box>
                         <Typography
                           variant="caption"
