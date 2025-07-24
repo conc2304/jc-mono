@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/features/portfolio"
+    },
+    {
       "path": "../../libs/shared/themes"
     },
     {

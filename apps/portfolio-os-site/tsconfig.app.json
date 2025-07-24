@@ -40,6 +40,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/features/portfolio/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/shared/themes/tsconfig.lib.json"
     },
     {
