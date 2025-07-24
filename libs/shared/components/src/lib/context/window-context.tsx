@@ -101,6 +101,9 @@ export const WindowProvider: React.FC<{
   const theme = useTheme();
 
   const [windows, setWindows] = useState<AnimatedWindowMetaData[]>([]);
+  console.log('WP:');
+  console.log({ windows });
+  console.log('___');
   const [draggedWindow, setDraggedWindow] = useState<string | null>(null);
   const [windowZIndex, setWindowZIndex] = useState(theme.zIndex.window);
   const [iconPositions, setIconPositions] =
@@ -358,7 +361,7 @@ export const WindowProvider: React.FC<{
           icon: fsItem.icon,
           x: 200 + windows.length * 30,
           y: 100 + windows.length * 30,
-          width: 400,
+          width: 450,
           height: 300,
           zIndex: windowZIndex + 1,
           minimized: false,
@@ -421,6 +424,7 @@ export const WindowProvider: React.FC<{
       const current = windows.find(({ id }) => windowId === id);
       const isRestoring = !!current?.minimized;
 
+      console.log({ isRestoring });
       setWindows((prev) =>
         prev.map((window) => {
           return window.id === windowId
@@ -455,37 +459,48 @@ export const WindowProvider: React.FC<{
     [windows, windowZIndex]
   );
 
-  const maximizeWindow = useCallback((windowId: string) => {
-    setWindows((prev) =>
-      prev.map((w) =>
-        w.id === windowId
-          ? {
-              ...w,
-              maximized: !w.maximized,
-              x: w.maximized ? 200 : 0,
-              y: w.maximized ? 100 : 0,
-              zIndex: w.maximized ? theme.zIndex.modal : windowZIndex,
-              width: w.maximized ? 400 : window.innerWidth || 800,
-              height: w.maximized ? 300 : (window.innerHeight || 600) - 100,
-              animationState: 'maximizing',
-            }
-          : w
-      )
-    );
+  const maximizeWindow = useCallback(
+    (windowId: string) => {
+      const current = windows.find(({ id }) => windowId === id);
+      const isMaximizing = !current?.maximized;
 
-    // Reset animation state after maximize animation
-    const timeout = setTimeout(() => {
+      console.log('WINDOW MAXIMIZE');
+      console.log({ windows, windowId, isMaximizing });
+
       setWindows((prev) =>
-        prev.map((window) =>
-          window.id === windowId
-            ? { ...window, animationState: 'normal' }
-            : window
+        prev.map((w) =>
+          w.id === windowId
+            ? {
+                ...w,
+                maximized: !w.maximized,
+                x: w.maximized ? 200 : 0,
+                y: w.maximized ? 100 : 0,
+                zIndex: isMaximizing ? theme.zIndex.modal : windowZIndex + 1,
+                width: w.maximized ? 400 : window.innerWidth || 800,
+                height: w.maximized ? 300 : (window.innerHeight || 600) - 100,
+                animationState: 'maximizing',
+              }
+            : w
         )
       );
-    }, 300);
 
-    animationTimeouts.current.set(`${windowId}-maximize`, timeout);
-  }, []);
+      if (!isMaximizing) setWindowZIndex(windowZIndex + 1);
+
+      // Reset animation state after maximize animation
+      const timeout = setTimeout(() => {
+        setWindows((prev) =>
+          prev.map((window) =>
+            window.id === windowId
+              ? { ...window, animationState: 'normal' }
+              : window
+          )
+        );
+      }, 300);
+
+      animationTimeouts.current.set(`${windowId}-maximize`, timeout);
+    },
+    [windows]
+  );
 
   const updateWindow = useCallback(
     (

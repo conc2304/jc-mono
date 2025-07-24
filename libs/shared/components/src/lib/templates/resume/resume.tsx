@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import {
   Email,
-  Phone,
   LocationOn,
   LinkedIn,
   GitHub,
@@ -28,7 +27,7 @@ export interface ResumeComponentProps {
   variant: 'sm' | 'md' | 'lg';
 }
 
-export const ResumeComponent = ({
+export const ResumeTemplate = ({
   variant,
   ...resumeData
 }: ResumeComponentProps & Resume) => {
@@ -141,7 +140,7 @@ export const ResumeComponent = ({
           >
             Core Competencies
           </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1}>
+          <Box display="flex" flexWrap="wrap" gap={1} justifyContent="center">
             {coreCompetencies.categories.map((competency, index) => (
               <Chip key={index} label={competency} variant="outlined" />
             ))}

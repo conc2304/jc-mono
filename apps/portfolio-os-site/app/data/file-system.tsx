@@ -1,16 +1,21 @@
 import {
   FileSystemItem,
   Resume,
-  ResumeComponent,
+  ResumeTemplate,
   ResumeComponentProps,
+  ProjectData,
+  ProjectTemplateProps,
+  ProjectTemplate,
 } from '@jc/ui-components';
-import { ResumeData } from '@jc/portfolio';
+import { lightformWebControllerProject, ResumeData } from '@jc/portfolio';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react'; // TODO replace with other icon library
+import { ImportantDevices } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
 
-const fontSize = '40px';
+const fontSize = '80px';
 
 const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
-  id: '2',
+  id: uuidv4(),
   name: 'Resume.pdf',
   icon: <FileTextIcon fontSize={fontSize} />,
   type: 'file',
@@ -29,9 +34,35 @@ const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
   },
   fileData: ResumeData,
   renderer: {
-    component: ResumeComponent,
+    component: ResumeTemplate,
     props: {
       variant: 'sm',
+    },
+  },
+};
+
+const lightformProject: FileSystemItem<ProjectData, ProjectTemplateProps> = {
+  id: uuidv4(),
+  name: 'Lightform.proj',
+  icon: <ImportantDevices fontSize={fontSize} />,
+  type: 'file',
+  size: 245760, // TODO
+  mimeType: 'application/pdf',
+  dateModified: new Date('2024-01-10'),
+  dateCreated: new Date('2024-01-10'),
+  path: '/Documents/Lightform.proj',
+  parentId: '1',
+  permissions: { read: true, write: true, execute: false },
+  metadata: {
+    tags: ['work', 'important'],
+    favorite: true,
+    description: 'Professional resume',
+  },
+  fileData: lightformWebControllerProject,
+  renderer: {
+    component: ProjectTemplate,
+    props: {
+      stuff: '',
     },
   },
 };
@@ -47,7 +78,7 @@ export const mockFileSystem: FileSystemItem[] = [
     path: '/Documents',
     permissions: { read: true, write: true, execute: true },
     metadata: { tags: [], favorite: true },
-    children: [resumeFile],
+    children: [resumeFile, lightformProject],
   },
   {
     id: '3',

@@ -113,6 +113,20 @@ export const lightformWebControllerProject: ProjectData = {
         caption:
           "Example projection mapping setup showing the web controller's target use case",
       },
+
+      {
+        url: 'https://lightform.com/wp-content/uploads/2022/02/IMG_9105-1170x690.jpg',
+        alt: 'Lightform LF2+ In Use Environment',
+        caption:
+          "Example projection mapping setup showing the web controller's target use case",
+      },
+
+      {
+        url: 'https://lightform.com/wp-content/uploads/2022/02/IMG_9105-1170x690.jpg',
+        alt: 'Lightform LF2+ In Use Environment',
+        caption:
+          "Example projection mapping setup showing the web controller's target use case",
+      },
     ],
     videos: [
       // Note: Specific video URLs would need to be extracted from the actual portfolio page

@@ -20,9 +20,6 @@ interface WindowProps extends WindowMetaData {
   maxWidth?: number;
   maxHeight?: number;
   resizable?: boolean;
-  // Animation properties from the updated context
-  isOpening?: boolean;
-  isClosing?: boolean;
   animationState?:
     | 'normal'
     | 'opening'
@@ -45,13 +42,11 @@ export const Window = React.memo(
     maximized,
     isActive = true,
     windowContent,
-    minWidth = 200,
-    minHeight = 150,
+    minWidth = 400,
+    minHeight = 250,
     maxWidth = window.innerWidth,
     maxHeight = window.innerHeight,
     resizable = true,
-    isOpening = false,
-    isClosing = false,
     animationState = 'normal',
   }: WindowProps) => {
     const {
@@ -334,7 +329,7 @@ export const Window = React.memo(
               data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
               sx={(theme) => ({
                 height: `calc(100% - ${theme.mixins.window.titleBar.height})`,
-                overflow: 'auto',
+                // overflow: 'auto',
                 p: 0.5,
                 pt: 0,
                 m: 0,
@@ -362,8 +357,8 @@ export const Window = React.memo(
                   // Disable pointer events on content during drag for better performance
                   pointerEvents: isDragging ? 'none' : 'auto',
                   // '& > *': {
-                  maxHeight: '100%',
-                  overflow: 'auto',
+                  // maxHeight: '100%',
+                  overflow: 'hidden',
                   // },
                 }}
               >
