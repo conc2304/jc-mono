@@ -6,6 +6,8 @@ import {
   ProjectData,
   ProjectTemplateProps,
   ProjectTemplate,
+  BrutalistTemplate,
+  BrutalistTemplateProps,
 } from '@jc/ui-components';
 import { lightformWebControllerProject, ResumeData } from '@jc/portfolio';
 import { Folder, FileTextIcon, ImageIcon } from 'lucide-react'; // TODO replace with other icon library
@@ -41,7 +43,8 @@ const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
   },
 };
 
-const lightformProject: FileSystemItem<ProjectData, ProjectTemplateProps> = {
+// const lightformProject: FileSystemItem<ProjectData, ProjectTemplateProps> = {
+const lightformProject: FileSystemItem<ProjectData, BrutalistTemplateProps> = {
   id: uuidv4(),
   name: 'Lightform.proj',
   icon: <ImportantDevices fontSize="large" />,
@@ -60,7 +63,7 @@ const lightformProject: FileSystemItem<ProjectData, ProjectTemplateProps> = {
   },
   fileData: lightformWebControllerProject,
   renderer: {
-    component: ProjectTemplate,
+    component: BrutalistTemplate,
     props: {
       hasNavigation: false,
     },
