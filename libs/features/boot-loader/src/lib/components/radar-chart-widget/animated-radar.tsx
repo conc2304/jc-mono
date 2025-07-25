@@ -10,7 +10,7 @@ import React, {
 import { RadarChart, RadarData, MetricGroup } from './radar-chart-widget';
 import { generateTrailingRadarData } from '../utils';
 
-import { easeBounce, easeLinear } from 'd3';
+import { easeLinear } from 'd3';
 
 // Configuration for trailing animation
 export interface AnimationConfig {
@@ -138,44 +138,6 @@ export function withAnimatedValues<T extends ComponentProps<typeof RadarChart>>(
 
 // Pre-wrapped component for convenience
 export const AnimatedRadarChart = memo(withAnimatedValues(RadarChart));
-
-// Example usage component with trailing effects
-export const RadarChartExample: React.FC = () => {
-  // Sample data - only need one metric group for trailing mode
-  const sampleData: RadarData = [
-    [
-      { axis: 'Performance', value: 80, metricGroupName: 'Team A' },
-      { axis: 'Quality', value: 90, metricGroupName: 'Team A' },
-      { axis: 'Innovation', value: 70, metricGroupName: 'Team A' },
-      { axis: 'Collaboration', value: 85, metricGroupName: 'Team A' },
-      { axis: 'Delivery', value: 75, metricGroupName: 'Team A' },
-    ],
-  ];
-
-  return (
-    <div style={{ width: '600px', height: '400px' }}>
-      <AnimatedRadarChart
-        id="animated-radar-trailing"
-        data={sampleData}
-        title="Trailing Animation Team Performance Metrics"
-        animationConfig={{
-          animationSpeed: 1000, // Smooth 10fps
-          numTrails: 5,
-          trailOffset: 200.0,
-          noiseScale: 1,
-          trailIntensity: 1,
-          enableAnimation: true,
-        }}
-        levels={5}
-        labelFactor={1.3}
-        opacityArea={0.2}
-        strokeWidth={2}
-        dotRadius={5}
-        lineType="curved"
-      />
-    </div>
-  );
-};
 
 // Animation control hooks for advanced usage
 export const useRadarAnimation = (

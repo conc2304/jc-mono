@@ -40,6 +40,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/features/boot-loader/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/features/portfolio/tsconfig.lib.json"
     },
     {

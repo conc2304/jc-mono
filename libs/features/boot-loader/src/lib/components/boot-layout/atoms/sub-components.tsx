@@ -51,7 +51,7 @@ export const AddressBar = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const RadarChartBox1 = styled(Box)(({ theme }) => ({
+const RadarChartBoxStyled = styled(Box)(({ theme }) => ({
   minHeight: 192,
   backgroundColor: theme.palette.background.paper,
   position: 'relative',
@@ -72,7 +72,7 @@ const RadarChartBox1 = styled(Box)(({ theme }) => ({
 }));
 
 export const RadarChartBox = (props: BoxProps) => (
-  <RadarChartBox1
+  <RadarChartBoxStyled
     {...props}
     data-augmented-ui="border bl-clip br-clip tl-clip tr-clip l-clip-y r-clip-y r-clip-y"
   />

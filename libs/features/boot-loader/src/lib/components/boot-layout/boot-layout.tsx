@@ -69,11 +69,11 @@ interface SciFiLayoutProps {
 
 const sampleData: RadarData = [
   [
-    { axis: '', value: 80, metricGroupName: '1' },
-    { axis: '', value: 90, metricGroupName: '1' },
-    { axis: '', value: 70, metricGroupName: '1' },
-    { axis: '', value: 85, metricGroupName: '1' },
-    { axis: '', value: 75, metricGroupName: '1' },
+    { axis: 'a', value: 80, metricGroupName: '1' },
+    { axis: 'b', value: 90, metricGroupName: '1' },
+    { axis: 'c', value: 70, metricGroupName: '1' },
+    { axis: 'd', value: 85, metricGroupName: '1' },
+    { axis: 'e', value: 75, metricGroupName: '1' },
   ],
 ];
 
@@ -128,7 +128,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
           <Grid container spacing={2} height="100%">
             {/* Left Panel */}
             <Grid size={{ xs: 3 }}>
-              <Box display="flex" flexDirection="column" gap={2} height="100%">
+              <Box display="flex" flexDirection="column" gap={2} flexGrow={1}>
                 {/* Radar Display */}
                 <RadarChartBox>
                   <AnimatedRadarChart
@@ -136,18 +136,19 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                     data={sampleData}
                     animationConfig={{
                       animationSpeed: 1500,
-                      numTrails: 3,
-                      trailOffset: 50.0,
-                      noiseScale: 1,
-                      trailIntensity: 0.5,
+                      numTrails: 4,
+                      trailOffset: 80.0,
+                      noiseScale: 1.5,
+                      trailIntensity: 1,
                       enableAnimation: true,
                       easing: d3.easeSinInOut,
                     }}
                     levels={5}
+                    showLabels={false}
                     labelFactor={1}
                     opacityArea={0.1}
                     strokeWidth={1}
-                    dotRadius={5}
+                    dotRadius={3}
                     lineType="curved"
                     colors={{
                       primary: theme.palette.primary.main,
@@ -164,7 +165,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                     }}
                     margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                   />
-                  {/* <RadarChartExample /> */}
                 </RadarChartBox>
 
                 {/* Control Panel */}

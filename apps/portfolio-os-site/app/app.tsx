@@ -38,7 +38,7 @@ export function App() {
     <>
       {/* <CursorTrail {...cursorConfig} /> */}
       <DesktopOS fileSystem={mockFileSystem} />
-      <GradientShader
+      {/* <GradientShader
         className={key}
         key={key}
         colors={bgColors}
@@ -59,7 +59,7 @@ export function App() {
           zIndex: -1,
           opacity: 0.3,
         }}
-      />
+      /> */}
     </>
   );
 }

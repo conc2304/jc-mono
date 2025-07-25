@@ -33,6 +33,7 @@ type Props = {
   id: string;
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
   levels?: number; // How many levels or inner circles should there be drawn
+  showLabels?: boolean;
   labelFactor?: number; // How much farther than the radius of the outer circle should the labels be placed
   wrapWidth?: number; // The number of pixels after which a label needs to be given a new line
   opacityArea?: number; // The opacity of the area of the blob
@@ -59,6 +60,7 @@ export const RadarChart = ({
   id,
   margin = {}, // The margins of the SVG
   levels = 3, // How many levels or inner circles should there be drawn
+  showLabels = true,
   labelFactor = 1.25, // How much farther than the radius of the outer circle should the labels be placed
   wrapWidth = 60, // The number of pixels after which a label needs to be given a new line
   opacityArea = 0.15, // The opacity of the area of the blob
@@ -77,6 +79,7 @@ export const RadarChart = ({
   const svgRef = useRef<SVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null); // Parent of SVG
+  // const dimensions = useResizeObserver(wrapperRef);
   const dimensions = useResizeObserver(wrapperRef);
 
   const colorScale = useRef<d3.ScaleOrdinal<string, unknown, never>>(null);
@@ -85,6 +88,7 @@ export const RadarChart = ({
   const defaultMargin = { top: 0, right: 0, bottom: 0, left: 0 };
   const marg = { ...defaultMargin, margin };
 
+  console.log({ data });
   const defaultColors = {
     primary: 'red',
     accent: 'orange',
@@ -123,7 +127,7 @@ export const RadarChart = ({
 
     const tooltip = tooltipRef.current;
 
-    svg.attr('width', svgWidth).attr('height', svgHeight);
+    // svg.attr('width', svgWidth).attr('height', svgHeight);
     const svgContent = svg
       .select('.content')
       .attr('transform', `translate(${0}, ${0})`);
@@ -219,32 +223,34 @@ export const RadarChart = ({
       return 'middle';
     };
 
-    axisGrid
-      .selectAll('.axis-label')
-      .data(axisNames)
-      .join('text')
-      .attr('class', 'axis-label')
-      .attr('text-anchor', getTextAnchorValue)
-      .attr('dy', '0.35em')
-      .attr(
-        'x',
-        (d, i) =>
-          svgWidth / 2 +
-          radius * labelFactor * Math.cos(angleSize * i - Math.PI / 2)
-      )
-      .attr(
-        'y',
-        (d, i) =>
-          svgHeight / 2 +
-          radius * labelFactor * Math.sin(angleSize * i - Math.PI / 2)
-      )
-      .style('font-size', '12px')
-      .style('fill', colorScheme.primary)
-      .style('fill-opacity', 0.8)
-      .text(function (d) {
-        return d;
-      })
-      .call(wrap, wrapWidth);
+    if (showLabels) {
+      axisGrid
+        .selectAll('.axis-label')
+        .data(axisNames)
+        .join('text')
+        .attr('class', 'axis-label')
+        .attr('text-anchor', getTextAnchorValue)
+        .attr('dy', '0.35em')
+        .attr(
+          'x',
+          (d, i) =>
+            svgWidth / 2 +
+            radius * labelFactor * Math.cos(angleSize * i - Math.PI / 2)
+        )
+        .attr(
+          'y',
+          (d, i) =>
+            svgHeight / 2 +
+            radius * labelFactor * Math.sin(angleSize * i - Math.PI / 2)
+        )
+        .style('font-size', '12px')
+        .style('fill', colorScheme.primary)
+        .style('fill-opacity', 0.8)
+        .text(function (d) {
+          return d;
+        })
+        .call(wrap, wrapWidth);
+    }
 
     //Create the straight lines radiating outward from the center
     axisGrid
@@ -422,8 +428,6 @@ export const RadarChart = ({
       .enter()
       .append('circle')
       .attr('class', 'radar-circle')
-      .attr('r', 0) // Start with radius 0 for enter transition
-      .style('fill-opacity', 0) // Start invisible
       .merge(radarCircles) // Merge with existing elements
       .call((selection) =>
         createTransition(selection)
@@ -458,73 +462,12 @@ export const RadarChart = ({
           .style('fill-opacity', 0)
           .remove()
       );
-
-    // PROPER D3 ENTER/UPDATE/EXIT PATTERN: Radar tooltip (invisible circles)
-    const circleWrapper = svgContent
-      .selectAll('.circle-wrapper')
-      .data(data)
-      .join('g')
-      .attr('class', 'circle-wrapper')
-      .attr('transform', `translate(${svgWidth / 2}, ${svgHeight / 2})`);
-
-    const invisibleCircles = circleWrapper.selectAll('.invisible-circle').data(
-      (d) => d,
-      (d: any) => `${d.metricGroupName}-${d.axis}`
-    ); // Use composite key
-
-    // Merge enter and update selections
-    invisibleCircles
-      .enter()
-      .append('circle')
-      .attr('class', 'invisible-circle')
-      .attr('r', dotRadius * 1.5)
-      .attr('fill', 'none')
-      .style('pointer-events', 'all')
-      .merge(invisibleCircles) // Merge with existing elements
-      .on('mouseover', function (event, d) {
-        if (!tooltip) return;
-
-        const newX = parseFloat(d3.select(this).attr('cx')) + 20;
-        const newY = parseFloat(d3.select(this).attr('cy')) - 16;
-
-        const groupName = d.metricGroupName || 'Unknown';
-        const formattedValue = d.formatFn
-          ? d.formatFn(d.value)
-          : d.value.toString();
-
-        tooltip.innerHTML = `<div><span>${groupName}</span>: ${formattedValue}</div>`;
-        tooltip.style.left = `${newX + svgWidth / 2}px`;
-        tooltip.style.top = `${newY + svgHeight / 2}px`;
-        tooltip.style.width = '150px';
-        tooltip.classList.add('active');
-      })
-      .on('mouseout', function () {
-        if (!tooltip) return;
-
-        tooltip.classList.remove('active');
-      })
-      .call((selection) =>
-        createTransition(selection)
-          .attr('cx', (d: { axis: string; value: number }, i: number) => {
-            const axisName = d.axis;
-            const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
-            return scale(d.value) * Math.cos(angleSize * i - Math.PI / 2);
-          })
-          .attr('cy', function (d, i) {
-            const axisName = d.axis;
-            const scale = areValuesNormalized ? rScale : axisScaleMap[axisName];
-            return scale(d.value) * Math.sin(angleSize * i - Math.PI / 2);
-          })
-      );
-
-    // Remove exiting invisible circles
-    invisibleCircles.exit().remove();
   }, [
     data,
     selectedGroup,
     maxTopGroups,
-    wrapperRef,
-    dimensions,
+    // wrapperRef,
+    // dimensions,
     transitionSettings,
   ]);
 

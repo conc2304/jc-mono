@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/features/boot-loader"
+    },
+    {
       "path": "../../libs/features/portfolio"
     },
     {
