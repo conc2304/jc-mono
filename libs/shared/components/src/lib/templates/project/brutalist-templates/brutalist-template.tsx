@@ -1,6 +1,6 @@
 // Main BrutalistTemplate.tsx
 import React, { useState } from 'react';
-import { Box, Typography, useTheme, alpha, styled } from '@mui/material';
+import { Box, Typography, useTheme, styled } from '@mui/material';
 
 import ProjectData from '../types';
 import { MobileNavigation } from './navigation/mobile-navigation';

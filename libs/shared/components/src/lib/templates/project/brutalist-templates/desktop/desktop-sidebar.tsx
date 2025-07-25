@@ -8,9 +8,34 @@ import {
   Link,
   alpha,
   useTheme,
+  capitalize,
+  styled,
 } from '@mui/material';
-import { Visibility, People } from '@mui/icons-material';
 import { ProjectData } from '../../types';
+import { Code, People, Visibility } from '@mui/icons-material';
+
+const DetailItem = ({ label, value }: { label: string; value: string }) => {
+  return (
+    <Box sx={{ mb: 1.5 }}>
+      <Typography
+        variant="caption"
+        sx={(theme) => ({
+          textTransform: 'uppercase',
+          letterSpacing: 2,
+          color: theme.palette.getInvertedMode('secondary'),
+        })}
+      >
+        {capitalize(label)}
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: 500, textTransform: 'capitalize' }}
+      >
+        {value}
+      </Typography>
+    </Box>
+  );
+};
 
 interface DesktopSidebarProps {
   data: ProjectData;
@@ -19,109 +44,46 @@ interface DesktopSidebarProps {
 export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
   const theme = useTheme();
 
+  const details = [
+    { label: 'Type', value: data.basics.type },
+    { label: 'Category', value: data.basics.category.replace('-', ' ') },
+    { label: 'Timeline', value: data?.technical?.timeline?.duration },
+    { label: 'Role', value: data?.technical?.myRole },
+  ];
+
+  const PaperStyled = styled(Paper)(({ theme }) => ({
+    backgroundColor: alpha(theme.palette.background.paper, 0.3),
+    border: `1px solid ${theme.palette.secondary.main}`,
+    padding: theme.spacing(3),
+  }));
+
+  const LinkStyled = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    color: theme.palette.getInvertedMode('secondary'),
+    textDecoration: 'none',
+    '&:hover': { color: theme.palette.secondary.main },
+  }));
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {/* Project Info */}
-      <Paper
-        sx={{
-          backgroundColor: alpha(theme.palette.grey[800], 0.3),
-          border: `1px solid ${theme.palette.grey[700]}`,
-          p: 3,
-        }}
-      >
+      <PaperStyled>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Project Details
         </Typography>
 
-        {data.basics?.type && (
-          <Box sx={{ mb: 1.5 }}>
-            <Typography
-              variant="caption"
-              sx={{
-                textTransform: 'uppercase',
-                letterSpacing: 2,
-                color: theme.palette.grey[400],
-              }}
-            >
-              Type
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: 500, textTransform: 'capitalize' }}
-            >
-              {data.basics.type}
-            </Typography>
-          </Box>
-        )}
-
-        {data.basics?.category && (
-          <Box sx={{ mb: 1.5 }}>
-            <Typography
-              variant="caption"
-              sx={{
-                textTransform: 'uppercase',
-                letterSpacing: 2,
-                color: theme.palette.grey[400],
-              }}
-            >
-              Category
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: 500, textTransform: 'capitalize' }}
-            >
-              {data.basics.category.replace('-', ' ')}
-            </Typography>
-          </Box>
-        )}
-
-        {data.technical?.timeline?.duration && (
-          <Box sx={{ mb: 1.5 }}>
-            <Typography
-              variant="caption"
-              sx={{
-                textTransform: 'uppercase',
-                letterSpacing: 2,
-                color: theme.palette.grey[400],
-              }}
-            >
-              Duration
-            </Typography>
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              {data.technical.timeline.duration}
-            </Typography>
-          </Box>
-        )}
-
-        {data.technical?.myRole && (
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{
-                textTransform: 'uppercase',
-                letterSpacing: 2,
-                color: theme.palette.grey[400],
-              }}
-            >
-              My Role
-            </Typography>
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              {data.technical.myRole}
-            </Typography>
-          </Box>
-        )}
-      </Paper>
+        {details.map(({ label, value }) => {
+          if (label && value) return <DetailItem label={label} value={value} />;
+          return <></>;
+        })}
+      </PaperStyled>
 
       {/* Technologies */}
       {data.technical?.technologies &&
         data.technical.technologies.length > 0 && (
-          <Paper
-            sx={{
-              backgroundColor: alpha(theme.palette.grey[800], 0.3),
-              border: `1px solid ${theme.palette.grey[700]}`,
-              p: 3,
-            }}
-          >
+          <PaperStyled>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Technologies
             </Typography>
@@ -131,92 +93,62 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
                   key={index}
                   label={tech}
                   sx={{
-                    backgroundColor: theme.palette.grey[700],
-                    border: `1px solid ${theme.palette.grey[600]}`,
+                    backgroundColor: theme.palette.getInvertedMode('secondary'),
+                    color: theme.palette.getContrastText(
+                      theme.palette.getInvertedMode('secondary')
+                    ),
+                    border: `1px solid ${
+                      theme.palette.secondary[theme.palette.mode]
+                    }`,
                   }}
                 />
               ))}
             </Box>
-          </Paper>
+          </PaperStyled>
         )}
 
       {/* Links */}
-      <Paper
-        sx={{
-          backgroundColor: alpha(theme.palette.grey[800], 0.3),
-          border: `1px solid ${theme.palette.grey[700]}`,
-          p: 3,
-        }}
-      >
+      <PaperStyled>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Links
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {data.links?.liveDemo && (
-            <Link
+            <LinkStyled
               href={data.links.liveDemo}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                color: theme.palette.primary.main,
-                textDecoration: 'none',
-                '&:hover': { color: theme.palette.primary.light },
-              }}
             >
               <Typography variant="body2">Live Demo</Typography>
-            </Link>
+            </LinkStyled>
           )}
           {data.links?.repository && (
-            <Link
+            <LinkStyled
               href={data.links.repository}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                color: theme.palette.grey[300],
-                textDecoration: 'none',
-                '&:hover': { color: theme.palette.common.white },
-              }}
             >
+              <Code sx={{ fontSize: 16 }} />
               <Typography variant="body2">Source Code</Typography>
-            </Link>
+            </LinkStyled>
           )}
           {data.links?.caseStudy && (
-            <Link
+            <LinkStyled
               href={data.links.caseStudy}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                color: theme.palette.grey[300],
-                textDecoration: 'none',
-                '&:hover': { color: theme.palette.common.white },
-              }}
             >
               <Visibility sx={{ fontSize: 16 }} />
               <Typography variant="body2">Case Study</Typography>
-            </Link>
+            </LinkStyled>
           )}
         </Box>
-      </Paper>
+      </PaperStyled>
 
       {/* Collaborators */}
       {data.technical?.collaborators &&
         data.technical.collaborators.length > 0 && (
-          <Paper
-            sx={{
-              backgroundColor: alpha(theme.palette.grey[800], 0.3),
-              border: `1px solid ${theme.palette.grey[700]}`,
-              p: 3,
-            }}
-          >
+          <PaperStyled>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Team
             </Typography>
@@ -227,16 +159,25 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
                   sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}
                 >
                   <People
-                    sx={{ fontSize: 16, color: theme.palette.grey[400] }}
+                    sx={{
+                      fontSize: 16,
+                      color: theme.palette.secondary[theme.palette.mode],
+                    }}
                   />
                   <Box>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: 500,
+                        color: theme.palette.getInvertedMode('secondary'),
+                      }}
+                    >
                       {collaborator.name}
                     </Typography>
                     {collaborator.role && (
                       <Typography
                         variant="caption"
-                        sx={{ color: theme.palette.grey[400] }}
+                        sx={{ color: theme.palette.text.secondary }}
                       >
                         {collaborator.role}
                       </Typography>
@@ -245,7 +186,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
                 </Box>
               ))}
             </Box>
-          </Paper>
+          </PaperStyled>
         )}
     </Box>
   );
