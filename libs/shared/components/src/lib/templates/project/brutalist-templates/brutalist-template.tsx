@@ -110,7 +110,7 @@ export const BrutalistTemplate = ({
           sx={{
             mb: 2,
             lineHeight: 1.6,
-            color: theme.palette.grey[300],
+            color: theme.palette.text.primary,
           }}
         >
           {paragraph}
@@ -122,7 +122,7 @@ export const BrutalistTemplate = ({
         variant="body1"
         sx={{
           lineHeight: 1.6,
-          color: theme.palette.grey[300],
+          color: theme.palette.text.primary,
         }}
       >
         {content}

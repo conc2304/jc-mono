@@ -56,9 +56,9 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
           borderBottom: `1px solid ${theme.palette.grey[800]}`,
           '& .MuiTab-root': {
             textTransform: 'capitalize',
-            color: theme.palette.grey[400],
+            color: theme.palette.text.secondary,
             '&.Mui-selected': {
-              color: theme.palette.common.white,
+              color: theme.palette.primary.main,
             },
           },
           '& .MuiTabs-indicator': {
@@ -81,7 +81,7 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
                 mb: 3,
                 fontWeight: 'bold',
                 textTransform: 'capitalize',
-                color: theme.palette.common.white,
+                color: theme.palette.primary.main,
               }}
             >
               {activeTab}
@@ -103,8 +103,10 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
                 <Paper
                   sx={{
                     overflow: 'hidden',
-                    backgroundColor: theme.palette.grey[800],
-                    border: `1px solid ${theme.palette.grey[700]}`,
+                    backgroundColor: theme.palette.getInvertedMode('secondary'),
+                    border: `1px solid ${
+                      theme.palette.secondary[theme.palette.mode]
+                    }`,
                     cursor: 'pointer',
                     transition: 'transform 0.3s ease',
                     '&:hover': {
@@ -131,7 +133,11 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
                     <CardContent>
                       <Typography
                         variant="body2"
-                        sx={{ color: theme.palette.grey[300] }}
+                        sx={{
+                          color: theme.palette.getContrastText(
+                            theme.palette.getInvertedMode('secondary')
+                          ),
+                        }}
                       >
                         {screenshot.caption}
                       </Typography>
