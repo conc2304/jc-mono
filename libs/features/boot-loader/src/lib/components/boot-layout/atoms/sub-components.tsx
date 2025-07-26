@@ -1,4 +1,3 @@
-import { AugmentedButton } from '@jc/ui-components';
 import {
   Box,
   Paper,
@@ -9,7 +8,6 @@ import {
   alpha,
   Theme,
   PaperProps,
-  PaletteOptionNames,
 } from '@mui/material';
 
 export const BootContainer = styled(Box)<{}>(({ theme }) => ({
@@ -19,19 +17,6 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
   minHeight: '100vh',
   padding: theme.spacing(2),
   transition: 'background-size 0.1s ease-in',
-
-  '@keyframes gradient-animation': {
-    '0%': {
-      '&::before': {
-        left: '-45%',
-      },
-    },
-    '100%': {
-      // '&::before': {
-      //   left: '100%',
-      // },
-    },
-  },
 }));
 
 export const BrowserFrame = styled(Paper)(({ theme }) => ({
@@ -39,32 +24,6 @@ export const BrowserFrame = styled(Paper)(({ theme }) => ({
   border: `2px solid ${theme.palette.primary.main}`,
   borderRadius: 0,
   overflow: 'hidden',
-}));
-
-export const BrowserHeader = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  borderBottom: `1px solid ${theme.palette.primary.main}`,
-  padding: theme.spacing(1),
-  backgroundColor: theme.palette.background.default,
-}));
-
-export const TrafficLight = styled(Box)<{ color: string }>(({ color }) => ({
-  width: 12,
-  height: 12,
-  borderRadius: '50%',
-  backgroundColor: color,
-}));
-
-export const AddressBar = styled(Box)(({ theme }) => ({
-  flex: 1,
-  margin: `0 ${theme.spacing(2)}`,
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.primary.main}`,
-  padding: theme.spacing(0.5, 1.5),
-  fontSize: '0.75rem',
-  color: theme.palette.primary.main,
 }));
 
 const RadarChartBoxStyled = styled(Box)(({ theme }) => ({
@@ -91,63 +50,6 @@ export const RadarChartBox = (props: BoxProps) => (
   <RadarChartBoxStyled
     {...props}
     data-augmented-ui="border bl-clip br-clip tl-clip tr-clip l-clip-y r-clip-y r-clip-y"
-  />
-);
-
-export const ControlSlider = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  height: 128,
-  position: 'relative',
-}));
-
-export const SliderInner = styled(Paper)(({ theme }) => ({
-  position: 'absolute',
-  inset: 8,
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.primary.main}`,
-}));
-
-// cloud looping background
-const url = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
-const gradient = (theme: Theme) =>
-  `linear-gradient(to bottom, ${alpha(
-    theme.palette.primary.main,
-    0.4
-  )}, ${alpha(theme.palette.background.paper, 0.4)})`;
-
-export const SliderGradient = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '100%',
-  background: `${gradient(theme)}, ${url}`,
-  opacity: 0.5,
-  backgroundBlendMode: 'hard-light',
-}));
-
-export const WarningPanelStyled = styled(Paper)(({ theme }) => ({
-  // border: `1px solid ${theme.palette.warning.main}`,
-  backgroundColor: alpha(theme.palette.warning.main, 0.1),
-  padding: theme.spacing(1.5),
-  paddingBottom: theme.spacing(0.5),
-  borderRadius: 0,
-
-  '&[data-augmented-ui]': {
-    '--aug-bl': '0.5rem',
-    '--aug-br1': '0.5rem',
-    '--aug-br2': '1rem',
-    '--aug-tl': '0.5rem',
-    '--aug-tr': '0.5rem',
-    // 7 stripes are each 8 pixels wide with gap of 12 + 1 for gap
-    '--aug-br-extend2': 'calc(100% - ((6px + 12px) * (7 + 1) + 1rem) )', //
-    // '--aug-br-inset2':
-    '--aug-border-all': '1px',
-    '--aug-border-bg': theme.palette.warning.main,
-  },
-}));
-
-export const WarningPanel = (props: PaperProps) => (
-  <WarningPanelStyled
-    data-augmented-ui="border bl-clip br-2-clip-x tl-clip tr-clip"
-    {...props}
   />
 );
 
@@ -251,14 +153,6 @@ export const SystemsText = styled(Typography)(({ theme }) => ({
   marginTop: 4,
 }));
 
-export const ControlIcon = styled(Box)(({ theme }) => ({
-  height: 32,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginBottom: theme.spacing(1),
-}));
-
 export const spinAnimation = keyframes`
   from {
     transform: rotate(0deg);
@@ -273,24 +167,6 @@ export const RightDisplay = styled(Box)(({ theme }) => ({
   height: 64,
   backgroundColor: theme.palette.background.paper,
   position: 'relative',
-}));
-
-export const RightDisplayInner = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  inset: 8,
-  border: `1px solid ${theme.palette.primary.main}`,
-  backgroundColor: theme.palette.background.paper,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-export const SpinningShape = styled(Box)(({ theme }) => ({
-  height: 32,
-  border: `5px solid ${theme.palette.primary.main}`,
-  animation: `${spinAnimation} 2s linear infinite`,
-  clipPath:
-    'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
 }));
 
 const scanlines = keyframes`

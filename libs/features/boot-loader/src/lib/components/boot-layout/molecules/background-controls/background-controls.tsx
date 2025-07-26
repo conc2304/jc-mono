@@ -1,7 +1,5 @@
-import { ControlIcon } from '../../atoms';
 import { AugmentedButton } from '@jc/ui-components';
 import {
-  RadioButtonChecked,
   Warning,
   RemoveCircle,
   AddCircle,
@@ -12,9 +10,15 @@ import {
   Tonality,
   QuestionMark,
 } from '@mui/icons-material';
-import { ButtonProps, Grid, IconProps } from '@mui/material';
+import { Box, ButtonProps, Grid, IconProps, styled } from '@mui/material';
 import { Property } from 'csstype';
-import { ReactNode } from 'react';
+
+const ControlIcon = styled(Box)(({ theme }) => ({
+  // height: 32,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 interface BackgroundControlsPRops {
   backgroundAnimated?: boolean;
@@ -24,6 +28,7 @@ interface BackgroundControlsPRops {
   onBackgroundSizeChange?: (action: 'plus' | 'minus' | 'reset') => void;
   onBlendModeChange?: (blendMode: Property.BackgroundBlendMode) => void;
 }
+
 export const BackgroundControls = ({
   onToggleBackground,
   onBackgroundSizeChange,
@@ -61,6 +66,7 @@ export const BackgroundControls = ({
   const buttonProps: ButtonProps = {
     color: 'primary',
     variant: 'outlined',
+    size: 'large',
   };
 
   const iconProps: IconProps = {
@@ -94,7 +100,11 @@ export const BackgroundControls = ({
           <Warning sx={{ ...iconProps.sx }} />
         </AugmentedButton>
       </ControlIcon>
-      <ControlIcon>
+      <ControlIcon
+        sx={{
+          mt: 1,
+        }}
+      >
         {blendModes.map((blendMode, i, arr) => {
           const Icon = blendModeMap[blendMode] ?? QuestionMark;
           return (
@@ -124,7 +134,11 @@ export const BackgroundControls = ({
           );
         })}
       </ControlIcon>
-      <ControlIcon>
+      <ControlIcon
+        sx={{
+          mt: 1,
+        }}
+      >
         {actionMap.map((action, i, arr) => {
           const Icon = actionIconMap[action];
           return (

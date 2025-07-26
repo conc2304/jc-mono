@@ -26,10 +26,10 @@ interface AugmentedButtonProps extends ButtonProps {
   animateClick?: boolean;
 }
 const augmentationSizeMap = {
-  small: '6px',
-  medium: '10px',
-  large: '14px',
-  default: '10px',
+  small: 0.5,
+  medium: 1,
+  large: 1.5,
+  default: 1,
 };
 
 // Base styled button that will receive the augmented-ui attributes
@@ -55,10 +55,10 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
         '--aug-border-all': borderWidth > 0 ? borderWidth + 'px' : undefined, // size
         '--aug-border-bg': gradientStyle, // style
 
-        '--aug-tl': auSize,
-        '--aug-tr': auSize,
-        '--aug-bl': auSize,
-        '--aug-br': auSize,
+        '--aug-tl': theme.spacing(auSize),
+        '--aug-tr': theme.spacing(auSize),
+        '--aug-bl': theme.spacing(auSize),
+        '--aug-br': theme.spacing(auSize),
       },
 
       '&[data-augmented-ui]:hover': {

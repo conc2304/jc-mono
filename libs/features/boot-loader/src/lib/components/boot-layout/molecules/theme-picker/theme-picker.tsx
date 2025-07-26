@@ -1,11 +1,8 @@
 import {
   Box,
-  Collapse,
   darken,
   Dialog,
-  Modal,
   PaletteOptionNames,
-  Paper,
   styled,
   Typography,
   useTheme,

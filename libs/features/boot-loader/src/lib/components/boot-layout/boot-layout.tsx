@@ -14,23 +14,15 @@ import { BootText } from '../boot-text';
 import { BootMessage } from '../../types';
 
 import {
-  AddressBar,
   BootContainer,
   BottomPanel,
   BrowserFrame,
-  BrowserHeader,
-  ControlSlider,
   RadarChartBox,
   MultiplexText,
   TorusLoaderCardAug,
   RightDisplay,
-  RightDisplayInner,
   ScanlinesOverlay,
-  SliderGradient,
-  SliderInner,
-  SpinningShape,
   SystemsText,
-  WarningPanel,
   WarningStripe,
   WarningStripes,
 } from './atoms';
@@ -38,7 +30,13 @@ import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
 import * as d3 from 'd3';
 import { remap } from '../utils';
-import { DataPanel, Footer } from './molecules';
+import {
+  DataPanel,
+  Footer,
+  GifContainer,
+  Header,
+  WarningPanel,
+} from './molecules';
 import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
 
 import { Property } from 'csstype';
@@ -78,40 +76,18 @@ const sampleData: RadarData = [
 export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
   const theme = useTheme();
 
-  const [dataValues, setDataValues] = useState({
-    temp: 23.7,
-    pressure: 101.3,
-    oxygen: 98.2,
-  });
-
   const [progress, setProgress] = useState({
     current: 0,
     total: 0,
     message: '',
   });
 
-  const [animateBackground, setAnimateBackground] = useState(false);
-
+  // BackgroundImage State
   const initialBgSize = 200;
-
+  const [animateBackground, setAnimateBackground] = useState(false);
   const [backgroundSize, setBackgroundSize] = useState(initialBgSize);
   const [backgroundBlendMode, setBackgroundBlendMode] =
     useState<Property.BackgroundBlendMode>('color-burn');
-
-  const [isComplete, setIsComplete] = useState(false);
-
-  const handleProgress = useCallback(
-    (current: number, total: number, message: string) => {
-      setProgress({ current, total, message });
-    },
-    []
-  );
-
-  const handleBootComplete = useCallback(() => {
-    setIsComplete(true);
-    console.log('Boot sequence complete!');
-  }, []);
-
   const bgUrl =
     'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTdtdTA3aTRzMWVsNnhvOTMycjdmZjNqNHNmZXEwaWQzajV1aHVnciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9PD6etrOTUxby/giphy.gif';
 
@@ -128,6 +104,22 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
     return;
   };
 
+  const [isComplete, setIsComplete] = useState(false);
+
+  const handleProgress = useCallback(
+    (current: number, total: number, message: string) => {
+      setProgress({ current, total, message });
+    },
+    []
+  );
+
+  const handleBootComplete = useCallback(() => {
+    setIsComplete(true);
+    console.log('Boot sequence complete!');
+  }, []);
+
+  const cloudGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
+
   return (
     <BootContainer
       className={'BootContainer--root ' + className}
@@ -142,23 +134,13 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
         <style></style>
       </>
       <BrowserFrame elevation={0}>
-        {/* Browser Header */}
-        <BrowserHeader>
-          <AddressBar>
-            CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD: *******
-          </AddressBar>
-          <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            MAINFRAME-RESEARCH
-          </Typography>
-        </BrowserHeader>
-
+        <Header />
         {/* Main Content Area */}
         <Box p={2} height={600}>
           <Grid container spacing={2} height="100%">
             {/* Left Panel */}
             <Grid size={{ xs: 3 }}>
               <Box display="flex" flexDirection="column" gap={2} flexGrow={1}>
-                {/* Radar Display */}
                 <RadarChartBox>
                   <AnimatedRadarChart
                     id="animated-radar"
@@ -196,67 +178,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                   />
                 </RadarChartBox>
 
-                {/* Control Panel */}
+                {/* Ambient Panels */}
                 <Box flex={1} display="flex" flexDirection="column" gap={1}>
-                  {/* Slider */}
-                  <ControlSlider>
-                    <SliderInner>
-                      <ScanlinesOverlay />
-                      <SliderGradient />
-                      {/* TODO - maybe switch to progress */}
-                    </SliderInner>
-                  </ControlSlider>
-
-                  {/* Warning Panel */}
-                  <WarningPanel elevation={0}>
-                    <Typography
-                      variant="h6"
-                      align="center"
-                      sx={{ color: 'warning.main', fontWeight: 'bold' }}
-                    >
-                      !
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      align="center"
-                      display="block"
-                      sx={{ color: 'warning.main' }}
-                    >
-                      DANGER
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: 'primary.main',
-                        fontSize: '0.7rem',
-                        lineHeight: 1.2,
-                        mt: 1,
-                        display: 'block',
-                      }}
-                    >
-                      HAZARD ZONE AREA
-                      <br />
-                      AUTHORIZED ONLY
-                      <br />
-                      <br />
-                      DO NOT
-                      <br />
-                      DISTURB OR
-                      <br />
-                      MOVE
-                    </Typography>
-                    <Box
-                      sx={(theme) => ({
-                        borderBottom: `1px solid ${theme.palette.warning.main}`,
-                        my: 1,
-                      })}
-                    />
-                    <WarningStripes>
-                      {[...Array(8)].map((_, i) => (
-                        <WarningStripe key={i} />
-                      ))}
-                    </WarningStripes>
-                  </WarningPanel>
+                  <GifContainer url={cloudGif} sx={{ height: 128 }} />
+                  <WarningPanel />
                 </Box>
               </Box>
             </Grid>
@@ -280,15 +205,13 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                   />
                 </TorusLoaderCardAug>
 
-                {/* Status Bar */}
-
                 <ThemePickerPanel />
 
                 <Typography
                   variant="caption"
                   align="right"
                   sx={{ color: 'primary.main', mt: 0.5 }}
-                  // TODO UPDATE THIS TEXT
+                  // TODO UPDATE THIS TEXT // or leave it as a shout out
                 >
                   YOUNGSTA X SLEEPER
                 </Typography>
@@ -298,12 +221,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             {/* Right Panel */}
             <Grid size={{ xs: 3 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
-                {/* Data Display */}
                 <DataPanel />
 
-                {/* TODO Find Something more interesting */}
-
-                {/* Additional Panels */}
+                {/* Ambient Panel */}
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -319,17 +239,11 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                       '--aug-br1': '1rem',
                       '--aug-br2': '2rem',
                       '--aug-br-extend2': '25%',
-
                       '--aug-border-all': '1px',
                       '--aug-border-bg': theme.palette.secondary.main,
                     },
                   })}
                 >
-                  {/* <Box
-
-                  >
-
-                  </Box> */}
                   <WarningStripes
                     sx={{
                       minHeight: '80px',
@@ -351,6 +265,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                   </WarningStripes>
                 </Box>
 
+                {/* BootText Panel */}
                 <Box
                   data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
                   sx={(theme) => ({
@@ -362,7 +277,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                       '--aug-tr1': '1rem',
                       '--aug-tr2': '2rem',
                       '--aug-tr-extend2': '25%',
-
                       '--aug-border-all': '1px',
                       '--aug-border-bg': theme.palette.primary.main,
                     },
@@ -415,13 +329,23 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             />
 
             {/* Right Display */}
-            <Grid size={{ xs: 2 }}>
-              <RightDisplay>
-                <AugmentedButton>
-                  <Home />
-                  <Typography>ENTER</Typography>
-                </AugmentedButton>
-              </RightDisplay>
+            <Grid
+              size={{ xs: 2 }}
+              sx={{
+                // height: '100%',
+                flex: 1,
+              }}
+            >
+              <AugmentedButton
+                variant="contained"
+                shape="buttonRight"
+                fullWidth
+                size="large"
+                startIcon={<Home />}
+                sx={{ height: '100%' }}
+              >
+                ENTER
+              </AugmentedButton>
             </Grid>
           </Grid>
         </BottomPanel>

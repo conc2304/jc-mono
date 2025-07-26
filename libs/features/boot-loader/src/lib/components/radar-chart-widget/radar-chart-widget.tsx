@@ -79,7 +79,6 @@ export const RadarChart = ({
   const svgRef = useRef<SVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null); // Parent of SVG
-  // const dimensions = useResizeObserver(wrapperRef);
   const dimensions = useResizeObserver(wrapperRef);
 
   const colorScale = useRef<d3.ScaleOrdinal<string, unknown, never>>(null);
@@ -160,6 +159,7 @@ export const RadarChart = ({
       const axisScale = d3
         .scaleLinear()
         .range([0, radius])
+        // @ts-ignore
         .domain([0, axisMax === 0 ? 100 : axisMax]);
       set(axisScaleMap, axisName, axisScale);
     });
@@ -168,6 +168,7 @@ export const RadarChart = ({
     const rScale = d3
       .scaleLinear()
       .range([0, radius])
+      // @ts-ignore
       .domain([0, domainMax === 0 ? 100 : domainMax]);
 
     const colorSeries = colorScheme.series;
@@ -212,6 +213,7 @@ export const RadarChart = ({
       .style('filter', 'url(#glow)');
 
     // Label the Axis Markers
+    // @ts-ignore
     const getTextAnchorValue = (_, i: number) => {
       const x = Math.cos(angleSize * i - Math.PI / 2);
       const y = Math.sin(angleSize * i - Math.PI / 2);
@@ -321,6 +323,7 @@ export const RadarChart = ({
       .append('path')
       .attr('class', 'radar-area')
       .style('fill-opacity', 0) // Start invisible for enter transition
+      // @ts-ignore
       .merge(radarAreas) // Merge with existing elements
       .on('mouseover', function (event: MouseEvent, d) {
         if (!tooltip) return;
@@ -390,8 +393,9 @@ export const RadarChart = ({
       .enter()
       .append('path')
       .attr('class', 'radar-stroke')
-      .style('stroke-opacity', 0) // Start invisible for enter transition
-      .merge(radarStrokes) // Merge with existing elements
+      .style('stroke-opacity', 0)
+      // @ts-ignore
+      .merge(radarStrokes)
       .call((selection) =>
         createTransition(selection)
           .attr('d', radarLineGenerator)
