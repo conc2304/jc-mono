@@ -341,10 +341,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 shape="buttonRight"
                 fullWidth
                 size="large"
-                startIcon={<Home />}
                 sx={{ height: '100%' }}
+                href="/"
               >
-                ENTER
+                <Typography fontSize={'2.5rem'}>ENTER</Typography>
               </AugmentedButton>
             </Grid>
           </Grid>
