@@ -5,9 +5,6 @@ import {
   styled,
   keyframes,
   BoxProps,
-  alpha,
-  Theme,
-  PaperProps,
 } from '@mui/material';
 
 export const BootContainer = styled(Box)<{}>(({ theme }) => ({

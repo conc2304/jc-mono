@@ -20,7 +20,6 @@ import {
   RadarChartBox,
   MultiplexText,
   TorusLoaderCardAug,
-  RightDisplay,
   ScanlinesOverlay,
   SystemsText,
   WarningStripe,
@@ -28,7 +27,7 @@ import {
 } from './atoms';
 import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
-import * as d3 from 'd3';
+import { easeSinInOut } from 'd3';
 import { remap } from '../utils';
 import {
   DataPanel,
@@ -148,7 +147,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                       noiseScale: 1.5,
                       trailIntensity: 1,
                       enableAnimation: true,
-                      easing: d3.easeSinInOut,
+                      easing: easeSinInOut,
                     }}
                     levels={5}
                     showLabels={false}
