@@ -108,19 +108,15 @@ export const ThemePickerPanel = () => {
         }}
       >
         <Box
-          data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
+          data-augmented-ui="border bl-clip br-clip tl-clip tr-clip"
           sx={(theme) => ({
-            // p: 5,
-            // height: '100%',
+            p: 2,
             backgroundColor: theme.palette.background.paper,
-            // backgroundColor: 'red',
             '&[data-augmented-ui]': {
-              '--aug-bl': '0.5rem',
-              '--aug-br': '0.5rem',
-              '--aug-tl': '0.5rem',
-              '--aug-tr1': '1rem',
-              '--aug-tr2': '2rem',
-              '--aug-tr-extend2': '25%',
+              '--aug-bl': theme.spacing(2),
+              '--aug-br': theme.spacing(2),
+              '--aug-tl': theme.spacing(2),
+              '--aug-tr': theme.spacing(2),
 
               '--aug-border-all': '2px',
               '--aug-border-bg': theme.palette.primary.main,
