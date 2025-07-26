@@ -91,7 +91,7 @@ export const BackgroundControls = ({
           onClick={() => handleToggleBackground()}
           shape="buttonLeft"
         >
-          <Warning sx={{ color: 'primary.main', fontSize: 16 }} />
+          <Warning sx={{ ...iconProps.sx }} />
         </AugmentedButton>
       </ControlIcon>
       <ControlIcon>
@@ -112,16 +112,11 @@ export const BackgroundControls = ({
                     blendMode === blendModeActive && backgroundAnimated
                       ? theme.palette.getInvertedMode('primary')
                       : undefined,
+                  '--aug-border-all':
+                    blendModeActive && backgroundAnimated ? '2px' : undefined,
                 },
               })}
             >
-              {/* <RadioButtonChecked
-              sx={{
-                color: 'primary.main',
-                fontSize: 16,
-                opacity: backgroundAnimated ? 1 : 0.3,
-              }}
-            /> */}
               <Icon
                 sx={{ ...iconProps.sx, opacity: backgroundAnimated ? 1 : 0.3 }}
               />
