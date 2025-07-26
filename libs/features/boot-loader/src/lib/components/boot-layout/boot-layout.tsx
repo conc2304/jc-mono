@@ -44,6 +44,10 @@ import * as d3 from 'd3';
 import { remap } from '../utils';
 import { DataPanel } from './molecules';
 import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
+import { AugmentedButton } from '@jc/ui-components';
+
+import { Property } from 'csstype';
+import { BackgroundControls } from './molecules/background-controls/background-controls';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -88,6 +92,15 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
     total: 0,
     message: '',
   });
+
+  const [animateBackground, setAnimateBackground] = useState(false);
+
+  const initialBgSize = 200;
+
+  const [backgroundSize, setBackgroundSize] = useState(initialBgSize);
+  const [backgroundBlendMode, setBackgroundBlendMode] =
+    useState<Property.BackgroundBlendMode>('color-burn');
+
   const [isComplete, setIsComplete] = useState(false);
 
   const handleProgress = useCallback(
@@ -102,16 +115,38 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
     console.log('Boot sequence complete!');
   }, []);
 
+  const bgUrl =
+    'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTdtdTA3aTRzMWVsNnhvOTMycjdmZjNqNHNmZXEwaWQzajV1aHVnciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9PD6etrOTUxby/giphy.gif';
+
+  const handleBackgroundResize = (action: 'plus' | 'minus' | 'reset') => {
+    if (action === 'reset') {
+      setBackgroundSize(initialBgSize);
+      return;
+    }
+
+    const incrementAmount = 20;
+    const direction = action === 'plus' ? 1 : -1;
+    const value = incrementAmount * direction;
+    setBackgroundSize((prev) => prev + value);
+    return;
+  };
+
   return (
-    <BootContainer className={className}>
+    <BootContainer
+      className={'BootContainer--root ' + className}
+      style={{
+        backgroundImage: animateBackground ? `url(${bgUrl})` : 'initial',
+        backgroundSize: `${backgroundSize}px`,
+        backgroundRepeat: 'repeat',
+        backgroundBlendMode: backgroundBlendMode,
+      }}
+    >
+      <>
+        <style></style>
+      </>
       <BrowserFrame elevation={0}>
         {/* Browser Header */}
         <BrowserHeader>
-          {/* <Box display="flex" alignItems="center" gap={1}>
-            <TrafficLight color={theme.palette.error.main} />
-            <TrafficLight color={theme.palette.warning.main} />
-            <TrafficLight color={theme.palette.success.main} />
-          </Box> */}
           <AddressBar>
             CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD: *******
           </AddressBar>
@@ -293,11 +328,17 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                     },
                   })}
                 >
+                  {/* <Box
+
+                  >
+
+                  </Box> */}
                   <WarningStripes
                     sx={{
                       minHeight: '80px',
                       m: 0,
                       gap: 5,
+                      backgroundColor: theme.palette.background.paper,
                     }}
                   >
                     {[...Array(8)].map((_, i) => (
@@ -364,19 +405,17 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             </Grid>
 
             {/* Control Icons */}
-            <Grid size={{ xs: 2 }}>
-              <ControlIcon>
-                <Warning sx={{ color: 'primary.main', fontSize: 16 }} />
-              </ControlIcon>
-              <ControlIcon>
-                <RadioButtonChecked
-                  sx={{ color: 'primary.main', fontSize: 16 }}
-                />
-              </ControlIcon>
-              <ControlIcon>
-                <Home sx={{ color: 'primary.main', fontSize: 16 }} />
-              </ControlIcon>
-            </Grid>
+            <BackgroundControls
+              backgroundAnimated={animateBackground}
+              onBackgroundSizeChange={(action) =>
+                handleBackgroundResize(action)
+              }
+              onBlendModeChange={(blendMode) =>
+                setBackgroundBlendMode(blendMode)
+              }
+              onToggleBackground={() => setAnimateBackground((prev) => !prev)}
+              blendModeActive={backgroundBlendMode}
+            />
 
             {/* Right Display */}
             <Grid size={{ xs: 2 }}>

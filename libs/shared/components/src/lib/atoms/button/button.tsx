@@ -23,6 +23,7 @@ const borderMap: Record<
 };
 interface AugmentedButtonProps extends ButtonProps {
   shape?: keyof typeof SHAPE_MAPPINGS;
+  animateClick?: boolean;
 }
 const augmentationSizeMap = {
   small: '6px',
@@ -77,6 +78,7 @@ export const AugmentedButton = React.forwardRef<
   (
     {
       shape = 'buttonClipped',
+      animateClick = false,
       // borderSize = 0,
       children,
       ...props

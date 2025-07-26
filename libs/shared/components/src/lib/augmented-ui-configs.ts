@@ -29,6 +29,9 @@ export const BUTTON_SHAPE_MAPPINGS: ShapeMapping = {
   buttonScoop: {
     'data-augmented-ui': 'tl-scoop tr-scoop br-scoop bl-scoop',
   },
+  buttonMiddle: {
+    'data-augmented-ui': '',
+  },
 };
 
 // Define semantic shape names to augmented-ui mixin mappings

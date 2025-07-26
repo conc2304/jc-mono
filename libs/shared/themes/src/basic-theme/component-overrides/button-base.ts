@@ -16,7 +16,7 @@ export default function ButtonBase(theme: Theme): Components {
       },
       styleOverrides: {
         root: ({ ownerState }) => {
-          const { color, variant, size, disabled } = ownerState;
+          const { color, variant, size, disabled, animateClick } = ownerState;
           const shouldUseColorStyling =
             color !== undefined && color !== 'inherit';
           const colorTheme = shouldUseColorStyling ? color : undefined;
@@ -73,7 +73,7 @@ export default function ButtonBase(theme: Theme): Components {
                   : 'inherit',
               border: 'unset !important', // leave it to augmented ui
               position: 'relative',
-              overflow: 'visible !important',
+              overflow: 'clip !important',
               borderRadius: 0,
               transition: theme.transitions.create(
                 ['background-color', 'transform'],
@@ -137,7 +137,9 @@ export default function ButtonBase(theme: Theme): Components {
                   ? paletteColor.contrastText
                   : 'inherit',
               backgroundImage:
-                variant !== 'text' ? `url("${bgImage}")` : undefined,
+                variant !== 'text' && animateClick
+                  ? `url("${bgImage}")`
+                  : undefined,
               backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center center',

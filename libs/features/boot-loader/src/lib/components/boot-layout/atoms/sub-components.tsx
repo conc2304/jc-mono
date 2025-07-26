@@ -1,3 +1,4 @@
+import { AugmentedButton } from '@jc/ui-components';
 import {
   Box,
   Paper,
@@ -11,12 +12,26 @@ import {
   PaletteOptionNames,
 } from '@mui/material';
 
-export const BootContainer = styled(Box)(({ theme }) => ({
+export const BootContainer = styled(Box)<{}>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.primary.main,
   fontFamily: 'monospace',
   minHeight: '100vh',
   padding: theme.spacing(2),
+  transition: 'background-size 0.1s ease-in',
+
+  '@keyframes gradient-animation': {
+    '0%': {
+      '&::before': {
+        left: '-45%',
+      },
+    },
+    '100%': {
+      // '&::before': {
+      //   left: '100%',
+      // },
+    },
+  },
 }));
 
 export const BrowserFrame = styled(Paper)(({ theme }) => ({
@@ -237,9 +252,7 @@ export const SystemsText = styled(Typography)(({ theme }) => ({
 }));
 
 export const ControlIcon = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
   height: 32,
-  backgroundColor: theme.palette.background.paper,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

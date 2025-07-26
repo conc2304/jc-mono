@@ -36,21 +36,14 @@ const StatusIcons = styled(Box)({
   gap: 8,
 });
 
-const StatusIcon = styled(Box)<{ colorName: PaletteOptionNames }>(
-  ({ colorName, theme }) => ({
-    width: 24,
-    height: 24,
-    border: `1px solid ${theme.palette.primary.main}`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '& > div': {
-      width: 8,
-      height: 8,
-      backgroundColor: theme.palette[colorName].main,
-    },
-  })
-);
+const StatusIcon = styled(Box)<{}>(({ theme }) => ({
+  width: 24,
+  height: 24,
+  border: `1px solid ${theme.palette.primary.main}`,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 export const ThemePickerPanel = () => {
   const { currentTheme } = useEnhancedTheme();
@@ -89,7 +82,16 @@ export const ThemePickerPanel = () => {
         </Box>
         <StatusIcons>
           {themeColors.map((color) => (
-            <StatusIcon colorName={color}>
+            <StatusIcon
+              sx={(theme) => ({
+                '& > div': {
+                  width: 8,
+                  height: 8,
+                  backgroundColor: theme.palette[color].main,
+                },
+              })}
+              key={color}
+            >
               <div />
             </StatusIcon>
           ))}
