@@ -8,6 +8,7 @@ import {
   alpha,
   Theme,
   PaperProps,
+  PaletteOptionNames,
 } from '@mui/material';
 
 export const BootContainer = styled(Box)(({ theme }) => ({

@@ -88,7 +88,6 @@ export const RadarChart = ({
   const defaultMargin = { top: 0, right: 0, bottom: 0, left: 0 };
   const marg = { ...defaultMargin, margin };
 
-  console.log({ data });
   const defaultColors = {
     primary: 'red',
     accent: 'orange',

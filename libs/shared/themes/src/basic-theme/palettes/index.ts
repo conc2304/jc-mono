@@ -1,8 +1,8 @@
-export * from './basic-palette';
-export * from './blade-runner-palette';
-export * from './corpo-dystopia-palette';
-export * from './cyberpunk-palette';
-export * from './holographic-palette';
+export * from './basic-themes/basic-palette';
+export * from './basic-themes/blade-runner-palette';
+export * from './basic-themes/corpo-dystopia-palette';
+export * from './basic-themes/cyberpunk-palette';
+export * from './basic-themes/holographic-palette';
 export * from './synthwave-palette';
 
 export * from './enhanced-themes';

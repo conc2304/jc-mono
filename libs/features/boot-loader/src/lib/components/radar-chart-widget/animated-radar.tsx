@@ -62,7 +62,6 @@ export function withAnimatedValues<T extends ComponentProps<typeof RadarChart>>(
       if (!originalDataRef.current || originalDataRef.current.length === 0)
         return;
 
-      console.log('animate');
       // Use the first metric group as base data for trailing
       const baseData: MetricGroup = originalDataRef.current[0];
 

@@ -272,31 +272,45 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 {/* TODO Find Something more interesting */}
 
                 {/* Additional Panels */}
-                <Box display="flex" flexDirection="column" gap={1} flex={1}>
-                  <StatusButton>
-                    <Typography
-                      variant="caption"
-                      sx={{ color: 'primary.main' }}
-                    >
-                      SYSTEM ACTIVE
-                    </Typography>
-                  </StatusButton>
-                  <StatusButton>
-                    <Typography
-                      variant="caption"
-                      sx={{ color: 'primary.main' }}
-                    >
-                      READY
-                    </Typography>
-                  </StatusButton>
-                  <StatusButton>
-                    <Typography
-                      variant="caption"
-                      sx={{ color: 'primary.main' }}
-                    >
-                      STANDBY
-                    </Typography>
-                  </StatusButton>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={1}
+                  flex={1}
+                  data-augmented-ui="border bl-clip br-clip tl-clip br-2-clip-y"
+                  sx={(theme) => ({
+                    height: '100%',
+                    '&[data-augmented-ui]': {
+                      '--aug-bl': '0.5rem',
+                      '--aug-br': '0.5rem',
+                      '--aug-tl': '0.5rem',
+                      '--aug-br1': '1rem',
+                      '--aug-br2': '2rem',
+                      '--aug-br-extend2': '25%',
+
+                      '--aug-border-all': '1px',
+                      '--aug-border-bg': theme.palette.secondary.main,
+                    },
+                  })}
+                >
+                  <WarningStripes
+                    sx={{
+                      minHeight: '80px',
+                      m: 0,
+                      gap: 5,
+                    }}
+                  >
+                    {[...Array(8)].map((_, i) => (
+                      <WarningStripe
+                        key={i}
+                        sx={{
+                          height: '250%',
+                          px: 2,
+                          backgroundColor: theme.palette.action.focus,
+                        }}
+                      />
+                    ))}
+                  </WarningStripes>
                 </Box>
 
                 <Box
