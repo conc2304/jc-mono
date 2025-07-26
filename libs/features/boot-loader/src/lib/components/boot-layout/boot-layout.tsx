@@ -42,7 +42,10 @@ import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
 import { Property } from 'csstype';
 import { BackgroundControls } from './molecules/background-controls/background-controls';
 import { AugmentedButton } from '@jc/ui-components';
-import { Home } from '@mui/icons-material';
+
+interface SciFiLayoutProps {
+  className?: string;
+}
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -58,10 +61,6 @@ const bootMessages: BootMessage[] = [
 
 const scrambleCharacterSet =
   '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-interface SciFiLayoutProps {
-  className?: string;
-}
 
 const sampleData: RadarData = [
   [
@@ -130,9 +129,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
         backgroundBlendMode: backgroundBlendMode,
       }}
     >
-      <>
-        <style></style>
-      </>
       <BrowserFrame elevation={0}>
         <Header />
         {/* Main Content Area */}
@@ -332,7 +328,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             <Grid
               size={{ xs: 2 }}
               sx={{
-                // height: '100%',
                 flex: 1,
               }}
             >
