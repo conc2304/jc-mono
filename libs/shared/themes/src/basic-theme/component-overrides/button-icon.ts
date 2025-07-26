@@ -7,7 +7,7 @@ export default function ButtonIcon(theme: Theme): Components {
         // size: 'medium',
       },
       styleOverrides: {
-        root: ({ ownerState: { color, size } }) => {
+        root: ({ ownerState: { color, size, animateClick = false } }) => {
           const colorTheme =
             !!color && color !== 'inherit' && color !== 'default'
               ? color
@@ -64,7 +64,7 @@ export default function ButtonIcon(theme: Theme): Components {
               backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center center',
-              backgroundImage: `url(${bgImage})`,
+              backgroundImage: animateClick ? `url(${bgImage})` : undefined,
             },
           };
         },

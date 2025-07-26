@@ -3,13 +3,13 @@
 import React from 'react';
 import { IconButtonProps, IconButton as MuiIconButton } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-import { OverridableStringUnion } from '@mui/types';
 
 import { getShapeData, SHAPE_MAPPINGS } from '../../augmented-ui-configs';
 
 export interface AugmentedIconButtonProps extends IconButtonProps {
   shape?: keyof typeof SHAPE_MAPPINGS;
   borderSize?: number;
+  animateClick: boolean;
 }
 
 const augmentationSizeMap = {

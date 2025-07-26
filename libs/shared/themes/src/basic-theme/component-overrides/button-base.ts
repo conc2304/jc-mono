@@ -16,7 +16,13 @@ export default function ButtonBase(theme: Theme): Components {
       },
       styleOverrides: {
         root: ({ ownerState }) => {
-          const { color, variant, size, disabled, animateClick } = ownerState;
+          const {
+            color,
+            variant,
+            size,
+            disabled,
+            animateClick = false,
+          } = ownerState;
           const shouldUseColorStyling =
             color !== undefined && color !== 'inherit';
           const colorTheme = shouldUseColorStyling ? color : undefined;

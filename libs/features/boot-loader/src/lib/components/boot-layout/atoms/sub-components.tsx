@@ -293,19 +293,6 @@ export const SpinningShape = styled(Box)(({ theme }) => ({
     'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
 }));
 
-export const Footer = styled(Box)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.primary.main}`,
-  backgroundColor: theme.palette.background.paper,
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  paddingTop: theme.spacing(0.5),
-  paddingBottom: theme.spacing(0.5),
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  fontSize: '0.75rem',
-}));
-
 const scanlines = keyframes`
   0% {
     transform: translateY(0);

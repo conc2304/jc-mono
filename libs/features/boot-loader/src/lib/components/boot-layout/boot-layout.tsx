@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -9,7 +9,6 @@ import {
   lighten,
   darken,
 } from '@mui/material';
-import { Warning, RadioButtonChecked, Home } from '@mui/icons-material';
 import { TorusFieldProgressMemo } from '../torus-field-progress';
 import { BootText } from '../boot-text';
 import { BootMessage } from '../../types';
@@ -20,10 +19,8 @@ import {
   BottomPanel,
   BrowserFrame,
   BrowserHeader,
-  ControlIcon,
   ControlSlider,
   RadarChartBox,
-  Footer,
   MultiplexText,
   TorusLoaderCardAug,
   RightDisplay,
@@ -32,7 +29,6 @@ import {
   SliderGradient,
   SliderInner,
   SpinningShape,
-  StatusButton,
   SystemsText,
   WarningPanel,
   WarningStripe,
@@ -42,12 +38,13 @@ import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
 import * as d3 from 'd3';
 import { remap } from '../utils';
-import { DataPanel } from './molecules';
+import { DataPanel, Footer } from './molecules';
 import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
-import { AugmentedButton } from '@jc/ui-components';
 
 import { Property } from 'csstype';
 import { BackgroundControls } from './molecules/background-controls/background-controls';
+import { AugmentedButton } from '@jc/ui-components';
+import { Home } from '@mui/icons-material';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -420,28 +417,17 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
             {/* Right Display */}
             <Grid size={{ xs: 2 }}>
               <RightDisplay>
-                <RightDisplayInner>
-                  <SpinningShape />
-                </RightDisplayInner>
+                <AugmentedButton>
+                  <Home />
+                  <Typography>ENTER</Typography>
+                </AugmentedButton>
               </RightDisplay>
             </Grid>
           </Grid>
         </BottomPanel>
 
         {/* Footer */}
-        <Footer>
-          <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            © 2157 - ALL RIGHTS RESERVED
-          </Typography>
-          <Box display="flex" gap={2}>
-            <Typography variant="caption" sx={{ color: 'primary.main' }}>
-              SECURE CONNECTION
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'primary.main' }}>
-              ENCRYPTED
-            </Typography>
-          </Box>
-        </Footer>
+        <Footer />
       </BrowserFrame>
     </BootContainer>
   );
