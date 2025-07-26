@@ -202,44 +202,6 @@ export const RadarTarget = styled(Box)<{
   animation: `${pulse} 1.5s infinite`,
 }));
 
-export const StatusBar = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(1),
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-}));
-
-export const StatusIndicator = styled(Box)(({ theme }) => ({
-  width: 16,
-  height: 16,
-  border: `1px solid ${theme.palette.primary.main}`,
-  borderRadius: '50%',
-  backgroundColor: theme.palette.success.main,
-}));
-
-export const StatusIcons = styled(Box)({
-  display: 'flex',
-  gap: 8,
-});
-
-export const StatusIcon = styled(Box)<{ color: string }>(
-  ({ color, theme }) => ({
-    width: 24,
-    height: 24,
-    border: `1px solid ${theme.palette.primary.main}`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '& > div': {
-      width: 8,
-      height: 8,
-      backgroundColor: color,
-    },
-  })
-);
-
 export const StatusButton = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
   backgroundColor: theme.palette.background.paper,

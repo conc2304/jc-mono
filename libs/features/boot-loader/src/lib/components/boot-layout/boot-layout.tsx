@@ -32,11 +32,7 @@ import {
   SliderGradient,
   SliderInner,
   SpinningShape,
-  StatusBar,
   StatusButton,
-  StatusIcon,
-  StatusIcons,
-  StatusIndicator,
   SystemsText,
   WarningPanel,
   WarningStripe,
@@ -47,6 +43,7 @@ import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
 import * as d3 from 'd3';
 import { remap } from '../utils';
 import { DataPanel } from './molecules';
+import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
 
 const bootMessages: BootMessage[] = [
   'Initializing system...',
@@ -243,38 +240,18 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                     progressMessage={progress.message}
                     colors={{
                       backgroundColor: theme.palette.background.paper,
-                      beamColor:
-                        theme.palette.info[theme.palette.getInvertedMode()],
+                      beamColor: theme.palette.getInvertedMode('info'),
                       torusColor: theme.palette.primary.main,
-                      particleColor: theme.palette.info.main,
+                      particleColor: theme.palette.getInvertedMode('info'),
                       verticalLineColor: theme.palette.warning.main,
                     }}
                   />
                 </TorusLoaderCardAug>
 
                 {/* Status Bar */}
-                <StatusBar>
-                  <Box display="flex" alignItems="center" gap={2}>
-                    <StatusIndicator />
-                    <Typography
-                      variant="caption"
-                      sx={{ color: 'primary.main' }}
-                    >
-                      FULL INTEGRATION STATUS
-                    </Typography>
-                  </Box>
-                  <StatusIcons>
-                    <StatusIcon color={theme.palette.primary.main}>
-                      <div />
-                    </StatusIcon>
-                    <StatusIcon color={theme.palette.warning.main}>
-                      <div />
-                    </StatusIcon>
-                    <StatusIcon color={theme.palette.primary.main}>
-                      <div />
-                    </StatusIcon>
-                  </StatusIcons>
-                </StatusBar>
+
+                <ThemePickerPanel />
+
                 <Typography
                   variant="caption"
                   align="right"

@@ -28,7 +28,6 @@ export default function ThemeControls() {
         onThemeChange={(themeId, theme) => changeTheme(themeId)}
         showModeToggle={true}
         compact={false}
-        width="100%"
       />
     </Paper>
   );

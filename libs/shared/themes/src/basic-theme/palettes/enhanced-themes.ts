@@ -83,7 +83,7 @@ export const enhancedThemes: EnhancedThemeOption[] = [
     name: 'Blade Runner',
     description: 'Only available in dark mode',
     category: 'cyberpunk',
-    supportsLight: false,
+    supportsLight: true,
     supportsDark: true,
     darkPalette: {
       mode: 'dark',
@@ -100,13 +100,21 @@ export const enhancedThemes: EnhancedThemeOption[] = [
     },
     lightPalette: {
       mode: 'light',
-      primary: { main: '#FF6B35' },
-      secondary: { main: '#004445' },
-      // This theme doesn't really work in light mode
+      primary: { main: '#E55A2B' }, // Slightly darker orange for better contrast on light
+      secondary: { main: '#006B6D' }, // Deeper teal for visibility
+      error: { main: '#C62828' },
+      warning: { main: '#F57F17' }, // Darker amber for readability
+      info: { main: '#0097A7' }, // Deeper cyan
+      success: { main: '#2E7D32' }, // Darker green
       background: {
-        default: '#F5F5F5',
-        paper: '#FFFFFF',
+        default: '#F8FAFC', // Light gray-blue base
+        paper: '#FFFFFF', // Pure white for cards/surfaces
       },
+      text: {
+        primary: '#1A202C', // Dark gray for primary text
+        secondary: '#4A5568', // Medium gray for secondary text
+      },
+      divider: '#E2E8F0', // Light gray for borders/dividers
     },
   },
 ];

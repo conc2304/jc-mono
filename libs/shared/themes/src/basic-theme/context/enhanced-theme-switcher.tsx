@@ -13,16 +13,214 @@ import {
   Typography,
   SelectChangeEvent,
   SimplePaletteColorOptions,
+  styled,
+  alpha,
+  useTheme,
 } from '@mui/material';
 import {
   PaletteIcon,
   SunIcon as LightMode,
   MoonStarIcon as DarkMode,
   MonitorCogIcon as SettingsBrightness,
+  Settings,
+  Monitor,
 } from 'lucide-react';
 
 import { useColorMode } from './color-mode-context';
 import { EnhancedThemeOption, ColorMode } from '../types';
+
+// Styled components with theme-aware brutalist sci-fi aesthetic
+const MainPanel = styled(Box)(({ theme }) => ({
+  // backgroundColor: theme.palette.background.paper,
+  // border: `4px solid ${theme.palette.primary.main}`,
+  borderRadius: 0,
+  // boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+  position: 'relative',
+  overflow: 'hidden',
+  fontFamily: 'monospace',
+}));
+
+const SectionDivider = styled(Box)(({ theme }) => ({
+  height: '1px',
+  background: alpha(theme.palette.primary.main, 0.3),
+  margin: 0,
+}));
+
+const CyberFormControl = styled(FormControl)(({ theme }) => ({
+  '& .MuiInputLabel-root': {
+    color: theme.palette.primary.main,
+    fontFamily: 'monospace',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    '&.Mui-focused': {
+      color: theme.palette.primary.main,
+    },
+  },
+  '& .MuiOutlinedInput-root': {
+    // border: `2px solid ${theme.palette.divider}`,
+    borderRadius: 0,
+    backgroundColor: 'transparent',
+    fontFamily: 'monospace',
+    fontSize: '12px',
+    color: theme.palette.text.primary,
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.primary.main,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.primary.main,
+      borderWidth: '1px',
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.divider,
+      borderWidth: '1px',
+    },
+  },
+  '& .MuiSelect-icon': {
+    color: theme.palette.primary.main,
+  },
+}));
+
+const CyberMenuItem = styled(MenuItem)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
+  fontFamily: 'monospace',
+  fontSize: '12px',
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  },
+  '&.Mui-selected': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.primary.main, 0.3),
+    },
+  },
+}));
+
+const ModeButton = styled(IconButton)<{ active?: boolean }>(
+  ({ theme, active }) => ({
+    border: `2px solid ${
+      active ? theme.palette.warning.main : theme.palette.divider
+    }`,
+    backgroundColor: active
+      ? alpha(theme.palette.warning.main, 0.2)
+      : 'transparent',
+    color: active ? theme.palette.warning.main : theme.palette.text.secondary,
+    borderRadius: 0,
+    padding: '8px',
+    boxShadow: active
+      ? `0 0 10px ${alpha(theme.palette.warning.main, 0.3)}`
+      : 'none',
+    '&:hover': {
+      backgroundColor: active
+        ? alpha(theme.palette.warning.main, 0.3)
+        : alpha(theme.palette.warning.main, 0.1),
+      borderColor: active
+        ? theme.palette.warning.main
+        : alpha(theme.palette.warning.main, 0.5),
+      color: active
+        ? theme.palette.warning.main
+        : alpha(theme.palette.warning.main, 0.7),
+    },
+  })
+);
+
+const DarkModeButton = styled(IconButton)<{ active?: boolean }>(
+  ({ theme, active }) => ({
+    border: `2px solid ${
+      active ? theme.palette.secondary.light : theme.palette.divider
+    }`,
+    backgroundColor: active
+      ? alpha(theme.palette.secondary.main, 0.2)
+      : 'transparent',
+    color: active
+      ? theme.palette.secondary.light
+      : theme.palette.text.secondary,
+    borderRadius: 0,
+    padding: '8px',
+    boxShadow: active
+      ? `0 0 10px ${alpha(theme.palette.secondary.main, 0.3)}`
+      : 'none',
+    '&:hover': {
+      backgroundColor: active
+        ? alpha(theme.palette.secondary.main, 0.3)
+        : alpha(theme.palette.secondary.main, 0.1),
+      borderColor: active
+        ? theme.palette.secondary.main
+        : alpha(theme.palette.secondary.main, 0.5),
+      color: active
+        ? theme.palette.secondary.main
+        : alpha(theme.palette.secondary.main, 0.7),
+    },
+  })
+);
+
+const SystemModeButton = styled(IconButton)<{ active?: boolean }>(
+  ({ theme, active }) => ({
+    border: `2px solid ${
+      active ? theme.palette.info.main : theme.palette.divider
+    }`,
+    backgroundColor: active
+      ? alpha(theme.palette.info.main, 0.2)
+      : 'transparent',
+    color: active ? theme.palette.info.main : theme.palette.text.secondary,
+    borderRadius: 0,
+    padding: '8px',
+    boxShadow: active
+      ? `0 0 10px ${alpha(theme.palette.info.main, 0.3)}`
+      : 'none',
+    '&:hover': {
+      backgroundColor: active
+        ? alpha(theme.palette.info.main, 0.3)
+        : alpha(theme.palette.info.main, 0.1),
+      borderColor: active
+        ? theme.palette.info.main
+        : alpha(theme.palette.info.main, 0.5),
+      color: active
+        ? theme.palette.info.main
+        : alpha(theme.palette.info.main, 0.7),
+    },
+  })
+);
+
+const CyberChip = styled(Chip)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.primary.main, 0.2),
+  color: theme.palette.primary.main,
+  border: `1px solid ${theme.palette.primary.main}`,
+  borderRadius: 0,
+  fontFamily: 'monospace',
+  fontSize: '10px',
+  fontWeight: 'bold',
+  letterSpacing: '1px',
+  textTransform: 'uppercase',
+  '&.MuiChip-colorPrimary': {
+    backgroundColor: alpha(theme.palette.warning.main, 0.2),
+    color: theme.palette.warning.main,
+    borderColor: theme.palette.warning.main,
+  },
+  '&.MuiChip-colorWarning': {
+    backgroundColor: alpha(theme.palette.error.main, 0.2),
+    color: theme.palette.error.main,
+    borderColor: theme.palette.error.main,
+  },
+}));
+
+const StatusIndicator = styled(Box)<{ delay?: number }>(({ delay = 0 }) => ({
+  width: '8px',
+  height: '8px',
+  borderRadius: '50%',
+  animation: 'pulse 2s infinite',
+  animationDelay: `${delay}s`,
+}));
+
+const ColorSwatch = styled(Box)<{ color: string }>(({ color, theme }) => ({
+  width: '12px',
+  height: '12px',
+  backgroundColor: color,
+  border: `1px solid ${theme.palette.divider}`,
+  display: 'inline-block',
+}));
 
 interface EnhancedThemeSwitcherProps {
   themes: EnhancedThemeOption[];
@@ -30,7 +228,6 @@ interface EnhancedThemeSwitcherProps {
   onThemeChange: (themeId: string, theme: EnhancedThemeOption) => void;
   showModeToggle?: boolean;
   compact?: boolean;
-  width?: string | number;
 }
 
 export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
@@ -39,15 +236,15 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
   onThemeChange,
   showModeToggle = true,
   compact = false,
-  width = 250,
 }) => {
+  const theme = useTheme();
   const { mode, setMode, resolvedMode, systemMode } = useColorMode();
 
   const handleThemeChange = (event: SelectChangeEvent<string>) => {
     const themeId = event.target.value;
-    const theme = themes.find((t) => t.id === themeId);
-    if (theme) {
-      onThemeChange(themeId, theme);
+    const selectedTheme = themes.find((t) => t.id === themeId);
+    if (selectedTheme) {
+      onThemeChange(themeId, selectedTheme);
     }
   };
 
@@ -57,14 +254,24 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
 
   const selectedTheme = themes.find((t) => t.id === selectedThemeId);
 
-  const getPreviewColors = (theme: EnhancedThemeOption) => {
+  const getPreviewColors = (themeOption: EnhancedThemeOption) => {
     const palette =
-      resolvedMode === 'dark' ? theme.darkPalette : theme.lightPalette;
+      resolvedMode === 'dark'
+        ? themeOption.darkPalette
+        : themeOption.lightPalette;
     return [
-      (palette.primary as SimplePaletteColorOptions)?.main || '#000',
-      (palette.secondary as SimplePaletteColorOptions)?.main || '#000',
-      (palette.error as SimplePaletteColorOptions)?.main || '#000',
-      (palette.success as SimplePaletteColorOptions)?.main || '#000',
+      (palette.primary as SimplePaletteColorOptions)?.main ||
+        theme.palette.primary.main,
+      (palette.secondary as SimplePaletteColorOptions)?.main ||
+        theme.palette.secondary.main,
+      (palette.warning as SimplePaletteColorOptions)?.main ||
+        theme.palette.warning.main,
+      (palette.error as SimplePaletteColorOptions)?.main ||
+        theme.palette.error.main,
+      (palette.success as SimplePaletteColorOptions)?.main ||
+        theme.palette.success.main,
+      (palette.info as SimplePaletteColorOptions)?.main ||
+        theme.palette.info.main,
     ];
   };
 
@@ -72,210 +279,412 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
     if (!showModeToggle) return null;
 
     const modeButtons = [
-      { mode: 'light' as ColorMode, icon: <LightMode />, label: 'Light' },
+      {
+        mode: 'light' as ColorMode,
+        icon: <LightMode size={16} />,
+        label: 'Light',
+        component: ModeButton,
+      },
       {
         mode: 'system' as ColorMode,
-        icon: <SettingsBrightness />,
+        icon: <SettingsBrightness size={16} />,
         label: 'System',
+        component: SystemModeButton,
       },
-      { mode: 'dark' as ColorMode, icon: <DarkMode />, label: 'Dark' },
+      {
+        mode: 'dark' as ColorMode,
+        icon: <DarkMode size={16} />,
+        label: 'Dark',
+        component: DarkModeButton,
+      },
     ];
+
     if (compact) {
       return (
-        <div>
-          <Box sx={{ display: 'flex' }}>
-            {modeButtons.map(({ mode: btnMode, icon, label }) => (
+        <Stack direction="row" spacing={0.5}>
+          {modeButtons.map(
+            ({ mode: btnMode, icon, label, component: ButtonComponent }) => (
               <Tooltip key={btnMode} title={`${label} mode`}>
-                <IconButton
+                <ButtonComponent
                   size="small"
                   onClick={() => handleModeChange(btnMode)}
-                  color={mode === btnMode ? 'primary' : 'default'}
-                  sx={{
-                    borderRadius: 1,
-                    ...(mode === btnMode && {
-                      backgroundColor: 'primary.main',
-                      color: 'primary.contrastText',
-                    }),
-                  }}
+                  active={mode === btnMode}
                 >
                   {icon}
-                </IconButton>
+                </ButtonComponent>
               </Tooltip>
-            ))}
-          </Box>
-        </div>
+            )
+          )}
+        </Stack>
       );
     }
 
     return (
-      <Paper sx={{ p: 1, backgroundColor: 'background.paper' }}>
-        <Typography variant="caption" display="block" gutterBottom>
+      <Box sx={{ position: 'relative', zIndex: 2 }}>
+        <Typography
+          variant="caption"
+          sx={{
+            fontFamily: 'monospace',
+            fontSize: '10px',
+            color: theme.palette.primary.main,
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            mb: 1,
+            display: 'block',
+          }}
+        >
           Color Mode
         </Typography>
         <Stack direction="row" spacing={1}>
-          {modeButtons.map(({ mode: btnMode, icon, label }) => (
-            <Tooltip key={btnMode} title={`${label} mode`}>
-              <IconButton
-                size="small"
-                onClick={() => handleModeChange(btnMode)}
-                color={mode === btnMode ? 'primary' : 'default'}
-                sx={{
-                  borderRadius: 1,
-                  ...(mode === btnMode && {
-                    backgroundColor: 'primary.main',
-                    color: 'primary.contrastText',
-                  }),
-                }}
-              >
-                {icon}
-              </IconButton>
-            </Tooltip>
-          ))}
+          {modeButtons.map(
+            ({ mode: btnMode, icon, label, component: ButtonComponent }) => (
+              <Tooltip key={btnMode} title={`${label} mode`}>
+                <ButtonComponent
+                  size="small"
+                  onClick={() => handleModeChange(btnMode)}
+                  active={mode === btnMode}
+                >
+                  {icon}
+                </ButtonComponent>
+              </Tooltip>
+            )
+          )}
         </Stack>
         <Typography
           variant="caption"
-          color="text.secondary"
-          sx={{ mt: 0.5, display: 'block' }}
+          sx={{
+            mt: 1,
+            display: 'block',
+            fontFamily: 'monospace',
+            fontSize: '10px',
+            color: theme.palette.text.secondary,
+          }}
         >
-          Current: {resolvedMode} {mode === 'system' && `(${systemMode})`}
+          Current: {resolvedMode.toUpperCase()}
+          {mode === 'system' && `(${systemMode?.toUpperCase()})`}
         </Typography>
-      </Paper>
+      </Box>
     );
   };
 
   // Filter themes based on mode support
-  const availableThemes = themes.filter((theme) => {
-    if (resolvedMode === 'dark') return theme.supportsDark !== false;
-    if (resolvedMode === 'light') return theme.supportsLight !== false;
+  const availableThemes = themes.filter((themeOption) => {
+    if (resolvedMode === 'dark') return themeOption.supportsDark !== false;
+    if (resolvedMode === 'light') return themeOption.supportsLight !== false;
     return true;
   });
 
   if (compact) {
     return (
-      <Stack direction="row" spacing={1} alignItems="center">
-        <FormControl size="small" sx={{ minWidth: 150 }}>
-          <Select
-            value={selectedThemeId}
-            onChange={handleThemeChange}
-            displayEmpty
+      <Box sx={{ position: 'relative' }}>
+        <MainPanel elevation={0} sx={{ p: 2 }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            sx={{ position: 'relative', zIndex: 2 }}
           >
-            {availableThemes.map((theme) => (
-              <MenuItem key={theme.id} value={theme.id}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ display: 'flex', gap: 0.25 }}>
-                    {getPreviewColors(theme).map((color, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          backgroundColor: color,
-                          border: '1px solid rgba(0,0,0,0.1)',
-                        }}
-                      />
-                    ))}
-                  </Box>
-                  <Typography variant="body2">{theme.name}</Typography>
-                </Box>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        {renderModeToggle()}
-      </Stack>
+            <CyberFormControl size="small" sx={{ minWidth: 180 }}>
+              <Select
+                value={selectedThemeId}
+                onChange={handleThemeChange}
+                displayEmpty
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: theme.palette.background.paper,
+                      border: `2px solid ${theme.palette.primary.main}`,
+                      borderRadius: 0,
+                      boxShadow: `0 0 20px ${alpha(
+                        theme.palette.primary.main,
+                        0.3
+                      )}`,
+                    },
+                  },
+                }}
+              >
+                {availableThemes.map((themeOption) => (
+                  <CyberMenuItem key={themeOption.id} value={themeOption.id}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        width: '100%',
+                      }}
+                    >
+                      <Stack direction="row" spacing={0.25} sx={{ ml: 2 }}>
+                        {getPreviewColors(themeOption).map((color, index) => (
+                          <ColorSwatch key={index} color={color} />
+                        ))}
+                      </Stack>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontFamily: 'monospace', fontSize: '12px' }}
+                      >
+                        {themeOption.name}
+                      </Typography>
+                    </Box>
+                  </CyberMenuItem>
+                ))}
+              </Select>
+            </CyberFormControl>
+            {renderModeToggle()}
+          </Stack>
+        </MainPanel>
+      </Box>
     );
   }
 
   return (
-    <Box sx={{ width }}>
-      <Stack spacing={2}>
-        <FormControl fullWidth>
-          <InputLabel>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <PaletteIcon style={{ fontSize: '1rem' }} />
-              Theme
-            </Box>
-          </InputLabel>
-          <Select
-            value={selectedThemeId}
-            onChange={handleThemeChange}
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <PaletteIcon style={{ fontSize: '1rem' }} />
-                Theme
-              </Box>
-            }
+    <Box
+      sx={{
+        position: 'relative',
+
+        maxWidth: 600,
+      }}
+    >
+      <MainPanel elevation={0}>
+        {/* Header */}
+        <Box sx={{ p: 2, position: 'relative', zIndex: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mb: 2 }}
           >
-            {availableThemes.map((theme) => (
-              <MenuItem key={theme.id} value={theme.id}>
-                <Box
-                  sx={{ display: 'flex', alignItems: 'center', width: '100%' }}
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Box
+                sx={{
+                  p: 1,
+                  // backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                  border: `1px solid ${theme.palette.primary.main}`,
+                }}
+              >
+                <Settings size={20} color={theme.palette.primary.main} />
+              </Box>
+              <Box>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontWeight: 'bold',
+                    fontSize: '12px',
+                    color: theme.palette.primary.main,
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase',
+                  }}
                 >
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="body2" fontWeight="medium">
-                      {theme.name}
-                    </Typography>
-                    {theme.description && (
-                      <Typography variant="caption" color="text.secondary">
-                        {theme.description}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 0.5, ml: 1 }}>
-                    {getPreviewColors(theme).map((color, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: '50%',
-                          backgroundColor: color,
-                          border: '1px solid rgba(0,0,0,0.1)',
-                        }}
-                      />
-                    ))}
-                  </Box>
+                  THEME_SELECT
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontSize: '10px',
+                    color: theme.palette.success.main,
+                  }}
+                >
+                  {selectedTheme?.name || 'SELECT_THEME'}
+                </Typography>
+              </Box>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <PaletteIcon size={16} color={theme.palette.secondary.main} />
+              <Stack direction="row" spacing={0.5}>
+                <StatusIndicator
+                  sx={{ backgroundColor: theme.palette.success.main }}
+                />
+                <StatusIndicator
+                  sx={{ backgroundColor: theme.palette.warning.main }}
+                  delay={0.5}
+                />
+                <StatusIndicator
+                  sx={{ backgroundColor: theme.palette.error.main }}
+                  delay={1}
+                />
+              </Stack>
+            </Stack>
+          </Stack>
+        </Box>
+
+        <SectionDivider />
+
+        {/* Theme Selection */}
+        <Box sx={{ p: 2, position: 'relative', zIndex: 2 }}>
+          <CyberFormControl fullWidth>
+            <InputLabel>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <PaletteIcon size={16} />
+                Themes
+              </Box>
+            </InputLabel>
+            <Select
+              value={selectedThemeId}
+              onChange={handleThemeChange}
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <PaletteIcon size={16} />
+                  Theme
                 </Box>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              }
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: theme.palette.background.paper,
+                    border: `2px solid ${theme.palette.primary.main}`,
+                    borderRadius: 0,
+                    boxShadow: `0 0 20px ${alpha(
+                      theme.palette.primary.main,
+                      0.3
+                    )}`,
+                  },
+                },
+              }}
+            >
+              {availableThemes.map((themeOption) => (
+                <CyberMenuItem key={themeOption.id} value={themeOption.id}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography
+                        variant="body2"
+                        fontWeight="medium"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontSize: '12px',
+                          color: theme.palette.success.main,
+                        }}
+                      >
+                        {themeOption.name}
+                      </Typography>
+                      {themeOption.description && (
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: theme.palette.text.secondary,
+                            fontFamily: 'monospace',
+                            fontSize: '10px',
+                          }}
+                        >
+                          {themeOption.description}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Stack direction="row" spacing={0.5} sx={{ ml: 2 }}>
+                      {getPreviewColors(themeOption).map((color, index) => (
+                        <ColorSwatch key={index} color={color} />
+                      ))}
+                    </Stack>
+                  </Box>
+                </CyberMenuItem>
+              ))}
+            </Select>
+          </CyberFormControl>
+        </Box>
 
-        {renderModeToggle()}
+        <SectionDivider />
 
+        {/* Mode Toggle */}
+        <Box sx={{ p: 2, position: 'relative', zIndex: 2 }}>
+          {renderModeToggle()}
+        </Box>
+
+        <SectionDivider />
+
+        {/* Status Chips */}
         {selectedTheme && (
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Chip
-              size="small"
-              label={resolvedMode}
-              color="primary"
-              variant="outlined"
-            />
-            <Chip
-              size="small"
-              label={selectedTheme.category}
-              variant="outlined"
-            />
-            {!selectedTheme.supportsLight && resolvedMode === 'light' && (
-              <Chip
+          <Box sx={{ p: 2, position: 'relative', zIndex: 2 }}>
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+              <CyberChip
                 size="small"
-                label="Dark only"
-                color="warning"
+                label={resolvedMode}
+                color="primary"
                 variant="outlined"
               />
-            )}
-            {!selectedTheme.supportsDark && resolvedMode === 'dark' && (
-              <Chip
+              <CyberChip
                 size="small"
-                label="Light only"
-                color="warning"
+                label={selectedTheme.category}
                 variant="outlined"
               />
-            )}
+              {!selectedTheme.supportsLight && resolvedMode === 'light' && (
+                <CyberChip
+                  size="small"
+                  label="Dark only"
+                  color="warning"
+                  variant="outlined"
+                />
+              )}
+              {!selectedTheme.supportsDark && resolvedMode === 'dark' && (
+                <CyberChip
+                  size="small"
+                  label="Light only"
+                  color="warning"
+                  variant="outlined"
+                />
+              )}
+            </Stack>
           </Box>
         )}
-      </Stack>
+
+        {/* Footer */}
+        <Box
+          sx={{
+            p: 1.5,
+            // backgroundColor: alpha(theme.palette.background.default, 0.5),
+            position: 'relative',
+            zIndex: 2,
+          }}
+        >
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                fontFamily: 'monospace',
+                fontSize: '10px',
+                color: theme.palette.text.secondary,
+              }}
+            >
+              {availableThemes.length} {resolvedMode.toUpperCase()}_THEMES
+            </Typography>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Monitor size={12} color={theme.palette.text.secondary} />
+              <Typography
+                variant="caption"
+                sx={{
+                  fontFamily: 'monospace',
+                  fontSize: '10px',
+                  color: theme.palette.text.secondary,
+                }}
+              >
+                ENHANCED_MODE
+              </Typography>
+            </Stack>
+          </Stack>
+        </Box>
+      </MainPanel>
+
+      {/* Global styles for animations */}
+      <style jsx global>{`
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+      `}</style>
     </Box>
   );
 };
