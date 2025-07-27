@@ -8,6 +8,8 @@ import {
   neonCyberpunkTheme,
   oceanDepthTheme,
   synthwaveSunsetTheme,
+  bubblegumDreamTheme,
+  tresSendasTheme,
 } from './enhanced-palettes';
 import { bladeRunnerTheme } from './enhanced-palettes/blade-runner-palette';
 
@@ -20,5 +22,7 @@ export const enhancedThemes: EnhancedThemeOption[] = [
   desertSunsetTheme,
   electricSynthwaveTheme,
   oceanDepthTheme,
+  bubblegumDreamTheme,
+  tresSendasTheme,
   monochromeThemes,
 ];

@@ -20,8 +20,8 @@ export function App() {
   ];
 
   const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
-  const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
+  const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
   const cursorConfig: CursorTrailConfig = {
     floorHeight: 0,
     trailLength: 6,

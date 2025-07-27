@@ -7,3 +7,5 @@ export * from './blade-runner-palette';
 export * from './desert-sunset-palette';
 export * from './electric-synth-palette';
 export * from './ocean-depth-palette';
+export * from './bubblegum-dream-palette';
+export * from './tres-sendas-palette';
