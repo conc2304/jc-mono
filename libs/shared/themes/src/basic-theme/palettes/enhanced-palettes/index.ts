@@ -9,3 +9,4 @@ export * from './electric-synth-palette';
 export * from './ocean-depth-palette';
 export * from './bubblegum-dream-palette';
 export * from './tres-sendas-palette';
+export * from './violence-palette';

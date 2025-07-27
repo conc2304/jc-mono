@@ -10,6 +10,7 @@ import {
   synthwaveSunsetTheme,
   bubblegumDreamTheme,
   tresSendasTheme,
+  violenceTheme,
 } from './enhanced-palettes';
 import { bladeRunnerTheme } from './enhanced-palettes/blade-runner-palette';
 
@@ -24,5 +25,6 @@ export const enhancedThemes: EnhancedThemeOption[] = [
   oceanDepthTheme,
   bubblegumDreamTheme,
   tresSendasTheme,
+  violenceTheme,
   monochromeThemes,
 ];

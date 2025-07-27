@@ -14,7 +14,6 @@ import { Box, ButtonProps, Grid, IconProps, styled } from '@mui/material';
 import { Property } from 'csstype';
 
 const ControlIcon = styled(Box)(({ theme }) => ({
-  // height: 32,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -53,7 +52,7 @@ export const BackgroundControls = ({
   };
 
   type BgSizeAction = 'plus' | 'minus' | 'reset';
-  const actionMap: Array<BgSizeAction> = ['plus', 'reset', 'minus'];
+  const actionMap: Array<BgSizeAction> = ['minus', 'reset', 'plus'];
 
   const handleBackgroundSizeChange = (action: BgSizeAction) => {
     onBackgroundSizeChange && onBackgroundSizeChange(action);
@@ -77,9 +76,9 @@ export const BackgroundControls = ({
   };
 
   const actionIconMap: Record<BgSizeAction, SvgIconComponent> = {
-    plus: RemoveCircle,
+    minus: RemoveCircle,
     reset: ChangeCircle,
-    minus: AddCircle,
+    plus: AddCircle,
   };
 
   const blendModeMap: Record<string, SvgIconComponent> = {
