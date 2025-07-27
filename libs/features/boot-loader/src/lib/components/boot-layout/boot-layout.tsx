@@ -106,7 +106,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
 
   const handleProgress = useCallback(
     (current: number, total: number, message: string) => {
-      setProgress({ current, total, message });
+      // setProgress({ current, total, message });
     },
     []
   );
@@ -188,14 +188,15 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 <TorusLoaderCardAug>
                   <ScanlinesOverlay />
                   <TorusFieldProgressMemo
-                    progress={(progress.current / progress.total) * 100}
-                    progressMessage={progress.message}
+                    // progress={(progress.current / progress.total) * 100}
+                    // progressMessage={progress.message}
                     colors={{
                       backgroundColor: theme.palette.background.paper,
                       beamColor: theme.palette.getInvertedMode('info'),
                       torusColor: theme.palette.primary.main,
                       particleColor: theme.palette.getInvertedMode('info'),
                       verticalLineColor: theme.palette.warning.main,
+                      themeMode: theme.palette.mode,
                     }}
                   />
                 </TorusLoaderCardAug>

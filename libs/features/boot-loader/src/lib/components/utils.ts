@@ -1,25 +1,23 @@
-import { Color } from 'three';
 import * as d3 from 'd3';
-
-import { ColorValue } from './boot-layout/types';
-import { ReactNode } from 'react';
+import * as THREE from 'three';
 import {
   MetricGroup,
   RadarData,
   RadarDataEntry,
 } from './radar-chart-widget/radar-chart-widget';
+import { ColorScheme, ColorValue } from './torus-field-progress/types';
 
 /**
  * Universal color converter that handles multiple input formats
  * and returns a THREE.Color instance
  */
-export const convertToThreeColor = (color: ColorValue): Color => {
-  if (color instanceof Color) {
+export const convertToThreeColor = (color: ColorValue): THREE.Color => {
+  if (color instanceof THREE.Color) {
     return color.clone();
   }
 
   if (typeof color === 'number') {
-    return new Color(color);
+    return new THREE.Color(color);
   }
 
   if (typeof color === 'string') {
@@ -28,11 +26,11 @@ export const convertToThreeColor = (color: ColorValue): Color => {
 
     // Hex without # prefix
     if (/^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/.test(trimmed)) {
-      return new Color(`#${trimmed}`);
+      return new THREE.Color(`#${trimmed}`);
     }
 
     // All other string formats (hex with #, rgb, hsl, color names)
-    return new Color(trimmed);
+    return new THREE.Color(trimmed);
   }
 
   if (
@@ -45,23 +43,34 @@ export const convertToThreeColor = (color: ColorValue): Color => {
     const { r, g, b } = color;
     if (r <= 1 && g <= 1 && b <= 1) {
       // 0-1 range
-      return new Color(r, g, b);
+      return new THREE.Color(r, g, b);
     } else {
       // 0-255 range
-      return new Color(r / 255, g / 255, b / 255);
+      return new THREE.Color(r / 255, g / 255, b / 255);
     }
   }
 
   // Fallback to white if conversion fails
   console.warn('Invalid color format, defaulting to white:', color);
-  return new Color(0xffffff);
+  return new THREE.Color(0xffffff);
 };
 
 /**
- * Creates color variations for different states (activated, dimmed, bright)
+ * Creates color variations for different states based on theme mode
  */
-export const createColorVariations = (baseColor: Color) => {
-  const brightColor = baseColor.clone().multiplyScalar(1.5);
+export const createColorVariations = (
+  baseColor: THREE.Color,
+  themeMode: 'light' | 'dark' = 'dark'
+) => {
+  const isLight = themeMode === 'light';
+
+  // For light mode: brighten less, darken more for subtle effects
+  // For dark mode: brighten more, darken less for vibrant effects
+  const brightMultiplier = isLight ? 1.2 : 1.5;
+  const dimMultiplier = isLight ? 0.6 : 0.3;
+  const glowMultiplier = isLight ? 0.9 : 0.8;
+
+  const brightColor = baseColor.clone().multiplyScalar(brightMultiplier);
   // Manually clamp RGB values to [0, 1] range
   brightColor.r = Math.min(1, brightColor.r);
   brightColor.g = Math.min(1, brightColor.g);
@@ -70,9 +79,34 @@ export const createColorVariations = (baseColor: Color) => {
   return {
     base: baseColor.clone(),
     bright: brightColor,
-    dim: baseColor.clone().multiplyScalar(0.3),
-    glow: baseColor.clone().multiplyScalar(0.8),
+    dim: baseColor.clone().multiplyScalar(dimMultiplier),
+    glow: baseColor.clone().multiplyScalar(glowMultiplier),
   };
+};
+
+// Default colors for different theme modes
+export const getDefaultColors = (
+  themeMode: 'light' | 'dark' = 'dark'
+): ColorScheme => {
+  if (themeMode === 'light') {
+    return {
+      backgroundColor: 0xf5f5f5, // Light gray background
+      beamColor: '#1976d2', // Blue beam
+      torusColor: 'rgb(25, 118, 210)', // Blue torus
+      particleColor: { r: 25, g: 118, b: 210 }, // Blue particles
+      verticalLineColor: '#1976d2', // Blue lines
+      themeMode: 'light',
+    };
+  } else {
+    return {
+      backgroundColor: 0x220000, // Dark red background
+      beamColor: '#ff0000', // Red beam
+      torusColor: 'rgb(255, 0, 0)', // Red torus
+      particleColor: { r: 255, g: 0, b: 0 }, // Red particles
+      verticalLineColor: 'red', // Red lines
+      themeMode: 'dark',
+    };
+  }
 };
 
 export function wrap(text: d3.Selection<any, any, any, any>, width: number) {

@@ -1,8 +1,8 @@
 import { EnhancedThemeOption } from '../../types';
 
 export const bubblegumDreamTheme: EnhancedThemeOption = {
-  id: 'pastel-vintage-bubblegum',
-  name: 'Pastel Vintage Bubblegum',
+  id: 'bubblegum-dream',
+  name: 'Bubblegum Dream',
   description:
     'Sweet vintage-inspired theme with soft pastels and nostalgic bubblegum colors',
   category: 'retro',
