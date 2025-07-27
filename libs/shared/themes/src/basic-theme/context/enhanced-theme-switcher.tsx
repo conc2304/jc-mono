@@ -31,10 +31,7 @@ import { EnhancedThemeOption, ColorMode } from '../types';
 
 // Styled components with theme-aware brutalist sci-fi aesthetic
 const MainPanel = styled(Box)(({ theme }) => ({
-  // backgroundColor: theme.palette.background.paper,
-  // border: `4px solid ${theme.palette.primary.main}`,
   borderRadius: 0,
-  // boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.3)}`,
   position: 'relative',
   overflow: 'hidden',
   fontFamily: 'monospace',
@@ -98,86 +95,86 @@ const CyberMenuItem = styled(MenuItem)(({ theme }) => ({
   },
 }));
 
-const ModeButton = styled(IconButton)<{ active?: boolean }>(
-  ({ theme, active }) => ({
+const ModeButton = styled(IconButton)<{ isActive?: boolean }>(
+  ({ theme, isActive = false }) => ({
     border: `2px solid ${
-      active ? theme.palette.warning.main : theme.palette.divider
+      isActive ? theme.palette.warning.main : theme.palette.divider
     }`,
-    backgroundColor: active
+    backgroundColor: isActive
       ? alpha(theme.palette.warning.main, 0.2)
       : 'transparent',
-    color: active ? theme.palette.warning.main : theme.palette.text.secondary,
+    color: isActive ? theme.palette.warning.main : theme.palette.text.secondary,
     borderRadius: 0,
     padding: '8px',
-    boxShadow: active
+    boxShadow: isActive
       ? `0 0 10px ${alpha(theme.palette.warning.main, 0.3)}`
       : 'none',
     '&:hover': {
-      backgroundColor: active
+      backgroundColor: isActive
         ? alpha(theme.palette.warning.main, 0.3)
         : alpha(theme.palette.warning.main, 0.1),
-      borderColor: active
+      borderColor: isActive
         ? theme.palette.warning.main
         : alpha(theme.palette.warning.main, 0.5),
-      color: active
+      color: isActive
         ? theme.palette.warning.main
         : alpha(theme.palette.warning.main, 0.7),
     },
   })
 );
 
-const DarkModeButton = styled(IconButton)<{ active?: boolean }>(
-  ({ theme, active }) => ({
+const DarkModeButton = styled(IconButton)<{ isActive?: boolean }>(
+  ({ theme, isActive = false }) => ({
     border: `2px solid ${
-      active ? theme.palette.secondary.light : theme.palette.divider
+      isActive ? theme.palette.secondary.light : theme.palette.divider
     }`,
-    backgroundColor: active
+    backgroundColor: isActive
       ? alpha(theme.palette.secondary.main, 0.2)
       : 'transparent',
-    color: active
+    color: isActive
       ? theme.palette.secondary.light
       : theme.palette.text.secondary,
     borderRadius: 0,
     padding: '8px',
-    boxShadow: active
+    boxShadow: isActive
       ? `0 0 10px ${alpha(theme.palette.secondary.main, 0.3)}`
       : 'none',
     '&:hover': {
-      backgroundColor: active
+      backgroundColor: isActive
         ? alpha(theme.palette.secondary.main, 0.3)
         : alpha(theme.palette.secondary.main, 0.1),
-      borderColor: active
+      borderColor: isActive
         ? theme.palette.secondary.main
         : alpha(theme.palette.secondary.main, 0.5),
-      color: active
+      color: isActive
         ? theme.palette.secondary.main
         : alpha(theme.palette.secondary.main, 0.7),
     },
   })
 );
 
-const SystemModeButton = styled(IconButton)<{ active?: boolean }>(
-  ({ theme, active }) => ({
+const SystemModeButton = styled(IconButton)<{ isActive?: boolean }>(
+  ({ theme, isActive = false }) => ({
     border: `2px solid ${
-      active ? theme.palette.info.main : theme.palette.divider
+      isActive ? theme.palette.info.main : theme.palette.divider
     }`,
-    backgroundColor: active
+    backgroundColor: isActive
       ? alpha(theme.palette.info.main, 0.2)
       : 'transparent',
-    color: active ? theme.palette.info.main : theme.palette.text.secondary,
+    color: isActive ? theme.palette.info.main : theme.palette.text.secondary,
     borderRadius: 0,
     padding: '8px',
-    boxShadow: active
+    boxShadow: isActive
       ? `0 0 10px ${alpha(theme.palette.info.main, 0.3)}`
       : 'none',
     '&:hover': {
-      backgroundColor: active
+      backgroundColor: isActive
         ? alpha(theme.palette.info.main, 0.3)
         : alpha(theme.palette.info.main, 0.1),
-      borderColor: active
+      borderColor: isActive
         ? theme.palette.info.main
         : alpha(theme.palette.info.main, 0.5),
-      color: active
+      color: isActive
         ? theme.palette.info.main
         : alpha(theme.palette.info.main, 0.7),
     },
@@ -308,7 +305,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                 <ButtonComponent
                   size="small"
                   onClick={() => handleModeChange(btnMode)}
-                  active={mode === btnMode}
+                  isActive={mode === btnMode ? true : undefined}
                 >
                   {icon}
                 </ButtonComponent>
@@ -342,7 +339,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                 <ButtonComponent
                   size="small"
                   onClick={() => handleModeChange(btnMode)}
-                  active={mode === btnMode}
+                  isActive={mode === btnMode ? true : undefined}
                 >
                   {icon}
                 </ButtonComponent>
@@ -377,7 +374,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
   if (compact) {
     return (
       <Box sx={{ position: 'relative' }}>
-        <MainPanel elevation={0} sx={{ p: 2 }}>
+        <MainPanel sx={{ p: 2 }}>
           <Stack
             direction="row"
             spacing={2}
@@ -440,11 +437,10 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
     <Box
       sx={{
         position: 'relative',
-
         maxWidth: 600,
       }}
     >
-      <MainPanel elevation={0}>
+      <MainPanel>
         {/* Header */}
         <Box sx={{ p: 2, position: 'relative', zIndex: 2 }}>
           <Stack
@@ -457,7 +453,6 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
               <Box
                 sx={{
                   p: 1,
-                  // backgroundColor: alpha(theme.palette.primary.main, 0.2),
                   border: `1px solid ${theme.palette.primary.main}`,
                 }}
               >
@@ -674,7 +669,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
       </MainPanel>
 
       {/* Global styles for animations */}
-      <style jsx global>{`
+      <style>{`
         @keyframes pulse {
           0%,
           100% {

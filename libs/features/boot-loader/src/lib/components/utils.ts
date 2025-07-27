@@ -267,7 +267,6 @@ export function generateTrailingRadarData({
 }: TrailingConfig): RadarData {
   const trails: RadarData = [];
 
-  console.log('generateTrailingRadarData');
   for (let trailIndex = 0; trailIndex < numTrails; trailIndex++) {
     const trailTime = timeStep - trailIndex * trailOffset;
     const trailGroup: MetricGroup = [];
@@ -279,7 +278,6 @@ export function generateTrailingRadarData({
 
       // Get noise value (-1 to 1)
       const noiseValue = noise.noise2D(noiseX, noiseY);
-      // console.log({ noiseValue, trailIndex, trailTime });
 
       // Apply noise to create trailing effect
       const trailIntensityForThisTrail =
@@ -305,7 +303,6 @@ export function generateTrailingRadarData({
     trails.push(trailGroup);
   }
 
-  // console.log({ trails });
   return trails;
 }
 
