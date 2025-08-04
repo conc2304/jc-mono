@@ -30,6 +30,8 @@ import {
 } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 
+const hasNavigation = false;
+
 export const atomicVisualizerFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
@@ -42,8 +44,8 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2023-08-15'),
   dateCreated: new Date('2023-06-01'),
-  path: '/Documents/Projects/AtomicVisualizer.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -62,7 +64,7 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -78,8 +80,8 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2024-05-15'),
   dateCreated: new Date('2024-01-15'),
-  path: '/Documents/Projects/GravityScavenger.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -99,7 +101,7 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -116,8 +118,8 @@ export const simplisafeJawaFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2021-06-30'),
   dateCreated: new Date('2020-01-01'),
-  path: '/Documents/Work/ProjectJawa.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -137,7 +139,7 @@ export const simplisafeJawaFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -154,8 +156,8 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2021-06-30'),
   dateCreated: new Date('2020-08-01'),
-  path: '/Documents/Work/LightformController.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -175,7 +177,7 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -191,8 +193,8 @@ export const terrainifyFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2024-01-15'),
   dateCreated: new Date('2023-03-01'),
-  path: '/Documents/Personal/Terrainify.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -212,7 +214,7 @@ export const terrainifyFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -228,8 +230,8 @@ export const tunecraftFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2023-12-15'),
   dateCreated: new Date('2023-09-01'),
-  path: '/Documents/Graduate/TuneCraft.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -249,7 +251,7 @@ export const tunecraftFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -265,8 +267,8 @@ export const verdantiaFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2024-05-15'),
   dateCreated: new Date('2023-09-01'),
-  path: '/Documents/Graduate/Verdantia.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -287,7 +289,7 @@ export const verdantiaFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -303,8 +305,8 @@ export const vyzbyFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2024-01-30'),
   dateCreated: new Date('2021-03-01'),
-  path: '/Documents/Personal/VYZBY.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -324,7 +326,7 @@ export const vyzbyFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
@@ -341,8 +343,8 @@ export const climateDataVizFileSystemItem: FileSystemItem<
   mimeType: 'application/pdf',
   dateModified: new Date('2023-12-15'),
   dateCreated: new Date('2023-09-01'),
-  path: '/Documents/Projects/PlanetHabitability.proj',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
@@ -362,7 +364,7 @@ export const climateDataVizFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {
-      hasNavigation: true,
+      hasNavigation,
     },
   },
 };
