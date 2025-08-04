@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 import { PickerPanel } from './picker-panel';
 import { useEnhancedTheme } from '@jc/themes';
+import { SunIcon as LightMode, MoonStarIcon as DarkMode } from 'lucide-react';
 
 const StatusBar = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
@@ -73,9 +74,23 @@ export const ThemePickerPanel = () => {
         <Box display="flex" alignItems="center" gap={2}>
           <StatusIndicator />
           <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            THEMING INTEGRATION STATUS : {currentTheme?.name.toUpperCase()} [
-            {theme.palette.mode.toUpperCase()}]
+            THEMING INTEGRATION STATUS : {currentTheme?.name.toUpperCase()}
           </Typography>
+          {theme.palette.mode === 'dark' ? (
+            <DarkMode
+              size={'1rem'}
+              style={{
+                color: theme.palette.primary.main,
+              }}
+            />
+          ) : (
+            <LightMode
+              size={'1rem'}
+              style={{
+                color: theme.palette.primary.main,
+              }}
+            />
+          )}
         </Box>
         <StatusIcons>
           {themeColors.map((color) => (

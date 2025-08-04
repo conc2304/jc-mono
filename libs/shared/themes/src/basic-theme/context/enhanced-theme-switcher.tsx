@@ -8,7 +8,6 @@ import {
   Chip,
   IconButton,
   Tooltip,
-  Paper,
   Stack,
   Typography,
   SelectChangeEvent,

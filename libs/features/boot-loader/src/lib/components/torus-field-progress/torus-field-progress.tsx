@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, capitalize, Typography } from '@mui/material';
 import { useRef, useEffect, useMemo, memo, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import {
@@ -1094,7 +1094,7 @@ export const TorusFieldProgress = ({
         <br />
         Click to boost (+{clickBoostValue}%)
         <br />
-        Theme: {themeMode}
+        Theme: {capitalize(themeMode)}
       </Typography>
 
       {/* Mouse interaction indicator */}
