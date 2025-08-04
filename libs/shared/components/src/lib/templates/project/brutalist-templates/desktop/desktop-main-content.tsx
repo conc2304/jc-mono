@@ -126,6 +126,7 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
                         height: '100%',
                         objectFit: 'cover',
                         transition: 'transform 0.3s ease',
+                        background: theme.palette.background.default,
                       }}
                     />
                   </Box>
