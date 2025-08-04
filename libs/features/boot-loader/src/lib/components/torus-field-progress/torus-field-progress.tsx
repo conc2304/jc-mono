@@ -19,6 +19,21 @@ interface TorusFieldProgressProps {
   progressMessage?: string;
 }
 
+interface EntryAnimationConfig {
+  startTime: number;
+  duration: number;
+  phases: {
+    energyBeam: AnimationPhase;
+    torusRings: AnimationPhase;
+    verticalLines: AnimationPhase;
+    particles: AnimationPhase;
+  };
+}
+interface AnimationPhase {
+  start: number;
+  duration: number;
+}
+
 export const TorusFieldProgress = ({
   progress: initialProgress = 0, // 0-100
   progressMessage,
@@ -37,7 +52,7 @@ export const TorusFieldProgress = ({
   const animationRef = useRef<number>(null);
 
   const [isAnimatingEntry, setIsAnimatingEntry] = useState(true);
-  const entryAnimationRef = useRef({
+  const entryAnimationRef = useRef<EntryAnimationConfig>({
     startTime: 0,
     duration: 3000, // 3 seconds total
     phases: {
@@ -49,7 +64,10 @@ export const TorusFieldProgress = ({
   });
 
   // Calculate entry animation progress
-  const getEntryAnimationProgress = (phase, currentTime: number) => {
+  const getEntryAnimationProgress = (
+    phase: keyof EntryAnimationConfig['phases'],
+    currentTime: number
+  ) => {
     const { start, duration } = entryAnimationRef.current.phases[phase];
     const elapsed = currentTime - start;
 
