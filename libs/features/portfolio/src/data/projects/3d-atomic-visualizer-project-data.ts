@@ -1,0 +1,247 @@
+import { ProjectData } from '@jc/ui-components';
+
+export const atomicVisualizerProject: ProjectData = {
+  // =============================================================================
+  // CORE PROJECT INFORMATION
+  // =============================================================================
+  id: '3d-atomic-visualizer',
+  projectName: '3D Atomic Visualizer: Interactive Periodic Table Explorer',
+  slug: '3d-atomic-visualizer',
+
+  // =============================================================================
+  // PROJECT BASICS
+  // =============================================================================
+  basics: {
+    type: 'school',
+    category: '3d-modeling',
+    subcategories: [
+      'web',
+      '3d-animation',
+      'data-visualization',
+      'creative-coding',
+      'educational-technology',
+      'scientific-visualization',
+    ],
+    description:
+      'WebGL-based 3D educational application demonstrating React Three Fiber mastery through interactive atomic structure visualization. Features 3D carousel navigation through 118 periodic elements, real-time electron orbital animations, and scientifically accurate Bohr model implementation with TypeScript integration.',
+    context:
+      'Harvard Extension School - CS50 Course Final Project (Summer 2023)',
+  },
+
+  // =============================================================================
+  // TECHNICAL DETAILS
+  // =============================================================================
+  technical: {
+    technologies: [
+      'React Three Fiber',
+      'TypeScript',
+      'Three.js',
+      'WebGL',
+      'React',
+      'React Spring',
+      'Node.js',
+      'npm',
+      'Create React App',
+      'HTML5 Canvas',
+      'CSS3',
+      'GitHub Pages (Deployment)',
+      'RESTful API Integration',
+      'JSON Data Processing',
+    ],
+    timeline: {
+      startDate: '2023-06', // Summer 2023 course
+      endDate: '2023-08',
+      duration: 'Summer semester project (2-3 months)',
+    },
+    myRole:
+      'Solo Developer - 3D web application development, React Three Fiber implementation, TypeScript programming, WebGL optimization, scientific research and atomic modeling, user interface design',
+    collaborators: [
+      // Solo academic project - no collaborators mentioned
+    ],
+  },
+
+  // =============================================================================
+  // MEDIA ASSETS
+  // =============================================================================
+  media: {
+    // TODO GET MEDIA
+    thumbnail: 'https://conc2304.github.io/3D-Atomic-Visualizer/thumbnail.png', // Placeholder
+    screenshots: [
+      {
+        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-carousel.png', // Placeholder
+        alt: '3D periodic table carousel showing element tiles with atomic icons',
+        caption:
+          'Interactive 3D carousel interface displaying periodic elements with hover states and atomic structure previews',
+      },
+      {
+        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-atom.png', // Placeholder
+        alt: '3D atomic structure visualization showing electron orbital animation',
+        caption:
+          'Real-time 3D atomic structure visualization using Bohr model with animated electron orbits and shell representations',
+      },
+      {
+        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-navigation.png', // Placeholder
+        alt: '3D navigation controls and element search interface',
+        caption:
+          'Intuitive 3D navigation with mouse controls and autocomplete element search functionality',
+      },
+      {
+        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-info-modal.png', // Placeholder
+        alt: 'Element information modal displaying detailed atomic properties',
+        caption:
+          'Comprehensive element information modal with scientific properties and electron configuration details',
+      },
+    ],
+    videos: [
+      {
+        url: 'https://youtu.be/1rKQbis-Bmw',
+        title: '3D Atomic Visualizer Demo',
+        type: 'demo',
+        caption:
+          'Complete demonstration of 3D atomic visualization features and interactive exploration capabilities',
+      },
+    ],
+  },
+
+  // =============================================================================
+  // PROJECT LINKS
+  // =============================================================================
+  links: {
+    liveDemo: 'https://conc2304.github.io/3D-Atomic-Visualizer/',
+    repository: 'https://github.com/conc2304/3D-Atomic-Visualizer',
+    caseStudy: undefined,
+    additionalLinks: [
+      {
+        title: 'Project Demo Video',
+        url: 'https://youtu.be/1rKQbis-Bmw',
+        type: 'other',
+      },
+      {
+        title: 'React Three Fiber Documentation',
+        url: 'https://r3f.docs.pmnd.rs/',
+        type: 'documentation',
+      },
+      {
+        title: 'Three.js Library',
+        url: 'https://threejs.org/',
+        type: 'documentation',
+      },
+      {
+        title: 'Periodic Table Data API',
+        url: 'https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json',
+        type: 'documentation',
+      },
+    ],
+  },
+
+  // =============================================================================
+  // PROJECT CONTENT & NARRATIVE
+  // =============================================================================
+  content: {
+    overview: `The 3D Atomic Visualizer represents a successful exploration of cutting-edge 3D web development technologies, specifically mastering React Three Fiber for WebGL-based educational applications. Developed as a CS50 final project, the application demonstrates practical integration of React component architecture with Three.js 3D rendering to create an interactive exploration platform for atomic structures and periodic table elements.
+
+The project addresses the challenge of learning complex 3D web development while creating a meaningful educational tool. Through implementing scientific atomic visualization using the Bohr model, the application showcases both technical skill development in emerging web technologies and thoughtful application of programming concepts to educational challenges. The electron configuration parsing system and real-time orbital animations demonstrate data processing capabilities alongside 3D graphics programming.
+
+The application features a dynamic 3D carousel interface enabling navigation through all 118 periodic elements, with each element providing access to its atomic structure visualization. The project successfully integrates multiple technical components - React state management, Three.js scene rendering, TypeScript development, and external API integration - while maintaining smooth performance and intuitive user interactions across different browser environments.`,
+
+    process: `**Learning Objective & Technology Selection**: As a CS50 student, the primary goal was mastering new web programming techniques leveraging cutting-edge 3D technologies. Selected React Three Fiber as the core framework to combine familiar React paradigms with powerful Three.js 3D capabilities, enabling component-based architecture for complex 3D scene management.
+
+**Scientific Research & Atomic Model Implementation**: Conducted extensive research into atomic structure representation, electron configuration parsing, and orbital mechanics to ensure scientific accuracy. Chose the Bohr model for visualization due to its clarity and educational value, while acknowledging the complexity trade-offs compared to more advanced orbital models (s, p, d, f orbitals).
+
+**3D Scene Architecture & Component Design**: Developed modular component architecture separating concerns between periodic table navigation, atomic structure visualization, and user interface controls. Created reusable 3D components including element tiles, atomic structure renderers, and interactive controls while maintaining clean separation between React state management and Three.js scene manipulation.
+
+**Interactive Carousel Development**: Implemented sophisticated 3D carousel system supporting smooth navigation between 118 periodic elements, with dynamic focus management and responsive layout adaptation. Integrated complex state management to coordinate between carousel position, active element selection, and atomic structure updates.
+
+**Electron Configuration Processing & Visualization**: Developed parsing system for electron configuration strings (e.g., "1s2 2s2 2p5" for Fluorine) to programmatically generate accurate atomic structures. Implemented orbital animation system creating realistic electron movement patterns around atomic nuclei with proper shell-based organization.
+
+**Performance Optimization & Browser Compatibility**: Addressed WebGL performance challenges through efficient geometry management, texture optimization, and frame rate monitoring. Implemented browser compatibility checks and provided clear user guidance for optimal viewing experience, particularly for WebGL-intensive 3D rendering.
+
+**Data Integration & External API Management**: Integrated real-time periodic table data from external JSON API, implementing efficient data fetching, caching, and error handling. Created robust data processing pipeline transforming raw element data into 3D visualization parameters while maintaining application responsiveness.`,
+
+    results: `**3D Web Development Skill Acquisition**:
+• Successfully learned and implemented React Three Fiber, demonstrating ability to master cutting-edge 3D web development technologies
+• Created functional integration between React component architecture and Three.js WebGL rendering, solving fundamental state synchronization challenges
+• Built responsive 3D carousel navigation system supporting smooth transitions between 118 periodic elements with intuitive user controls
+• Developed working atomic structure visualization system rendering Bohr model representations with animated electron orbits
+
+**Educational Application Development**:
+• Transformed abstract atomic structure concepts into interactive 3D experiences, demonstrating practical application of programming skills to educational challenges
+• Implemented electron configuration parsing system automatically generating atomic structures from standard chemistry notation strings
+• Created functional orbital animation system demonstrating electron movement patterns and shell-based atomic organization
+• Developed comprehensive element information system integrating external API data with 3D visualizations
+
+**Technical Implementation & Performance**:
+• Successfully optimized WebGL rendering to maintain smooth animation performance across different browser environments
+• Implemented efficient component architecture enabling clean separation between React state management and 3D scene rendering
+• Created robust data integration system handling real-time periodic table data fetching and processing
+• Developed multi-modal interaction system supporting both traditional UI controls and 3D spatial navigation
+
+**Academic Project Excellence**:
+• Exceeded typical CS50 project scope by implementing advanced 3D graphics programming and modern web frameworks
+• Demonstrated independent learning capability by mastering React Three Fiber and WebGL concepts not covered in coursework
+• Created production-ready application with professional deployment practices and comprehensive documentation
+• Successfully balanced technical complexity with educational value and user experience considerations`,
+
+    challenges: `**Learning React Three Fiber Integration**: Mastering the integration between React's component model and Three.js 3D rendering required understanding new concepts around state synchronization, lifecycle management, and 3D scene updates. Learning how to coordinate React state changes with 3D object transformations while maintaining performance demanded extensive experimentation with the React Three Fiber framework.
+
+**WebGL Performance & Browser Compatibility**: Creating smooth 3D experiences with animated atomic visualizations required learning about WebGL performance optimization and browser compatibility considerations. Understanding how to maintain consistent frame rates while rendering multiple 3D elements and ensuring the application worked across different graphics hardware configurations presented ongoing technical challenges.
+
+**Scientific Research & Implementation**: Implementing scientifically accurate atomic structure representations required researching chemistry concepts, electron configuration notation, and orbital mechanics. Balancing scientific accuracy with visual clarity and educational value while working within the constraints of the Bohr model demanded careful consideration of both technical limitations and educational objectives.
+
+**3D User Interface Design**: Designing intuitive interaction patterns for 3D environments required learning new approaches to user experience design beyond traditional web interfaces. Creating effective hover states, navigation controls, and spatial interactions that felt natural to users unfamiliar with 3D environments demanded extensive iteration and testing.
+
+**Data Processing & Real-Time Visualization**: Transforming electron configuration strings into dynamic 3D atomic structures required developing parsing algorithms and animation systems. Creating smooth transitions between different atomic structures while maintaining visual appeal and educational value presented coordination challenges between data processing and 3D rendering.
+
+**Project Scope Management**: Balancing the ambitious technical goals of learning advanced 3D web development with the practical constraints of an academic project timeline required careful scope management and feature prioritization. Deciding which aspects of atomic visualization to implement while ensuring a polished final product demanded ongoing project management decisions.
+
+**Independent Learning & Problem Solving**: Working with cutting-edge technologies like React Three Fiber that had limited learning resources and community support required developing strong independent learning skills and problem-solving approaches when encountering technical obstacles with minimal available documentation or examples.`,
+
+    learnings: `**React Three Fiber & 3D Web Development**: This project provided hands-on experience with cutting-edge 3D web development, learning how React Three Fiber enables component-based architecture for WebGL applications. Understanding how to integrate React's declarative paradigm with Three.js 3D rendering became valuable knowledge for future interactive web applications requiring visual complexity.
+
+**WebGL Performance & Optimization**: Working with real-time 3D graphics taught important lessons about browser performance, frame rate optimization, and memory management in graphics applications. Learning to balance visual complexity with smooth performance provided insights applicable to any application involving complex visual processing or animation.
+
+**Scientific Data Processing & Visualization**: Implementing electron configuration parsing and atomic structure generation taught valuable lessons about transforming technical data into visual representations. Understanding how to research scientific concepts and translate them into interactive experiences demonstrated the intersection of programming skills with domain knowledge.
+
+**Modern Web Technology Integration**: Successfully coordinating React, TypeScript, WebGL, and external APIs in a complex application taught essential lessons about modern web architecture and technology selection. Learning to manage dependencies and coordinate multiple sophisticated technologies became foundational knowledge for large-scale web development.
+
+**3D User Interface Design**: Creating intuitive interactions in 3D environments introduced new concepts about spatial interface design and user guidance in immersive experiences. Understanding the unique challenges of 3D interaction design provided insights into emerging interface paradigms beyond traditional 2D web development.
+
+**Independent Technical Learning**: Mastering React Three Fiber and advanced WebGL concepts independently demonstrated ability to learn cutting-edge technologies through documentation, experimentation, and problem-solving. This self-directed learning approach became valuable for staying current with evolving web technologies.
+
+**Educational Technology Development**: Creating an educational application highlighted how interactive technology can enhance learning experiences. Understanding how to make technical concepts accessible through thoughtful interaction design became applicable to documentation, training materials, and knowledge transfer in professional contexts.
+
+**Academic Project Management**: Completing a sophisticated technical project within academic constraints taught valuable lessons about scope management, technical decision-making, and balancing learning objectives with deliverable quality. These project management skills became essential for future independent development work.`,
+  },
+
+  // =============================================================================
+  // PROJECT METADATA
+  // =============================================================================
+  metadata: {
+    featured: true,
+    status: 'live',
+    lastUpdated: '2023-08',
+    tags: [
+      'react-three-fiber',
+      '3d-web-development',
+      'webgl-programming',
+      'scientific-visualization',
+      'educational-technology',
+      'typescript-development',
+      'three-js',
+      'atomic-structure-simulation',
+      'interactive-3d-ui',
+      'periodic-table-visualization',
+      'electron-orbital-animation',
+      'chemistry-education',
+      'real-time-3d-graphics',
+      'browser-based-3d',
+      'react-spring-animation',
+      'performance-optimization',
+      'cross-browser-compatibility',
+      'academic-project',
+      'harvard-cs50',
+      'solo-development',
+    ],
+    difficulty: 'advanced',
+  },
+};

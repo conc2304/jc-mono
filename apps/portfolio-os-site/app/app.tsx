@@ -6,7 +6,7 @@ import {
   GradientShader,
 } from '@jc/ui-components';
 import { remToPixels } from '@jc/themes';
-import { mockFileSystem } from './data/file-system';
+import { FileSystem } from './data/file-system';
 
 export function App() {
   const theme = useTheme();
@@ -38,7 +38,7 @@ export function App() {
     <>
       {/* TODO make cursor something that you turn on */}
       {/* <CursorTrail {...cursorConfig} /> */}
-      <DesktopOS fileSystem={mockFileSystem} />
+      <DesktopOS fileSystem={FileSystem} />
       <GradientShader
         className={key}
         key={key}

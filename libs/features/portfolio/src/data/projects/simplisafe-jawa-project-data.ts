@@ -1,6 +1,6 @@
 import { ProjectData } from '@jc/ui-components';
 
-export const projectJawaProject: ProjectData = {
+export const simplisafeJawaProject: ProjectData = {
   // =============================================================================
   // CORE PROJECT INFORMATION
   // =============================================================================

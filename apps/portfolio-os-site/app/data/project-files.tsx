@@ -1,15 +1,34 @@
-import { FileSystemItem, ProjectData, BrutalistTemplateProps } from '@jc/ui-components';
+import {
+  FileSystemItem,
+  ProjectData,
+  ProjectTemplateProps,
+  ProjectTemplate,
+  BrutalistTemplate,
+  BrutalistTemplateProps,
+} from '@jc/ui-components';
+import {
+  lightformWebControllerProject,
+  atomicVisualizerProject,
+  climateDataVizProject,
+  gravityScavengerProject,
+  simplisafeJawaProject,
+  terrainifyProject,
+  tunecraftProject,
+  verdantiaProject,
+  vyzbyProject,
+} from '@jc/portfolio';
+import {
+  Compost,
+  MovieFilter,
+  MusicNote,
+  RocketLaunch,
+  Science,
+  Security,
+  Terrain,
+  ThermostatAuto,
+  Tune,
+} from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
-import { Science, ThermostatAuto, Public, RocketLaunch, Security, VideoProjector, Terrain, MusicNote, Eco, Tune } from '@mui/icons-material';
-import { atomicVisualizerProject } from './atomicVisualizerProject';
-import { climateDataVizProject } from './climateDataVizProject';
-import { gravityScavengerProject } from './gravityScavengerProject';
-import { simplisafeJawaProject } from './simplisafeJawaProject';
-import { lightformWebControllerProject } from './lightformWebControllerProject';
-import { terrainifyProject } from './terrainifyProject';
-import { tunecraftProject } from './tunecraftProject';
-import { verdantiaProject } from './verdantiaProject';
-import { vyzbyProject } from './vyzbyProject';
 
 export const atomicVisualizerFileSystemItem: FileSystemItem<
   ProjectData,
@@ -27,9 +46,17 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['school', 'featured', '3d', 'webgl', 'react-three-fiber', 'harvard-cs50'],
+    tags: [
+      'school',
+      'featured',
+      '3d',
+      'webgl',
+      'react-three-fiber',
+      'harvard-cs50',
+    ],
     favorite: true,
-    description: '3D WebGL periodic table explorer with animated atomic structures',
+    description:
+      '3D WebGL periodic table explorer with animated atomic structures',
   },
   fileData: atomicVisualizerProject,
   renderer: {
@@ -37,6 +64,8 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
 export const gravityScavengerFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
@@ -53,9 +82,18 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['school', 'featured', 'unity', 'game-dev', 'physics', 'procedural', 'harvard-gd50'],
+    tags: [
+      'school',
+      'featured',
+      'unity',
+      'game-dev',
+      'physics',
+      'procedural',
+      'harvard-gd50',
+    ],
     favorite: true,
-    description: 'Physics-based Unity space game with procedural generation and real-time gravity simulation',
+    description:
+      'Physics-based Unity space game with procedural generation and real-time gravity simulation',
   },
   fileData: gravityScavengerProject,
   renderer: {
@@ -63,6 +101,9 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
+
 export const simplisafeJawaFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
@@ -79,9 +120,18 @@ export const simplisafeJawaFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['work', 'featured', 'enterprise', 'full-stack', 'ux-research', 'simplisafe', 'iot'],
+    tags: [
+      'work',
+      'featured',
+      'enterprise',
+      'full-stack',
+      'ux-research',
+      'simplisafe',
+      'iot',
+    ],
     favorite: true,
-    description: 'SimpliSafe fulfillment system redesign - enterprise warehouse management with IoT device pairing',
+    description:
+      'SimpliSafe fulfillment system redesign - enterprise warehouse management with IoT device pairing',
   },
   fileData: simplisafeJawaProject,
   renderer: {
@@ -89,13 +139,16 @@ export const simplisafeJawaFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
+
 export const lightformWebControllerFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
   name: 'LightformController.proj',
-  icon: <VideoProjector fontSize="large" />,
+  icon: <MovieFilter fontSize="large" />,
   type: 'file',
   size: 1835008, // ~1.75MB - PWA with hardware integration, multiple apps, and creative coding
   mimeType: 'application/pdf',
@@ -105,9 +158,18 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['work', 'featured', 'pwa', 'hardware-integration', 'projection-mapping', 'lightform', 'creative-coding'],
+    tags: [
+      'work',
+      'featured',
+      'pwa',
+      'hardware-integration',
+      'projection-mapping',
+      'lightform',
+      'creative-coding',
+    ],
     favorite: true,
-    description: 'PWA projection mapping controller with FTUX - AR hardware interface and creative coding',
+    description:
+      'PWA projection mapping controller with FTUX - AR hardware interface and creative coding',
   },
   fileData: lightformWebControllerProject,
   renderer: {
@@ -115,6 +177,8 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
 export const terrainifyFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
@@ -131,9 +195,18 @@ export const terrainifyFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['personal', 'featured', 'maya-plugin', 'procedural', 'audio-visual', 'creative-coding', 'python'],
+    tags: [
+      'personal',
+      'featured',
+      'maya-plugin',
+      'procedural',
+      'audio-visual',
+      'creative-coding',
+      'python',
+    ],
     favorite: true,
-    description: 'Maya Python plugin for procedural terrain with BPM-synchronized animation and music visualization',
+    description:
+      'Maya Python plugin for procedural terrain with BPM-synchronized animation and music visualization',
   },
   fileData: terrainifyProject,
   renderer: {
@@ -141,6 +214,8 @@ export const terrainifyFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
 export const tunecraftFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
@@ -157,9 +232,18 @@ export const tunecraftFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['graduate', 'featured', 'computer-vision', 'touchdesigner', 'audio-visual', 'mediapipe', 'harvard'],
+    tags: [
+      'graduate',
+      'featured',
+      'computer-vision',
+      'touchdesigner',
+      'audio-visual',
+      'mediapipe',
+      'harvard',
+    ],
     favorite: true,
-    description: '6D object tracking for real-time music control - computer vision meets interactive audio',
+    description:
+      '6D object tracking for real-time music control - computer vision meets interactive audio',
   },
   fileData: tunecraftProject,
   renderer: {
@@ -167,13 +251,15 @@ export const tunecraftFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
 export const verdantiaFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
   name: 'Verdantia.proj',
-  icon: <Eco fontSize="large" />,
+  icon: <Compost fontSize="large" />,
   type: 'file',
   size: 2621440, // ~2.5MB - comprehensive Unity game with calculus, museum installation, and educational systems
   mimeType: 'application/pdf',
@@ -183,9 +269,19 @@ export const verdantiaFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['graduate', 'featured', 'unity', 'environmental', 'calculus', 'museum', 'capstone', 'harvard'],
+    tags: [
+      'graduate',
+      'featured',
+      'unity',
+      'environmental',
+      'calculus',
+      'museum',
+      'capstone',
+      'harvard',
+    ],
     favorite: true,
-    description: 'Unity city builder museum installation with real-time heat equation simulation and environmental education',
+    description:
+      'Unity city builder museum installation with real-time heat equation simulation and environmental education',
   },
   fileData: verdantiaProject,
   renderer: {
@@ -193,6 +289,8 @@ export const verdantiaFileSystemItem: FileSystemItem<
     props: {
       hasNavigation: true,
     },
+  },
+};
 export const vyzbyFileSystemItem: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
@@ -209,9 +307,18 @@ export const vyzbyFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['personal', 'featured', 'framework', 'creative-coding', 'vue', 'p5js', 'developer-tools'],
+    tags: [
+      'personal',
+      'featured',
+      'framework',
+      'creative-coding',
+      'vue',
+      'p5js',
+      'developer-tools',
+    ],
     favorite: true,
-    description: 'Interactive audio visualizer framework - real-time parameter control for creative coding workflows',
+    description:
+      'Interactive audio visualizer framework - real-time parameter control for creative coding workflows',
   },
   fileData: vyzbyProject,
   renderer: {
@@ -238,9 +345,18 @@ export const climateDataVizFileSystemItem: FileSystemItem<
   parentId: '1',
   permissions: { read: true, write: true, execute: false },
   metadata: {
-    tags: ['school', 'featured', 'data-viz', 'd3js', 'climate-science', 'harvard-cs171', 'team-project'],
+    tags: [
+      'school',
+      'featured',
+      'data-viz',
+      'd3js',
+      'climate-science',
+      'harvard-cs171',
+      'team-project',
+    ],
     favorite: true,
-    description: 'Interactive climate impact visualization exploring temperature and weather correlations',
+    description:
+      'Interactive climate impact visualization exploring temperature and weather correlations',
   },
   fileData: climateDataVizProject,
   renderer: {
@@ -250,3 +366,18 @@ export const climateDataVizFileSystemItem: FileSystemItem<
     },
   },
 };
+
+export const allPortfolioProjectFiles: FileSystemItem<
+  ProjectData,
+  BrutalistTemplateProps
+>[] = [
+  atomicVisualizerFileSystemItem,
+  gravityScavengerFileSystemItem,
+  simplisafeJawaFileSystemItem,
+  lightformWebControllerFileSystemItem,
+  terrainifyFileSystemItem,
+  tunecraftFileSystemItem,
+  verdantiaFileSystemItem,
+  vyzbyFileSystemItem,
+  climateDataVizFileSystemItem,
+];

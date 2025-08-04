@@ -1,4 +1,4 @@
-import { Component, ComponentType, ReactNode } from 'react';
+import { ComponentType, ReactNode } from 'react';
 
 export interface DesktopIconMetaData {
   id: string;
@@ -47,7 +47,7 @@ export interface BaseFileSystemItem {
   extension?: string;
   mimeType?: string;
   path: string;
-  parentId?: string;
+  parentId?: string | null;
   children?: BaseFileSystemItem[];
   permissions: {
     read: boolean;
