@@ -73,6 +73,7 @@ export const TorusLoaderBox = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   padding: theme.spacing(0),
+  border: 'unset',
 
   '&[data-augmented-ui]': {
     '--aug-bl': '8px',

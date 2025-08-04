@@ -36,6 +36,31 @@ export const TorusFieldProgress = ({
   const energyBeamRef = useRef<THREE.Group>(null);
   const animationRef = useRef<number>(null);
 
+  const [isAnimatingEntry, setIsAnimatingEntry] = useState(true);
+  const entryAnimationRef = useRef({
+    startTime: 0,
+    duration: 3000, // 3 seconds total
+    phases: {
+      energyBeam: { start: 0, duration: 800 },
+      torusRings: { start: 300, duration: 1200 },
+      verticalLines: { start: 600, duration: 1000 },
+      particles: { start: 1000, duration: 1500 },
+    },
+  });
+
+  // Calculate entry animation progress
+  const getEntryAnimationProgress = (phase, currentTime: number) => {
+    const { start, duration } = entryAnimationRef.current.phases[phase];
+    const elapsed = currentTime - start;
+
+    if (elapsed <= 0) return 0;
+    if (elapsed >= duration) return 1;
+
+    // Smooth easing function
+    const t = elapsed / duration;
+    return t * t * (3 - 2 * t); // Smoothstep
+  };
+
   // Mouse interaction state
   const mouseRef = useRef<MouseInteraction>({
     normalized: new THREE.Vector2(0, 0),
@@ -520,10 +545,25 @@ export const TorusFieldProgress = ({
       animationRef.current = requestAnimationFrame(animate);
 
       const time = Date.now() * 0.001;
+      const currentTime = Date.now();
+
       const totalElements = torusRingsRef.current.length;
       const progressThreshold = normalizedProgress * totalElements;
       const mouse = mouseRef.current;
       const isLight = themeMode === 'light';
+
+      // Entry animation logic
+      let entryTime = 0;
+      if (isAnimatingEntry) {
+        if (entryAnimationRef.current.startTime === 0) {
+          entryAnimationRef.current.startTime = currentTime;
+        }
+        entryTime = currentTime - entryAnimationRef.current.startTime;
+
+        if (entryTime >= entryAnimationRef.current.duration) {
+          setIsAnimatingEntry(false);
+        }
+      }
 
       // Decay click intensity
       mouse.clickIntensity = Math.max(0, mouse.clickIntensity - 0.02);
@@ -570,12 +610,22 @@ export const TorusFieldProgress = ({
         mouse.distanceFromCenter * colorIntensityMultiplier +
         mouse.clickIntensity * colorIntensityMultiplier;
 
-      // Animate torus rings with theme-aware mouse interactions
+      // Animate torus rings with staggered entry
       torusRingsRef.current.forEach((element, index) => {
         const isActivated = index < progressThreshold;
         const baseActivationIntensity = isActivated ? 1 : isLight ? 0.5 : 0.3;
 
         if (element.userData.type === 'verticalLine') {
+          // Entry animation for vertical lines
+          const lineDelay = index * 30; // Faster stagger for lines
+          const adjustedEntryTime = Math.max(0, entryTime - lineDelay);
+          const entryProgress = isAnimatingEntry
+            ? getEntryAnimationProgress('verticalLines', adjustedEntryTime)
+            : 1;
+
+          // Lines grow from center outward
+
+          const entryOpacity = entryProgress;
           // Vertical line warping based on mouse position
           const positions = element.geometry.attributes.position;
           const originalPoints = element.userData.originalPoints;
@@ -613,8 +663,44 @@ export const TorusFieldProgress = ({
 
           const finalIntensity =
             baseActivationIntensity * (0.3 + intensity * 0.7 + proximityBoost);
+
+          // Apply entry opacity
           element.material.opacity =
-            element.userData.baseOpacity * finalIntensity;
+            element.userData.baseOpacity * finalIntensity * entryOpacity;
+
+          // Entry effect: lines extend from center
+          if (isAnimatingEntry && entryProgress < 1) {
+            const positions = element.geometry.attributes.position;
+            const originalPoints = element.userData.originalPoints;
+            const centerY = 0;
+
+            for (let i = 0; i < originalPoints.length; i++) {
+              const originalPoint = originalPoints[i];
+              const distanceFromCenter = Math.abs(originalPoint.y - centerY);
+              const maxDistance = 6; // Half height of lines
+
+              // Lines grow outward from center
+              const lineProgress = Math.max(
+                0,
+                (entryProgress * maxDistance - distanceFromCenter) /
+                  (maxDistance * 0.3)
+              );
+
+              if (lineProgress > 0) {
+                const targetPoint = originalPoint.clone();
+                // Apply your existing mouse warping here if needed
+                positions.array[i * 3] = targetPoint.x;
+                positions.array[i * 3 + 1] = targetPoint.y;
+                positions.array[i * 3 + 2] = targetPoint.z;
+              } else {
+                // Keep at center until it's time to extend
+                positions.array[i * 3] = originalPoint.x;
+                positions.array[i * 3 + 1] = centerY;
+                positions.array[i * 3 + 2] = originalPoint.z;
+              }
+            }
+            positions.needsUpdate = true;
+          }
 
           // Color and brightness based on mouse proximity - theme aware
           if (proximityBoost > 0.3) {
@@ -633,6 +719,17 @@ export const TorusFieldProgress = ({
             element.material.color.copy(element.userData.dimColor);
           }
         } else if (element.userData.type === 'torus') {
+          // Entry animation for torus rings
+          const ringDelay = index * 80; // Stagger each ring by 80ms
+          const adjustedEntryTime = Math.max(0, entryTime - ringDelay);
+          const entryProgress = isAnimatingEntry
+            ? getEntryAnimationProgress('torusRings', adjustedEntryTime)
+            : 1;
+
+          const entryScale = 0.1 + entryProgress * 0.9; // Start small, grow to normal
+          const entryOpacity = entryProgress;
+          const entryPosition = entryProgress; // For position animation
+
           // Torus ring scaling and effects based on mouse proximity
           const ringWorldPos = new THREE.Vector3();
           element.getWorldPosition(ringWorldPos);
@@ -664,17 +761,32 @@ export const TorusFieldProgress = ({
 
           // Scaling based on mouse proximity - adjusted for theme
           const scaleMultiplier =
-            1 +
-            proximityInfluence *
-              (0.3 + mouse.clickIntensity * (isLight ? 0.3 : 0.5));
+            (1 +
+              proximityInfluence *
+                (0.3 + mouse.clickIntensity * (isLight ? 0.3 : 0.5))) *
+            entryScale;
+
           element.scale
             .copy(element.userData.originalScale)
             .multiplyScalar(
-              scaleMultiplier +
-                Math.sin(time * 4 + element.userData.index * 0.3) * 0.05
+              scaleMultiplier + Math.sin(time * 4 + index * 0.3) * 0.05
             );
 
-          // Color effects - theme aware
+          // Apply entry opacity
+          element.material.opacity =
+            element.userData.baseOpacity *
+            pulseIntensity *
+            (baseActivationIntensity + mouseBoost) *
+            entryOpacity;
+
+          // Entry position animation (rings emerge from center)
+          const targetY =
+            element.userData.originalY +
+            Math.sin(time * 2 + index * 0.8) * 0.2 +
+            mouse.normalized.y * proximityInfluence * 2;
+          element.position.y = targetY * entryPosition;
+
+          // Color effects
           if (proximityInfluence > 0.2) {
             const targetColor = isLight
               ? element.userData.baseColor
@@ -693,24 +805,35 @@ export const TorusFieldProgress = ({
         }
       });
 
-      // Energy beam interactions - theme aware
+      // Energy beam interactions
       if (energyBeamRef.current) {
+        const entryProgress = isAnimatingEntry
+          ? getEntryAnimationProgress('energyBeam', entryTime)
+          : 1;
+
+        // Entry animation: beam grows from center
+        const entryScale = entryProgress;
+        const entryOpacity = entryProgress;
+
         const beamTilt = mouse.normalized.clone().multiplyScalar(0.3);
         energyBeamRef.current.rotation.y = time * 0.8 + beamTilt.x;
         energyBeamRef.current.rotation.x = beamTilt.y;
 
         energyBeamRef.current.children.forEach((beam, index) => {
           const scaleY =
-            0.3 +
-            normalizedProgress * 0.7 +
-            Math.sin(time * 4) * 0.1 +
-            mouse.distanceFromCenter * (isLight ? 0.2 : 0.3) +
-            mouse.clickIntensity * (isLight ? 0.3 : 0.5);
+            (0.3 +
+              normalizedProgress * 0.7 +
+              Math.sin(time * 4) * 0.1 +
+              mouse.distanceFromCenter * (isLight ? 0.2 : 0.3) +
+              mouse.clickIntensity * (isLight ? 0.3 : 0.5)) *
+            entryScale;
 
           const scaleXZ =
-            1 +
-            mouse.distanceFromCenter * (isLight ? 0.15 : 0.2) +
-            mouse.clickIntensity * (isLight ? 0.2 : 0.3);
+            (1 +
+              mouse.distanceFromCenter * (isLight ? 0.15 : 0.2) +
+              mouse.clickIntensity * (isLight ? 0.2 : 0.3)) *
+            entryScale;
+
           beam.scale.set(scaleXZ, scaleY, scaleXZ);
 
           if (beam instanceof THREE.Mesh) {
@@ -720,13 +843,18 @@ export const TorusFieldProgress = ({
               opacityMultiplier *
               (0.2 +
                 normalizedProgress * 0.8 +
-                mouse.distanceFromCenter * (isLight ? 0.2 : 0.3));
+                mouse.distanceFromCenter * (isLight ? 0.2 : 0.3)) *
+              entryOpacity;
           }
         });
       }
 
-      // Particle attraction and swirling motion - theme aware
+      // Particle attraction and swirling motion
       particlesRef.current.forEach((particles) => {
+        const entryProgress = isAnimatingEntry
+          ? getEntryAnimationProgress('particles', entryTime)
+          : 1;
+
         particles.rotation.y = time * 0.1;
 
         const positions = particles.geometry.attributes.position.array;
@@ -754,76 +882,93 @@ export const TorusFieldProgress = ({
             mouse.distanceFromCenter * (isLight ? 0.08 : 0.1) +
             mouse.clickIntensity * (isLight ? 0.2 : 0.3);
 
+          let targetX, targetY, targetZ;
+
           if (attractionForce > 0) {
             const direction = new THREE.Vector3()
               .subVectors(mouse.world3D, particlePos)
               .normalize()
               .multiplyScalar(attractionStrength * attractionForce);
 
-            particlePos.add(direction);
+            const attractedPos = particlePos.clone().add(direction);
+            targetX = attractedPos.x;
+            targetZ = attractedPos.z;
+          } else {
+            // Use swirled position when no mouse attraction
+            const angle = time * 0.5 + i * 0.01;
+            const radius = Math.sqrt(
+              originalPos.x * originalPos.x + originalPos.z * originalPos.z
+            );
+
+            targetX = Math.cos(angle) * radius;
+            targetZ = Math.sin(angle) * radius;
           }
 
-          // Swirling motion around original position
-          const angle = time * 0.5 + i * 0.01;
-          const radius = Math.sqrt(
-            originalPos.x * originalPos.x + originalPos.z * originalPos.z
-          );
-
-          const swirledX = Math.cos(angle) * radius;
-          const swirledZ = Math.sin(angle) * radius;
-
-          // Blend between swirled position and mouse-attracted position
-          const blendFactor = 0.7 + attractionForce * 0.3;
-          positions[i] =
-            originalPos.x * (1 - blendFactor) +
-            (swirledX + (particlePos.x - originalPos.x)) * blendFactor;
-          positions[i + 2] =
-            originalPos.z * (1 - blendFactor) +
-            (swirledZ + (particlePos.z - originalPos.z)) * blendFactor;
-
           // Vertical oscillation with mouse influence
-          positions[i + 1] =
+          targetY =
             originalPos.y +
             Math.sin(time * 2 + i * 0.02) * 0.3 +
             mouse.normalized.y * attractionForce * 2;
 
-          // Color intensity based on progress and mouse influence - theme aware
-          const baseIntensity =
-            (isLight ? 0.5 : 0.3) + normalizedProgress * 0.7;
-          const pulseIntensity = Math.sin(time * 3 + i * 0.1) * 0.2;
-          const mouseColorBoost =
-            attractionForce * (1 + mouse.clickIntensity * (isLight ? 1.5 : 2));
-          const finalIntensity =
-            (baseIntensity + pulseIntensity) * (1 + mouseColorBoost);
+          // Entry animation: particles start at center and move to target positions
+          if (isAnimatingEntry) {
+            // Particles emerge from center (0, 0, 0) to their target positions
+            positions[i] = targetX * entryProgress;
+            positions[i + 1] = targetY * entryProgress;
+            positions[i + 2] = targetZ * entryProgress;
 
-          // Apply hue shifting near mouse - subtler in light mode
-          let r = originalColors[i];
-          let g = originalColors[i + 1];
-          let b = originalColors[i + 2];
+            // Fade in colors
+            colors[i] = originalColors[i] * entryProgress;
+            colors[i + 1] = originalColors[i + 1] * entryProgress;
+            colors[i + 2] = originalColors[i + 2] * entryProgress;
+          } else {
+            // Normal animation after entry is complete
+            const blendFactor = 0.7 + attractionForce * 0.3;
+            positions[i] =
+              originalPos.x * (1 - blendFactor) + targetX * blendFactor;
+            positions[i + 2] =
+              originalPos.z * (1 - blendFactor) + targetZ * blendFactor;
+            positions[i + 1] = targetY;
 
-          if (attractionForce > 0.1) {
-            // Shift towards complementary colors when near mouse
-            const shiftAmount =
-              attractionForce * hueShift * (isLight ? 0.5 : 1.0);
-            r = Math.min(1, r * (1 + shiftAmount));
-            g = Math.min(1, g * (1 - shiftAmount * 0.5));
-            b = Math.min(1, b * (1 + shiftAmount * 0.3));
+            // Color intensity based on progress and mouse influence - theme aware
+            const baseIntensity =
+              (isLight ? 0.5 : 0.3) + normalizedProgress * 0.7;
+            const pulseIntensity = Math.sin(time * 3 + i * 0.1) * 0.2;
+            const mouseColorBoost =
+              attractionForce *
+              (1 + mouse.clickIntensity * (isLight ? 1.5 : 2));
+            const finalIntensity =
+              (baseIntensity + pulseIntensity) * (1 + mouseColorBoost);
+
+            // Apply hue shifting near mouse - subtler in light mode
+            let r = originalColors[i];
+            let g = originalColors[i + 1];
+            let b = originalColors[i + 2];
+
+            if (attractionForce > 0.1) {
+              // Shift towards complementary colors when near mouse
+              const shiftAmount =
+                attractionForce * hueShift * (isLight ? 0.5 : 1.0);
+              r = Math.min(1, r * (1 + shiftAmount));
+              g = Math.min(1, g * (1 - shiftAmount * 0.5));
+              b = Math.min(1, b * (1 + shiftAmount * 0.3));
+            }
+
+            // Apply theme-appropriate intensity
+            const themeIntensityMultiplier = isLight ? 0.8 : 1.0;
+            colors[i] = Math.min(
+              1,
+              r * finalIntensity * colorIntensity * themeIntensityMultiplier
+            );
+            colors[i + 1] = Math.min(
+              1,
+              g * finalIntensity * colorIntensity * themeIntensityMultiplier
+            );
+            colors[i + 2] = Math.min(
+              1,
+              b * finalIntensity * colorIntensity * themeIntensityMultiplier
+            );
           }
-
-          // Apply theme-appropriate intensity
-          const themeIntensityMultiplier = isLight ? 0.8 : 1.0;
-          colors[i] = Math.min(
-            1,
-            r * finalIntensity * colorIntensity * themeIntensityMultiplier
-          );
-          colors[i + 1] = Math.min(
-            1,
-            g * finalIntensity * colorIntensity * themeIntensityMultiplier
-          );
-          colors[i + 2] = Math.min(
-            1,
-            b * finalIntensity * colorIntensity * themeIntensityMultiplier
-          );
 
           // Size variation based on mouse proximity - adjusted for theme
           const baseSizeIndex = Math.floor(i / 3);
@@ -832,7 +977,7 @@ export const TorusFieldProgress = ({
             1 +
             attractionForce *
               (0.5 + mouse.clickIntensity * (isLight ? 0.7 : 1.0));
-          sizes[baseSizeIndex] = baseSize * sizeMultiplier;
+          sizes[baseSizeIndex] = baseSize * sizeMultiplier * entryProgress;
         }
 
         particles.geometry.attributes.position.needsUpdate = true;
@@ -846,7 +991,8 @@ export const TorusFieldProgress = ({
           particleOpacityMultiplier *
           (0.2 +
             normalizedProgress * 0.8 +
-            mouse.distanceFromCenter * (isLight ? 0.15 : 0.2));
+            mouse.distanceFromCenter * (isLight ? 0.15 : 0.2)) *
+          entryProgress;
       });
 
       // Field distortion effect - create ripple waves from mouse position (theme aware)
@@ -896,7 +1042,7 @@ export const TorusFieldProgress = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [normalizedProgress, themeMode]); // Re-run when progress or theme changes
+  }, [normalizedProgress, themeMode, isAnimatingEntry]); // Re-run when progress or theme changes
 
   return (
     <Box
