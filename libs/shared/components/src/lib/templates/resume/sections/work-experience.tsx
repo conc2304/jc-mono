@@ -6,6 +6,8 @@ import {
   ListItemText,
   Card,
   CardContent,
+  Divider,
+  Stack,
 } from '@mui/material';
 import { WorkExperience } from '../types';
 
@@ -36,6 +38,7 @@ export const WorkExperienceSection = ({
             background: 'unset',
             border: 'unset',
             p: 5,
+            pt: 0,
             '--aug-tl': '1.25rem',
             '--aug-tr': '1.25rem',
             '--aug-tl-inset1': '0%',
@@ -50,18 +53,23 @@ export const WorkExperienceSection = ({
             '--aug-inlay-bg': theme.palette.background.paper,
             '--aug-inlay-all': '5px',
           })}
-
-          // sx={{  }}
         >
           <CardContent>
             <Box
               display="flex"
               justifyContent="space-between"
-              alignItems="flex-start"
+              alignItems="flex-end"
               flexWrap="wrap"
               mb={2}
             >
-              <Box>
+              <Typography variant="body2" color="text.secondary">
+                {job.location}
+              </Typography>
+              <Stack textAlign="center">
+                <Typography variant="subtitle1" color="primary">
+                  {job.position}
+                </Typography>
+
                 <Typography variant="h6" component="h4" fontWeight="bold">
                   {job.company}
                   {job.acquisitionInfo && (
@@ -75,13 +83,7 @@ export const WorkExperienceSection = ({
                     </Typography>
                   )}
                 </Typography>
-                <Typography variant="subtitle1" color="primary">
-                  {job.position}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {job.location}
-                </Typography>
-              </Box>
+              </Stack>
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -90,6 +92,7 @@ export const WorkExperienceSection = ({
                 {job.duration}
               </Typography>
             </Box>
+            <Divider sx={{ my: 2.5 }} />
             <Typography variant="body2" fontStyle="italic">
               {job.description}
             </Typography>
