@@ -21,7 +21,7 @@ export const TechnicalSkillsCard = ({
   return (
     <Grid {...gridProps}>
       <Card variant="outlined" sx={{ background: 'unset', height: '100%' }}>
-        <CardContent sx={{ background: 'unset', height: '100%' }}>
+        <CardContent>
           <Typography variant="h6" mb={2} textAlign="center">
             {title}
           </Typography>
@@ -45,7 +45,7 @@ export const TechnicalSkillsSection = ({
     <Box mb={4}>
       <Typography
         variant="h5"
-        component="h3"
+        component="h5"
         gutterBottom
         color="primary"
         fontWeight="bold"
