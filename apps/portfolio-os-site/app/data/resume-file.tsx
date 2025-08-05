@@ -1,5 +1,4 @@
 import {
-  FileSystemItem,
   Resume,
   ResumeTemplate,
   ResumeComponentProps,
@@ -7,6 +6,7 @@ import {
 import { ResumeData } from '@jc/portfolio';
 import { FileTextIcon } from 'lucide-react'; // TODO replace with other icon library
 import { v4 as uuidv4 } from 'uuid';
+import { FileSystemItem } from '@jc/file-system';
 
 export const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
   id: uuidv4(),
@@ -18,8 +18,8 @@ export const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
   mimeType: 'application/pdf',
   dateModified: new Date('2024-01-10'),
   dateCreated: new Date('2024-01-10'),
-  path: '/Documents/Resume.pdf',
-  parentId: '1',
+  path: '',
+  parentId: '',
   permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: ['work', 'important'],

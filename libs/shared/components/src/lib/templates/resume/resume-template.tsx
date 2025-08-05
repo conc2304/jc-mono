@@ -14,14 +14,13 @@ import {
   CardContent,
   Stack,
 } from '@mui/material';
-import {
-  Email,
-  LocationOn,
-  LinkedIn,
-  GitHub,
-  Language,
-} from '@mui/icons-material';
+
 import { Resume } from './types';
+import { ResumeHeader } from './atoms/header';
+import {
+  TechnicalSkillsCard,
+  TechnicalSkillsSection,
+} from './atoms/technical-skils-card';
 
 export interface ResumeComponentProps {
   variant: 'sm' | 'md' | 'lg';
@@ -49,71 +48,7 @@ export const ResumeTemplate = ({
     >
       <Paper elevation={3} sx={{ p: 4 }}>
         {/* Header Section */}
-        <Box textAlign="center" mb={4}>
-          <Typography
-            variant="h3"
-            component="h1"
-            gutterBottom
-            fontWeight="bold"
-          >
-            {contactInfo.name}
-          </Typography>
-          <Typography variant="h5" component="h2" color="primary" gutterBottom>
-            {title}
-          </Typography>
-
-          {/* Contact Information */}
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-            flexWrap="wrap"
-            mt={2}
-          >
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <LocationOn fontSize="small" color="action" />
-              <Typography variant="body2">{contactInfo.location}</Typography>
-            </Box>
-
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <Email fontSize="small" color="action" />
-              <Link href={`mailto:${contactInfo.email}`} variant="body2">
-                {contactInfo.email}
-              </Link>
-            </Box>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <LinkedIn fontSize="small" color="action" />
-              <Link
-                href={`https://${contactInfo.linkedin}`}
-                variant="body2"
-                target="_blank"
-              >
-                LinkedIn
-              </Link>
-            </Box>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <GitHub fontSize="small" color="action" />
-              <Link
-                href={`https://${contactInfo.github}`}
-                variant="body2"
-                target="_blank"
-              >
-                GitHub
-              </Link>
-            </Box>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <Language fontSize="small" color="action" />
-              <Link
-                href={`https://${contactInfo.website}`}
-                variant="body2"
-                target="_blank"
-              >
-                {contactInfo.website}
-              </Link>
-            </Box>
-          </Stack>
-        </Box>
+        <ResumeHeader title={title} contactInfo={contactInfo} />
 
         <Divider sx={{ my: 3 }} />
 
@@ -151,90 +86,7 @@ export const ResumeTemplate = ({
           </Box>
         </Box>
 
-        {/* Technical Skills */}
-        <Box mb={4}>
-          <Typography
-            variant="h5"
-            component="h3"
-            gutterBottom
-            color="primary"
-            fontWeight="bold"
-          >
-            Technical Skills
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Front End
-                  </Typography>
-                  <Box display="flex" flexWrap="wrap" gap={0.5}>
-                    {technicalSkills.frontEnd.map((skill, index) => (
-                      <Chip key={index} label={skill} size="small" />
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Back End
-                  </Typography>
-                  <Box display="flex" flexWrap="wrap" gap={0.5}>
-                    {technicalSkills.backEnd.map((skill, index) => (
-                      <Chip key={index} label={skill} size="small" />
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Testing Frameworks
-                  </Typography>
-                  <Box display="flex" flexWrap="wrap" gap={0.5}>
-                    {technicalSkills.testingFrameworks.map((skill, index) => (
-                      <Chip key={index} label={skill} size="small" />
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    DevOps Tools
-                  </Typography>
-                  <Box display="flex" flexWrap="wrap" gap={0.5}>
-                    {technicalSkills.devopsTools.map((skill, index) => (
-                      <Chip key={index} label={skill} size="small" />
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Creative Technology
-                  </Typography>
-                  <Box display="flex" flexWrap="wrap" gap={0.5}>
-                    {technicalSkills.creativeTechnology.map((skill, index) => (
-                      <Chip key={index} label={skill} size="small" />
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Box>
+        <TechnicalSkillsSection technicalSkills={technicalSkills} />
 
         {/* Work Experience */}
         <Box mb={4}>

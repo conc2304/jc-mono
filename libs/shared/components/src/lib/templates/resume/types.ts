@@ -1,5 +1,5 @@
 // TypeScript interfaces for resume data structure
-interface ContactInfo {
+export interface ContactInfo {
   name: string;
   location: string;
   phone: string;
@@ -9,11 +9,11 @@ interface ContactInfo {
   website: string;
 }
 
-interface CoreCompetencies {
+export interface CoreCompetencies {
   categories: string[];
 }
 
-interface TechnicalSkills {
+export interface TechnicalSkills {
   frontEnd: string[];
   backEnd: string[];
   testingFrameworks: string[];
@@ -21,7 +21,7 @@ interface TechnicalSkills {
   creativeTechnology: string[];
 }
 
-interface WorkExperience {
+export interface WorkExperience {
   company: string;
   location: string;
   position: string;
@@ -31,7 +31,7 @@ interface WorkExperience {
   acquisitionInfo?: string;
 }
 
-interface Education {
+export interface Education {
   institution: string;
   location: string;
   degree: string;
