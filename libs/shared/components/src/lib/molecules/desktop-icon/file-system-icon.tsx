@@ -26,8 +26,6 @@ export const FileSystemIcon = ({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        // width: theme.mixins.desktopIcon.width,
-        // maxHeight: theme.mixins.desktopIcon.maxHeight,
       })}
     >
       <Box
@@ -39,8 +37,6 @@ export const FileSystemIcon = ({
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          // width: iconSize,
-          // height: iconSize,
           width: theme.mixins.desktopIcon.width,
           height: theme.mixins.desktopIcon.width,
           backgroundColor: alpha(
@@ -65,14 +61,13 @@ export const FileSystemIcon = ({
           },
         })}
       >
+        <Box sx={{ position: 'absolute', top: 5, left: 5 }}>{tagContent}</Box>
         {icon}
       </Box>
       <Box
         className="FileSystemIcon--text"
         sx={(theme) => ({
-          // display: 'flex',
           position: 'relative',
-          // width: '150%',
           width: `calc(${theme.mixins.desktopIcon.width} * 1.5)`,
 
           alignItems: 'center',
@@ -101,7 +96,7 @@ export const FileSystemIcon = ({
             wordBreak: 'break-word',
           }}
         >
-          {tagContent}
+          {/* {tagContent} */}
           {name}
         </Typography>
       </Box>

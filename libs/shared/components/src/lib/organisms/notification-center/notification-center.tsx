@@ -4,7 +4,6 @@ import {
   Paper,
   Typography,
   Chip,
-  Grid,
   LinearProgress,
   IconButton,
   Card,
@@ -284,7 +283,6 @@ export const NotificationCenter: React.FC = () => {
           color: 'text.primary',
           minWidth: 320,
           pl: 1.25,
-          // height: '100%',
           height: theme.mixins.taskbar.height,
 
           bgcolor: alpha(theme.palette.background.paper, 0.5),
@@ -382,8 +380,9 @@ export const NotificationCenter: React.FC = () => {
             mb: 1,
             mr: 1,
             width: 420, // nice
-            p: 2,
+            px: 2,
             pt: 0,
+            pb: 1,
             backgroundColor: alpha(theme.palette.background.paper, 0.5),
             color: 'text.primary',
 
@@ -425,8 +424,14 @@ export const NotificationCenter: React.FC = () => {
                 >
                   <Computer sx={{ color: '#64b5f6' }} /> System Information
                 </Typography>
-                <Grid container spacing={2.5}>
-                  <Grid size={{ xs: 6 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <AccessTime sx={{ fontSize: 20, color: '#64b5f6' }} />
                       <Box>
@@ -448,8 +453,8 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
+                  </Box>
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Avatar
                         sx={{
@@ -484,8 +489,8 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
+                  </Box>
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Memory sx={{ fontSize: 20, color: '#ff9800' }} />
                       <Box>
@@ -503,8 +508,8 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
+                  </Box>
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       {metrics.isOnline ? (
                         <Wifi sx={{ fontSize: 20, color: '#4caf50' }} />
@@ -529,8 +534,8 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </CardContent>
             </CardAug>
 
@@ -588,8 +593,8 @@ export const NotificationCenter: React.FC = () => {
                   />
                 </Box>
 
-                <Grid container spacing={2.5}>
-                  <Grid size={{ xs: 6 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box>
                     <Box>
                       <Typography
                         variant="caption"
@@ -604,8 +609,8 @@ export const NotificationCenter: React.FC = () => {
                         {metrics.domManipulationTime.toFixed(3)}ms
                       </Typography>
                     </Box>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
+                  </Box>
+                  <Box>
                     <Box>
                       <Typography
                         variant="caption"
@@ -620,9 +625,9 @@ export const NotificationCenter: React.FC = () => {
                         {(metrics.pageLoadTime / 1000).toFixed(2)}s
                       </Typography>
                     </Box>
-                  </Grid>
+                  </Box>
                   {metrics.memoryUsage && (
-                    <Grid size={{ xs: 6 }}>
+                    <Box>
                       <Box>
                         <Typography
                           variant="caption"
@@ -653,9 +658,9 @@ export const NotificationCenter: React.FC = () => {
                           }
                         />
                       </Box>
-                    </Grid>
+                    </Box>
                   )}
-                </Grid>
+                </Box>
               </CardContent>
             </CardAug>
 
@@ -676,8 +681,14 @@ export const NotificationCenter: React.FC = () => {
                 >
                   <Timeline sx={{ color: '#9c27b0' }} /> Session Analytics
                 </Typography>
-                <Grid container spacing={2.5}>
-                  <Grid size={{ xs: 6 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <AccessTime sx={{ fontSize: 20, color: '#64b5f6' }} />
                       <Box>
@@ -695,9 +706,9 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
+                  </Box>
 
-                  <Grid size={{ xs: 6 }}>
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <TouchApp sx={{ fontSize: 20, color: '#ff9800' }} />
                       <Box>
@@ -715,8 +726,8 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
-                  <Grid size={{ xs: 6 }}>
+                  </Box>
+                  <Box>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Keyboard sx={{ fontSize: 20, color: '#e91e63' }} />
                       <Box>
@@ -734,15 +745,15 @@ export const NotificationCenter: React.FC = () => {
                         </Typography>
                       </Box>
                     </Stack>
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
               </CardContent>
             </CardAug>
 
             {/* Network Information Card */}
             {metrics.networkInfo && (
-              <CardAug>
-                <CardContent sx={{ pb: '16px !important' }}>
+              <CardAug sx={{ mb: 0 }}>
+                <CardContent sx={{}}>
                   <Typography
                     variant="h6"
                     gutterBottom
@@ -758,8 +769,14 @@ export const NotificationCenter: React.FC = () => {
                     <NetworkCheck sx={{ color: '#00bcd4' }} /> Network
                     Information
                   </Typography>
-                  <Grid container spacing={2.5}>
-                    <Grid size={{ xs: 4 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <Box>
                       <Box>
                         <Typography
                           variant="caption"
@@ -778,8 +795,8 @@ export const NotificationCenter: React.FC = () => {
                           {metrics.networkInfo.type}
                         </Typography>
                       </Box>
-                    </Grid>
-                    <Grid size={{ xs: 4 }}>
+                    </Box>
+                    <Box>
                       <Box>
                         <Typography
                           variant="caption"
@@ -794,8 +811,8 @@ export const NotificationCenter: React.FC = () => {
                           {metrics.networkInfo.speed} Mbps
                         </Typography>
                       </Box>
-                    </Grid>
-                    <Grid size={{ xs: 4 }}>
+                    </Box>
+                    <Box>
                       <Box>
                         <Typography
                           variant="caption"
@@ -810,8 +827,8 @@ export const NotificationCenter: React.FC = () => {
                           {metrics.networkInfo.rtt}ms
                         </Typography>
                       </Box>
-                    </Grid>
-                  </Grid>
+                    </Box>
+                  </Box>
                 </CardContent>
               </CardAug>
             )}

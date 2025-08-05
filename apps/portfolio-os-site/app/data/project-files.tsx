@@ -1,5 +1,4 @@
 import {
-  FileSystemItem,
   ProjectData,
   ProjectTemplateProps,
   ProjectTemplate,
@@ -29,6 +28,7 @@ import {
   Tune,
 } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
+import { FileSystemItem } from '@jc/file-system';
 
 const hasNavigation = false;
 
@@ -37,7 +37,7 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
-  name: 'AtomicVisualizer.proj',
+  name: 'Atomic-Visualizer.proj',
   icon: <Science fontSize="large" />,
   type: 'file',
   size: 342560, // ~335KB - substantial 3D web application
@@ -73,7 +73,7 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
-  name: 'GravityScavenger.proj',
+  name: 'Gravity-Scavenger.proj',
   icon: <RocketLaunch fontSize="large" />,
   type: 'file',
   size: 1572864, // ~1.5MB - comprehensive Unity game with physics, AI, and procedural systems
@@ -111,7 +111,7 @@ export const simplisafeJawaFileSystemItem: FileSystemItem<
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
-  name: 'ProjectJawa.proj',
+  name: 'Simplisafe-Jawa.proj',
   icon: <Security fontSize="large" />,
   type: 'file',
   size: 2097152, // 2MB - comprehensive enterprise system with full-stack architecture
@@ -149,7 +149,7 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
-  name: 'LightformController.proj',
+  name: 'Lightform-Controller.proj',
   icon: <MovieFilter fontSize="large" />,
   type: 'file',
   size: 1835008, // ~1.75MB - PWA with hardware integration, multiple apps, and creative coding
@@ -223,7 +223,7 @@ export const tunecraftFileSystemItem: FileSystemItem<
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
-  name: 'TuneCraft.proj',
+  name: 'Tune-Craft.proj',
   icon: <MusicNote fontSize="large" />,
   type: 'file',
   size: 1048576, // 1MB - computer vision + TouchDesigner + Ableton integration project
@@ -336,7 +336,7 @@ export const climateDataVizFileSystemItem: FileSystemItem<
   BrutalistTemplateProps
 > = {
   id: uuidv4(),
-  name: 'PlanetHabitability.proj',
+  name: 'Planet-Habitability.proj',
   icon: <ThermostatAuto fontSize="large" />,
   type: 'file',
   size: 428800, // ~419KB - complex data visualization with multiple charts
