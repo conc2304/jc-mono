@@ -8,7 +8,16 @@ export const EducationExperienceSection = ({
   education: Education[];
 }) => {
   return (
-    <Box mb={4} mx="auto" maxWidth="75%">
+    <Box
+      sx={{
+        mb: 4,
+        maxWidth: '100%',
+        mx: 'auto',
+        '@container (min-width: 769px)': {
+          maxWidth: '75%',
+        },
+      }}
+    >
       <SectionTitle title="Education & Professional Development" />
       {education.map((edu, index) => (
         <Card

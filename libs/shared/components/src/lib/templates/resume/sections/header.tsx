@@ -1,20 +1,4 @@
-import {
-  Box,
-  Typography,
-  Container,
-  Paper,
-  Chip,
-  Divider,
-  Grid,
-  Link,
-  List,
-  ListItem,
-  ListItemText,
-  Card,
-  CardContent,
-  Stack,
-  LinkProps,
-} from '@mui/material';
+import { Box, Typography, Link, Stack, LinkProps } from '@mui/material';
 import {
   Email,
   LocationOn,
@@ -33,7 +17,12 @@ const linkProps: LinkProps = {
   variant: 'body2',
   target: '_blank',
   color: 'textSecondary',
-  sx: { textDecoration: 'none' },
+  sx: {
+    textDecoration: 'none',
+    '&:hover': {
+      color: 'info.main',
+    },
+  },
 };
 
 export const ResumeHeader = ({ title, contactInfo }: ResumeHeaderProps) => {

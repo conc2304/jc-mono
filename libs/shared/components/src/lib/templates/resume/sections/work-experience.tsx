@@ -10,6 +10,7 @@ import {
   Stack,
 } from '@mui/material';
 import { WorkExperience } from '../types';
+import { SectionTitle } from './section-title';
 
 export const WorkExperienceSection = ({
   workExperience,
@@ -17,16 +18,17 @@ export const WorkExperienceSection = ({
   workExperience: WorkExperience[];
 }) => {
   return (
-    <Box mb={4} maxWidth="75%" mx="auto">
-      <Typography
-        variant="h5"
-        component="h3"
-        gutterBottom
-        color="primary"
-        fontWeight="bold"
-      >
-        Professional Experience
-      </Typography>
+    <Box
+      sx={{
+        mb: 4,
+        maxWidth: '100%',
+        mx: 'auto',
+        '@container (min-width: 769px)': {
+          maxWidth: '75%',
+        },
+      }}
+    >
+      <SectionTitle title="Professional Experience" />
       {workExperience.map((job, index) => (
         <Card
           key={index}

@@ -38,7 +38,12 @@ export const ResumeTemplate = ({
     <Container
       className="ResumeTemplate--root"
       maxWidth="lg"
-      sx={{ py: 4, height: '100%', overflowY: 'auto' }}
+      sx={{
+        py: 4,
+        height: '100%',
+        overflowY: 'auto',
+        containerType: 'inline-size',
+      }}
     >
       <Paper elevation={3} sx={{ p: 4 }}>
         <ResumeHeader title={title} contactInfo={contactInfo} />

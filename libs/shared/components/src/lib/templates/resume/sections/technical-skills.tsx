@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { TechnicalSkills } from '../types';
 import { formatLabel } from '@jc/utils';
+import { SectionTitle } from './section-title';
 interface TechnicalSkillsCardProps {
   title: string;
   skills: string[];
@@ -43,15 +44,8 @@ export const TechnicalSkillsSection = ({
 }) => {
   return (
     <Box mb={4}>
-      <Typography
-        variant="h5"
-        component="h5"
-        gutterBottom
-        color="primary"
-        fontWeight="bold"
-      >
-        Technical Skills
-      </Typography>
+      <SectionTitle title="Technical Skills" />
+
       <Grid container spacing={2}>
         {Object.entries(technicalSkills).map(([key, value], i, arr) => {
           return (
