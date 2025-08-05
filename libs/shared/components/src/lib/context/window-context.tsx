@@ -11,8 +11,9 @@ import { useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
 import { FileManager } from '../organisms/file-manager';
-import { WindowMetaData, IconPosition, FileSystemItem } from '../types';
+import { WindowMetaData, IconPosition } from '../types';
 import { findFileSystemItemByIdWithPath } from '../utils';
+import { FileSystemItem } from '@jc/file-system';
 
 interface DragRef {
   startX: number;
@@ -805,6 +806,7 @@ const getWindowContent = (
         folderContents={fsItem.children || []}
         fileSystemItems={fileSystemItems}
         updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
+        hasPreviewPanel={true}
       />
     );
   } else {

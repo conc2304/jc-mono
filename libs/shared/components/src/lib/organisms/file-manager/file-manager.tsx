@@ -10,18 +10,24 @@ import {
 } from '../../molecules';
 import { ViewControls } from '../../molecules/file-view-controls';
 import { PreviewPanel } from '../../molecules/preview-panel';
-import { BaseFileSystemItem, SortBy, SortOrder, ViewMode } from '../../types';
+import { SortBy, SortOrder, ViewMode } from '../../types';
+import { BaseFileSystemItem, useFileSystemManager } from '@jc/file-system';
 
 interface FileManagerProps {
   initialPath: string;
   folderContents: BaseFileSystemItem[];
   fileSystemItems: BaseFileSystemItem[];
+  hasQuickAccessPanel?: boolean;
+  hasPreviewPanel?: boolean;
   updateWindowName: (name: string, icon: ReactNode) => void;
 }
+
 export const FileManager = ({
   fileSystemItems,
   initialPath,
   folderContents: folderContentsProp,
+  hasQuickAccessPanel = false,
+  hasPreviewPanel = false,
   updateWindowName,
 }: FileManagerProps) => {
   const [folderContents, setFolderContents] = useState(folderContentsProp);
@@ -125,6 +131,8 @@ export const FileManager = ({
     setDraggedItems,
   };
 
+  const { getItemById } = useFileSystemManager(fileSystemItems);
+  const selectedItem = getItemById(selectedItems[0]);
   return (
     <FileSystemContext.Provider value={contextValue}>
       <Box
@@ -135,24 +143,29 @@ export const FileManager = ({
         <ViewControls />
 
         <Box sx={{ flex: 1, display: 'flex', minHeight: 0 }}>
-          <QuickAccessPanel
-            collapsed={quickAccessCollapsed}
-            onToggle={() => setQuickAccessCollapsed(!quickAccessCollapsed)}
-          />
+          {hasQuickAccessPanel && (
+            <QuickAccessPanel
+              collapsed={quickAccessCollapsed}
+              onToggle={() => setQuickAccessCollapsed(!quickAccessCollapsed)}
+            />
+          )}
 
           <Box sx={{ flex: 2, overflow: 'auto' }}>
             <FileListView items={getFolderItems()} />
           </Box>
 
-          <Box
-            className="PreviewPanel--container"
-            sx={{ flexShrink: 0, display: 'flex', minHeight: 0 }}
-          >
-            <PreviewPanel
-              collapsed={previewCollapsed}
-              onToggle={() => setPreviewCollapsed(!previewCollapsed)}
-            />
-          </Box>
+          {hasPreviewPanel && (
+            <Box
+              className="PreviewPanel--container"
+              sx={{ flexShrink: 0, display: 'flex', minHeight: 0 }}
+            >
+              <PreviewPanel
+                collapsed={previewCollapsed}
+                onToggle={() => setPreviewCollapsed(!previewCollapsed)}
+                selectedItem={selectedItem || null}
+              />
+            </Box>
+          )}
         </Box>
       </Box>
     </FileSystemContext.Provider>

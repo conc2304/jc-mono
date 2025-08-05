@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 
-import { BaseFileSystemItem, SortBy, SortOrder, ViewMode } from '../types';
+import { SortBy, SortOrder, ViewMode } from '../types';
+import { BaseFileSystemItem } from '@jc/file-system';
 
 export const FileSystemContext = createContext<{
   fs: BaseFileSystemItem[];

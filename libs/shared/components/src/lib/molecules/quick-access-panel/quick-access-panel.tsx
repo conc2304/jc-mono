@@ -10,9 +10,11 @@ import {
 } from '@mui/material';
 import { ChevronDown, ChevronRight, List } from 'lucide-react';
 
-import { quickAccessItems } from './mockData';
+// import { quickAccessItems } from './mockData';
+
 import { FileSystemContext } from '../../context';
 
+const quickAccessItems = [];
 interface QuickAccessPanelProps {
   collapsed: boolean;
   onToggle: () => void;

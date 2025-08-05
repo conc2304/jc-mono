@@ -1,25 +1,23 @@
-import { useContext } from 'react';
 import { Box, Chip, Divider, IconButton, Typography } from '@mui/material';
 import { ChevronDown, ChevronLeft, Info } from 'lucide-react';
 
-import { FileSystemContext } from '../../context';
+import { FileSystemItem } from '@jc/file-system';
 
 interface PreviewPanelProps {
   collapsed: boolean;
   onToggle: () => void;
+  selectedItem?: FileSystemItem | null;
 }
 
-export const PreviewPanel = ({ collapsed, onToggle }: PreviewPanelProps) => {
-  const context = useContext(FileSystemContext);
-  const selectedItem =
-    context?.selectedItems.length === 1
-      ? context.fs.find((item) => item.id === context.selectedItems[0])
-      : null;
-
+export const PreviewPanel = ({
+  collapsed,
+  onToggle,
+  selectedItem = null,
+}: PreviewPanelProps) => {
   return (
     <Box
       sx={{
-        width: collapsed ? 48 : 250,
+        width: collapsed ? 'auto' : 250,
         height: '100%',
         borderLeft: 1,
         borderColor: 'divider',

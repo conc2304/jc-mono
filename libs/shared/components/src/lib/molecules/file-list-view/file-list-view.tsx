@@ -2,7 +2,7 @@ import { useCallback, useContext } from 'react';
 
 import { IconsView, ListView, DetailsView } from './views';
 import { FileSystemContext, useWindowActions } from '../../context';
-import { BaseFileSystemItem } from '../../types';
+import { BaseFileSystemItem } from '@jc/file-system';
 
 export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
@@ -12,7 +12,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     (item: BaseFileSystemItem, event: React.MouseEvent) => {
       event.preventDefault();
       if (event.button === 2) return;
-      context?.selectItem(item.id, true);
+      context?.selectItem(item.id, false); // TODO handle multi select
     },
     [context]
   );
