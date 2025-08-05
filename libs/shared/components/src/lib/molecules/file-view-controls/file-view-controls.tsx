@@ -7,13 +7,7 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import {
-  ArrowUpDown,
-  Grid3x3,
-  LayoutGrid,
-  LayoutList,
-  ListIcon,
-} from 'lucide-react';
+import { ArrowUpDown, LayoutGrid, LayoutList, ListIcon } from 'lucide-react';
 
 import { FileSystemContext } from '../../context';
 import { SortBy, ViewMode } from '../../types';

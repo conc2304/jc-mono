@@ -1,17 +1,10 @@
 import { useContext } from 'react';
-import {
-  Box,
-  Chip,
-  inputAdornmentClasses,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
-import { Star } from 'lucide-react';
+import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
 import { FileSystemContext } from '../../../context';
-import { BaseFileSystemItem } from '../../../types';
+import { BaseFileSystemItem } from '@jc/file-system';
+import { OverflowChipContainer } from '../../overflow-chip-container';
+import { Star } from 'lucide-react';
 
 interface ListViewProps {
   items: BaseFileSystemItem[];
@@ -47,24 +40,12 @@ export const ListView = ({
           onDragStart={() => onDragStart(item)}
           onDragOver={(e) => onDragOver(item, e)}
           onDrop={(e) => onDrop(item, e)}
-          secondaryAction={
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {item.metadata.tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  size="small"
-                  variant="outlined"
-                  slotProps={{
-                    label: {
-                      color: 'textPrimary',
-                    },
-                  }}
-                />
-              ))}
-              {item.metadata.favorite && <Star size={16} color="gold" />}
-            </Box>
-          }
+          // secondaryAction={
+          //   // <OverflowChipContainer
+          //   //   tags={item.metadata.tags}
+          //   //   favorite={item.metadata.favorite}
+          //   // />
+          // }
           sx={(theme) => ({
             // TODO
             background: context?.selectedItems.includes(item.id)
@@ -76,6 +57,7 @@ export const ListView = ({
           <ListItemText
             primary={item.name}
             secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
+            sx={{ flex: '1 0 auto' }}
             slotProps={{
               primary: {
                 color: 'textPrimary',
@@ -83,6 +65,18 @@ export const ListView = ({
               secondary: {
                 color: 'textSecondary',
               },
+            }}
+          />
+          <OverflowChipContainer
+            tags={item.metadata.tags}
+            favorite={item.metadata.favorite}
+          />
+          <Star
+            size={16}
+            color="gold"
+            style={{
+              flexShrink: 0,
+              visibility: item.metadata.favorite ? 'visible' : 'hidden',
             }}
           />
         </ListItem>
