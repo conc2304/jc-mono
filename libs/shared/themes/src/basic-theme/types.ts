@@ -13,7 +13,13 @@ export interface EnhancedThemeOption {
   id: string;
   name: string;
   description?: string;
-  category: 'cyberpunk' | 'retro' | 'corporate' | 'minimal' | 'synthwave';
+  category:
+    | 'cyberpunk'
+    | 'retro'
+    | 'corporate'
+    | 'minimal'
+    | 'synthwave'
+    | 'custom';
   // Define both light and dark variants
   lightPalette: PaletteOptions;
   darkPalette: PaletteOptions;

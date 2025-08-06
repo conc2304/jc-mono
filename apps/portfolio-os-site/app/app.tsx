@@ -2,10 +2,10 @@ import { darken, rgbToHex, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
 import {
   // CursorTrail,
-  CursorTrailConfig,
+  // CursorTrailConfig,
   GradientShader,
 } from '@jc/ui-components';
-import { remToPixels } from '@jc/themes';
+// import { remToPixels } from '@jc/themes';
 import { FileSystem } from './data/file-system';
 
 export function App() {

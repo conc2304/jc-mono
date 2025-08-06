@@ -25,7 +25,7 @@ import {
   Monitor,
 } from 'lucide-react';
 
-import { useColorMode } from './color-mode-context';
+import { useColorMode } from '../context/color-mode-context';
 import { EnhancedThemeOption, ColorMode } from '../types';
 
 // Styled components with theme-aware brutalist sci-fi aesthetic
@@ -218,7 +218,7 @@ const ColorSwatch = styled(Box)<{ color: string }>(({ color, theme }) => ({
   display: 'inline-block',
 }));
 
-interface EnhancedThemeSwitcherProps {
+export interface EnhancedThemeSwitcherProps {
   themes: EnhancedThemeOption[];
   selectedThemeId: string;
   onThemeChange: (themeId: string, theme: EnhancedThemeOption) => void;
