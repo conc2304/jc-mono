@@ -3,7 +3,13 @@
   "include": [],
   "references": [
     {
+      "path": "../utils"
+    },
+    {
       "path": "../themes"
+    },
+    {
+      "path": "../file-system"
     },
     {
       "path": "./tsconfig.lib.json"

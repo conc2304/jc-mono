@@ -6,6 +6,9 @@
       "path": "../../libs/features/boot-loader"
     },
     {
+      "path": "../../libs/shared/file-system"
+    },
+    {
       "path": "../../libs/features/portfolio"
     },
     {

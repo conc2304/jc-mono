@@ -11,7 +11,17 @@
 		"typescript.tsdk": "node_modules/typescript/lib",
 		"nxConsole.generateAiAgentRules": true,
 		"cSpell.words": [
-			"gsap"
+			"gsap",
+			"simplisafe",
+			"uuidv"
+		],
+		"cSpell.ignoreWords": [
+			"simplisafe",
+			"terrainify",
+			"tunecraft",
+			"uuidv",
+			"verdantia",
+			"vyzby"
 		]
 	}
 }

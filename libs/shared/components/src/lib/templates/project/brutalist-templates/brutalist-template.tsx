@@ -59,7 +59,7 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
 }));
 
 export interface BrutalistTemplateProps {
-  hasNavigation: boolean;
+  hasNavigation?: boolean;
 }
 
 export const BrutalistTemplate = ({

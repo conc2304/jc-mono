@@ -1,7 +1,7 @@
 import { darken, rgbToHex, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
 import {
-  CursorTrail,
+  // CursorTrail,
   CursorTrailConfig,
   GradientShader,
 } from '@jc/ui-components';
@@ -21,18 +21,18 @@ export function App() {
 
   const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
 
-  const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
-  const cursorConfig: CursorTrailConfig = {
-    floorHeight: 0,
-    trailLength: 6,
-    trailDecayRate: 0.1,
-    wallBounce: 0.5,
-    groundBounce: 0.3,
-    returnDuration: 300,
-    returnGlowColor: theme.palette.primary.main,
-    cursorColor: theme.palette.primary.main,
-    returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
-  };
+  // const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+  // const cursorConfig: CursorTrailConfig = {
+  //   floorHeight: 0,
+  //   trailLength: 6,
+  //   trailDecayRate: 0.1,
+  //   wallBounce: 0.5,
+  //   groundBounce: 0.3,
+  //   returnDuration: 300,
+  //   returnGlowColor: theme.palette.primary.main,
+  //   cursorColor: theme.palette.primary.main,
+  //   returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
+  // };
 
   return (
     <>
