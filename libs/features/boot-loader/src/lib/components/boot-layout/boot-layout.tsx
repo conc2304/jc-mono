@@ -6,6 +6,7 @@ import {
   Typography,
   Grid,
   useTheme,
+  useMediaQuery,
   lighten,
   darken,
 } from '@mui/material';
@@ -74,6 +75,12 @@ const sampleData: RadarData = [
 export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
   const theme = useTheme();
 
+  // Responsive breakpoints
+  const isXs = useMediaQuery(theme.breakpoints.down('sm')); // < 600px - Mobile
+  const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md')); // 600px - 900px - Tablet
+  const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg')); // 900px - 1200px - Small desktop
+  const isLg = useMediaQuery(theme.breakpoints.up('lg')); // >= 1200px - Large desktop
+
   const [progress, setProgress] = useState({
     current: 0,
     total: 0,
@@ -118,6 +125,370 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
 
   const cloudGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
 
+  // Mobile Layout (XS - < 600px)
+  if (isXs) {
+    return (
+      <BootContainer
+        className={'BootContainer--root ' + className}
+        style={{
+          backgroundImage: animateBackground ? `url(${bgUrl})` : 'initial',
+          backgroundSize: `${backgroundSize}px`,
+          backgroundRepeat: 'repeat',
+          backgroundBlendMode: backgroundBlendMode,
+        }}
+      >
+        <BrowserFrame elevation={0}>
+          <Header compact={true} />
+
+          {/* Mobile Content - Minimal Layout */}
+          <Box
+            p={1}
+            height="calc(100vh - 200px)"
+            display="flex"
+            flexDirection="column"
+            gap={1}
+          >
+            {/* Boot Text Panel - Takes most of the space */}
+            <Box
+              flex={1}
+              data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
+              sx={(theme) => ({
+                minHeight: '300px',
+                '&[data-augmented-ui]': {
+                  '--aug-bl': '0.5rem',
+                  '--aug-br': '0.5rem',
+                  '--aug-tl': '0.5rem',
+                  '--aug-tr1': '1rem',
+                  '--aug-tr2': '2rem',
+                  '--aug-tr-extend2': '25%',
+                  '--aug-border-all': '1px',
+                  '--aug-border-bg': theme.palette.primary.main,
+                },
+              })}
+            >
+              <BootText
+                bootMessages={bootMessages}
+                typeSpeed={1.8}
+                lineDelay={1.2}
+                cursorChar="█"
+                scrambleChars={12}
+                textColor={
+                  theme.palette.primary[theme.palette.getInvertedMode()]
+                }
+                scrambleDuration={0.6}
+                charDelay={0.05}
+                scrambleCharSet={scrambleCharacterSet}
+                hoverScrambleChars={8}
+                hoverScrambleDuration={0.5}
+                onProgress={handleProgress}
+                onComplete={handleBootComplete}
+              />
+            </Box>
+
+            {/* Enter Button */}
+            <AugmentedButton
+              variant="contained"
+              shape="buttonRight"
+              fullWidth
+              size="large"
+              sx={{ height: '60px' }}
+              href="/desktop"
+            >
+              <Typography fontSize={'1.5rem'}>ENTER</Typography>
+            </AugmentedButton>
+          </Box>
+
+          <Footer />
+        </BrowserFrame>
+      </BootContainer>
+    );
+  }
+
+  // Tablet Layout (SM - 600px to 900px)
+  if (isSm) {
+    return (
+      <BootContainer
+        className={'BootContainer--root ' + className}
+        style={{
+          backgroundImage: animateBackground ? `url(${bgUrl})` : 'initial',
+          backgroundSize: `${backgroundSize}px`,
+          backgroundRepeat: 'repeat',
+          backgroundBlendMode: backgroundBlendMode,
+        }}
+      >
+        <BrowserFrame elevation={0}>
+          <Header />
+
+          <Box p={2} height={'100%'}>
+            <Grid container spacing={2} height="100%">
+              {/* Single column layout with essential components */}
+              <Grid size={{ xs: 12 }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={2}
+                  height="100%"
+                >
+                  {/* Torus Scanner */}
+                  <TorusLoaderCardAug sx={{ height: '250px' }}>
+                    <ScanlinesOverlay />
+                    <TorusFieldProgressMemo
+                      colors={{
+                        backgroundColor: theme.palette.background.paper,
+                        beamColor: theme.palette.getInvertedMode('info'),
+                        torusColor: theme.palette.primary.main,
+                        particleColor: theme.palette.getInvertedMode('info'),
+                        verticalLineColor: theme.palette.warning.main,
+                        themeMode: theme.palette.mode,
+                      }}
+                    />
+                  </TorusLoaderCardAug>
+
+                  {/* Boot Text Panel */}
+                  <Box
+                    flex={1}
+                    data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
+                    sx={(theme) => ({
+                      minHeight: '200px',
+                      '&[data-augmented-ui]': {
+                        '--aug-bl': '0.5rem',
+                        '--aug-br': '0.5rem',
+                        '--aug-tl': '0.5rem',
+                        '--aug-tr1': '1rem',
+                        '--aug-tr2': '2rem',
+                        '--aug-tr-extend2': '25%',
+                        '--aug-border-all': '1px',
+                        '--aug-border-bg': theme.palette.primary.main,
+                      },
+                    })}
+                  >
+                    <BootText
+                      bootMessages={bootMessages}
+                      typeSpeed={1.8}
+                      lineDelay={1.2}
+                      cursorChar="█"
+                      scrambleChars={12}
+                      textColor={
+                        theme.palette.primary[theme.palette.getInvertedMode()]
+                      }
+                      scrambleDuration={0.6}
+                      charDelay={0.05}
+                      scrambleCharSet={scrambleCharacterSet}
+                      hoverScrambleChars={8}
+                      hoverScrambleDuration={0.5}
+                      onProgress={handleProgress}
+                      onComplete={handleBootComplete}
+                    />
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Bottom Panel with Enter Button */}
+          <BottomPanel>
+            <Grid container columns={12} spacing={2} alignItems="center">
+              <Grid size={8}>
+                <MultiplexText>MULTIPLEX</MultiplexText>
+                <SystemsText>SYSTEMS</SystemsText>
+              </Grid>
+              <Grid size={4}>
+                <AugmentedButton
+                  variant="contained"
+                  shape="buttonRight"
+                  fullWidth
+                  size="large"
+                  sx={{ height: '80px' }}
+                  href="/desktop"
+                >
+                  <Typography fontSize={'2rem'}>ENTER</Typography>
+                </AugmentedButton>
+              </Grid>
+            </Grid>
+          </BottomPanel>
+
+          <Footer />
+        </BrowserFrame>
+      </BootContainer>
+    );
+  }
+
+  // Small Desktop Layout (MD - 900px to 1200px)
+  if (isMd) {
+    return (
+      <BootContainer
+        className={'BootContainer--root ' + className}
+        style={{
+          backgroundImage: animateBackground ? `url(${bgUrl})` : 'initial',
+          backgroundSize: `${backgroundSize}px`,
+          backgroundRepeat: 'repeat',
+          backgroundBlendMode: backgroundBlendMode,
+        }}
+      >
+        <BrowserFrame elevation={0}>
+          <Header />
+
+          <Box p={2} height={600}>
+            <Grid container spacing={2} height="100%">
+              {/* Left Panel - Reduced */}
+              <Grid size={{ xs: 4 }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={2}
+                  height="100%"
+                >
+                  <RadarChartBox>
+                    <AnimatedRadarChart
+                      id="animated-radar"
+                      data={sampleData}
+                      animationConfig={{
+                        animationSpeed: 1500,
+                        numTrails: 4,
+                        trailOffset: 80.0,
+                        noiseScale: 1.5,
+                        trailIntensity: 1,
+                        enableAnimation: true,
+                        easing: easeSinInOut,
+                      }}
+                      levels={5}
+                      showLabels={false}
+                      labelFactor={1}
+                      opacityArea={0.1}
+                      strokeWidth={1}
+                      dotRadius={3}
+                      lineType="curved"
+                      colors={{
+                        primary: theme.palette.primary.main,
+                        accent: theme.palette.warning.main,
+                        series: new Array(3).fill('').map((_, i) => {
+                          const fn =
+                            theme.palette.mode === 'light' ? darken : lighten;
+                          return fn(
+                            theme.palette.primary[theme.palette.mode],
+                            remap(i, 0, 3, 0, 0.5)
+                          );
+                        }),
+                      }}
+                      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    />
+                  </RadarChartBox>
+
+                  <GifContainer url={cloudGif} sx={{ height: 128 }} />
+                </Box>
+              </Grid>
+
+              {/* Center Panel */}
+              <Grid size={{ xs: 8 }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={2}
+                  height="100%"
+                >
+                  <TorusLoaderCardAug>
+                    <ScanlinesOverlay />
+                    <TorusFieldProgressMemo
+                      colors={{
+                        backgroundColor: theme.palette.background.paper,
+                        beamColor: theme.palette.getInvertedMode('info'),
+                        torusColor: theme.palette.primary.main,
+                        particleColor: theme.palette.getInvertedMode('info'),
+                        verticalLineColor: theme.palette.warning.main,
+                        themeMode: theme.palette.mode,
+                      }}
+                    />
+                  </TorusLoaderCardAug>
+
+                  <Box
+                    flex={1}
+                    data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
+                    sx={(theme) => ({
+                      minHeight: '200px',
+                      '&[data-augmented-ui]': {
+                        '--aug-bl': '0.5rem',
+                        '--aug-br': '0.5rem',
+                        '--aug-tl': '0.5rem',
+                        '--aug-tr1': '1rem',
+                        '--aug-tr2': '2rem',
+                        '--aug-tr-extend2': '25%',
+                        '--aug-border-all': '1px',
+                        '--aug-border-bg': theme.palette.primary.main,
+                      },
+                    })}
+                  >
+                    <BootText
+                      bootMessages={bootMessages}
+                      typeSpeed={1.8}
+                      lineDelay={1.2}
+                      cursorChar="█"
+                      scrambleChars={12}
+                      textColor={
+                        theme.palette.primary[theme.palette.getInvertedMode()]
+                      }
+                      scrambleDuration={0.6}
+                      charDelay={0.05}
+                      scrambleCharSet={scrambleCharacterSet}
+                      hoverScrambleChars={8}
+                      hoverScrambleDuration={0.5}
+                      onProgress={handleProgress}
+                      onComplete={handleBootComplete}
+                    />
+                  </Box>
+
+                  <Typography
+                    variant="caption"
+                    align="right"
+                    sx={{ color: 'primary.main', mt: 0.5 }}
+                  >
+                    YOUNGSTA X SLEEPER
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <BottomPanel>
+            <Grid container columns={12} spacing={4}>
+              <Grid size={8}>
+                <MultiplexText>MULTIPLEX</MultiplexText>
+                <SystemsText>SYSTEMS</SystemsText>
+              </Grid>
+
+              <BackgroundControls
+                backgroundAnimated={animateBackground}
+                onBackgroundSizeChange={(action) =>
+                  handleBackgroundResize(action)
+                }
+                onBlendModeChange={(blendMode) =>
+                  setBackgroundBlendMode(blendMode)
+                }
+                onToggleBackground={() => setAnimateBackground((prev) => !prev)}
+                blendModeActive={backgroundBlendMode}
+              />
+
+              <Grid size={{ xs: 2 }} sx={{ flex: 1 }}>
+                <AugmentedButton
+                  variant="contained"
+                  shape="buttonRight"
+                  fullWidth
+                  size="large"
+                  sx={{ height: '100%' }}
+                  href="/desktop"
+                >
+                  <Typography fontSize={'2.5rem'}>ENTER</Typography>
+                </AugmentedButton>
+              </Grid>
+            </Grid>
+          </BottomPanel>
+
+          <Footer />
+        </BrowserFrame>
+      </BootContainer>
+    );
+  }
+
+  // Full Desktop Layout (LG+ - >= 1200px) - Original layout
   return (
     <BootContainer
       className={'BootContainer--root ' + className}

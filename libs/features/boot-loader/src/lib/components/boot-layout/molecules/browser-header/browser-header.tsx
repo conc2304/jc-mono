@@ -20,11 +20,13 @@ export const AddressBar = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-export const Header = () => (
+export const Header = ({ compact = false }) => (
   <BrowserHeader>
     <AddressBar>CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD: *******</AddressBar>
-    <Typography variant="caption" sx={{ color: 'primary.main' }}>
-      MAINFRAME-RESEARCH
-    </Typography>
+    {!compact && (
+      <Typography variant="caption" sx={{ color: 'primary.main' }}>
+        MAINFRAME-RESEARCH
+      </Typography>
+    )}
   </BrowserHeader>
 );
