@@ -9,7 +9,6 @@ import React, {
 } from 'react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, Theme } from '@mui/material/styles';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 
 import { ColorModeProvider, useColorMode } from './color-mode-context';
 import { createThemeFromOptions } from '../theme';
@@ -330,12 +329,12 @@ const EnhancedThemeProviderInner: React.FC<{
 
   return (
     <EnhancedThemeContext.Provider value={contextValue}>
-      <AppRouterCacheProvider>
-        <ThemeProvider theme={muiTheme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
-      </AppRouterCacheProvider>
+      {/* <AppRouterCacheProvider> */}
+      <ThemeProvider theme={muiTheme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+      {/* </AppRouterCacheProvider> */}
     </EnhancedThemeContext.Provider>
   );
 };
