@@ -337,7 +337,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 fullWidth
                 size="large"
                 sx={{ height: '100%' }}
-                href="/"
+                href="/desktop"
               >
                 <Typography fontSize={'2.5rem'}>ENTER</Typography>
               </AugmentedButton>

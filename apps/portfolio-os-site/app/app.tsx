@@ -1,68 +1,92 @@
-import { darken, rgbToHex, useTheme } from '@mui/material';
-import { DesktopOS } from '@jc/desktop-OS';
-import {
-  // CursorTrail,
-  // CursorTrailConfig,
-  GradientShader,
-} from '@jc/ui-components';
-// import { remToPixels } from '@jc/themes';
-import { FileSystem } from './data/file-system';
+// import { darken, rgbToHex, useTheme } from '@mui/material';
+// import { DesktopOS } from '@jc/desktop-OS';
+// import {
+//   // CursorTrail,
+//   // CursorTrailConfig,
+//   GradientShader,
+// } from '@jc/ui-components';
+// // import { remToPixels } from '@jc/themes';
+// import { FileSystem } from './data/file-system';
 
-export function App() {
-  const theme = useTheme();
+// export function App() {
+//   const theme = useTheme();
 
-  const bgColors = [
-    theme.palette.background.default,
-    rgbToHex(darken(theme.palette.primary[theme.palette.mode], 0.3)),
-    rgbToHex(darken(theme.palette.secondary.dark, 0.3)),
-    theme.palette.background.default,
-    rgbToHex(darken(theme.palette.getInvertedMode('primary'), 0.6)),
-  ];
+//   const bgColors = [
+//     theme.palette.background.default,
+//     rgbToHex(darken(theme.palette.primary[theme.palette.mode], 0.3)),
+//     rgbToHex(darken(theme.palette.secondary.dark, 0.3)),
+//     theme.palette.background.default,
+//     rgbToHex(darken(theme.palette.getInvertedMode('primary'), 0.6)),
+//   ];
 
-  const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
+//   const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
 
-  // const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
-  // const cursorConfig: CursorTrailConfig = {
-  //   floorHeight: 0,
-  //   trailLength: 6,
-  //   trailDecayRate: 0.1,
-  //   wallBounce: 0.5,
-  //   groundBounce: 0.3,
-  //   returnDuration: 300,
-  //   returnGlowColor: theme.palette.primary.main,
-  //   cursorColor: theme.palette.primary.main,
-  //   returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
-  // };
+//   // const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
+//   // const cursorConfig: CursorTrailConfig = {
+//   //   floorHeight: 0,
+//   //   trailLength: 6,
+//   //   trailDecayRate: 0.1,
+//   //   wallBounce: 0.5,
+//   //   groundBounce: 0.3,
+//   //   returnDuration: 300,
+//   //   returnGlowColor: theme.palette.primary.main,
+//   //   cursorColor: theme.palette.primary.main,
+//   //   returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
+//   // };
 
+//   return (
+//     <>
+//       {/* TODO make cursor something that you turn on */}
+//       {/* <CursorTrail {...cursorConfig} /> */}
+//       <DesktopOS fileSystem={FileSystem} />
+//       <GradientShader
+//         className={key}
+//         key={key}
+//         colors={bgColors}
+//         resolution={0.15}
+//         scrollSpeed={0.04}
+//         scale={0.75}
+//         angle={135}
+//         width={window.innerWidth}
+//         height={window.innerHeight}
+//         isBackground
+//         autoResize
+//         style={{
+//           position: 'absolute',
+//           top: 0,
+//           bottom: 0,
+//           left: 0,
+//           right: 0,
+//           zIndex: -1,
+//           opacity: 0.3,
+//         }}
+//       />
+//     </>
+//   );
+// }
+
+// export default App;
+
+import { Box } from '@mui/system';
+import { BootMessage, BootLayout } from '@jc/boot-loader';
+
+const bootMessages: BootMessage[] = [
+  'Initializing system...',
+  ['Loading kernel modules...', 'Injecting backdoor...'],
+  'Starting network services...',
+  ['Mounting file systems...', 'Accessing classified data...'],
+  'Starting user services...',
+  ['System boot complete.', 'Welcome, Agent Smith.'],
+  '',
+  'Welcome to Terminal OS v2.1.0',
+  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
+];
+
+export default function App() {
   return (
-    <>
-      {/* TODO make cursor something that you turn on */}
-      {/* <CursorTrail {...cursorConfig} /> */}
-      <DesktopOS fileSystem={FileSystem} />
-      <GradientShader
-        className={key}
-        key={key}
-        colors={bgColors}
-        resolution={0.15}
-        scrollSpeed={0.04}
-        scale={0.75}
-        angle={135}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        isBackground
-        autoResize
-        style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: -1,
-          opacity: 0.3,
-        }}
-      />
-    </>
+    <Box>
+      {/* <BootUpSequence bootMessages={bootMessages} /> */}
+      <BootLayout />
+    </Box>
   );
 }
-
-export default App;
