@@ -11,7 +11,7 @@ interface ListViewProps {
   onItemClick: (item: BaseFileSystemItem, event: React.MouseEvent) => void;
   onItemDoubleClick: (
     item: BaseFileSystemItem,
-    event: React.MouseEvent
+    event: React.MouseEvent | React.TouchEvent
   ) => void;
   onDragStart: (item: BaseFileSystemItem) => void;
   onDragOver: (targetItem: BaseFileSystemItem, e: React.DragEvent) => void;
@@ -37,6 +37,7 @@ export const ListView = ({
           draggable
           onClick={(e) => onItemClick(item, e)}
           onDoubleClick={(e) => onItemDoubleClick(item, e)}
+          onTouchEnd={(e) => onItemDoubleClick(item, e)}
           onDragStart={() => onDragStart(item)}
           onDragOver={(e) => onDragOver(item, e)}
           onDrop={(e) => onDrop(item, e)}

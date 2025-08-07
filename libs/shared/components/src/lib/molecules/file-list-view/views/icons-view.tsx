@@ -23,6 +23,7 @@ export const IconsView = ({
           <Box
             onClick={(e) => onItemClick(item, e)}
             onDoubleClick={(e) => onItemDoubleClick(item, e)}
+            onTouchEnd={(e) => onItemDoubleClick(item, e)}
             onDragStart={() => onDragStart(item)}
             onDragOver={(e) => onDragOver(item, e)}
             onDrop={(e) => onDrop(item, e)}

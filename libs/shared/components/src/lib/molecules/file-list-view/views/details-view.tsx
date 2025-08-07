@@ -39,6 +39,7 @@ export const DetailsView = ({
             hover
             selected={context?.selectedItems.includes(item.id)}
             onDoubleClick={(e) => onItemDoubleClick(item, e)}
+            onTouchEnd={(e) => onItemDoubleClick(item, e)}
             onClick={(e) => onItemClick(item, e)}
             draggable
             onDragStart={() => onDragStart(item)}
