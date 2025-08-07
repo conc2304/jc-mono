@@ -103,7 +103,7 @@ export const generateDefaultIconPositions = (
 
   switch (arrangement) {
     case 'grid': {
-      const ICON_SIZE = 80;
+      const ICON_SIZE = 100;
       const GRID_MARGIN = 20;
       const ICONS_PER_COLUMN = Math.floor(
         (window.innerHeight - 100) / ICON_SIZE

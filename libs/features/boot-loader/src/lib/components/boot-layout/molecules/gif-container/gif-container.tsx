@@ -1,5 +1,5 @@
 import { alpha, BoxProps, Paper, styled, Theme, Box } from '@mui/material';
-import { ScanlinesOverlay } from '../../atoms';
+import { ScanLinesOverlay } from '../../atoms';
 
 export const Container = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -50,7 +50,7 @@ export const GifContainer = ({
   return (
     <Container data-augmented-ui="border br-clip" {...boxProps}>
       <Inner elevation={0} data-augmented-ui="border br-clip">
-        <ScanlinesOverlay />
+        <ScanLinesOverlay />
         <SliderGradient url={url} />
       </Inner>
     </Container>

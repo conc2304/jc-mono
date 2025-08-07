@@ -11,7 +11,6 @@ type WindowControlProps = {
 
 export const WindowControls = ({ id, isActive }: WindowControlProps) => {
   const { minimizeWindow, maximizeWindow, closeWindow } = useWindowActions();
-  // Responsive breakpoints
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
 

@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useCallback } from 'react';
 import {
   Box,
@@ -21,7 +19,7 @@ import {
   RadarChartBox,
   MultiplexText,
   TorusLoaderCardAug,
-  ScanlinesOverlay,
+  ScanLinesOverlay,
   SystemsText,
   WarningStripe,
   WarningStripes,
@@ -75,11 +73,9 @@ const sampleData: RadarData = [
 export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
   const theme = useTheme();
 
-  // Responsive breakpoints
   const isXs = useMediaQuery(theme.breakpoints.down('sm')); // < 600px - Mobile
   const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md')); // 600px - 900px - Tablet
   const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg')); // 900px - 1200px - Small desktop
-  const isLg = useMediaQuery(theme.breakpoints.up('lg')); // >= 1200px - Large desktop
 
   const [progress, setProgress] = useState({
     current: 0,
@@ -231,7 +227,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                 >
                   {/* Torus Scanner */}
                   <TorusLoaderCardAug sx={{ height: '250px' }}>
-                    <ScanlinesOverlay />
+                    <ScanLinesOverlay />
                     <TorusFieldProgressMemo
                       colors={{
                         backgroundColor: theme.palette.background.paper,
@@ -387,7 +383,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
                   height="100%"
                 >
                   <TorusLoaderCardAug>
-                    <ScanlinesOverlay />
+                    <ScanLinesOverlay />
                     <TorusFieldProgressMemo
                       colors={{
                         backgroundColor: theme.palette.background.paper,
@@ -557,7 +553,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Main Scanner */}
                 <TorusLoaderCardAug>
-                  <ScanlinesOverlay />
+                  <ScanLinesOverlay />
                   <TorusFieldProgressMemo
                     // progress={(progress.current / progress.total) * 100}
                     // progressMessage={progress.message}

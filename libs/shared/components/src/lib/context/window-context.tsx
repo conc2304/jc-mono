@@ -100,6 +100,7 @@ export const WindowProvider: React.FC<{
   defaultIconPositions?: Record<string, IconPosition>;
 }> = ({ children, fileSystemItems, defaultIconPositions = {} }) => {
   const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
   const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
@@ -322,9 +323,6 @@ export const WindowProvider: React.FC<{
       return newZIndex;
     });
   }, []);
-  const isXs = useMediaQuery(theme.breakpoints.down('md'));
-
-  console.log({ isXs });
 
   const openWindow = useCallback(
     (itemId: string) => {
@@ -363,7 +361,7 @@ export const WindowProvider: React.FC<{
           height:
             fsItem.type === 'folder' && !isXs
               ? 400
-              : window.innerHeight - taskbarHeight,
+              : window.innerHeight - (isXs ? 0 : taskbarHeight),
           zIndex: windowZIndex + 1,
           minimized: false,
           maximized: fsItem.type !== 'folder',
@@ -474,10 +472,10 @@ export const WindowProvider: React.FC<{
                 x: w.maximized ? 200 : 0,
                 y: w.maximized ? 100 : 0,
                 zIndex: isMaximizing ? theme.zIndex.modal : windowZIndex + 1,
-                width: w.maximized ? 400 : window.innerWidth || 800,
+                width: w.maximized ? 400 : window.innerWidth,
                 height: w.maximized
                   ? 300
-                  : window.innerHeight - taskbarHeight || 600,
+                  : window.innerHeight - (isXs ? 0 : taskbarHeight),
                 animationState: 'maximizing',
               }
             : w
@@ -808,7 +806,6 @@ const getWindowContent = (
         folderContents={fsItem.children || []}
         fileSystemItems={fileSystemItems}
         updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
-        hasPreviewPanel={true}
       />
     );
   } else {

@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { Computer } from 'lucide-react';
 
 import { FileSystemContext } from '../../context';
@@ -12,6 +12,7 @@ import { ViewControls } from '../../molecules/file-view-controls';
 import { PreviewPanel } from '../../molecules/preview-panel';
 import { SortBy, SortOrder, ViewMode } from '../../types';
 import { BaseFileSystemItem, useFileSystemManager } from '@jc/file-system';
+import { useMediaQuery } from '@mui/system';
 
 interface FileManagerProps {
   initialPath: string;
@@ -30,6 +31,8 @@ export const FileManager = ({
   hasPreviewPanel = false,
   updateWindowName,
 }: FileManagerProps) => {
+  const theme = useTheme();
+  const isLg = useMediaQuery(theme.breakpoints.up('md'));
   const [folderContents, setFolderContents] = useState(folderContentsProp);
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
   const [previewCollapsed, setPreviewCollapsed] = useState(true);
@@ -143,7 +146,7 @@ export const FileManager = ({
         <ViewControls />
 
         <Box sx={{ flex: 1, display: 'flex', minHeight: 0 }}>
-          {hasQuickAccessPanel && (
+          {hasQuickAccessPanel && isLg && (
             <QuickAccessPanel
               collapsed={quickAccessCollapsed}
               onToggle={() => setQuickAccessCollapsed(!quickAccessCollapsed)}
@@ -154,7 +157,7 @@ export const FileManager = ({
             <FileListView items={getFolderItems()} />
           </Box>
 
-          {hasPreviewPanel && (
+          {hasPreviewPanel && isLg && (
             <Box
               className="PreviewPanel--container"
               sx={{ flexShrink: 0, display: 'flex', minHeight: 0 }}

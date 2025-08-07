@@ -167,7 +167,7 @@ export const RightDisplay = styled(Box)(({ theme }) => ({
   position: 'relative',
 }));
 
-const scanlines = keyframes`
+const scanLines = keyframes`
   0% {
     transform: translateY(0);
   }
@@ -176,12 +176,12 @@ const scanlines = keyframes`
   }
 `;
 
-export const ScanlinesOverlay = styled(Box)({
+export const ScanLinesOverlay = styled(Box)({
   position: 'absolute',
   inset: 0,
   pointerEvents: 'none',
   // background: 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.41) 100%)',
   background: 'linear-gradient(transparent 50%, rgba(0, 255, 136, 0.03) 50%)',
   backgroundSize: '100% 4px',
-  animation: `${scanlines} 0.1s linear infinite`,
+  animation: `${scanLines} 0.1s linear infinite`,
 });

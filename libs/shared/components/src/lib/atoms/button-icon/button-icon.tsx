@@ -9,7 +9,7 @@ import { getShapeData, SHAPE_MAPPINGS } from '../../augmented-ui-configs';
 export interface AugmentedIconButtonProps extends IconButtonProps {
   shape?: keyof typeof SHAPE_MAPPINGS;
   borderSize?: number;
-  animateClick: boolean;
+  animateClick?: boolean;
 }
 
 const augmentationSizeMap = {
