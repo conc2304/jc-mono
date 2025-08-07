@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import {
   DesktopIcon,
   BaseFileSystemItem,
@@ -11,6 +11,7 @@ import {
 } from '@jc/ui-components';
 
 import { generateDefaultIconPositions } from '../utils';
+import { useMediaQuery } from '@mui/system';
 
 type DesktopOSProps = {
   fileSystem?: BaseFileSystemItem[];
@@ -22,6 +23,8 @@ type DesktopOSProps = {
 const DesktopContent = () => {
   const { windows, iconPositions, fileSystemItems, draggedIcon } =
     useWindowManager();
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
   // Get desktop icons (root-level items only)
   const desktopIcons = useMemo(() => {
@@ -34,8 +37,7 @@ const DesktopContent = () => {
       sx={(theme) => ({
         width: '100vw',
         height: '100vh',
-        background: (theme) =>
-          `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
+        background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         position: 'relative',
         overflow: 'hidden',
         contain: 'layout style paint',
@@ -60,7 +62,7 @@ const DesktopContent = () => {
       {windows.map((window) => (
         <Window key={window.id} {...window} isActive={window.isActive} />
       ))}
-      <TaskBar />
+      {!isXs && <TaskBar />}
     </Box>
   );
 };
@@ -111,8 +113,8 @@ export const DesktopOSSingleComponent = ({
         sx={{
           width: '100vw',
           height: '100vh',
-          // background: (theme) =>
-          //   `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
+          background: (theme) =>
+            `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
           position: 'relative',
           overflow: 'hidden',
           contain: 'layout style paint',

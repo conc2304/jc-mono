@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 
 import { AugmentedIconButton, AugmentedIconButtonProps } from '../../atoms';
@@ -11,6 +11,10 @@ type WindowControlProps = {
 
 export const WindowControls = ({ id, isActive }: WindowControlProps) => {
   const { minimizeWindow, maximizeWindow, closeWindow } = useWindowActions();
+  // Responsive breakpoints
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
+
   const buttonProps: AugmentedIconButtonProps = {
     size: 'small',
     shape: 'buttonRight',
@@ -29,26 +33,30 @@ export const WindowControls = ({ id, isActive }: WindowControlProps) => {
         opacity: isActive ? 1 : 0.6,
       })}
     >
-      <AugmentedIconButton
-        {...buttonProps}
-        color="info"
-        onClick={(e) => {
-          e.stopPropagation();
-          minimizeWindow(id);
-        }}
-      >
-        <Minimize2 />
-      </AugmentedIconButton>
-      <AugmentedIconButton
-        {...buttonProps}
-        color="info"
-        onClick={(e) => {
-          e.stopPropagation();
-          maximizeWindow(id);
-        }}
-      >
-        <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
-      </AugmentedIconButton>
+      {!isXs && (
+        <>
+          <AugmentedIconButton
+            {...buttonProps}
+            color="info"
+            onClick={(e) => {
+              e.stopPropagation();
+              minimizeWindow(id);
+            }}
+          >
+            <Minimize2 />
+          </AugmentedIconButton>
+          <AugmentedIconButton
+            {...buttonProps}
+            color="info"
+            onClick={(e) => {
+              e.stopPropagation();
+              maximizeWindow(id);
+            }}
+          >
+            <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
+          </AugmentedIconButton>
+        </>
+      )}
       <AugmentedIconButton
         {...buttonProps}
         color="error"

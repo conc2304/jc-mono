@@ -7,7 +7,7 @@ import React, {
   useRef,
   ReactNode,
 } from 'react';
-import { useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
 import { FileManager } from '../organisms/file-manager';
@@ -104,9 +104,6 @@ export const WindowProvider: React.FC<{
   const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
   const [windows, setWindows] = useState<AnimatedWindowMetaData[]>([]);
-  console.log('WP:');
-  console.log({ windows });
-  console.log('___');
   const [draggedWindow, setDraggedWindow] = useState<string | null>(null);
   const [windowZIndex, setWindowZIndex] = useState(theme.zIndex.window);
   const [iconPositions, setIconPositions] =
@@ -325,6 +322,9 @@ export const WindowProvider: React.FC<{
       return newZIndex;
     });
   }, []);
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
+
+  console.log({ isXs });
 
   const openWindow = useCallback(
     (itemId: string) => {
@@ -357,11 +357,13 @@ export const WindowProvider: React.FC<{
           id,
           title: fsItem.name,
           icon: fsItem.icon,
-          x: fsItem.type === 'folder' ? 200 + windows.length * 30 : 0,
-          y: fsItem.type === 'folder' ? 100 + windows.length * 30 : 0,
-          width: fsItem.type === 'folder' ? 550 : window.innerWidth,
+          x: fsItem.type === 'folder' && !isXs ? 200 + windows.length * 30 : 0,
+          y: fsItem.type === 'folder' && !isXs ? 100 + windows.length * 30 : 0,
+          width: fsItem.type === 'folder' && !isXs ? 550 : window.innerWidth,
           height:
-            fsItem.type === 'folder' ? 400 : window.innerHeight - taskbarHeight,
+            fsItem.type === 'folder' && !isXs
+              ? 400
+              : window.innerHeight - taskbarHeight,
           zIndex: windowZIndex + 1,
           minimized: false,
           maximized: fsItem.type !== 'folder',

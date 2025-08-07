@@ -80,6 +80,7 @@ export const DesktopIcon = React.memo<DesktopIconProps>(
           top: position.y,
           zIndex: effectiveIsDragging ? 10000 : 1,
         }}
+        // on
         onMouseDown={(e) => handleIconMouseDown(e, id)}
         onDoubleClick={() => openWindow(id)}
         onClick={() => console.log('one click')}

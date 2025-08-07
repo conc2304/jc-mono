@@ -6,11 +6,13 @@ import {
   GradientShader,
 } from '@jc/ui-components';
 import { FileSystem } from '../data/file-system';
+import { useMediaQuery } from '@mui/system';
 // import { remToPixels } from '@jc/themes';
 // import { FileSystem } from './data/file-system';
 
 export function App() {
   const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
   const bgColors = [
     theme.palette.background.default,
@@ -34,12 +36,14 @@ export function App() {
   //   cursorColor: theme.palette.primary.main,
   //   returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
   // };
-
   return (
     <>
       {/* TODO make cursor something that you turn on */}
       {/* <CursorTrail {...cursorConfig} /> */}
-      <DesktopOS fileSystem={FileSystem} />
+      <DesktopOS
+        fileSystem={FileSystem}
+        iconArrangement={isXs ? 'grid' : 'linear'}
+      />
       <GradientShader
         className={key}
         key={key}
