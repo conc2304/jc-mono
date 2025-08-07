@@ -85,8 +85,7 @@ const bootMessages: BootMessage[] = [
 export default function App() {
   return (
     <Box>
-      {/* <BootUpSequence bootMessages={bootMessages} /> */}
-      <BootLayout />
+      <BootLayout bootMessages={bootMessages} />
     </Box>
   );
 }

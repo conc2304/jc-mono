@@ -43,9 +43,10 @@ import { AugmentedButton } from '@jc/ui-components';
 
 interface SciFiLayoutProps {
   className?: string;
+  bootMessages?: BootMessage[];
 }
 
-const bootMessages: BootMessage[] = [
+const defaultBootMessages: BootMessage[] = [
   'Initializing system...',
   ['Loading kernel modules...', 'Injecting backdoor...'],
   'Starting network services...',
@@ -70,12 +71,15 @@ const sampleData: RadarData = [
   ],
 ];
 
-export const BootLayout: React.FC<SciFiLayoutProps> = ({ className = '' }) => {
+export const BootLayout: React.FC<SciFiLayoutProps> = ({
+  className = '',
+  bootMessages = defaultBootMessages,
+}) => {
   const theme = useTheme();
 
-  const isXs = useMediaQuery(theme.breakpoints.down('sm')); // < 600px - Mobile
-  const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md')); // 600px - 900px - Tablet
-  const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg')); // 900px - 1200px - Small desktop
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg'));
 
   const [progress, setProgress] = useState({
     current: 0,
