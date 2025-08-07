@@ -1,70 +1,14 @@
-import React, { useMemo } from 'react';
-import { Box, useTheme } from '@mui/material';
-import {
-  DesktopIcon,
-  BaseFileSystemItem,
-  IconPosition,
-  TaskBar,
-  useWindowManager,
-  Window,
-  WindowProvider,
-} from '@jc/ui-components';
+import { useMemo } from 'react';
+import { IconPosition, WindowProvider } from '@jc/ui-components';
 
 import { generateDefaultIconPositions } from '../utils';
-import { useMediaQuery } from '@mui/system';
+import { BaseFileSystemItem } from '@jc/file-system';
+import { DesktopContent } from './desktop-content';
 
 type DesktopOSProps = {
   fileSystem?: BaseFileSystemItem[];
   iconArrangement?: 'linear' | 'grid' | 'circular';
   customIconPositions?: Record<string, IconPosition>;
-};
-
-// Inner component that uses the context
-const DesktopContent = () => {
-  const { windows, iconPositions, fileSystemItems, draggedIcon } =
-    useWindowManager();
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down('md'));
-
-  // Get desktop icons (root-level items only)
-  const desktopIcons = useMemo(() => {
-    return fileSystemItems.filter((item) => !item.parentId);
-  }, [fileSystemItems]);
-
-  return (
-    <Box
-      className="DesktopOS--root"
-      sx={(theme) => ({
-        width: '100vw',
-        height: '100vh',
-        background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
-        position: 'relative',
-        overflow: 'hidden',
-        contain: 'layout style paint',
-      })}
-    >
-      {/* Desktop Icons */}
-      {desktopIcons.map((icon) => {
-        const position = iconPositions[icon.id] || { x: 0, y: 0 };
-        return (
-          <DesktopIcon
-            key={icon.id}
-            id={icon.id}
-            name={icon.name}
-            icon={icon.icon}
-            position={position}
-            isDragging={draggedIcon === icon.id}
-          />
-        );
-      })}
-
-      {/* Windows */}
-      {windows.map((window) => (
-        <Window key={window.id} {...window} isActive={window.isActive} />
-      ))}
-      {!isXs && <TaskBar />}
-    </Box>
-  );
 };
 
 // Main component that provides the context
@@ -90,81 +34,3 @@ export const DesktopOS = ({
     </WindowProvider>
   );
 };
-
-// Alternative: If you want to keep everything in one component
-export const DesktopOSSingleComponent = ({
-  fileSystem = [],
-  iconArrangement = 'linear',
-  customIconPositions,
-}: DesktopOSProps) => {
-  const defaultIconPositions = useMemo(() => {
-    if (customIconPositions) return customIconPositions;
-    return generateDefaultIconPositions(fileSystem, iconArrangement);
-  }, [fileSystem, iconArrangement, customIconPositions]);
-
-  return (
-    <WindowProvider
-      fileSystemItems={fileSystem}
-      defaultIconPositions={defaultIconPositions}
-    >
-      {/* Render everything inline */}
-      <Box
-        className="DesktopOS--root"
-        sx={{
-          width: '100vw',
-          height: '100vh',
-          background: (theme) =>
-            `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
-          position: 'relative',
-          overflow: 'hidden',
-          contain: 'layout style paint',
-        }}
-      >
-        <DesktopIconRenderer />
-        <WindowRenderer />
-      </Box>
-    </WindowProvider>
-  );
-};
-
-// Helper components for cleaner separation
-const DesktopIconRenderer = React.memo(() => {
-  const { iconPositions, fileSystemItems, draggedIcon } = useWindowManager();
-
-  const desktopIcons = useMemo(() => {
-    return fileSystemItems.filter((item) => !item.parentId);
-  }, [fileSystemItems]);
-
-  return (
-    <>
-      {desktopIcons.map((icon) => {
-        const position = iconPositions[icon.id] || { x: 0, y: 0 };
-        return (
-          <DesktopIcon
-            key={icon.id}
-            id={icon.id}
-            name={icon.name}
-            icon={icon.icon}
-            position={position}
-            isDragging={draggedIcon === icon.id}
-          />
-        );
-      })}
-    </>
-  );
-});
-
-const WindowRenderer = React.memo(() => {
-  const { windows } = useWindowManager();
-
-  return (
-    <>
-      {windows.map((window) => (
-        <Window key={window.id} {...window} isActive={window.isActive} />
-      ))}
-    </>
-  );
-});
-
-DesktopIconRenderer.displayName = 'DesktopIconRenderer';
-WindowRenderer.displayName = 'WindowRenderer';
