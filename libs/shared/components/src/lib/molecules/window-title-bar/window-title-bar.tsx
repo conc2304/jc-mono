@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { alpha, Box, darken, lighten, Typography } from '@mui/material';
+import { alpha, Box, darken, Typography, useTheme } from '@mui/material';
 
 import { useWindowManager } from '../../context';
 import { WindowControls } from '../window-controls';
-import { blend } from '@mui/system';
+import { ensureContrast } from '@jc/utils';
 
 type WindowTitleBarProps = {
   isActive?: boolean;
@@ -18,9 +18,15 @@ export const WindowTitleBar = ({
   id,
   icon,
   title,
-}: // onMouseDown,
-WindowTitleBarProps) => {
+}: WindowTitleBarProps) => {
   const { handleWindowMouseDown } = useWindowManager();
+  const theme = useTheme();
+  const background = isActive
+    ? alpha(
+        theme.palette.background.paper,
+        Number(theme.mixins.paper?.opacity || 1)
+      )
+    : alpha(theme.palette.getInvertedMode('primary'), 0.3);
 
   return (
     <Box
@@ -56,9 +62,12 @@ WindowTitleBarProps) => {
             pt: 0.5,
             pl: 1.5,
             pr: 2.5,
-            background: isActive
-              ? theme.palette.primary[theme.palette.mode]
-              : darken(theme.palette.primary[theme.palette.mode], 0.5),
+            background,
+            color: ensureContrast(theme.palette.text.primary, background, 3)
+              .color,
+            // : isActive
+            //   ? theme.palette.primary[theme.palette.mode]
+            //   : darken(theme.palette.primary[theme.palette.mode], 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
@@ -103,13 +112,7 @@ WindowTitleBarProps) => {
             pr: 0.5,
             pl: 1,
             transition: theme.transitions.create(['background']),
-
-            background: isActive
-              ? alpha(
-                  theme.palette.background.paper,
-                  Number(theme.mixins.paper?.opacity || 1)
-                )
-              : darken(theme.palette.primary[theme.palette.mode], 0.5),
+            background,
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
@@ -124,7 +127,7 @@ WindowTitleBarProps) => {
             },
           })}
         >
-          <WindowControls id={id} isActive={!!isActive} />
+          <WindowControls id={id} bgColor={background} />
         </Box>
       </Box>
     </Box>
