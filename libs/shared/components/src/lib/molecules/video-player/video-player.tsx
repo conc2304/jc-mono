@@ -277,7 +277,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             <Box display="flex" alignItems="center" gap={1}>
               <IconButton
                 onClick={togglePlayPause}
-                sx={{ color: 'red' }}
+                sx={{ color: 'white' }}
                 size="small"
               >
                 {isPlaying ? <Pause /> : <PlayArrow />}
