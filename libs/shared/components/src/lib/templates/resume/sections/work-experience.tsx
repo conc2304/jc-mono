@@ -19,8 +19,6 @@ export const WorkExperienceSection = ({
 }: {
   workExperience: WorkExperience[];
 }) => {
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Box
       sx={{
@@ -110,7 +108,6 @@ export const WorkExperienceSection = ({
                     py: 0.5,
                     '@container (max-width: 769px)': {
                       px: 0,
-                      // border: '1px solid red',
                     },
                   }}
                 >

@@ -88,49 +88,125 @@ export const lightformWebControllerProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail:
-      'https://www.joseconchello.com/lightforms-web-app-controller/hero-image.jpg', // Assuming from portfolio structure
+    // Choose your main thumbnail/hero image
+    thumbnail: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+
     screenshots: [
       {
-        url: 'https://lightform.com/wp-content/uploads/2019/10/lf2-upside-down-gradpink-1-800x450.jpg',
+        url: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
         alt: 'Lightform LF2+ AR Projector - Primary Hardware',
         caption:
           'The Lightform LF2+ AR projector that the web controller interfaces with',
       },
       {
-        url: 'https://lightform.com/wp-content/uploads/2021/01/LF2plus-front-transparent-square.png',
+        url: 'projects/lightform/LF2plus-front-transparent-square.webp',
         alt: 'LF2+ Front View Technical Specification',
         caption: 'Front view showing camera array and projection lens',
       },
       {
-        url: 'https://lightform.com/wp-content/uploads/2021/01/LF2plus-rear-transparent-square.png',
+        url: 'projects/lightform/LF2plus-rear-transparent-square.webp',
         alt: 'LF2+ Rear View Technical Specification',
         caption: 'Rear connectivity ports and mounting options',
       },
       {
-        url: 'https://lightform.com/wp-content/uploads/2022/02/IMG_9105-1170x690.jpg',
-        alt: 'Lightform LF2+ In Use Environment',
-        caption:
-          "Example projection mapping setup showing the web controller's target use case",
+        url: 'projects/lightform/App-Header.jpg',
+        alt: 'Web Application Header Interface',
+        caption: 'Main application header showing navigation and device status',
       },
-
       {
-        url: 'https://lightform.com/wp-content/uploads/2022/02/IMG_9105-1170x690.jpg',
-        alt: 'Lightform LF2+ In Use Environment',
-        caption:
-          "Example projection mapping setup showing the web controller's target use case",
+        url: 'projects/lightform/FTUX-Step-2-Update-Firmware.png',
+        alt: 'First Time User Experience - Firmware Update',
+        caption: 'Step 2 of device setup process - firmware update interface',
       },
-
       {
-        url: 'https://lightform.com/wp-content/uploads/2022/02/IMG_9105-1170x690.jpg',
-        alt: 'Lightform LF2+ In Use Environment',
+        url: 'projects/lightform/FTUX-Step-3-Device-Registration.png',
+        alt: 'First Time User Experience - Device Registration',
+        caption: 'Step 3 of device setup - registering device to user account',
+      },
+      {
+        url: 'projects/lightform/OAK-Step-1-Object-Scanning.png',
+        alt: 'Object Alignment Kit - 3D Scanning Interface',
         caption:
-          "Example projection mapping setup showing the web controller's target use case",
+          'Real-time 3D scanning interface for object detection and alignment',
+      },
+      {
+        url: 'projects/lightform/OAK-Step-2-Environments-UI.png',
+        alt: 'Object Alignment Kit - Environment Selection',
+        caption: 'Environment selection interface for projection mapping setup',
+      },
+      {
+        url: 'projects/lightform/OAK-Step-2-Object-Alignment.png',
+        alt: 'Object Alignment Kit - Precision Alignment',
+        caption:
+          'Fine-tuned object alignment controls for accurate projection mapping',
+      },
+      {
+        url: 'projects/lightform/article-1-step-1-v1.png',
+        alt: 'Tutorial Article 1 - Getting Started',
+        caption: 'Step-by-step tutorial showing initial device setup process',
       },
     ],
+
     videos: [
-      // Note: Specific video URLs would need to be extracted from the actual portfolio page
-      // These would likely include demo videos of the FTUX experience and web controller in action
+      {
+        url: 'projects/lightform/Desktop-View-Full-With-Errors-.mp4',
+        title: 'Desktop Application Demo with Error Handling',
+        type: 'demo',
+        thumbnail: 'projects/lightform/App-Header.jpg', // Use a screenshot as thumbnail
+        caption:
+          'Complete desktop application walkthrough including error state management',
+      },
+      {
+        url: 'projects/lightform/Skate Shop Mural Mapping - Houston.mp4',
+        title: 'Real-World Projection Mapping Demo',
+        type: 'demo',
+        caption:
+          'Live demonstration of projection mapping on a mural at a Houston skate shop',
+      },
+      {
+        url: 'projects/lightform/lightform-bgloop720.mp4',
+        title: 'Lightform Background Demo Loop',
+        type: 'demo',
+        caption:
+          'Ambient projection mapping demonstration showing dynamic visual effects',
+      },
+      {
+        url: 'projects/lightform/article1_step1_v1.mp4',
+        title: 'Tutorial: Getting Started - Step 1',
+        type: 'process',
+        caption: 'First step of the guided setup process for new users',
+      },
+      {
+        url: 'projects/lightform/article1_step2_v1.mp4',
+        title: 'Tutorial: Getting Started - Step 2',
+        type: 'process',
+        caption:
+          'Second step covering device connection and initial calibration',
+      },
+      {
+        url: 'projects/lightform/article1_step3_v1.mp4',
+        title: 'Tutorial: Getting Started - Step 3',
+        type: 'process',
+        caption: 'Final setup step showing first projection and basic controls',
+      },
+      {
+        url: 'projects/lightform/article2_step2_v1.mp4',
+        title: 'Advanced Tutorial: Object Detection - Step 2',
+        type: 'process',
+        caption: 'Advanced object detection and tracking setup process',
+      },
+      {
+        url: 'projects/lightform/article2_step3_v1.mp4',
+        title: 'Advanced Tutorial: Object Detection - Step 3',
+        type: 'process',
+        caption: 'Fine-tuning object detection parameters for optimal tracking',
+      },
+      {
+        url: 'projects/lightform/article3_step2_v1.mp4',
+        title: 'Professional Tutorial: Complex Mappings - Step 2',
+        type: 'process',
+        caption: 'Creating complex multi-surface projection mappings',
+      },
     ],
   },
 

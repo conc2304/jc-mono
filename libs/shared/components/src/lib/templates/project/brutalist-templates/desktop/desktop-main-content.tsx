@@ -10,6 +10,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { ProjectData, ProjectContent } from '../../types';
+import { getResponsiveImageSet } from '@jc/utils';
+import { ImageContainer } from '@jc/ui-components';
 
 interface Screenshot {
   url: string;
@@ -98,55 +100,60 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
             Gallery
           </Typography>
           <Grid container spacing={3}>
-            {screenshots.map((screenshot, index) => (
-              <Grid size={{ xs: 12, lg: 6 }} key={index}>
-                <Paper
-                  sx={{
-                    overflow: 'hidden',
-                    backgroundColor: theme.palette.getInvertedMode('secondary'),
-                    border: `1px solid ${
-                      theme.palette.secondary[theme.palette.mode]
-                    }`,
-                    cursor: 'pointer',
-                    transition: 'transform 0.3s ease',
-                    '&:hover': {
-                      '& img': {
-                        transform: 'scale(1.05)',
+            {screenshots.map((screenshot, index) => {
+              const imgSrcProps = getResponsiveImageSet(screenshot.url);
+
+              return (
+                <Grid size={{ xs: 12, lg: 6 }} key={index}>
+                  <Paper
+                    sx={{
+                      overflow: 'hidden',
+                      backgroundColor:
+                        theme.palette.getInvertedMode('secondary'),
+                      border: `1px solid ${
+                        theme.palette.secondary[theme.palette.mode]
+                      }`,
+                      cursor: 'pointer',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': {
+                        '& img': {
+                          transform: 'scale(1.05)',
+                        },
                       },
-                    },
-                  }}
-                  onClick={() => onImageChange(index)}
-                >
-                  <Box sx={{ height: 256, overflow: 'hidden' }}>
-                    <img
-                      src={screenshot.url}
-                      alt={screenshot.alt}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        transition: 'transform 0.3s ease',
-                        background: theme.palette.background.default,
-                      }}
-                    />
-                  </Box>
-                  {screenshot.caption && (
-                    <CardContent>
-                      <Typography
-                        variant="body2"
+                    }}
+                    onClick={() => onImageChange(index)}
+                  >
+                    <Box sx={{ height: 256, overflow: 'hidden' }}>
+                      <ImageContainer
+                        {...imgSrcProps}
+                        alt={screenshot.alt}
                         sx={{
-                          color: theme.palette.getContrastText(
-                            theme.palette.getInvertedMode('secondary')
-                          ),
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.3s ease',
+                          background: theme.palette.background.default,
                         }}
-                      >
-                        {screenshot.caption}
-                      </Typography>
-                    </CardContent>
-                  )}
-                </Paper>
-              </Grid>
-            ))}
+                      />
+                    </Box>
+                    {screenshot.caption && (
+                      <CardContent>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: theme.palette.getContrastText(
+                              theme.palette.getInvertedMode('secondary')
+                            ),
+                          }}
+                        >
+                          {screenshot.caption}
+                        </Typography>
+                      </CardContent>
+                    )}
+                  </Paper>
+                </Grid>
+              );
+            })}
           </Grid>
         </Box>
       )}

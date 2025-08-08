@@ -9,7 +9,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { ImageCarousel } from './image-carousel';
-// import { ImageCarousel } from './ImageCarousel';
+import { getResponsiveImageSet } from '@jc/utils';
+import { ImageContainer } from '../../../../atoms';
 
 const HeroSectionContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -67,6 +68,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const theme = useTheme();
 
+  const imgSrcProps = getResponsiveImageSet(screenshots[activeImageIndex]?.url);
   return (
     <HeroSectionContainer>
       {screenshots.length > 0 && (
@@ -74,8 +76,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           className="hero-mobile"
           sx={{ position: 'relative', overflow: 'hidden' }}
         >
-          <img
-            src={screenshots[activeImageIndex]?.url}
+          <ImageContainer
+            {...imgSrcProps}
             alt={screenshots[activeImageIndex]?.alt}
             className="hero-image"
           />
