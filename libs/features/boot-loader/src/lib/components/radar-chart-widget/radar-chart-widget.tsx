@@ -125,7 +125,7 @@ export const RadarChart = ({
 
     const tooltip = tooltipRef.current;
 
-    // svg.attr('width', svgWidth).attr('height', svgHeight);
+    svg.attr('width', svgWidth).attr('height', svgHeight);
     const svgContent = svg
       .select('.content')
       .attr('transform', `translate(${0}, ${0})`);
@@ -493,8 +493,12 @@ export const RadarChart = ({
 
   return (
     <div
-      style={{ width: '100%', height: '100%', position: 'relative' }}
-      className={`${id}-wrapper radar-chart position-relative d-flex flex-column justify-content-center`}
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+      }}
+      className={`RadarChart--root chart-id-${id}`}
     >
       {title && (
         <div
@@ -506,8 +510,14 @@ export const RadarChart = ({
       )}
       <div
         ref={wrapperRef}
-        style={{ width: '100%', height: '100%', position: 'relative' }}
-        className={`${id}-wrapper radar-chart position-relative`}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+        className={`${id}-wrapper`}
       >
         <svg ref={svgRef}>
           <defs>
