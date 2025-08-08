@@ -11,9 +11,10 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.primary.main,
   fontFamily: 'monospace',
-  minHeight: '100vh',
+  height: '100vh',
   padding: theme.spacing(2),
   transition: 'background-size 0.1s ease-in',
+  pb: '100px',
 }));
 
 export const BrowserFrame = styled(Paper)(({ theme }) => ({
@@ -21,10 +22,14 @@ export const BrowserFrame = styled(Paper)(({ theme }) => ({
   border: `2px solid ${theme.palette.primary.main}`,
   borderRadius: 0,
   overflow: 'hidden',
+  height: '100%',
+
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const RadarChartBoxStyled = styled(Box)(({ theme }) => ({
-  minHeight: 192,
+  // minHeight: 192,
   backgroundColor: theme.palette.background.paper,
   position: 'relative',
   display: 'flex',

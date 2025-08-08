@@ -5,6 +5,7 @@ import {
   PaletteOptionNames,
   styled,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { useState } from 'react';
@@ -46,6 +47,7 @@ const StatusIcon = styled(Box)<{}>(({ theme }) => ({
 export const ThemePickerPanel = () => {
   const { currentTheme } = useEnhancedTheme();
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -73,9 +75,11 @@ export const ThemePickerPanel = () => {
       >
         <Box display="flex" alignItems="center" gap={2}>
           <StatusIndicator />
-          <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            THEMING INTEGRATION STATUS : {currentTheme?.name.toUpperCase()}
-          </Typography>
+          {!isSm && (
+            <Typography variant="caption" sx={{ color: 'primary.main' }}>
+              THEMING INTEGRATION STATUS : {currentTheme?.name.toUpperCase()}
+            </Typography>
+          )}
           {theme.palette.mode === 'dark' ? (
             <DarkMode
               size={'1rem'}

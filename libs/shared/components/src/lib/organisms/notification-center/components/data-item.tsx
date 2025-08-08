@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Box } from 'lucide-react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface DataItemProps {
   icon?: ReactNode;

@@ -77,8 +77,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 }) => {
   const theme = useTheme();
 
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
-  const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg'));
 
   const [progress, setProgress] = useState({
@@ -125,8 +124,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
   const cloudGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
 
-  // Mobile Layout (XS - < 600px)
-  if (isXs) {
+  // Mobile Layout
+  if (isSm) {
     return (
       <BootContainer
         className={'BootContainer--root ' + className}
@@ -147,6 +146,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             display="flex"
             flexDirection="column"
             gap={1}
+            flex={1}
           >
             {/* Boot Text Panel - Takes most of the space */}
             <Box
@@ -209,6 +209,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               </Box>
             </Box>
 
+            <ThemePickerPanel />
+
+            <GifContainer url={cloudGif} sx={{ height: '15%' }} />
+
             {/* Enter Button */}
             <AugmentedButton
               variant="contained"
@@ -221,115 +225,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               <Typography fontSize={'1.5rem'}>ENTER</Typography>
             </AugmentedButton>
           </Box>
-
-          <Footer />
-        </BrowserFrame>
-      </BootContainer>
-    );
-  }
-
-  // Tablet Layout (SM - 600px to 900px)
-  if (isSm) {
-    return (
-      <BootContainer
-        className={'BootContainer--root ' + className}
-        style={{
-          backgroundImage: animateBackground ? `url(${bgUrl})` : 'initial',
-          backgroundSize: `${backgroundSize}px`,
-          backgroundRepeat: 'repeat',
-          backgroundBlendMode: backgroundBlendMode,
-        }}
-      >
-        <BrowserFrame elevation={0}>
-          <Header />
-
-          <Box p={2} height={'100%'}>
-            <Grid container spacing={2} height="100%">
-              {/* Single column layout with essential components */}
-              <Grid size={{ xs: 12 }}>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  gap={2}
-                  height="100%"
-                >
-                  {/* Torus Scanner */}
-                  <TorusLoaderCardAug sx={{ height: '250px' }}>
-                    <ScanLinesOverlay />
-                    <TorusFieldProgressMemo
-                      colors={{
-                        backgroundColor: theme.palette.background.paper,
-                        beamColor: theme.palette.getInvertedMode('info'),
-                        torusColor: theme.palette.primary.main,
-                        particleColor: theme.palette.getInvertedMode('info'),
-                        verticalLineColor: theme.palette.warning.main,
-                        themeMode: theme.palette.mode,
-                      }}
-                    />
-                  </TorusLoaderCardAug>
-
-                  {/* Boot Text Panel */}
-                  <Box
-                    flex={1}
-                    data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
-                    sx={(theme) => ({
-                      minHeight: '200px',
-                      '&[data-augmented-ui]': {
-                        '--aug-bl': '0.5rem',
-                        '--aug-br': '0.5rem',
-                        '--aug-tl': '0.5rem',
-                        '--aug-tr1': '1rem',
-                        '--aug-tr2': '2rem',
-                        '--aug-tr-extend2': '25%',
-                        '--aug-border-all': '1px',
-                        '--aug-border-bg': theme.palette.primary.main,
-                      },
-                    })}
-                  >
-                    <BootText
-                      bootMessages={bootMessages}
-                      typeSpeed={1.8}
-                      lineDelay={1.2}
-                      cursorChar="█"
-                      scrambleChars={12}
-                      textColor={
-                        theme.palette.primary[theme.palette.getInvertedMode()]
-                      }
-                      scrambleDuration={0.6}
-                      charDelay={0.05}
-                      scrambleCharSet={scrambleCharacterSet}
-                      hoverScrambleChars={8}
-                      hoverScrambleDuration={0.5}
-                      onProgress={handleProgress}
-                      onComplete={handleBootComplete}
-                    />
-                  </Box>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-
-          {/* Bottom Panel with Enter Button */}
-          <BottomPanel>
-            <Grid container columns={12} spacing={2} alignItems="center">
-              <Grid size={8}>
-                <MultiplexText>MULTIPLEX</MultiplexText>
-                <SystemsText>SYSTEMS</SystemsText>
-              </Grid>
-              <Grid size={4}>
-                <AugmentedButton
-                  variant="contained"
-                  shape="buttonRight"
-                  fullWidth
-                  size="large"
-                  sx={{ height: '80px' }}
-                  href="/desktop"
-                >
-                  <Typography fontSize={'2rem'}>ENTER</Typography>
-                </AugmentedButton>
-              </Grid>
-            </Grid>
-          </BottomPanel>
 
           <Footer />
         </BrowserFrame>
@@ -352,7 +247,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         <BrowserFrame elevation={0}>
           <Header />
 
-          <Box p={2} height={600}>
+          <Box p={2} flex={10}>
             <Grid container spacing={2} height="100%">
               {/* Left Panel - Reduced */}
               <Grid size={{ xs: 5 }}>
@@ -363,10 +258,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   height="100%"
                 >
                   <Box
-                    // flex={0}
                     data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
                     sx={(theme) => ({
-                      minHeight: '200px',
                       '&[data-augmented-ui]': {
                         '--aug-bl': '0.5rem',
                         '--aug-br': '0.5rem',
@@ -397,7 +290,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       onComplete={handleBootComplete}
                     />
                   </Box>
-                  <RadarChartBox>
+                  <RadarChartBox flex={1}>
                     <AnimatedRadarChart
                       id="animated-radar"
                       data={sampleData}
@@ -432,8 +325,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                     />
                   </RadarChartBox>
-
-                  <GifContainer url={cloudGif} sx={{ flexGrow: 1 }} />
                 </Box>
               </Grid>
 
@@ -445,7 +336,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   gap={2}
                   height="100%"
                 >
-                  <TorusLoaderCardAug flex={1}>
+                  <TorusLoaderCardAug>
                     <ScanLinesOverlay />
                     <TorusFieldProgressMemo
                       colors={{
@@ -458,10 +349,13 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       }}
                     />
                   </TorusLoaderCardAug>
+                  <GifContainer url={cloudGif} sx={{ height: '20%' }} />
                 </Box>
               </Grid>
             </Grid>
           </Box>
+
+          <ThemePickerPanel />
 
           <BottomPanel>
             <Grid container columns={12} spacing={4}>
@@ -517,12 +411,18 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
       <BrowserFrame elevation={0}>
         <Header />
         {/* Main Content Area */}
-        <Box p={2} height={600}>
+        <Box p={2} flex={1}>
           <Grid container spacing={2} height="100%">
             {/* Left Panel */}
-            <Grid size={{ xs: 3 }}>
-              <Box display="flex" flexDirection="column" gap={2} flexGrow={1}>
-                <RadarChartBox>
+            <Grid size={{ xs: 3 }} height="100%">
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap={2}
+                flexGrow={1}
+                height="100%"
+              >
+                <RadarChartBox flex={1}>
                   <AnimatedRadarChart
                     id="animated-radar"
                     data={sampleData}

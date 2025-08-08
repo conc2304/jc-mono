@@ -36,6 +36,7 @@ export const SliderGradient = styled(Box)<{ url: string }>(
     width: '100%',
     height: '100%',
     background: `${gradient(theme)}, ${url}`,
+    backgroundSize: 'cover',
     opacity: 0.5,
     backgroundBlendMode: 'hard-light',
   })
