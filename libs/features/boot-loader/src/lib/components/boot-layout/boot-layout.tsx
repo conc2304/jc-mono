@@ -124,7 +124,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
   const cloudGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
 
-  // Mobile Layout
+  // Mobile Layout (1 column)
   if (isSm) {
     return (
       <BootContainer
@@ -232,7 +232,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     );
   }
 
-  // Small Desktop Layout (MD - 900px to 1200px)
+  // Small Desktop Layout (2 column)
   if (isMd) {
     return (
       <BootContainer
@@ -397,7 +397,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     );
   }
 
-  // Full Desktop Layout (LG+ - >= 1200px) - Original layout
+  // Full Desktop Layout (3 column - all components)
   return (
     <BootContainer
       className={'BootContainer--root ' + className}
