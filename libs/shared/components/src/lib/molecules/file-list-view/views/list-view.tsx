@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import {
+  alpha,
   List,
   ListItem,
   ListItemIcon,
@@ -37,7 +38,8 @@ export const ListView = ({
 
   const selectedBg = ensureContrast(
     theme.palette.text.primary,
-    theme.palette.getInvertedMode('primary')
+    theme.palette.getInvertedMode('primary'),
+    5
   ).color;
 
   const selectedTextPrimary = ensureContrast(
@@ -63,7 +65,7 @@ export const ListView = ({
         return (
           <ListItem
             key={item.id}
-            component="button"
+            // component="button"
             draggable
             onClick={(e) => onItemClick(item, e)}
             onDoubleClick={(e) => onItemDoubleClick(item, e)}
@@ -72,8 +74,19 @@ export const ListView = ({
             onDragOver={(e) => onDragOver(item, e)}
             onDrop={(e) => onDrop(item, e)}
             sx={(theme) => ({
-              // TODO
-              background: isSelected ? selectedBg : 'transparent',
+              background: isSelected ? alpha(selectedBg, 0.5) : 'transparent',
+              borderWidth: 0,
+              borderTopWidth: '2px',
+              borderBottomWidth: '2px',
+              borderStyle: 'solid',
+              borderColor: isSelected ? 'primary.main' : 'transparent',
+              // Slow transition for mouse out (default state)
+              transition: 'border-color 0.75s ease-out',
+              '&:hover': {
+                borderColor: !isSelected ? 'secondary.main' : 'primary.main',
+                // Fast transition for mouse in
+                transition: 'border-color 0s ease-in',
+              },
             })}
           >
             <ListItemIcon
