@@ -178,14 +178,14 @@ export const BrutalistTemplate = ({
         description={data.basics?.description}
       />
 
-      <MobileContent
+      {/* <MobileContent
         screenshots={screenshots}
         activeImageIndex={activeImageIndex}
         onImageChange={setActiveImageIndex}
         activeTab={activeTab}
         data={data}
         renderContent={renderContent}
-      />
+      /> */}
 
       <DesktopContent
         data={data}

@@ -4,17 +4,11 @@ import { Image, Error } from '@mui/icons-material';
 
 interface ImageContainerProps extends Omit<BoxProps, 'component'> {
   src: string;
-
   fallbackSrc?: string;
-
   alt?: string;
-
   sx?: SxProps;
-
   skeletonSx?: SxProps;
-
   errorSx?: SxProps;
-
   /**
    * Minimum duration (in milliseconds) to show the skeleton loader
    * This ensures the skeleton is visible for a minimum time for better UX

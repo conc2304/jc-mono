@@ -93,6 +93,11 @@ export const lightformWebControllerProject: ProjectData = {
 
     screenshots: [
       {
+        url: 'projects/lightform/App-Header.jpg',
+        alt: 'Web Application Header Interface',
+        caption: 'Main application header showing navigation and device status',
+      },
+      {
         url: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
         alt: 'Lightform LF2+ AR Projector - Primary Hardware',
         caption:
@@ -102,16 +107,6 @@ export const lightformWebControllerProject: ProjectData = {
         url: 'projects/lightform/LF2plus-front-transparent-square.webp',
         alt: 'LF2+ Front View Technical Specification',
         caption: 'Front view showing camera array and projection lens',
-      },
-      {
-        url: 'projects/lightform/LF2plus-rear-transparent-square.webp',
-        alt: 'LF2+ Rear View Technical Specification',
-        caption: 'Rear connectivity ports and mounting options',
-      },
-      {
-        url: 'projects/lightform/App-Header.jpg',
-        alt: 'Web Application Header Interface',
-        caption: 'Main application header showing navigation and device status',
       },
       {
         url: 'projects/lightform/FTUX-Step-2-Update-Firmware.png',
@@ -171,38 +166,38 @@ export const lightformWebControllerProject: ProjectData = {
           'Ambient projection mapping demonstration showing dynamic visual effects',
       },
       {
-        url: 'projects/lightform/article1_step1_v1.mp4',
+        url: 'projects/lightform/lf-article1_step1_v1.mp4',
         title: 'Tutorial: Getting Started - Step 1',
         type: 'process',
         caption: 'First step of the guided setup process for new users',
       },
       {
-        url: 'projects/lightform/article1_step2_v1.mp4',
+        url: 'projects/lightform/lf-article1_step2_v1.mp4',
         title: 'Tutorial: Getting Started - Step 2',
         type: 'process',
         caption:
           'Second step covering device connection and initial calibration',
       },
       {
-        url: 'projects/lightform/article1_step3_v1.mp4',
+        url: 'projects/lightform/lf-article1_step3_v1.mp4',
         title: 'Tutorial: Getting Started - Step 3',
         type: 'process',
         caption: 'Final setup step showing first projection and basic controls',
       },
       {
-        url: 'projects/lightform/article2_step2_v1.mp4',
+        url: 'projects/lightform/lf-article2_step2_v1.mp4',
         title: 'Advanced Tutorial: Object Detection - Step 2',
         type: 'process',
         caption: 'Advanced object detection and tracking setup process',
       },
       {
-        url: 'projects/lightform/article2_step3_v1.mp4',
+        url: 'projects/lightform/lf-article2_step3_v1.mp4',
         title: 'Advanced Tutorial: Object Detection - Step 3',
         type: 'process',
         caption: 'Fine-tuning object detection parameters for optimal tracking',
       },
       {
-        url: 'projects/lightform/article3_step2_v1.mp4',
+        url: 'projects/lightform/lf-article3_step2_v1.mp4',
         title: 'Professional Tutorial: Complex Mappings - Step 2',
         type: 'process',
         caption: 'Creating complex multi-surface projection mappings',

@@ -52,6 +52,7 @@ export const DesktopContent: React.FC<DesktopContentProps> = ({
             onTabChange={onTabChange}
             tabs={tabs}
             renderContent={renderContent}
+            videos={data.media?.videos}
             screenshots={screenshots}
             activeImageIndex={activeImageIndex}
             onImageChange={onImageChange}

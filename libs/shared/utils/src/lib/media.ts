@@ -25,7 +25,7 @@ export function getImageUrl(
 
   const options = variantOptions[variant];
 
-  // Use correct Cloudflare Images URL format: /cdn-cgi/image/<OPTIONS>/<SOURCE-IMAGE>
+  // Use Cloudflare Images URL format: /cdn-cgi/image/<OPTIONS>/<SOURCE-IMAGE>
   return `https://${CF_ZONE}/cdn-cgi/image/${options}/${fullR2Url}`;
 }
 
