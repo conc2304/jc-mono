@@ -1,19 +1,38 @@
 import { useState, useLayoutEffect, useRef } from 'react';
-import { Box, Chip, Tooltip } from '@mui/material';
+import { Box, Chip, lighten, Tooltip, useTheme } from '@mui/material';
 import { Property } from 'csstype';
+import { ensureContrast } from '@jc/utils';
 interface OverflowChipContainerProps {
   tags?: string[];
   favorite?: boolean;
-  color: Property.Color;
+  bgColor: Property.Color;
+  isSelected?: boolean;
 }
 export const OverflowChipContainer = ({
   tags = [],
   favorite = false,
-  color,
+  bgColor,
+  isSelected,
 }: OverflowChipContainerProps) => {
   const [visibleTags, setVisibleTags] = useState(tags);
   const [hiddenTags, setHiddenTags] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
+  const selectedTextPrimary = ensureContrast(
+    theme.palette.primary.main,
+    bgColor
+  ).color;
+
+  const selectedTextSecondary = ensureContrast(
+    theme.palette.text.secondary,
+    bgColor
+  ).color;
+
+  const selectedIconColor = ensureContrast(
+    theme.palette.primary.main,
+    bgColor,
+    5
+  ).color;
 
   useLayoutEffect(() => {
     const calculateVisibleChips = () => {
@@ -134,7 +153,7 @@ export const OverflowChipContainer = ({
         p: 1,
         '&[data-augmented-ui]': {
           '--aug-border-all': '1px',
-          '--aug-border-bg': theme.palette.secondary.main,
+          '--aug-border-bg': theme.palette.info.main,
           '--aug-br': '0.5rem',
           '--aug-tl': '0.5rem',
         },
@@ -177,10 +196,11 @@ export const OverflowChipContainer = ({
           label={tag}
           size="small"
           variant="outlined"
-          // color="inherit"
           slotProps={{
             label: {
-              sx: { color: color },
+              sx: {
+                color: isSelected ? selectedTextSecondary : 'text.secondary',
+              },
             },
           }}
           sx={{ flexShrink: 0 }}
@@ -205,7 +225,7 @@ export const OverflowChipContainer = ({
               },
             },
             arrow: {
-              sx: { color: 'secondary.main' },
+              sx: { color: 'info.main' },
             },
           }}
         >
@@ -215,18 +235,20 @@ export const OverflowChipContainer = ({
             variant="outlined"
             sx={{
               flexShrink: 0,
-              bgcolor: 'action.hover',
+              bgcolor: isSelected
+                ? lighten(theme.palette.action.hover, 0.5)
+                : theme.palette.action.hover,
               borderColor: 'divider',
               '&:hover': {
                 bgcolor: 'action.selected',
-                borderColor: 'action.selected',
+                borderColor: 'info.main',
               },
               cursor: 'default',
             }}
             slotProps={{
               label: {
                 sx: {
-                  color: 'text.secondary',
+                  color: isSelected ? selectedTextSecondary : 'text.secondary',
                   fontWeight: 500,
                 },
               },

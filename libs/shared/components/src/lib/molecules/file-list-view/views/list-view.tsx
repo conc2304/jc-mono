@@ -99,10 +99,8 @@ export const ListView = ({
             <OverflowChipContainer
               tags={item.metadata.tags}
               favorite={item.metadata.favorite}
-              // selected={isSelected}
-              color={
-                isSelected ? selectedTextSecondary : theme.palette.text.primary
-              }
+              bgColor={selectedBg}
+              isSelected={isSelected}
             />
             <Star
               size={16}
