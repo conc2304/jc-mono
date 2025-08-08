@@ -1,14 +1,15 @@
 import { useState, useLayoutEffect, useRef } from 'react';
 import { Box, Chip, Tooltip } from '@mui/material';
-import { Star } from 'lucide-react';
-
+import { Property } from 'csstype';
 interface OverflowChipContainerProps {
   tags?: string[];
   favorite?: boolean;
+  color: Property.Color;
 }
 export const OverflowChipContainer = ({
   tags = [],
   favorite = false,
+  color,
 }: OverflowChipContainerProps) => {
   const [visibleTags, setVisibleTags] = useState(tags);
   const [hiddenTags, setHiddenTags] = useState<string[]>([]);
@@ -47,15 +48,10 @@ export const OverflowChipContainer = ({
           align-items: center;
           justify-content: center;
           height: 24px;
-          color: rgba(0, 0, 0, 0.87);
-          border: 1px solid rgba(0, 0, 0, 0.23);
-          cursor: default;
           outline: 0;
           padding: 0;
-          border-radius: 12px;
           vertical-align: middle;
           box-sizing: border-box;
-          text-decoration: none;
           font-family: "Roboto","Helvetica","Arial",sans-serif;
           font-size: 0.8125rem;
           font-weight: 400;
@@ -170,7 +166,7 @@ export const OverflowChipContainer = ({
         flex: '1 1 auto',
         mr: 1,
         gap: 1,
-        minWidth: 0, // Allow shrinking
+        minWidth: 0,
         overflow: 'hidden',
       }}
     >
@@ -181,13 +177,13 @@ export const OverflowChipContainer = ({
           label={tag}
           size="small"
           variant="outlined"
-          // color="info"
+          // color="inherit"
           slotProps={{
             label: {
-              color: 'textPrimary',
+              sx: { color: color },
             },
           }}
-          sx={{ flexShrink: 0, bgColor: 'red' }}
+          sx={{ flexShrink: 0 }}
         />
       ))}
 
@@ -238,9 +234,6 @@ export const OverflowChipContainer = ({
           />
         </Tooltip>
       )}
-
-      {/* Star icon */}
-      {/* {favorite && <Star size={16} color="gold" style={{ flexShrink: 0 }} />} */}
     </Box>
   );
 };

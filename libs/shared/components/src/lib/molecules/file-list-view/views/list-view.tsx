@@ -1,10 +1,17 @@
 import { useContext } from 'react';
-import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useTheme,
+} from '@mui/material';
 
 import { FileSystemContext } from '../../../context';
 import { BaseFileSystemItem } from '@jc/file-system';
 import { OverflowChipContainer } from '../../overflow-chip-container';
 import { Star } from 'lucide-react';
+import { ensureContrast } from '@jc/utils';
 
 interface ListViewProps {
   items: BaseFileSystemItem[];
@@ -26,62 +33,88 @@ export const ListView = ({
   onDrop,
 }: ListViewProps) => {
   const context = useContext(FileSystemContext);
+  const theme = useTheme();
+
+  const selectedBg = ensureContrast(
+    theme.palette.text.primary,
+    theme.palette.getInvertedMode('primary')
+  ).color;
+
+  const selectedTextPrimary = ensureContrast(
+    theme.palette.primary.main,
+    selectedBg
+  ).color;
+
+  const selectedTextSecondary = ensureContrast(
+    theme.palette.text.secondary,
+    selectedBg
+  ).color;
+
+  const selectedIconColor = ensureContrast(
+    theme.palette.primary.main,
+    selectedBg,
+    5
+  ).color;
 
   return (
-    <List>
-      {items.map((item) => (
-        <ListItem
-          key={item.id}
-          // selected={context?.selectedItems.includes(item.id)}
-          component="button"
-          draggable
-          onClick={(e) => onItemClick(item, e)}
-          onDoubleClick={(e) => onItemDoubleClick(item, e)}
-          onTouchEnd={(e) => onItemDoubleClick(item, e)}
-          onDragStart={() => onDragStart(item)}
-          onDragOver={(e) => onDragOver(item, e)}
-          onDrop={(e) => onDrop(item, e)}
-          // secondaryAction={
-          //   // <OverflowChipContainer
-          //   //   tags={item.metadata.tags}
-          //   //   favorite={item.metadata.favorite}
-          //   // />
-          // }
-          sx={(theme) => ({
-            // TODO
-            background: context?.selectedItems.includes(item.id)
-              ? theme.palette.primary[theme.palette.getInvertedMode()]
-              : 'transparent',
-          })}
-        >
-          <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText
-            primary={item.name}
-            secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
-            sx={{ flex: '1 0 auto' }}
-            slotProps={{
-              primary: {
-                color: 'textPrimary',
-              },
-              secondary: {
-                color: 'textSecondary',
-              },
-            }}
-          />
-          <OverflowChipContainer
-            tags={item.metadata.tags}
-            favorite={item.metadata.favorite}
-          />
-          <Star
-            size={16}
-            color="gold"
-            style={{
-              flexShrink: 0,
-              visibility: item.metadata.favorite ? 'visible' : 'hidden',
-            }}
-          />
-        </ListItem>
-      ))}
+    <List className="FileListView--root">
+      {items.map((item) => {
+        const isSelected = context?.selectedItems.includes(item.id);
+        return (
+          <ListItem
+            key={item.id}
+            component="button"
+            draggable
+            onClick={(e) => onItemClick(item, e)}
+            onDoubleClick={(e) => onItemDoubleClick(item, e)}
+            onTouchEnd={(e) => onItemDoubleClick(item, e)}
+            onDragStart={() => onDragStart(item)}
+            onDragOver={(e) => onDragOver(item, e)}
+            onDrop={(e) => onDrop(item, e)}
+            sx={(theme) => ({
+              // TODO
+              background: isSelected ? selectedBg : 'transparent',
+            })}
+          >
+            <ListItemIcon
+              sx={{
+                '& svg': { color: isSelected ? selectedIconColor : undefined },
+              }}
+            >
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={item.name}
+              secondary={`Modified: ${item.dateModified.toLocaleDateString()}`}
+              sx={{ flex: '1 0 auto' }}
+              slotProps={{
+                primary: {
+                  color: isSelected ? selectedTextPrimary : 'textPrimary',
+                },
+                secondary: {
+                  color: isSelected ? selectedTextSecondary : 'textSecondary',
+                },
+              }}
+            />
+            <OverflowChipContainer
+              tags={item.metadata.tags}
+              favorite={item.metadata.favorite}
+              // selected={isSelected}
+              color={
+                isSelected ? selectedTextSecondary : theme.palette.text.primary
+              }
+            />
+            <Star
+              size={16}
+              color="gold"
+              style={{
+                flexShrink: 0,
+                visibility: item.metadata.favorite ? 'visible' : 'hidden',
+              }}
+            />
+          </ListItem>
+        );
+      })}
     </List>
   );
 };

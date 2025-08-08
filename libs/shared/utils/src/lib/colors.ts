@@ -72,7 +72,6 @@ export const ensureContrast = (
       color: foregroundColor,
       contrastRatio: 1,
       wasAdjusted: false,
-      error: error.message,
     };
   }
 };

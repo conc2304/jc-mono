@@ -22,11 +22,8 @@ export const WindowTitleBar = ({
   const { handleWindowMouseDown } = useWindowManager();
   const theme = useTheme();
   const background = isActive
-    ? alpha(
-        theme.palette.background.paper,
-        Number(theme.mixins.paper?.opacity || 1)
-      )
-    : alpha(theme.palette.getInvertedMode('primary'), 0.3);
+    ? alpha(theme.palette.getInvertedMode('primary'), 0.7)
+    : alpha(theme.palette.background.paper, 0.3);
 
   return (
     <Box
@@ -65,9 +62,6 @@ export const WindowTitleBar = ({
             background,
             color: ensureContrast(theme.palette.text.primary, background, 3)
               .color,
-            // : isActive
-            //   ? theme.palette.primary[theme.palette.mode]
-            //   : darken(theme.palette.primary[theme.palette.mode], 0.5),
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
