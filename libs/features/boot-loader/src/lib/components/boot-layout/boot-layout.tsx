@@ -183,6 +183,30 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 onProgress={handleProgress}
                 onComplete={handleBootComplete}
               />
+
+              <Box
+                sx={{
+                  position: 'absolute',
+                  height: '100%',
+                  width: '100%',
+                  top: 0,
+                  zIndex: 0,
+                  opacity: 0.5,
+                }}
+              >
+                <ScanLinesOverlay />
+                <TorusFieldProgressMemo
+                  hideText
+                  colors={{
+                    backgroundColor: theme.palette.background.paper,
+                    beamColor: theme.palette.getInvertedMode('info'),
+                    torusColor: theme.palette.primary.main,
+                    particleColor: theme.palette.getInvertedMode('info'),
+                    verticalLineColor: theme.palette.warning.main,
+                    themeMode: theme.palette.mode,
+                  }}
+                />
+              </Box>
             </Box>
 
             {/* Enter Button */}
@@ -331,13 +355,48 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           <Box p={2} height={600}>
             <Grid container spacing={2} height="100%">
               {/* Left Panel - Reduced */}
-              <Grid size={{ xs: 4 }}>
+              <Grid size={{ xs: 5 }}>
                 <Box
                   display="flex"
                   flexDirection="column"
                   gap={2}
                   height="100%"
                 >
+                  <Box
+                    // flex={0}
+                    data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
+                    sx={(theme) => ({
+                      minHeight: '200px',
+                      '&[data-augmented-ui]': {
+                        '--aug-bl': '0.5rem',
+                        '--aug-br': '0.5rem',
+                        '--aug-tl': '0.5rem',
+                        '--aug-tr1': '1rem',
+                        '--aug-tr2': '2rem',
+                        '--aug-tr-extend2': '25%',
+                        '--aug-border-all': '1px',
+                        '--aug-border-bg': theme.palette.primary.main,
+                      },
+                    })}
+                  >
+                    <BootText
+                      bootMessages={bootMessages}
+                      typeSpeed={1.8}
+                      lineDelay={1.2}
+                      cursorChar="█"
+                      scrambleChars={12}
+                      textColor={
+                        theme.palette.primary[theme.palette.getInvertedMode()]
+                      }
+                      scrambleDuration={0.6}
+                      charDelay={0.05}
+                      scrambleCharSet={scrambleCharacterSet}
+                      hoverScrambleChars={8}
+                      hoverScrambleDuration={0.5}
+                      onProgress={handleProgress}
+                      onComplete={handleBootComplete}
+                    />
+                  </Box>
                   <RadarChartBox>
                     <AnimatedRadarChart
                       id="animated-radar"
@@ -374,19 +433,19 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     />
                   </RadarChartBox>
 
-                  <GifContainer url={cloudGif} sx={{ height: 128 }} />
+                  <GifContainer url={cloudGif} sx={{ flexGrow: 1 }} />
                 </Box>
               </Grid>
 
               {/* Center Panel */}
-              <Grid size={{ xs: 8 }}>
+              <Grid size={{ xs: 7 }}>
                 <Box
                   display="flex"
                   flexDirection="column"
                   gap={2}
                   height="100%"
                 >
-                  <TorusLoaderCardAug>
+                  <TorusLoaderCardAug flex={1}>
                     <ScanLinesOverlay />
                     <TorusFieldProgressMemo
                       colors={{
@@ -399,50 +458,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       }}
                     />
                   </TorusLoaderCardAug>
-
-                  <Box
-                    flex={1}
-                    data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
-                    sx={(theme) => ({
-                      minHeight: '200px',
-                      '&[data-augmented-ui]': {
-                        '--aug-bl': '0.5rem',
-                        '--aug-br': '0.5rem',
-                        '--aug-tl': '0.5rem',
-                        '--aug-tr1': '1rem',
-                        '--aug-tr2': '2rem',
-                        '--aug-tr-extend2': '25%',
-                        '--aug-border-all': '1px',
-                        '--aug-border-bg': theme.palette.primary.main,
-                      },
-                    })}
-                  >
-                    <BootText
-                      bootMessages={bootMessages}
-                      typeSpeed={1.8}
-                      lineDelay={1.2}
-                      cursorChar="█"
-                      scrambleChars={12}
-                      textColor={
-                        theme.palette.primary[theme.palette.getInvertedMode()]
-                      }
-                      scrambleDuration={0.6}
-                      charDelay={0.05}
-                      scrambleCharSet={scrambleCharacterSet}
-                      hoverScrambleChars={8}
-                      hoverScrambleDuration={0.5}
-                      onProgress={handleProgress}
-                      onComplete={handleBootComplete}
-                    />
-                  </Box>
-
-                  <Typography
-                    variant="caption"
-                    align="right"
-                    sx={{ color: 'primary.main', mt: 0.5 }}
-                  >
-                    YOUNGSTA X SLEEPER
-                  </Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -450,7 +465,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
           <BottomPanel>
             <Grid container columns={12} spacing={4}>
-              <Grid size={8}>
+              <Grid size={7}>
                 <MultiplexText>MULTIPLEX</MultiplexText>
                 <SystemsText>SYSTEMS</SystemsText>
               </Grid>
@@ -467,7 +482,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 blendModeActive={backgroundBlendMode}
               />
 
-              <Grid size={{ xs: 2 }} sx={{ flex: 1 }}>
+              <Grid size={{ xs: 3 }} sx={{ flex: 1 }}>
                 <AugmentedButton
                   variant="contained"
                   shape="buttonRight"

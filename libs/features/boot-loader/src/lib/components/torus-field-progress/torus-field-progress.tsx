@@ -17,6 +17,7 @@ interface TorusFieldProgressProps {
   progress?: number; // 0-100
   colors?: ColorScheme;
   progressMessage?: string;
+  hideText?: boolean;
 }
 
 interface EntryAnimationConfig {
@@ -38,6 +39,7 @@ export const TorusFieldProgress = ({
   progress: initialProgress = 0, // 0-100
   progressMessage,
   colors = {},
+  hideText = false,
 }: TorusFieldProgressProps) => {
   const [progress, setProgress] = useState(initialProgress);
   const [mouseDistance, setMouseDistance] = useState(0);
@@ -1085,50 +1087,54 @@ export const TorusFieldProgress = ({
       />
 
       {/* Progress indicator */}
-      <Typography
-        variant="h6"
-        sx={{
-          position: 'absolute',
-          top: 12,
-          left: 12,
-          color: 'primary.main',
-        }}
-      >
-        {progressMessage !== undefined
-          ? progressMessage
-          : 'INITIALIZING BOOT SEQUENCE'}
-      </Typography>
+      {!hideText && (
+        <>
+          <Typography
+            variant="h6"
+            sx={{
+              position: 'absolute',
+              top: 12,
+              left: 12,
+              color: 'primary.main',
+            }}
+          >
+            {progressMessage !== undefined
+              ? progressMessage
+              : 'INITIALIZING BOOT SEQUENCE'}
+          </Typography>
 
-      <Typography
-        variant="caption"
-        sx={{
-          position: 'absolute',
-          bottom: 12,
-          left: 12,
-          color: 'primary.main',
-        }}
-      >
-        Progress: {isNaN(Math.round(progress)) ? 0 : Math.round(progress)}%
-        <br />
-        Click to boost (+{clickBoostValue}%)
-        <br />
-        Theme: {capitalize(themeMode)}
-      </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              position: 'absolute',
+              bottom: 12,
+              left: 12,
+              color: 'primary.main',
+            }}
+          >
+            Progress: {isNaN(Math.round(progress)) ? 0 : Math.round(progress)}%
+            <br />
+            Click to boost (+{clickBoostValue}%)
+            <br />
+            Theme: {capitalize(themeMode)}
+          </Typography>
 
-      {/* Mouse interaction indicator */}
-      <Typography
-        variant="caption"
-        sx={{
-          position: 'absolute',
-          bottom: 12,
-          right: 12,
-          color: 'primary.main',
-        }}
-      >
-        Mouse Distance: <strong>{mouseDistance}%</strong>
-        <br />
-        Click Intensity: <strong>{clickIntensity}%</strong>
-      </Typography>
+          {/* Mouse interaction indicator */}
+          <Typography
+            variant="caption"
+            sx={{
+              position: 'absolute',
+              bottom: 12,
+              right: 12,
+              color: 'primary.main',
+            }}
+          >
+            Mouse Distance: <strong>{mouseDistance}%</strong>
+            <br />
+            Click Intensity: <strong>{clickIntensity}%</strong>
+          </Typography>
+        </>
+      )}
     </Box>
   );
 };
