@@ -8,6 +8,8 @@ import {
   CardContent,
   Divider,
   Stack,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { WorkExperience } from '../types';
 import { SectionTitle } from './section-title';
@@ -17,6 +19,8 @@ export const WorkExperienceSection = ({
 }: {
   workExperience: WorkExperience[];
 }) => {
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Box
       sx={{
@@ -100,7 +104,16 @@ export const WorkExperienceSection = ({
             </Typography>
             <List dense>
               {job.responsibilities.map((responsibility, respIndex) => (
-                <ListItem key={respIndex} sx={{ py: 0.5 }}>
+                <ListItem
+                  key={respIndex}
+                  sx={{
+                    py: 0.5,
+                    '@container (max-width: 769px)': {
+                      px: 0,
+                      // border: '1px solid red',
+                    },
+                  }}
+                >
                   <ListItemText primary={responsibility} />
                 </ListItem>
               ))}

@@ -5,6 +5,7 @@ import {
   Paper,
   Chip,
   Divider,
+  useTheme,
 } from '@mui/material';
 
 import { Resume } from './types';
@@ -15,6 +16,7 @@ import {
   EducationExperienceSection,
   SectionTitle,
 } from './sections';
+import { useMediaQuery } from '@mui/system';
 
 export interface ResumeComponentProps {
   variant: 'sm' | 'md' | 'lg'; // TODO - this is just an example
@@ -34,18 +36,31 @@ export const ResumeTemplate = ({
     education,
   } = resumeData;
 
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Container
       className="ResumeTemplate--root"
       maxWidth="lg"
       sx={{
-        py: 4,
+        // py: 4,
         height: '100%',
         overflowY: 'auto',
         containerType: 'inline-size',
+        px: isXs ? 0 : undefined,
       }}
     >
-      <Paper elevation={3} sx={{ p: 4 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          '@container (max-width: 769px)': {
+            px: 1,
+            // border: '3px solid red',
+          },
+        }}
+      >
         <ResumeHeader title={title} contactInfo={contactInfo} />
 
         <Divider sx={{ my: 3 }} />

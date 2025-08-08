@@ -64,6 +64,8 @@ export function App() {
           right: 0,
           zIndex: -1,
           opacity: 0.3,
+          width: '100vw',
+          height: '100vh',
         }}
       />
     </>

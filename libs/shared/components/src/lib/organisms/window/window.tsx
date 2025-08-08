@@ -1,5 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { alpha, Box, darken, Fade } from '@mui/material';
+import {
+  alpha,
+  Box,
+  darken,
+  Fade,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 import {
   ResizeDirection,
@@ -57,6 +64,9 @@ export const Window = React.memo(
       draggedWindow,
       handleWindowMouseDown, // Use the context handler
     } = useWindowManager();
+
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
     const [resizeState, setResizeState] = useState<ResizeState>({
       isResizing: false,
@@ -227,7 +237,7 @@ export const Window = React.memo(
     }, []);
 
     // Add event listeners for resize
-    React.useEffect(() => {
+    useEffect(() => {
       if (resizeState.isResizing) {
         document.addEventListener('mousemove', handleResizeMove);
         document.addEventListener('mouseup', handleResizeEnd);
@@ -296,9 +306,11 @@ export const Window = React.memo(
             // Performance optimizations
             willChange: isDragging ? 'transform' : 'auto',
             contain: 'layout style paint',
-            height: !maximized
-              ? undefined
-              : `calc(100% - ${theme.mixins.taskbar.height} - 0.25rem)`,
+            height: maximized
+              ? `calc(100% - ${
+                  isXs ? 0 : theme.mixins.taskbar.height
+                } - 0.25rem)`
+              : undefined,
 
             // Apply animation styles
             ...getAnimationStyles(),

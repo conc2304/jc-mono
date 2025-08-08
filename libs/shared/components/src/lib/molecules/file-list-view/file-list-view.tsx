@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { IconsView, ListView, DetailsView } from './views';
 import { FileSystemContext, useWindowActions } from '../../context';
@@ -18,14 +18,14 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   );
 
   const handleItemDoubleClick = useCallback(
-    (item: BaseFileSystemItem, event: React.MouseEvent) => {
+    (item: BaseFileSystemItem, event: React.MouseEvent | React.TouchEvent) => {
       if (event.button === 2) return;
+
+      console.log('Double Click Open Item');
 
       if (item.type === 'folder') {
         context?.navigateToPath(item.path);
       } else {
-        // TODO OPEN FILE
-        console.log('OPEN FILE', { item });
         openWindow(item.id);
       }
     },

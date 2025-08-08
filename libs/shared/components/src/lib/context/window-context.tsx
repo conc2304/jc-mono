@@ -328,6 +328,7 @@ export const WindowProvider: React.FC<{
     (itemId: string) => {
       const result = findFileSystemItemByIdWithPath(fileSystemItems, itemId);
       if (!result) return;
+      console.log('Open. Window');
 
       const fsItem = result.item;
       const id = `window-${itemId}`;
@@ -351,20 +352,33 @@ export const WindowProvider: React.FC<{
         );
       } else {
         // Create new window with opening animation
+        console.log({ isXs });
+        // open 'files' maximized always
+        // if screen small, open maximized always
+        const maximized = fsItem.type !== 'folder' && !isXs;
+        console.log({ maximized });
+        const width =
+          fsItem.type === 'folder' && !isXs ? 550 : window.innerWidth;
+        const height =
+          fsItem.type === 'folder' && !isXs
+            ? 400
+            : window.innerHeight - (isXs ? 0 : taskbarHeight);
+        const x =
+          fsItem.type === 'folder' && !isXs ? 200 + windows.length * 30 : 0;
+        const y =
+          fsItem.type === 'folder' && !isXs ? 100 + windows.length * 30 : 0;
+
         const newWindow: AnimatedWindowMetaData = {
           id,
           title: fsItem.name,
           icon: fsItem.icon,
-          x: fsItem.type === 'folder' && !isXs ? 200 + windows.length * 30 : 0,
-          y: fsItem.type === 'folder' && !isXs ? 100 + windows.length * 30 : 0,
-          width: fsItem.type === 'folder' && !isXs ? 550 : window.innerWidth,
-          height:
-            fsItem.type === 'folder' && !isXs
-              ? 400
-              : window.innerHeight - (isXs ? 0 : taskbarHeight),
+          x,
+          y,
+          width,
+          height,
           zIndex: windowZIndex + 1,
           minimized: false,
-          maximized: fsItem.type !== 'folder',
+          maximized,
           windowContent: getWindowContent(
             fsItem,
             fileSystemItems,
@@ -374,6 +388,9 @@ export const WindowProvider: React.FC<{
           isOpening: true,
           animationState: 'opening',
         };
+
+        console.log(newWindow.height);
+        console.log({ newWindow });
 
         setWindows((prev) => [
           ...prev.map((window) => ({ ...window, isActive: false })),
