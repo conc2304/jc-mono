@@ -12,6 +12,7 @@ import { PlayArrow } from '@mui/icons-material';
 import { ImageContainer, VideoPlayer } from '@jc/ui-components';
 import { MediaItem, ImageMediaData, VideoMediaData } from './types';
 import { MediaModal } from './components';
+import { ensureContrast } from '@jc/utils';
 
 interface MediaGalleryProps {
   screenshots: ImageMediaData[];
@@ -104,9 +105,7 @@ export const MediaGallery = ({
           <Paper
             sx={{
               overflow: 'hidden',
-              backgroundColor:
-                theme.palette.getInvertedMode?.('secondary') ||
-                theme.palette.grey[100],
+              backgroundColor: theme.palette.getInvertedMode('secondary'),
               border: `1px solid ${theme.palette.divider}`,
               cursor: 'pointer',
               transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -122,7 +121,6 @@ export const MediaGallery = ({
           >
             <Box sx={{ height: isMobile ? 200 : 256, overflow: 'hidden' }}>
               <ImageContainer
-                // {...imgSrcProps}
                 src={screenshot.src}
                 srcSet={screenshot.srcSet}
                 sizes={screenshot.sizes}
@@ -141,7 +139,12 @@ export const MediaGallery = ({
                 <Typography
                   variant="body2"
                   sx={{
-                    color: theme.palette.text.primary,
+                    color: ensureContrast(
+                      theme.palette.text.primary,
+                      theme.palette.getInvertedMode('secondary'),
+                      2.5
+                    ),
+                    // color: theme.palette.text.primary,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
@@ -239,7 +242,11 @@ export const MediaGallery = ({
                     <Typography
                       variant="subtitle2"
                       sx={{
-                        color: theme.palette.text.primary,
+                        color: ensureContrast(
+                          theme.palette.text.primary,
+                          theme.palette.getInvertedMode('secondary'),
+                          2
+                        ),
                         fontWeight: 'medium',
                         flex: 1,
                         minWidth: 0,
@@ -253,7 +260,11 @@ export const MediaGallery = ({
                   <Typography
                     variant="body2"
                     sx={{
-                      color: theme.palette.text.primary,
+                      color: ensureContrast(
+                        theme.palette.text.primary,
+                        theme.palette.getInvertedMode('secondary'),
+                        2.5
+                      ),
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
