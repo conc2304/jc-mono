@@ -163,9 +163,9 @@ export const BrutalistTemplate = ({
       />
 
       <DesktopNavigation
-        hasNavigation={hasNavigation}
-        status={data.metadata?.status}
-        getStatusColor={getStatusColor}
+        title={data.projectName}
+        // onNextProject={}
+        // onPreviousProject={}
       />
 
       <HeroSection
@@ -174,14 +174,14 @@ export const BrutalistTemplate = ({
         description={data.basics?.description}
       />
 
-       <MobileContent
+      <MobileContent
         screenshots={screenshots}
         activeImageIndex={activeImageIndex}
         onImageChange={setActiveImageIndex}
         activeTab={activeTab}
         data={data}
         renderContent={renderContent}
-      /> 
+      />
 
       <DesktopContent
         data={data}

@@ -2,27 +2,24 @@ import React from 'react';
 import {
   AppBar,
   Toolbar,
-  Button,
   Container,
-  Chip,
   Typography,
   alpha,
   useTheme,
+  IconButton,
 } from '@mui/material';
-import { ArrowLeft } from '@mui/icons-material';
+import { ArrowLeft, ArrowRight } from '@mui/icons-material';
 
 interface DesktopNavigationProps {
-  hasNavigation: boolean;
-  status?: string;
-  getStatusColor: (
-    status?: string
-  ) => 'success' | 'warning' | 'default' | 'primary';
+  title: string;
+  onPreviousProject?: () => void;
+  onNextProject?: () => void;
 }
 
 export const DesktopNavigation: React.FC<DesktopNavigationProps> = ({
-  hasNavigation,
-  status,
-  getStatusColor,
+  onPreviousProject,
+  onNextProject,
+  title,
 }) => {
   const theme = useTheme();
 
@@ -38,21 +35,29 @@ export const DesktopNavigation: React.FC<DesktopNavigationProps> = ({
     >
       <Container maxWidth="xl">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {hasNavigation && (
-            <Button
-              startIcon={<ArrowLeft />}
-              sx={{ color: theme.palette.grey[400], textTransform: 'none' }}
-            >
-              Back to Portfolio
-            </Button>
-          )}
-          {status && (
-            <Chip
-              label={status.replace('-', ' ').toUpperCase()}
-              color={getStatusColor(status)}
-              size="small"
-            />
-          )}
+          <IconButton onClick={onPreviousProject}>
+            <ArrowLeft />
+          </IconButton>
+
+          <Typography
+            variant="h2"
+            sx={{
+              mt: 0.25,
+              textAlign: 'center',
+              p: 0.125,
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              wordBreak: 'break-word',
+            }}
+          >
+            {title}
+          </Typography>
+          <IconButton onClick={onNextProject}>
+            <ArrowRight />
+          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>

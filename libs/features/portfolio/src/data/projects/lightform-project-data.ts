@@ -203,7 +203,6 @@ export const lightformWebControllerProject: ProjectData = {
         ),
         title: 'Desktop Application Demo with Error Handling',
         type: 'demo',
-        // thumbnail: gitImageUrl('projects/lightform/App-Header.jpg'), // Use a screenshot as thumbnail
         caption:
           'Complete desktop application walkthrough including error state management',
       },

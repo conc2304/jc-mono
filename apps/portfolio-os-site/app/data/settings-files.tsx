@@ -1,8 +1,5 @@
 import { FileSystemItem } from '@jc/file-system';
-import {
-  EnhancedThemeSwitcherWithTheme,
-  ThemeCustomizerPage,
-} from '@jc/themes';
+import { ThemeCustomizerPage } from '@jc/themes';
 import { SettingsSuggest } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 

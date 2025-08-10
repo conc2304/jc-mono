@@ -22,13 +22,13 @@ export const allPortfolioProjectFiles: FileSystemItem<
   ProjectData,
   BrutalistTemplateProps
 >[] = [
-  atomicVisualizerFileSystemItem,
-  gravityScavengerFileSystemItem,
-  simplisafeJawaFileSystemItem,
   lightformWebControllerFileSystemItem,
-  terrainifyFileSystemItem,
-  tunecraftFileSystemItem,
-  verdantiaFileSystemItem,
-  vyzbyFileSystemItem,
   climateDataVizFileSystemItem,
+  gravityScavengerFileSystemItem,
+  verdantiaFileSystemItem,
+  tunecraftFileSystemItem,
+  vyzbyFileSystemItem,
+  atomicVisualizerFileSystemItem,
+  terrainifyFileSystemItem,
+  simplisafeJawaFileSystemItem,
 ];

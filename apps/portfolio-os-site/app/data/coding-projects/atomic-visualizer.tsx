@@ -34,7 +34,7 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
       'react-three-fiber',
       'harvard-cs50',
     ],
-    favorite: true,
+    favorite: false,
     description:
       '3D WebGL periodic table explorer with animated atomic structures',
   },

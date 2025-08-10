@@ -35,7 +35,7 @@ export const terrainifyFileSystemItem: FileSystemItem<
       'creative-coding',
       'python',
     ],
-    favorite: true,
+    favorite: false,
     description:
       'Maya Python plugin for procedural terrain with BPM-synchronized animation and music visualization',
   },

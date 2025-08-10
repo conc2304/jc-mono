@@ -488,15 +488,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 </TorusLoaderCardAug>
 
                 <ThemePickerPanel />
-
-                <Typography
-                  variant="caption"
-                  align="right"
-                  sx={{ color: 'primary.main', mt: 0.5 }}
-                  // TODO UPDATE THIS TEXT // or leave it as a shout out
-                >
-                  YOUNGSTA X SLEEPER
-                </Typography>
               </Box>
             </Grid>
 

@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 
@@ -35,6 +36,7 @@ export const ListView = ({
 }: ListViewProps) => {
   const context = useContext(FileSystemContext);
   const theme = useTheme();
+  const isLg = useMediaQuery(theme.breakpoints.up('sm'));
 
   const selectedBg = ensureContrast(
     theme.palette.text.primary,
@@ -109,12 +111,14 @@ export const ListView = ({
                 },
               }}
             />
-            <OverflowChipContainer
-              tags={item.metadata.tags}
-              favorite={item.metadata.favorite}
-              bgColor={selectedBg}
-              isSelected={isSelected}
-            />
+            {isLg && (
+              <OverflowChipContainer
+                tags={item.metadata.tags}
+                favorite={item.metadata.favorite}
+                bgColor={selectedBg}
+                isSelected={isSelected}
+              />
+            )}
             <Star
               size={16}
               color="gold"

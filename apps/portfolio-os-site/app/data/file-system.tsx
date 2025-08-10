@@ -3,30 +3,26 @@ import { v4 as uuidv4 } from 'uuid';
 import { resumeFile } from './resume-file';
 import { allPortfolioProjectFiles } from './project-files';
 import { setFileSystemHierarchy } from './utils';
-import { SettingsSuggest } from '@mui/icons-material';
-import { FileSystemItem } from '@jc/file-system';
-import {
-  EnhancedThemeSwitcher,
-  EnhancedThemeSwitcherProps,
-  EnhancedThemeSwitcherWithTheme,
-} from '@jc/themes';
+import { BaseFileSystemItem } from '@jc/file-system';
+
 import { SettingsFileSystem } from './settings-files';
 
 const fontSize = '80px';
 
-const unMappedFileSystem: FileSystemItem[] = [
+const unMappedFileSystem: BaseFileSystemItem[] = [
   {
     id: uuidv4(),
     icon: <Folder fontSize={fontSize} />,
-    name: 'Documents',
+    name: 'Projects',
     type: 'folder',
     dateModified: new Date('2024-01-15'),
     dateCreated: new Date('2024-01-01'),
-    path: '/Documents',
+    path: '/Projects',
     permissions: { read: true, write: true, execute: true },
     metadata: { tags: [], favorite: true },
-    children: [resumeFile, ...allPortfolioProjectFiles],
+    children: [...allPortfolioProjectFiles],
   },
+  resumeFile,
   {
     id: uuidv4(),
     name: 'Pictures',
@@ -40,21 +36,6 @@ const unMappedFileSystem: FileSystemItem[] = [
     children: [],
   },
   SettingsFileSystem,
-  // {
-  //   id: uuidv4(),
-  //   name: 'Settings',
-  //   type: 'file',
-  //   icon: <SettingsSuggest fontSize='large' />,
-  //   dateModified: new Date('2024-01-25'),
-  //   dateCreated: new Date('2024-01-01'),
-  //   path: '/Settings',
-  //   permissions: { read: true, write: true, execute: true },
-  //   metadata: { tags: ['development'], favorite: true },
-  //   children: [],
-  //   renderer: {
-  //     component: EnhancedThemeSwitcher
-  //   }
-  // },
 ];
 
 export const FileSystem = setFileSystemHierarchy(unMappedFileSystem);
