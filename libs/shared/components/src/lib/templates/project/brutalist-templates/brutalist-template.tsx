@@ -169,23 +169,19 @@ export const BrutalistTemplate = ({
       />
 
       <HeroSection
-        screenshots={screenshots}
-        activeImageIndex={activeImageIndex}
-        onImageChange={setActiveImageIndex}
-        onNextImage={nextImage}
-        onPrevImage={prevImage}
+        heroImage={data.media.thumbnail}
         projectName={data.projectName}
         description={data.basics?.description}
       />
 
-      {/* <MobileContent
+       <MobileContent
         screenshots={screenshots}
         activeImageIndex={activeImageIndex}
         onImageChange={setActiveImageIndex}
         activeTab={activeTab}
         data={data}
         renderContent={renderContent}
-      /> */}
+      /> 
 
       <DesktopContent
         data={data}
@@ -193,9 +189,6 @@ export const BrutalistTemplate = ({
         onTabChange={handleTabChange}
         tabs={tabsData}
         renderContent={renderContent}
-        screenshots={screenshots}
-        activeImageIndex={activeImageIndex}
-        onImageChange={setActiveImageIndex}
       />
     </ResponsiveContainer>
   );

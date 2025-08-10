@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const lightformWebControllerProject: ProjectData = {
   // =============================================================================
@@ -89,54 +90,107 @@ export const lightformWebControllerProject: ProjectData = {
   // =============================================================================
   media: {
     // Choose your main thumbnail/hero image
-    thumbnail: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+    thumbnail: {
+      url: getImageUrl(
+        'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+        'full'
+      ),
+      alt: 'Lightform LF2+ AR Projector - Primary Hardware',
+      ...getResponsiveImageSet(
+        'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg'
+      ),
+    },
 
     screenshots: [
       {
-        url: 'projects/lightform/App-Header.jpg',
+        url: getImageUrl('projects/lightform/App-Header.jpg', 'full'),
+        ...getResponsiveImageSet('projects/lightform/App-Header.jpg'),
         alt: 'Web Application Header Interface',
         caption: 'Main application header showing navigation and device status',
       },
       {
-        url: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+        url: getImageUrl(
+          'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg'
+        ),
         alt: 'Lightform LF2+ AR Projector - Primary Hardware',
         caption:
           'The Lightform LF2+ AR projector that the web controller interfaces with',
       },
       {
-        url: 'projects/lightform/LF2plus-front-transparent-square.webp',
+        url: getImageUrl(
+          'projects/lightform/LF2plus-front-transparent-square.webp',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/LF2plus-front-transparent-square.webp'
+        ),
         alt: 'LF2+ Front View Technical Specification',
         caption: 'Front view showing camera array and projection lens',
       },
       {
-        url: 'projects/lightform/FTUX-Step-2-Update-Firmware.png',
+        url: getImageUrl(
+          'projects/lightform/FTUX-Step-2-Update-Firmware.png',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/FTUX-Step-2-Update-Firmware.png'
+        ),
         alt: 'First Time User Experience - Firmware Update',
         caption: 'Step 2 of device setup process - firmware update interface',
       },
       {
-        url: 'projects/lightform/FTUX-Step-3-Device-Registration.png',
+        url: getImageUrl(
+          'projects/lightform/FTUX-Step-3-Device-Registration.png',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/FTUX-Step-3-Device-Registration.png'
+        ),
         alt: 'First Time User Experience - Device Registration',
         caption: 'Step 3 of device setup - registering device to user account',
       },
       {
-        url: 'projects/lightform/OAK-Step-1-Object-Scanning.png',
+        url: getImageUrl(
+          'projects/lightform/OAK-Step-1-Object-Scanning.png',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/OAK-Step-1-Object-Scanning.png'
+        ),
         alt: 'Object Alignment Kit - 3D Scanning Interface',
         caption:
           'Real-time 3D scanning interface for object detection and alignment',
       },
       {
-        url: 'projects/lightform/OAK-Step-2-Environments-UI.png',
+        url: getImageUrl(
+          'projects/lightform/OAK-Step-2-Environments-UI.png',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/OAK-Step-2-Environments-UI.png'
+        ),
         alt: 'Object Alignment Kit - Environment Selection',
         caption: 'Environment selection interface for projection mapping setup',
       },
       {
-        url: 'projects/lightform/OAK-Step-2-Object-Alignment.png',
+        url: getImageUrl(
+          'projects/lightform/OAK-Step-2-Object-Alignment.png',
+          'full'
+        ),
+        ...getResponsiveImageSet(
+          'projects/lightform/OAK-Step-2-Object-Alignment.png'
+        ),
         alt: 'Object Alignment Kit - Precision Alignment',
         caption:
           'Fine-tuned object alignment controls for accurate projection mapping',
       },
       {
-        url: 'projects/lightform/article-1-step-1-v1.png',
+        url: getImageUrl('projects/lightform/article-1-step-1-v1.png', 'full'),
+        ...getResponsiveImageSet('projects/lightform/article-1-step-1-v1.png'),
         alt: 'Tutorial Article 1 - Getting Started',
         caption: 'Step-by-step tutorial showing initial device setup process',
       },
@@ -144,7 +198,9 @@ export const lightformWebControllerProject: ProjectData = {
 
     videos: [
       {
-        url: 'projects/lightform/Desktop-View-Full-With-Errors-.mp4',
+        url: getVideoUrl(
+          'projects/lightform/Desktop-View-Full-With-Errors-.mp4'
+        ),
         title: 'Desktop Application Demo with Error Handling',
         type: 'demo',
         thumbnail: 'projects/lightform/App-Header.jpg', // Use a screenshot as thumbnail
@@ -152,52 +208,54 @@ export const lightformWebControllerProject: ProjectData = {
           'Complete desktop application walkthrough including error state management',
       },
       {
-        url: 'projects/lightform/Skate Shop Mural Mapping - Houston.mp4',
+        url: getVideoUrl(
+          'projects/lightform/Skate Shop Mural Mapping - Houston.mp4'
+        ),
         title: 'Real-World Projection Mapping Demo',
         type: 'demo',
         caption:
           'Live demonstration of projection mapping on a mural at a Houston skate shop',
       },
       {
-        url: 'projects/lightform/lightform-bgloop720.mp4',
+        url: getVideoUrl('projects/lightform/lightform-bgloop720.mp4'),
         title: 'Lightform Background Demo Loop',
         type: 'demo',
         caption:
           'Ambient projection mapping demonstration showing dynamic visual effects',
       },
       {
-        url: 'projects/lightform/lf-article1_step1_v1.mp4',
+        url: getVideoUrl('projects/lightform/lf-article1_step1_v1.mp4'),
         title: 'Tutorial: Getting Started - Step 1',
         type: 'process',
         caption: 'First step of the guided setup process for new users',
       },
       {
-        url: 'projects/lightform/lf-article1_step2_v1.mp4',
+        url: getVideoUrl('projects/lightform/lf-article1_step2_v1.mp4'),
         title: 'Tutorial: Getting Started - Step 2',
         type: 'process',
         caption:
           'Second step covering device connection and initial calibration',
       },
       {
-        url: 'projects/lightform/lf-article1_step3_v1.mp4',
+        url: getVideoUrl('projects/lightform/lf-article1_step3_v1.mp4'),
         title: 'Tutorial: Getting Started - Step 3',
         type: 'process',
         caption: 'Final setup step showing first projection and basic controls',
       },
       {
-        url: 'projects/lightform/lf-article2_step2_v1.mp4',
+        url: getVideoUrl('projects/lightform/lf-article2_step2_v1.mp4'),
         title: 'Advanced Tutorial: Object Detection - Step 2',
         type: 'process',
         caption: 'Advanced object detection and tracking setup process',
       },
       {
-        url: 'projects/lightform/lf-article2_step3_v1.mp4',
+        url: getVideoUrl('projects/lightform/lf-article2_step3_v1.mp4'),
         title: 'Advanced Tutorial: Object Detection - Step 3',
         type: 'process',
         caption: 'Fine-tuning object detection parameters for optimal tracking',
       },
       {
-        url: 'projects/lightform/lf-article3_step2_v1.mp4',
+        url: getVideoUrl('projects/lightform/lf-article3_step2_v1.mp4'),
         title: 'Professional Tutorial: Complex Mappings - Step 2',
         type: 'process',
         caption: 'Creating complex multi-surface projection mappings',

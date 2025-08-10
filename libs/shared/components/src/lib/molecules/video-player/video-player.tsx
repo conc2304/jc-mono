@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   IconButton,
@@ -15,26 +15,21 @@ import {
   Fullscreen,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { ImageContainer } from '@jc/ui-components';
-
-interface VideoData {
-  url: string;
-  title?: string;
-  type?: 'demo' | 'process' | 'final' | 'inspiration';
-  thumbnail?: string;
-  caption?: string;
-}
+import { ImageContainer, VideoMediaData } from '@jc/ui-components';
 
 interface VideoPlayerProps {
-  video: VideoData;
+  video: VideoMediaData;
   sx?: any;
   autoPlay?: boolean;
   controls?: boolean;
   muted?: boolean;
   loop?: boolean;
+  lazy?: boolean;
+  lazyOffset?: string | number;
   onPlay?: () => void;
   onPause?: () => void;
   onError?: () => void;
+  onLazyLoad?: () => void;
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -44,18 +39,54 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   controls = true,
   muted = true,
   loop = false,
+  lazy = false,
+  lazyOffset = '100px',
   onPlay,
   onPause,
   onError,
+  onLazyLoad,
 }) => {
   const theme = useTheme();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!lazy);
   const [hasError, setHasError] = useState(false);
   const [isMuted, setIsMuted] = useState(muted);
   const [showControls, setShowControls] = useState(false);
   const [showThumbnail, setShowThumbnail] = useState(!!video.thumbnail);
+  const [shouldLoad, setShouldLoad] = useState(!lazy);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  // Intersection Observer for lazy loading
+  useEffect(() => {
+    if (!lazy || shouldLoad) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        setIsIntersecting(entry.isIntersecting);
+
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          setIsLoading(true);
+          onLazyLoad?.();
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin:
+          typeof lazyOffset === 'number' ? `${lazyOffset}px` : lazyOffset,
+        threshold: 0.1,
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [lazy, lazyOffset, shouldLoad, onLazyLoad]);
 
   const handlePlay = () => {
     if (videoRef.current) {
@@ -103,10 +134,19 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     setIsLoading(false);
   };
 
-  const handleVideoError = (e) => {
+  const handleVideoError = () => {
     setIsLoading(false);
     setHasError(true);
     onError?.();
+  };
+
+  const handleThumbnailClick = () => {
+    if (!shouldLoad) {
+      setShouldLoad(true);
+      setIsLoading(true);
+    } else {
+      handlePlay();
+    }
   };
 
   const getTypeColor = (type?: string) => {
@@ -127,6 +167,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   if (hasError) {
     return (
       <Box
+        ref={containerRef}
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -152,8 +193,107 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     );
   }
 
+  // Lazy loading placeholder
+  if (lazy && !shouldLoad) {
+    return (
+      <Box
+        ref={containerRef}
+        sx={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+          backgroundColor: 'black',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          ...sx,
+        }}
+      >
+        {/* Video Type Badge */}
+        {video.type && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 8,
+              left: 8,
+              zIndex: 3,
+              bgcolor: getTypeColor(video.type),
+              color: 'white',
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              typography: 'caption',
+              textTransform: 'capitalize',
+            }}
+          >
+            {video.type}
+          </Box>
+        )}
+
+        {/* Thumbnail or Placeholder */}
+        {video.thumbnail ? (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              cursor: 'pointer',
+            }}
+            onClick={handleThumbnailClick}
+          >
+            <ImageContainer
+              src={video.thumbnail}
+              alt={video.title || 'Video thumbnail'}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                bgcolor: 'rgba(0, 0, 0, 0.7)',
+                borderRadius: '50%',
+                p: 2,
+              }}
+            >
+              <PlayArrow sx={{ color: 'white', fontSize: 48 }} />
+            </Box>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              color: 'white',
+              cursor: 'pointer',
+            }}
+            onClick={handleThumbnailClick}
+          >
+            <PlayArrow sx={{ fontSize: 64, mb: 1 }} />
+            <Typography variant="body2">Click to load video</Typography>
+            {video.title && (
+              <Typography variant="caption" sx={{ mt: 1, textAlign: 'center' }}>
+                {video.title}
+              </Typography>
+            )}
+          </Box>
+        )}
+      </Box>
+    );
+  }
+
   return (
     <Box
+      ref={containerRef}
       sx={{
         position: 'relative',
         width: '100%',
@@ -187,7 +327,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       )}
 
       {/* Thumbnail Overlay */}
-      {showThumbnail && video.thumbnail && (
+      {showThumbnail && video.thumbnail && shouldLoad && (
         <Box
           sx={{
             position: 'absolute',
@@ -203,6 +343,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           <ImageContainer
             src={video.thumbnail}
             alt={video.title || 'Video thumbnail'}
+            // lazy={true}
             sx={{
               width: '100%',
               height: '100%',
@@ -220,33 +361,35 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               p: 2,
             }}
           >
-            <PlayArrow sx={{ color: 'text.primary', fontSize: 48 }} />
+            <PlayArrow sx={{ color: 'white', fontSize: 48 }} />
           </Box>
         </Box>
       )}
 
-      {/* Video Element */}
-      <Box
-        component="video"
-        ref={videoRef}
-        src={video.url}
-        autoPlay={autoPlay}
-        muted={isMuted}
-        loop={loop}
-        onLoadedData={handleVideoLoad}
-        onError={handleVideoError}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        sx={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: showThumbnail ? 'none' : 'block',
-        }}
-      />
+      {/* Video Element - only render when shouldLoad is true */}
+      {shouldLoad && (
+        <Box
+          component="video"
+          ref={videoRef}
+          src={video.url}
+          autoPlay={autoPlay}
+          muted={isMuted}
+          loop={loop}
+          onLoadedData={handleVideoLoad}
+          onError={handleVideoError}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: showThumbnail ? 'none' : 'block',
+          }}
+        />
+      )}
 
       {/* Loading Spinner */}
-      {isLoading && !showThumbnail && (
+      {isLoading && shouldLoad && !showThumbnail && (
         <Box
           sx={{
             position: 'absolute',
@@ -261,7 +404,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       )}
 
       {/* Custom Controls */}
-      {controls && !showThumbnail && (
+      {controls && !showThumbnail && shouldLoad && (
         <Fade in={showControls || !isPlaying}>
           <Box
             sx={{

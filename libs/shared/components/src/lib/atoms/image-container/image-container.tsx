@@ -4,7 +4,10 @@ import { Image, Error } from '@mui/icons-material';
 
 interface ImageContainerProps extends Omit<BoxProps, 'component'> {
   src: string;
+  srcSet?: string;
+  sizes?: string;
   fallbackSrc?: string;
+  fallbackSrcSet?: string;
   alt?: string;
   sx?: SxProps;
   skeletonSx?: SxProps;
@@ -19,7 +22,10 @@ interface ImageContainerProps extends Omit<BoxProps, 'component'> {
 
 export const ImageContainer = ({
   src,
+  srcSet,
+  sizes,
   fallbackSrc,
+  fallbackSrcSet,
   alt = '',
   sx = {},
   skeletonSx = {},
@@ -29,11 +35,13 @@ export const ImageContainer = ({
 }: ImageContainerProps) => {
   const [imageState, setImageState] = useState('loading');
   const [currentSrc, setCurrentSrc] = useState(src);
+  const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
   const [showSkeleton, setShowSkeleton] = useState(true);
 
   useEffect(() => {
     setImageState('loading');
     setCurrentSrc(src);
+    setCurrentSrcSet(srcSet);
     setShowSkeleton(true);
 
     // Minimum skeleton display time for better UX
@@ -42,7 +50,7 @@ export const ImageContainer = ({
     }, showSkeletonDuration);
 
     return () => clearTimeout(skeletonTimer);
-  }, [src, showSkeletonDuration]);
+  }, [src, srcSet, showSkeletonDuration]);
 
   const handleImageLoad = () => {
     setImageState('loaded');
@@ -52,6 +60,7 @@ export const ImageContainer = ({
     if (currentSrc === src && fallbackSrc) {
       // Try fallback image
       setCurrentSrc(fallbackSrc);
+      setCurrentSrcSet(fallbackSrcSet);
       setImageState('loading');
     } else {
       // No fallback or fallback also failed
@@ -129,6 +138,8 @@ export const ImageContainer = ({
       <Box
         component="img"
         src={currentSrc}
+        srcSet={currentSrcSet}
+        sizes={sizes}
         alt={alt}
         onLoad={handleImageLoad}
         onError={handleImageError}

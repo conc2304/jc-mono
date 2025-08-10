@@ -1,3 +1,5 @@
+import { ImageMediaData, VideoMediaData } from '../../organisms';
+
 // =============================================================================
 // CORE INTERFACES (MVP - Essential for getting projects live)
 // =============================================================================
@@ -7,7 +9,6 @@ interface ProjectCore {
   projectName: string;
   slug?: string; // URL-friendly version, auto-generated if not provided
 }
-
 interface ProjectBasics {
   type: 'professional' | 'graduate' | 'personal' | 'school';
   category:
@@ -45,19 +46,9 @@ interface ProjectTechnical {
 }
 
 interface ProjectMedia {
-  thumbnail?: string; // main project image
-  screenshots?: Array<{
-    url: string;
-    alt: string;
-    caption?: string;
-  }>;
-  videos?: Array<{
-    url: string;
-    title?: string;
-    type?: 'demo' | 'process' | 'final' | 'inspiration';
-    thumbnail?: string;
-    caption?: string;
-  }>;
+  thumbnail: ImageMediaData; // main project image
+  screenshots?: ImageMediaData[];
+  videos?: VideoMediaData[];
 }
 
 interface ProjectLinks {
@@ -94,7 +85,7 @@ interface ProjectMetadata {
 interface ProjectMVP extends ProjectCore {
   basics: ProjectBasics;
   technical?: ProjectTechnical;
-  media?: ProjectMedia;
+  media: ProjectMedia;
   links?: ProjectLinks;
   content?: ProjectContent;
   metadata?: ProjectMetadata;
@@ -230,95 +221,6 @@ type ProjectWithInteractivity = ProjectMVP & {
 
 // The complete experience
 type ProjectComplete = ProjectFull;
-
-// =============================================================================
-// EXAMPLE USAGE - PROGRESSIVE ENHANCEMENT
-// =============================================================================
-
-// MVP Version - Get this live first
-const lightformMVP: ProjectData = {
-  id: 'lightform-controller',
-  projectName: 'Lightform Web App Controller',
-  basics: {
-    type: 'professional',
-    category: 'web',
-    subcategories: ['front-end', 'ui-dev', 'pwa'],
-    description: 'Progressive Web App for intuitive projection mapping control',
-    context: 'Professional work at Lightform',
-  },
-  technical: {
-    technologies: ['StencilJs', 'Typescript', 'Ionic', 'P5.js', 'SCSS'],
-    timeline: { duration: '8 months' },
-  },
-  content: {
-    overview:
-      'A Progressive Web App that transforms complex projection mapping into an intuitive creative tool accessible to everyone.',
-    learnings:
-      'Mastered StencilJs web components and created intuitive interfaces for complex 3D interactions.',
-  },
-  links: {
-    repository: 'https://github.com/...', // if allowed to share
-  },
-  metadata: {
-    featured: true,
-    status: 'live',
-    tags: ['pwa', 'creative-tools', '3d-ui'],
-  },
-};
-
-// Enhanced Version - Add narrative layer later
-const lightformWithNarrative: ProjectWithNarrative = {
-  ...lightformMVP,
-  narrative: {
-    personalSignificance: {
-      whyItMatters:
-        'Embodies intersection of creative technology and user empowerment',
-      creativeVsCorporateSpectrum: 7,
-    },
-    narrativeRole: {
-      hiddenStory:
-        'Mission to democratize art creation and break creative barriers',
-      emotionalIntent: ['wonder', 'accessibility', 'empowerment'],
-    },
-  },
-};
-
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
-
-export const createMVPProject = (
-  core: ProjectCore,
-  basics: ProjectBasics
-): ProjectData => ({
-  ...core,
-  basics,
-});
-
-export const hasMedia = (project: ProjectData): boolean => {
-  return !!(
-    project.media?.screenshots?.length || project.media?.videos?.length
-  );
-};
-
-export const hasTechnicalDetails = (project: ProjectData): boolean => {
-  return !!project.technical?.technologies?.length;
-};
-
-export const isFeatured = (project: ProjectData): boolean => {
-  return project.metadata?.featured === true;
-};
-
-export const getProjectsByType = (
-  projects: ProjectData[],
-  type: string
-): ProjectData[] => {
-  return projects.filter((p) => p.basics.type === type);
-};
-
-export const getFeaturedProjects = (projects: ProjectData[]): ProjectData[] => {
-  return projects.filter(isFeatured);
-};
 
 // =============================================================================
 // EXPORT TYPES

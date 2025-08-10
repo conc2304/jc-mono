@@ -1,17 +1,9 @@
-// components/Desktop/DesktopContent.tsx
 import React from 'react';
 import { Container, Grid, Box } from '@mui/material';
-// import { DesktopSidebar } from './DesktopSidebar';
-// import { DesktopMainContent } from './DesktopMainContent';
 import { ProjectData, ProjectContent } from '../../types';
 import { DesktopSidebar } from './desktop-sidebar';
 import { DesktopMainContent } from './desktop-main-content';
 
-interface Screenshot {
-  url: string;
-  alt: string;
-  caption?: string;
-}
 
 interface TabData {
   key: string;
@@ -24,9 +16,6 @@ interface DesktopContentProps {
   onTabChange: (event: React.SyntheticEvent, newValue: string) => void;
   tabs: TabData[];
   renderContent: (content?: string | string[]) => React.ReactNode;
-  screenshots: Screenshot[];
-  activeImageIndex: number;
-  onImageChange: (index: number) => void;
 }
 
 export const DesktopContent: React.FC<DesktopContentProps> = ({
@@ -35,9 +24,6 @@ export const DesktopContent: React.FC<DesktopContentProps> = ({
   onTabChange,
   tabs,
   renderContent,
-  screenshots,
-  activeImageIndex,
-  onImageChange,
 }) => {
   return (
     <Container maxWidth="xl" className="desktop-layout" sx={{ py: 4 }}>
@@ -53,9 +39,7 @@ export const DesktopContent: React.FC<DesktopContentProps> = ({
             tabs={tabs}
             renderContent={renderContent}
             videos={data.media?.videos}
-            screenshots={screenshots}
-            activeImageIndex={activeImageIndex}
-            onImageChange={onImageChange}
+            screenshots={data.media?.screenshots}
           />
         </Grid>
       </Grid>

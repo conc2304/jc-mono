@@ -1,4 +1,3 @@
-// components/Hero/HeroSection.tsx
 import React from 'react';
 import {
   Box,
@@ -8,9 +7,8 @@ import {
   styled,
   useTheme,
 } from '@mui/material';
-import { ImageCarousel } from './image-carousel';
-import { getResponsiveImageSet } from '@jc/utils';
 import { ImageContainer } from '../../../../atoms';
+import { ImageMediaData } from '../../../../organisms';
 
 const HeroSectionContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -41,57 +39,28 @@ const HeroSectionContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-interface Screenshot {
-  url: string;
-  alt: string;
-  caption?: string;
-}
-
 interface HeroSectionProps {
-  screenshots: Screenshot[];
-  activeImageIndex: number;
-  onImageChange: (index: number) => void;
-  onNextImage: () => void;
-  onPrevImage: () => void;
+  heroImage: ImageMediaData;
   projectName: string;
   description?: string;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
-  screenshots,
-  activeImageIndex,
-  onImageChange,
-  onNextImage,
-  onPrevImage,
+  heroImage,
   projectName,
   description,
 }) => {
   const theme = useTheme();
 
-  const imgSrcProps = getResponsiveImageSet(screenshots[activeImageIndex]?.url);
   return (
     <HeroSectionContainer>
-      {screenshots.length > 0 && (
-        <Box
-          className="hero-mobile"
-          sx={{ position: 'relative', overflow: 'hidden' }}
-        >
-          <ImageContainer
-            {...imgSrcProps}
-            alt={screenshots[activeImageIndex]?.alt}
-            className="hero-image"
-          />
-          <Box className="hero-overlay" />
-
-          <ImageCarousel
-            screenshots={screenshots}
-            activeIndex={activeImageIndex}
-            onIndexChange={onImageChange}
-            onNext={onNextImage}
-            onPrev={onPrevImage}
-          />
-        </Box>
-      )}
+      <Box
+        className="hero-mobile"
+        sx={{ position: 'relative', overflow: 'hidden' }}
+      >
+        <ImageContainer {...heroImage} className="hero-image" />
+        <Box className="hero-overlay" />
+      </Box>
 
       <Box className="hero-content">
         <Container maxWidth="xl">

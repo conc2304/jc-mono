@@ -1,9 +1,8 @@
-// apps/portfolio-web/src/utils/media.ts
 // Cloudflare Images transformation utilities
 
 // Your actual configuration
-const R2_CUSTOM_URL = 'https://media.clyzby.com'; // Your custom R2 domain
-const CF_ZONE = 'clyzby.com'; // Your main domain
+const R2_CUSTOM_URL = 'https://media.clyzby.com';
+const CF_ZONE = 'clyzby.com';
 
 /**
  * Generate optimized image URL using Cloudflare Images transformations
@@ -116,7 +115,3 @@ export function generateMediaUrls(mediaPaths: string[]) {
     responsive: isImage(path) ? getResponsiveImageSet(path) : null,
   }));
 }
-
-// Example usage with the new format:
-// getImageUrl('projects/lightform/hero.jpg', 'hero')
-// Result: https://clyzby.com/cdn-cgi/image/width=1200,quality=90,format=auto,fit=scale-down/https://media.clyzby.com/projects/lightform/hero.jpg

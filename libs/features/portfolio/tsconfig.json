@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../shared/utils"
+    },
+    {
       "path": "../../shared/components"
     },
     {
