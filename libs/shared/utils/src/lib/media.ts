@@ -98,13 +98,6 @@ export function isImage(path: string): boolean {
 }
 
 /**
- * Get file extension from path
- */
-export function getFileExtension(path: string): string {
-  return path.toLowerCase().split('.').pop() || '';
-}
-
-/**
  * Batch generate URLs for multiple media items
  */
 export function generateMediaUrls(mediaPaths: string[]) {
