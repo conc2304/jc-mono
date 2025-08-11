@@ -38,19 +38,6 @@ export const ImageContainer = ({
   const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
   const [showSkeleton, setShowSkeleton] = useState(true);
 
-  console.log({
-    srcSet,
-    sizes,
-    fallbackSrc,
-    fallbackSrcSet,
-    alt,
-    sx,
-    skeletonSx,
-    errorSx,
-    showSkeletonDuration,
-    props,
-  });
-
   useEffect(() => {
     setImageState('loading');
     setCurrentSrc(src);
