@@ -21,8 +21,6 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     (item: BaseFileSystemItem, event: React.MouseEvent | React.TouchEvent) => {
       if (event.button === 2) return;
 
-      console.log('Double Click Open Item');
-
       if (item.type === 'folder') {
         context?.navigateToPath(item.path);
       } else {

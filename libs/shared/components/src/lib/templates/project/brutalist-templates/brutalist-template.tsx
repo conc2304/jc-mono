@@ -79,9 +79,6 @@ export const BrutalistTemplate: React.FC<
     null
   );
 
-  console.log('BrutalistTemplate');
-  console.log(!!onNext, !!onPrevious);
-
   const data = project;
   const screenshots = data?.media?.screenshots || [];
 

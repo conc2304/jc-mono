@@ -24,8 +24,6 @@ export const DesktopNavigation: React.FC<
 > = ({ onNext, onPrevious, onSelectItem, navigationInfo, title }) => {
   const theme = useTheme();
   const showNavigation = onNext || onPrevious || onSelectItem;
-  console.log('DesktopNavigation');
-  console.log(!!onNext, !!onPrevious);
 
   return (
     <AppBar

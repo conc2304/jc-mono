@@ -484,7 +484,6 @@ export const WindowProvider: React.FC<{
       const current = windows.find(({ id }) => windowId === id);
       const isRestoring = !!current?.minimized;
 
-      console.log({ isRestoring });
       setWindows((prev) =>
         prev.map((window) => {
           return window.id === windowId
@@ -892,7 +891,6 @@ const getWindowContent = (
       windowId &&
       replaceWindowContent
     ) {
-      console.log('Use Navigation Manager');
       // Use navigation manager to render the file with navigation context
       const navigationManager = new FileSystemNavigationManager(
         fileSystemItems

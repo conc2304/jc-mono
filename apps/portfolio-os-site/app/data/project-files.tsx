@@ -48,5 +48,3 @@ export const allPortfolioProjectFiles: FileSystemItem<
       : undefined),
   },
 }));
-
-console.log({ allPortfolioProjectFiles });
