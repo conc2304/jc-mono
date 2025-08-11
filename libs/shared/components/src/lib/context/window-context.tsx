@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
   ReactNode,
+  useMemo,
 } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
@@ -16,7 +17,7 @@ import { findFileSystemItemByIdWithPath } from '../utils';
 import {
   FileSystemItem,
   FileSystemNavigationManager,
-  PROJECT_NAVIGATION_GROUP,
+  NavigationGroup,
 } from '@jc/file-system';
 
 interface DragRef {
@@ -113,8 +114,14 @@ const WindowContext = createContext<WindowContextValue | null>(null);
 export const WindowProvider: React.FC<{
   children: React.ReactNode;
   fileSystemItems: FileSystemItem[];
+  navigationGroups?: NavigationGroup[];
   defaultIconPositions?: Record<string, IconPosition>;
-}> = ({ children, fileSystemItems, defaultIconPositions = {} }) => {
+}> = ({
+  children,
+  fileSystemItems,
+  defaultIconPositions = {},
+  navigationGroups = [],
+}) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -127,7 +134,76 @@ export const WindowProvider: React.FC<{
     useState<Record<string, IconPosition>>(defaultIconPositions);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
 
-  // Performance-optimized drag refs
+  // Create navigation manager with provided groups
+  const navigationManager = useMemo(() => {
+    const manager = new FileSystemNavigationManager(fileSystemItems);
+
+    // Register all provided navigation groups
+    navigationGroups.forEach((group) => {
+      manager.registerNavigationGroup(group);
+    });
+
+    return manager;
+  }, [fileSystemItems, navigationGroups]);
+
+  // Update navigation manager when fileSystemItems change
+  useEffect(() => {
+    navigationManager.updateFileSystemItems(fileSystemItems);
+  }, [fileSystemItems, navigationManager]);
+
+  // Updated getWindowContent function to use the navigation manager
+  const getWindowContent = useCallback(
+    (
+      fsItem: FileSystemItem,
+      fileSystemItems: FileSystemItem[],
+      updateWindowCallback: (name: string, icon: ReactNode) => void,
+      windowId?: string,
+      replaceWindowContent?: (
+        windowId: string,
+        content: ReactNode,
+        title: string,
+        icon: ReactNode,
+        options?: any
+      ) => void
+    ): ReactNode => {
+      if (fsItem.type === 'folder') {
+        // File Browser
+        return (
+          <FileManager
+            windowId={windowId}
+            initialPath={fsItem.path}
+            folderContents={fsItem.children || []}
+            fileSystemItems={fileSystemItems}
+            updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
+          />
+        );
+      } else if (fsItem.renderer) {
+        // File with renderer - check if it supports navigation
+        if (
+          fsItem.renderer.navigationGroup &&
+          fsItem.renderer.shouldNavigate &&
+          windowId &&
+          replaceWindowContent
+        ) {
+          // NEW: Use the memoized navigation manager instead of creating a new one
+          return navigationManager.renderNavigableFile(
+            fsItem,
+            windowId,
+            replaceWindowContent
+          );
+        } else {
+          // Regular file rendering without navigation
+          const { component: Component, props = {} } = fsItem.renderer;
+          return <Component {...fsItem.fileData} {...(props as any)} />;
+        }
+      }
+
+      return null;
+    },
+    [navigationManager]
+  );
+
+  // Drag refs
   const windowDragRef = useRef<DragRef>({
     startX: 0,
     startY: 0,
@@ -451,6 +527,7 @@ export const WindowProvider: React.FC<{
       windowZIndex,
       onWindowAnimationComplete,
       replaceWindowContent,
+      getWindowContent,
     ]
   );
 
@@ -857,58 +934,6 @@ export const useWindowDrag = () => {
 export const useWindowContentActions = () => {
   const { replaceWindowContent } = useWindowManager();
   return { replaceWindowContent };
-};
-
-const getWindowContent = (
-  fsItem: FileSystemItem,
-  fileSystemItems: FileSystemItem[],
-  updateWindowCallback: (name: string, icon: ReactNode) => void,
-  windowId?: string,
-  replaceWindowContent?: (
-    windowId: string,
-    content: ReactNode,
-    title: string,
-    icon: ReactNode,
-    options?: any
-  ) => void
-): ReactNode => {
-  if (fsItem.type === 'folder') {
-    // File Browser
-    return (
-      <FileManager
-        windowId={windowId}
-        initialPath={fsItem.path}
-        folderContents={fsItem.children || []}
-        fileSystemItems={fileSystemItems}
-        updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
-      />
-    );
-  } else if (fsItem.renderer) {
-    // File with renderer - check if it supports navigation
-    if (
-      fsItem.renderer.navigationGroup &&
-      fsItem.renderer.shouldNavigate &&
-      windowId &&
-      replaceWindowContent
-    ) {
-      // Use navigation manager to render the file with navigation context
-      const navigationManager = new FileSystemNavigationManager(
-        fileSystemItems
-      );
-      navigationManager.registerNavigationGroup(PROJECT_NAVIGATION_GROUP); // Register your groups
-      return navigationManager.renderNavigableFile(
-        fsItem,
-        windowId,
-        replaceWindowContent
-      );
-    } else {
-      // Regular file rendering without navigation
-      const { component: Component, props = {} } = fsItem.renderer;
-      return <Component {...fsItem.fileData} {...(props as any)} />;
-    }
-  }
-
-  return null;
 };
 
 // Utility function to render a file

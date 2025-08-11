@@ -19,7 +19,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
 
   const handleItemDoubleClick = useCallback(
     (item: BaseFileSystemItem, event: React.MouseEvent | React.TouchEvent) => {
-      if (event.button === 2) return;
+      if ('button' in event && event.button === 2) return;
 
       if (item.type === 'folder') {
         context?.navigateToPath(item.path);

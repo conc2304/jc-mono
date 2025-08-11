@@ -38,6 +38,19 @@ export const ImageContainer = ({
   const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
   const [showSkeleton, setShowSkeleton] = useState(true);
 
+  console.log({
+    srcSet,
+    sizes,
+    fallbackSrc,
+    fallbackSrcSet,
+    alt,
+    sx,
+    skeletonSx,
+    errorSx,
+    showSkeletonDuration,
+    props,
+  });
+
   useEffect(() => {
     setImageState('loading');
     setCurrentSrc(src);
@@ -79,7 +92,7 @@ export const ImageContainer = ({
         ...sx,
         ...skeletonSx,
       }}
-      {...props}
+      // {...props}
     >
       <Skeleton
         variant="rectangular"
@@ -150,7 +163,7 @@ export const ImageContainer = ({
           transition: 'opacity 0.3s ease-in-out',
           objectFit: 'cover',
         }}
-        {...props}
+        // {...props}
       />
       {imageState === 'loading' && !showSkeleton && (
         <Box

@@ -196,40 +196,40 @@ export const createNavigationGroup = (
   metadata: options?.metadata,
 });
 
-// Pre-defined navigation groups
-export const PROJECT_NAVIGATION_GROUP = createNavigationGroup(
-  'projects',
-  'Portfolio Projects',
-  (item) => item.name.endsWith('.proj') && item.type === 'file',
-  {
-    sortBy: (a, b) => {
-      // Sort by favorite first, then by date modified
-      const aFavorite = a.metadata.favorite ? 1 : 0;
-      const bFavorite = b.metadata.favorite ? 1 : 0;
+// // Pre-defined navigation groups
+// export const PROJECT_NAVIGATION_GROUP = createNavigationGroup(
+//   'projects',
+//   'Portfolio Projects',
+//   (item) => item.name.endsWith('.proj') && item.type === 'file',
+//   {
+//     sortBy: (a, b) => {
+//       // Sort by favorite first, then by date modified
+//       const aFavorite = a.metadata.favorite ? 1 : 0;
+//       const bFavorite = b.metadata.favorite ? 1 : 0;
 
-      if (aFavorite !== bFavorite) {
-        return bFavorite - aFavorite; // Favorites first
-      }
+//       if (aFavorite !== bFavorite) {
+//         return bFavorite - aFavorite; // Favorites first
+//       }
 
-      return b.dateModified.getTime() - a.dateModified.getTime(); // Newest first
-    },
-  }
-);
+//       return b.dateModified.getTime() - a.dateModified.getTime(); // Newest first
+//     },
+//   }
+// );
 
-// Hook to use navigation manager in components
-export const useFileSystemNavigation = (
-  items: FileSystemItem[],
-  navigationGroups?: NavigationGroup[]
-) => {
-  const manager = new FileSystemNavigationManager(items);
+// // Hook to use navigation manager in components
+// export const useFileSystemNavigation = (
+//   items: FileSystemItem[],
+//   navigationGroups?: NavigationGroup[]
+// ) => {
+//   const manager = new FileSystemNavigationManager(items);
 
-  // Register default navigation groups
-  manager.registerNavigationGroup(PROJECT_NAVIGATION_GROUP);
+//   // Register default navigation groups
+//   manager.registerNavigationGroup(PROJECT_NAVIGATION_GROUP);
 
-  // Register custom navigation groups
-  navigationGroups?.forEach((group) => {
-    manager.registerNavigationGroup(group);
-  });
+//   // Register custom navigation groups
+//   navigationGroups?.forEach((group) => {
+//     manager.registerNavigationGroup(group);
+//   });
 
-  return manager;
-};
+//   return manager;
+// };

@@ -5,7 +5,7 @@ import {
   BrutalistTemplateProps,
 } from '@jc/ui-components';
 
-import { FileSystemItem } from '@jc/file-system';
+import { createNavigationGroup, FileSystemItem } from '@jc/file-system';
 import {
   atomicVisualizerFileSystemItem,
   climateDataVizFileSystemItem,
@@ -17,6 +17,7 @@ import {
   verdantiaFileSystemItem,
   vyzbyFileSystemItem,
 } from './coding-projects';
+import { NAVIGATION_GROUPS } from './constants';
 
 export const allPortfolioProjectFiles: FileSystemItem<
   ProjectData,
@@ -33,18 +34,29 @@ export const allPortfolioProjectFiles: FileSystemItem<
   simplisafeJawaFileSystemItem,
 ].map((projectFileItem) => ({
   ...projectFileItem,
-  // renderer: {
-  //   ...projectFileItem.renderer,
-  //   // navigationGroup: 'projects', // This makes it part of the projects navigation group
-  //   // shouldNavigate: true,
-  // },
+
   renderer: {
-    ...(projectFileItem.renderer
-      ? {
-          ...projectFileItem.renderer,
-          navigationGroup: 'projects', // This makes it part of the projects navigation group
-          shouldNavigate: true,
-        }
-      : undefined),
+    ...projectFileItem.renderer,
+    navigationGroup: NAVIGATION_GROUPS.Projects,
+    shouldNavigate: true,
   },
 }));
+
+export const PROJECT_NAVIGATION_GROUP = createNavigationGroup(
+  NAVIGATION_GROUPS.Projects,
+  'Portfolio Projects',
+  (item) => item.name.endsWith('.proj') && item.type === 'file',
+  {
+    sortBy: (a, b) => {
+      // Sort by favorite first, then by date modified
+      const aFavorite = a.metadata.favorite ? 1 : 0;
+      const bFavorite = b.metadata.favorite ? 1 : 0;
+
+      if (aFavorite !== bFavorite) {
+        return bFavorite - aFavorite; // Favorites first
+      }
+
+      return b.dateModified.getTime() - a.dateModified.getTime(); // Newest first
+    },
+  }
+);

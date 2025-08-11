@@ -75,9 +75,9 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
         </Typography>
 
         {details.map(({ label, value }) => {
-          if (label && value)
-            return <DetailItem label={label} value={value} key={label} />;
-          return <></>;
+          return (
+            <DetailItem label={label} value={value || 'N/A'} key={label} />
+          );
         })}
       </PaperStyled>
 

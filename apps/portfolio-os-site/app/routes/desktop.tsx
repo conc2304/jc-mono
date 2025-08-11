@@ -6,7 +6,9 @@ import {
   GradientShader,
 } from '@jc/ui-components';
 import { FileSystem } from '../data/file-system';
+
 import { useMediaQuery } from '@mui/system';
+import { PROJECT_NAVIGATION_GROUP } from '../data/project-files';
 // import { remToPixels } from '@jc/themes';
 // import { FileSystem } from './data/file-system';
 
@@ -42,6 +44,7 @@ export function App() {
       {/* <CursorTrail {...cursorConfig} /> */}
       <DesktopOS
         fileSystem={FileSystem}
+        navigationGroups={[PROJECT_NAVIGATION_GROUP]}
         iconArrangement={isXs ? 'grid' : 'linear'}
       />
       <GradientShader
