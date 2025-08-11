@@ -1,4 +1,3 @@
-// Main BrutalistTemplate.tsx
 import React, { useState } from 'react';
 import { Box, Typography, useTheme, styled } from '@mui/material';
 
@@ -9,6 +8,7 @@ import { DesktopNavigation } from './navigation/desktop-navigation';
 import { HeroSection } from './hero/hero-section';
 import { MobileContent } from './mobile/mobile-content';
 import { DesktopContent } from './desktop/desktop-content';
+import { NavigationContext } from '@jc/file-system';
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   height: '100%',
@@ -62,29 +62,28 @@ export interface BrutalistTemplateProps {
   hasNavigation?: boolean;
 }
 
-export const BrutalistTemplate = ({
+export const BrutalistTemplate: React.FC<
+  BrutalistTemplateProps & ProjectData & NavigationContext
+> = ({
   hasNavigation = false,
+  onNext,
+  onPrevious,
+  onSelectItem,
+  navigationInfo,
+  // Project props
   ...project
-}: BrutalistTemplateProps & ProjectData) => {
+}) => {
   const theme = useTheme();
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null
   );
 
+  console.log('BrutalistTemplate');
+  console.log(!!onNext, !!onPrevious);
+
   const data = project;
   const screenshots = data?.media?.screenshots || [];
-
-  const nextImage = (): void => {
-    setActiveImageIndex((prev) => (prev + 1) % screenshots.length);
-  };
-
-  const prevImage = (): void => {
-    setActiveImageIndex(
-      (prev) => (prev - 1 + screenshots.length) % screenshots.length
-    );
-  };
 
   const getStatusColor = (
     status?: string
@@ -150,6 +149,9 @@ export const BrutalistTemplate = ({
       <MobileNavigation
         hasNavigation={hasNavigation}
         onMenuClick={(e) => setMobileMenuAnchor(e.currentTarget)}
+        onNext={onNext}
+        onPrevious={onPrevious}
+        navigationInfo={navigationInfo}
       />
 
       <MobileMenu
@@ -164,8 +166,10 @@ export const BrutalistTemplate = ({
 
       <DesktopNavigation
         title={data.projectName}
-        // onNextProject={}
-        // onPreviousProject={}
+        onNext={onNext}
+        onPrevious={onPrevious}
+        onSelectItem={onSelectItem}
+        navigationInfo={navigationInfo}
       />
 
       <HeroSection
@@ -176,8 +180,6 @@ export const BrutalistTemplate = ({
 
       <MobileContent
         screenshots={screenshots}
-        activeImageIndex={activeImageIndex}
-        onImageChange={setActiveImageIndex}
         activeTab={activeTab}
         data={data}
         renderContent={renderContent}

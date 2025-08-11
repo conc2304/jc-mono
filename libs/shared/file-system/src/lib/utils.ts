@@ -1,16 +1,6 @@
 import { FileSystemItem } from './types';
 
 /**
- * Get a file/folder by ID from a flat array of FileSystemItems
- */
-export const getFileSystemItemById = (
-  id: string,
-  items: FileSystemItem[]
-): FileSystemItem | undefined => {
-  return items.find((item) => item.id === id);
-};
-
-/**
  * Get a file/folder by ID with recursive search through children
  * Useful when you have nested folder structures
  */
@@ -37,15 +27,31 @@ export const getFileSystemItemByIdRecursive = (
 };
 
 /**
- * Get multiple files/folders by an array of IDs
+ * Recursively search through file system items using a filter callback function
+ * Works similar to Array.filter() but searches through the entire nested structure
  */
-export const getFileSystemItemsByIds = (
-  ids: string[],
-  items: FileSystemItem[]
+export const searchFileSystemRecursive = (
+  items: FileSystemItem[],
+  filterCallback: (item: FileSystemItem) => boolean
 ): FileSystemItem[] => {
-  return ids
-    .map((id) => getFileSystemItemById(id, items))
-    .filter((item): item is FileSystemItem => item !== undefined);
+  const results: FileSystemItem[] = [];
+
+  const searchRecursive = (itemList: FileSystemItem[]): void => {
+    for (const item of itemList) {
+      // Test the current item against the filter
+      if (filterCallback(item)) {
+        results.push(item);
+      }
+
+      // Continue searching in children if it's a folder
+      if (item.type === 'folder' && item.children) {
+        searchRecursive(item.children);
+      }
+    }
+  };
+
+  searchRecursive(items);
+  return results;
 };
 
 /**
@@ -192,56 +198,5 @@ export const getIconById = (
   id: string,
   fileSystemItems: FileSystemItem[]
 ): FileSystemItem | undefined => {
-  return getFileSystemItemById(id, fileSystemItems);
+  return getFileSystemItemByIdRecursive(id, fileSystemItems);
 };
-
-// // Usage examples:
-
-// // 1. Simple lookup in flat array
-// const item = getFileSystemItemById('file-123', mockFileSystem);
-
-// // 2. Recursive lookup (searches nested folders)
-// const item2 = getFileSystemItemByIdRecursive('nested-file', mockFileSystem);
-
-// // 3. Performance-optimized lookup for many operations
-// const itemMap = createFileSystemItemMap(mockFileSystem);
-// const fastLookup = getFileSystemItemFromMap('file-123', itemMap);
-
-// // 4. Multiple items at once
-// const selectedItems = getFileSystemItemsByIds(
-//   ['file-1', 'folder-2'],
-//   mockFileSystem
-// );
-
-// // 5. Using the hook in a component
-// export const OptimizedDesktop = ({
-//   fileSystemItems,
-// }: {
-//   fileSystemItems: FileSystemItem[];
-// }) => {
-//   const { getItemById, getItemsByIds, getDesktopItems } =
-//     useFileSystemManager(fileSystemItems);
-
-//   const handleIconClick = (iconId: string) => {
-//     const item = getItemById(iconId);
-//     if (item) {
-//       console.log('Clicked:', item.name);
-//     }
-//   };
-
-//   const desktopIcons = getDesktopItems();
-
-//   return (
-//     <div className="desktop">
-//       {desktopIcons.map((icon) => (
-//         <OptimizedDesktopIcon
-//           key={icon.id}
-//           icon={icon}
-//           position={iconPositions[icon.id]}
-//           onMouseDown={(e) => handleIconMouseDown(e, icon.id)}
-//           onClick={() => handleIconClick(icon.id)}
-//         />
-//       ))}
-//     </div>
-//   );
-// };

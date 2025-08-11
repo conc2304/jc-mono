@@ -1,8 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { Box, useTheme } from '@mui/material';
 import { Computer } from 'lucide-react';
 
-import { FileSystemContext } from '../../context';
+import { FileSystemContext, useWindowContentActions } from '../../context';
 import {
   BreadcrumbNavigation,
   FileListView,
@@ -15,6 +15,7 @@ import { BaseFileSystemItem, useFileSystemManager } from '@jc/file-system';
 import { useMediaQuery } from '@mui/system';
 
 interface FileManagerProps {
+  windowId?: string;
   initialPath: string;
   folderContents: BaseFileSystemItem[];
   fileSystemItems: BaseFileSystemItem[];
@@ -24,6 +25,7 @@ interface FileManagerProps {
 }
 
 export const FileManager = ({
+  windowId,
   fileSystemItems,
   initialPath,
   folderContents: folderContentsProp,
@@ -43,23 +45,84 @@ export const FileManager = ({
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [draggedItems, setDraggedItems] = useState<string[]>([]);
 
-  const navigateToPath = (path: string) => {
-    setCurrentPath(path);
-    setSelectedItems([]);
-    if (path === '/') {
-      setFolderContents(fileSystemItems);
-      updateWindowName('Home', <Computer fontSize={24} />);
-    } else {
-      const targetFolder = fileSystemItems.find(
-        (item) => item.path === path && item.type === 'folder'
-      );
-      if (targetFolder && targetFolder.children) {
-        setFolderContents(targetFolder.children);
-        updateWindowName(targetFolder.name, targetFolder.icon);
-        // TODO On navigation update the Windows that are open.
+  const { replaceWindowContent } = useWindowContentActions();
+
+  const navigateToPath = useCallback(
+    (path: string) => {
+      setCurrentPath(path);
+      setSelectedItems([]);
+
+      if (path === '/') {
+        setFolderContents(fileSystemItems);
+        if (windowId && replaceWindowContent) {
+          replaceWindowContent(
+            windowId,
+            <FileManager
+              windowId={windowId}
+              initialPath="/"
+              folderContents={fileSystemItems}
+              fileSystemItems={fileSystemItems}
+              hasQuickAccessPanel={hasQuickAccessPanel}
+              hasPreviewPanel={hasPreviewPanel}
+              updateWindowName={updateWindowName}
+            />,
+            'Home',
+            <Computer fontSize={24} />,
+            {
+              addToHistory: true,
+              metadata: {
+                path: '/',
+                type: 'folder',
+              },
+            }
+          );
+        } else {
+          updateWindowName('Home', <Computer fontSize={24} />);
+        }
+      } else {
+        const targetFolder = fileSystemItems.find(
+          (item) => item.path === path && item.type === 'folder'
+        );
+        if (targetFolder && targetFolder.children) {
+          setFolderContents(targetFolder.children);
+          if (windowId && replaceWindowContent) {
+            replaceWindowContent(
+              windowId,
+              <FileManager
+                windowId={windowId}
+                initialPath={path}
+                folderContents={targetFolder.children}
+                fileSystemItems={fileSystemItems}
+                hasQuickAccessPanel={hasQuickAccessPanel}
+                hasPreviewPanel={hasPreviewPanel}
+                updateWindowName={updateWindowName}
+              />,
+              targetFolder.name,
+              targetFolder.icon,
+              {
+                addToHistory: true,
+                metadata: {
+                  path: path,
+                  type: 'folder',
+                  folderId: targetFolder.id,
+                },
+              }
+            );
+          } else {
+            updateWindowName(targetFolder.name, targetFolder.icon);
+          }
+        }
       }
-    }
-  };
+    },
+    [
+      fileSystemItems,
+      windowId,
+      replaceWindowContent,
+      updateWindowName,
+      hasQuickAccessPanel,
+      hasPreviewPanel,
+    ]
+  );
 
   const selectItem = (id: string, multi = false) => {
     if (multi) {

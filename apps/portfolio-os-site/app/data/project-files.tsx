@@ -31,4 +31,22 @@ export const allPortfolioProjectFiles: FileSystemItem<
   atomicVisualizerFileSystemItem,
   terrainifyFileSystemItem,
   simplisafeJawaFileSystemItem,
-];
+].map((projectFileItem) => ({
+  ...projectFileItem,
+  // renderer: {
+  //   ...projectFileItem.renderer,
+  //   // navigationGroup: 'projects', // This makes it part of the projects navigation group
+  //   // shouldNavigate: true,
+  // },
+  renderer: {
+    ...(projectFileItem.renderer
+      ? {
+          ...projectFileItem.renderer,
+          navigationGroup: 'projects', // This makes it part of the projects navigation group
+          shouldNavigate: true,
+        }
+      : undefined),
+  },
+}));
+
+console.log({ allPortfolioProjectFiles });

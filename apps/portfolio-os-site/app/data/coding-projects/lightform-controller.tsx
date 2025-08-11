@@ -43,5 +43,7 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
   renderer: {
     component: BrutalistTemplate,
     props: {},
+    navigationGroup: 'projects', // This makes it part of the projects navigation group
+    shouldNavigate: true,
   },
 };

@@ -27,10 +27,27 @@ export interface BaseFileSystemItem {
   };
 }
 
+// Navigation context interface that any file can implement
+export interface NavigationInfo {
+  currentIndex: number;
+  totalItems: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  items: { id: string; name: string }[];
+}
+export interface NavigationContext {
+  onNext?: () => void;
+  onPrevious?: () => void;
+  onSelectItem?: (id: string) => void;
+  navigationInfo?: NavigationInfo;
+}
+
 // Renderer configuration
 export interface FileRenderer<TData = {}, TProps = {}> {
-  component: ComponentType<TData & TProps>;
+  component: ComponentType<TData & TProps & NavigationContext>;
   props?: TProps;
+  navigationGroup?: string; // ID of the navigation group this file belongs to
+  shouldNavigate?: boolean;
 }
 
 // Generic FileSystemItem

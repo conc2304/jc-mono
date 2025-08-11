@@ -13,7 +13,11 @@ import { remToPixels } from '@jc/themes';
 import { FileManager } from '../organisms/file-manager';
 import { WindowMetaData, IconPosition } from '../types';
 import { findFileSystemItemByIdWithPath } from '../utils';
-import { FileSystemItem } from '@jc/file-system';
+import {
+  FileSystemItem,
+  FileSystemNavigationManager,
+  PROJECT_NAVIGATION_GROUP,
+} from '@jc/file-system';
 
 interface DragRef {
   startX: number;
@@ -62,6 +66,18 @@ interface WindowActions {
   handleWindowMouseDown: (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
     windowId: string
+  ) => void;
+
+  // Content replacement methods
+  replaceWindowContent: (
+    windowId: string,
+    newContent: ReactNode,
+    newTitle: string,
+    newIcon: ReactNode,
+    options?: {
+      addToHistory?: boolean;
+      metadata?: Record<string, any>;
+    }
   ) => void;
 
   // Animation callbacks
@@ -307,6 +323,34 @@ export const WindowProvider: React.FC<{
     setDraggedIcon(null);
   }, [draggedIcon, snapToGrid]);
 
+  // Replace window content
+  const replaceWindowContent = useCallback(
+    (
+      windowId: string,
+      newContent: ReactNode,
+      newTitle: string,
+      newIcon: ReactNode,
+      options: {
+        addToHistory?: boolean;
+        metadata?: Record<string, any>;
+      } = {}
+    ) => {
+      setWindows((prev) =>
+        prev.map((window) =>
+          window.id === windowId
+            ? {
+                ...window,
+                title: newTitle,
+                icon: newIcon,
+                windowContent: newContent,
+              }
+            : window
+        )
+      );
+    },
+    []
+  );
+
   // Window management functions
   const bringToFront = useCallback((windowId: string) => {
     setWindowZIndex((prevZIndex) => {
@@ -328,7 +372,6 @@ export const WindowProvider: React.FC<{
     (itemId: string) => {
       const result = findFileSystemItemByIdWithPath(fileSystemItems, itemId);
       if (!result) return;
-      console.log('Open. Window');
 
       const fsItem = result.item;
       const id = `window-${itemId}`;
@@ -351,12 +394,8 @@ export const WindowProvider: React.FC<{
           )
         );
       } else {
-        // Create new window with opening animation
-        console.log({ isXs });
-        // open 'files' maximized always
-        // if screen small, open maximized always
+        // Create new window with content (potentially with navigation)
         const maximized = fsItem.type !== 'folder' && !isXs;
-        console.log({ maximized });
         const width =
           fsItem.type === 'folder' && !isXs ? 550 : window.innerWidth;
         const height =
@@ -382,22 +421,21 @@ export const WindowProvider: React.FC<{
           windowContent: getWindowContent(
             fsItem,
             fileSystemItems,
-            (name: string, icon: ReactNode) => updateWindowTitle(id, name, icon)
+            (name: string, icon: ReactNode) =>
+              updateWindowTitle(id, name, icon),
+            id, // Pass window ID
+            replaceWindowContent // Pass replace function for navigation
           ),
           isActive: true,
           isOpening: true,
           animationState: 'opening',
         };
 
-        console.log(newWindow.height);
-        console.log({ newWindow });
-
         setWindows((prev) => [
           ...prev.map((window) => ({ ...window, isActive: false })),
           newWindow,
         ]);
 
-        // Set timeout as fallback in case animation callback doesn't fire
         const timeout = setTimeout(() => {
           onWindowAnimationComplete(id);
         }, 350);
@@ -407,7 +445,13 @@ export const WindowProvider: React.FC<{
 
       setWindowZIndex(windowZIndex + 1);
     },
-    [fileSystemItems, windows, windowZIndex, onWindowAnimationComplete]
+    [
+      fileSystemItems,
+      windows,
+      windowZIndex,
+      onWindowAnimationComplete,
+      replaceWindowContent,
+    ]
   );
 
   const closeWindow = useCallback(
@@ -741,6 +785,7 @@ export const WindowProvider: React.FC<{
     handleIconMouseDown,
     onWindowAnimationComplete,
     onWindowCloseAnimationComplete,
+    replaceWindowContent,
 
     // State setters
     setWindows,
@@ -810,25 +855,62 @@ export const useWindowDrag = () => {
   return { handleWindowMouseDown, draggedWindow };
 };
 
+export const useWindowContentActions = () => {
+  const { replaceWindowContent } = useWindowManager();
+  return { replaceWindowContent };
+};
+
 const getWindowContent = (
   fsItem: FileSystemItem,
   fileSystemItems: FileSystemItem[],
-  updateWindowCallback: (name: string, icon: ReactNode) => void
+  updateWindowCallback: (name: string, icon: ReactNode) => void,
+  windowId?: string,
+  replaceWindowContent?: (
+    windowId: string,
+    content: ReactNode,
+    title: string,
+    icon: ReactNode,
+    options?: any
+  ) => void
 ): ReactNode => {
   if (fsItem.type === 'folder') {
     // File Browser
     return (
       <FileManager
+        windowId={windowId}
         initialPath={fsItem.path}
         folderContents={fsItem.children || []}
         fileSystemItems={fileSystemItems}
         updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
       />
     );
-  } else {
-    // open file
-    return renderFile(fsItem);
+  } else if (fsItem.renderer) {
+    // File with renderer - check if it supports navigation
+    if (
+      fsItem.renderer.navigationGroup &&
+      fsItem.renderer.shouldNavigate &&
+      windowId &&
+      replaceWindowContent
+    ) {
+      console.log('Use Navigation Manager');
+      // Use navigation manager to render the file with navigation context
+      const navigationManager = new FileSystemNavigationManager(
+        fileSystemItems
+      );
+      navigationManager.registerNavigationGroup(PROJECT_NAVIGATION_GROUP); // Register your groups
+      return navigationManager.renderNavigableFile(
+        fsItem,
+        windowId,
+        replaceWindowContent
+      );
+    } else {
+      // Regular file rendering without navigation
+      const { component: Component, props = {} } = fsItem.renderer;
+      return <Component {...fsItem.fileData} {...(props as any)} />;
+    }
   }
+
+  return null;
 };
 
 // Utility function to render a file

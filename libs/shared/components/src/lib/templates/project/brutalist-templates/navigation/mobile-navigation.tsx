@@ -8,17 +8,20 @@ import {
   useTheme,
 } from '@mui/material';
 import { ArrowLeft, Menu as MenuIcon } from '@mui/icons-material';
+import { NavigationContext } from '@jc/file-system';
 
 interface MobileNavigationProps {
   hasNavigation: boolean;
   onMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const MobileNavigation: React.FC<MobileNavigationProps> = ({
+export const MobileNavigation: React.FC<MobileNavigationProps & NavigationContext> = ({
   hasNavigation,
   onMenuClick,
+  onNext, onPrevious, navigationInfo
 }) => {
   const theme = useTheme();
+  const showNavigation = onNext || onPrevious;
 
   return (
     <AppBar
@@ -31,7 +34,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', px: 1.5 }}>
-        {hasNavigation && (
+        {showNavigation && (
           <Button
             startIcon={<ArrowLeft />}
             sx={{ color: theme.palette.grey[400], textTransform: 'none' }}

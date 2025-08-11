@@ -8,14 +8,10 @@ interface Screenshot {
 
 interface MobileThumbnailsProps {
   screenshots: Screenshot[];
-  activeIndex: number;
-  onIndexChange: (index: number) => void;
 }
 
 export const MobileThumbnails: React.FC<MobileThumbnailsProps> = ({
   screenshots,
-  activeIndex,
-  onIndexChange,
 }) => {
   const theme = useTheme();
 
@@ -28,7 +24,7 @@ export const MobileThumbnails: React.FC<MobileThumbnailsProps> = ({
           <Box
             key={index}
             component="button"
-            onClick={() => onIndexChange(index)}
+            // onClick={() => onIndexChange(index)}
             sx={{
               flexShrink: 0,
               width: 80,
@@ -36,10 +32,7 @@ export const MobileThumbnails: React.FC<MobileThumbnailsProps> = ({
               borderRadius: 1,
               overflow: 'hidden',
               border: 2,
-              borderColor:
-                index === activeIndex
-                  ? theme.palette.primary.main
-                  : theme.palette.grey[600],
+              borderColor: theme.palette.primary.main,
               cursor: 'pointer',
               transition: 'border-color 0.3s',
               '&:hover': {

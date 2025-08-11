@@ -15,8 +15,6 @@ interface Screenshot {
 
 interface MobileContentProps {
   screenshots: Screenshot[];
-  activeImageIndex: number;
-  onImageChange: (index: number) => void;
   activeTab: string;
   data: ProjectData;
   renderContent: (content?: string | string[]) => React.ReactNode;
@@ -24,19 +22,13 @@ interface MobileContentProps {
 
 export const MobileContent: React.FC<MobileContentProps> = ({
   screenshots,
-  activeImageIndex,
-  onImageChange,
   activeTab,
   data,
   renderContent,
 }) => {
   return (
     <Box className="mobile-layout" sx={{ p: 2 }}>
-      <MobileThumbnails
-        screenshots={screenshots}
-        activeIndex={activeImageIndex}
-        onIndexChange={onImageChange}
-      />
+      <MobileThumbnails screenshots={screenshots} />
 
       <MobileTabContent
         activeTab={activeTab}
