@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Image, Error } from '@mui/icons-material';
 
@@ -18,6 +18,21 @@ interface ImageContainerProps extends Omit<BoxProps, 'component'> {
    * @default 300
    */
   showSkeletonDuration?: number;
+  /**
+   * Enable lazy loading using Intersection Observer
+   * @default true
+   */
+  lazy?: boolean;
+  /**
+   * Root margin for Intersection Observer (how far from viewport to start loading)
+   * @default '50px'
+   */
+  rootMargin?: string;
+  /**
+   * Threshold for Intersection Observer (0 = any pixel visible, 1 = fully visible)
+   * @default 0.1
+   */
+  threshold?: number;
 }
 
 export const ImageContainer = ({
@@ -31,14 +46,55 @@ export const ImageContainer = ({
   skeletonSx = {},
   errorSx = {},
   showSkeletonDuration = 300,
+  lazy = true,
+  rootMargin = '50px',
+  threshold = 0.1,
   ...props
 }: ImageContainerProps) => {
   const [imageState, setImageState] = useState('loading');
-  const [currentSrc, setCurrentSrc] = useState(src);
-  const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
+  const [currentSrc, setCurrentSrc] = useState(lazy ? '' : src);
+  const [currentSrcSet, setCurrentSrcSet] = useState(lazy ? '' : srcSet);
   const [showSkeleton, setShowSkeleton] = useState(true);
+  const [isIntersecting, setIsIntersecting] = useState(!lazy);
+  const [shouldLoad, setShouldLoad] = useState(!lazy);
+
+  console.log({ props });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer hook
+  const observerCallback = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && !shouldLoad) {
+        setIsIntersecting(true);
+        setShouldLoad(true);
+      }
+    },
+    [shouldLoad]
+  );
 
   useEffect(() => {
+    if (!lazy) return;
+
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(observerCallback, {
+      rootMargin,
+      threshold,
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.unobserve(element);
+    };
+  }, [lazy, observerCallback, rootMargin, threshold]);
+
+  // Handle image source updates
+  useEffect(() => {
+    if (!shouldLoad) return;
+
     setImageState('loading');
     setCurrentSrc(src);
     setCurrentSrcSet(srcSet);
@@ -50,7 +106,7 @@ export const ImageContainer = ({
     }, showSkeletonDuration);
 
     return () => clearTimeout(skeletonTimer);
-  }, [src, srcSet, showSkeletonDuration]);
+  }, [src, srcSet, showSkeletonDuration, shouldLoad]);
 
   const handleImageLoad = () => {
     setImageState('loaded');
@@ -79,7 +135,6 @@ export const ImageContainer = ({
         ...sx,
         ...skeletonSx,
       }}
-      // {...props}
     >
       <Skeleton
         variant="rectangular"
@@ -122,19 +177,27 @@ export const ImageContainer = ({
     </Box>
   );
 
-  // Show skeleton while loading or during minimum display time
-  if (imageState === 'loading' && showSkeleton) {
-    return <SkeletonLoader />;
+  // Show skeleton while not intersecting (lazy loading) or while loading/during minimum display time
+  if (!shouldLoad || (imageState === 'loading' && showSkeleton)) {
+    return (
+      <Box ref={containerRef} sx={{ position: 'relative', ...sx }} {...props}>
+        <SkeletonLoader />
+      </Box>
+    );
   }
 
   // Show error fallback
   if (imageState === 'error') {
-    return <ErrorFallback />;
+    return (
+      <Box ref={containerRef} sx={{ position: 'relative', ...sx }} {...props}>
+        <ErrorFallback />
+      </Box>
+    );
   }
 
   // Show actual image (may still be loading but skeleton time is over)
   return (
-    <Box sx={{ position: 'relative', ...sx }}>
+    <Box ref={containerRef} sx={{ position: 'relative', ...sx }} {...props}>
       <Box
         component="img"
         src={currentSrc}
@@ -150,7 +213,6 @@ export const ImageContainer = ({
           transition: 'opacity 0.3s ease-in-out',
           objectFit: 'cover',
         }}
-        // {...props}
       />
       {imageState === 'loading' && !showSkeleton && (
         <Box
