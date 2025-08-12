@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, useTheme, styled } from '@mui/material';
 
 import ProjectData from '../types';
@@ -74,10 +74,23 @@ export const BrutalistTemplate: React.FC<
   ...project
 }) => {
   const theme = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null
   );
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+    // Reset active tab to overview when project changes
+    setActiveTab('overview');
+  }, [project.projectName]);
 
   const data = project;
   const screenshots = data?.media?.screenshots || [];
@@ -142,7 +155,7 @@ export const BrutalistTemplate: React.FC<
   };
 
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer ref={containerRef}>
       <MobileNavigation
         hasNavigation={hasNavigation}
         onMenuClick={(e) => setMobileMenuAnchor(e.currentTarget)}

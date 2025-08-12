@@ -58,7 +58,6 @@ export const ImageContainer = ({
   const [isIntersecting, setIsIntersecting] = useState(!lazy);
   const [shouldLoad, setShouldLoad] = useState(!lazy);
 
-  console.log({ props });
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Intersection Observer hook

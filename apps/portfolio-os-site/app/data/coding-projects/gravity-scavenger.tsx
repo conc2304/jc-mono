@@ -36,6 +36,8 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
       'harvard-gd50',
     ],
     favorite: true,
+    thumbnail: gravityScavengerProject.media.thumbnail,
+
     description:
       'Physics-based Unity space game with procedural generation and real-time gravity simulation',
   },

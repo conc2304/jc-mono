@@ -175,6 +175,7 @@ export const WindowProvider: React.FC<{
             folderContents={fsItem.children || []}
             fileSystemItems={fileSystemItems}
             updateWindowName={(name, icon) => updateWindowCallback(name, icon)}
+            hasPreviewPanel
           />
         );
       } else if (fsItem.renderer) {

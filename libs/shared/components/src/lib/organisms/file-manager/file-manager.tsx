@@ -157,6 +157,15 @@ export const FileManager = ({
 
     // Sort items
     items.sort((a, b) => {
+      // Check if items are favorites
+      const aIsFavorite = a.metadata?.favorite === true;
+      const bIsFavorite = b.metadata?.favorite === true;
+
+      // If one is favorite and other is not, favorite comes first
+      if (aIsFavorite && !bIsFavorite) return -1;
+      if (!aIsFavorite && bIsFavorite) return 1;
+
+      // Both are favorites or both are not favorites, sort by the selected criteria
       let comparison = 0;
 
       switch (sortBy) {

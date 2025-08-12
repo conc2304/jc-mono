@@ -22,7 +22,14 @@ export interface BaseFileSystemItem {
     description?: string;
     tags: string[];
     favorite: boolean;
-    thumbnail?: string;
+    thumbnail?: {
+      url: string;
+      src: string;
+      srcSet?: string;
+      sizes?: string;
+      alt: string;
+      caption?: string;
+    };
     customProperties?: Record<string, any>;
   };
 }

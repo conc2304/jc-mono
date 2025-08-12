@@ -2,6 +2,7 @@ import { Box, Chip, Divider, IconButton, Typography } from '@mui/material';
 import { ChevronDown, ChevronLeft, Info } from 'lucide-react';
 
 import { FileSystemItem } from '@jc/file-system';
+import { ImageContainer } from '../../atoms';
 
 interface PreviewPanelProps {
   collapsed: boolean;
@@ -23,6 +24,7 @@ export const PreviewPanel = ({
         borderColor: 'divider',
         transition: 'width 0.3s ease',
         overflow: 'hidden',
+        pb: 1,
       }}
     >
       <Box
@@ -54,7 +56,20 @@ export const PreviewPanel = ({
           </Box>
         ) : (
           <Box sx={{ p: 2, height: '100%', overflow: 'auto' }}>
-            <Box sx={{ textAlign: 'center', mb: 2 }}>{selectedItem.icon}</Box>
+            <Box sx={{ textAlign: 'center', mb: 2 }}>
+              {!!selectedItem.metadata.thumbnail ? (
+                <ImageContainer
+                  lazy={false}
+                  showSkeletonDuration={0}
+                  src={selectedItem.metadata.thumbnail.src}
+                  srcSet={selectedItem.metadata.thumbnail.srcSet}
+                  sizes={selectedItem.metadata.thumbnail.sizes}
+                  alt={selectedItem.metadata.thumbnail.alt}
+                />
+              ) : (
+                selectedItem.icon
+              )}
+            </Box>
 
             <Typography variant="h6" gutterBottom>
               {selectedItem.name}

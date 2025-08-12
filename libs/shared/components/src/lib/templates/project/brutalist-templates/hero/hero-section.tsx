@@ -52,13 +52,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const theme = useTheme();
 
+  const { relativePath, ...imgAttributes } = heroImage;
   return (
     <HeroSectionContainer>
       <Box
         className="hero-mobile"
         sx={{ position: 'relative', overflow: 'hidden' }}
       >
-        <ImageContainer {...heroImage} className="hero-image" />
+        <ImageContainer
+          {...imgAttributes}
+          lazy={false}
+          showSkeletonDuration={50}
+          className="hero-image"
+        />
         <Box className="hero-overlay" />
       </Box>
 
