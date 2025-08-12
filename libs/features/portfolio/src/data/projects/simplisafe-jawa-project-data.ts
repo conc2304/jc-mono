@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet } from '@jc/utils';
 
 export const simplisafeJawaProject: ProjectData = {
   // =============================================================================
@@ -33,7 +34,7 @@ export const simplisafeJawaProject: ProjectData = {
   // =============================================================================
   technical: {
     technologies: [
-      'Frontend UI Development', // Specific tech stack not specified in available docs
+      'Frontend UI Development',
       'Angular.js',
       'Drupal',
       'PHP',
@@ -51,9 +52,9 @@ export const simplisafeJawaProject: ProjectData = {
       'Enterprise Integration',
     ],
     timeline: {
-      startDate: undefined, // Not specified in available documentation
-      endDate: undefined, // Not specified in available documentation
-      duration: undefined, // Would need clarification from user
+      startDate: undefined,
+      endDate: undefined,
+      duration: undefined,
     },
     myRole:
       'Technical and Design Lead - Full-stack development, UX design, user research oversight, API development, business requirements definition',
@@ -85,24 +86,71 @@ export const simplisafeJawaProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail:
-      'http://www.joseconchello.com/wp-content/uploads/2021/06/Jawa-UI-Home-view.png',
+    thumbnail: {
+      relativePath:
+        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
+      url: getImageUrl(
+        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
+        'full'
+      ),
+      ...getResponsiveImageSet(
+        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg'
+      ),
+
+      alt: 'SimpliSafe home security installation showing professional monitoring service that depends on properly paired devices processed through Project Jawa fulfillment system',
+      caption: 'SimpliSafe home security monitoring service implementation',
+      detailedCaption:
+        "SimpliSafe's professional home security monitoring service that relies on properly paired and configured devices processed through Project Jawa's advanced fulfillment system, demonstrating the end-user experience that depends on accurate warehouse operations, device pairing reliability, and comprehensive quality assurance workflows",
+    },
     screenshots: [
       {
-        url: 'http://www.joseconchello.com/wp-content/uploads/2021/06/Jawa-UI-Home-view.png',
-        alt: 'Project Jawa main dashboard interface showing modern web-based fulfillment system',
+        relativePath: 'projects/simplisafe-jawa/Jawa-UI-Home-view.png',
+        alt: 'Project Jawa fulfillment system home interface showing modern web application design with inventory tracking, order processing controls, and analytics dashboard for SimpliSafe warehouse operations',
         caption:
-          'Main dashboard view of the new web-based fulfillment system replacing legacy Flash software',
+          'Modern fulfillment system home interface with operational controls',
+        detailedCaption:
+          "Project Jawa's main interface showcasing the complete redesign from legacy Flash-based software to modern web application, featuring real-time inventory tracking, streamlined order processing controls, comprehensive analytics dashboard, and intuitive user experience design optimized for high-volume warehouse operations and fulfillment efficiency",
       },
       {
-        url: 'http://www.joseconchello.com/wp-content/uploads/2020/02/Jawa-order-view.jpg',
-        alt: 'Project Jawa order processing interface with barcode validation',
+        relativePath: 'projects/simplisafe-jawa/Jawa-order-view.jpg',
+        alt: 'Order processing interface showing barcode scanning integration, device pairing workflow, and real-time validation systems for SimpliSafe security device fulfillment',
         caption:
-          'Order processing view demonstrating improved barcode validation and device pairing workflow',
+          'Advanced order processing with barcode validation and device pairing',
+        detailedCaption:
+          'Detailed order processing interface demonstrating the innovative barcode validation system that enables scanning devices in any sequence, over-the-air sensor pairing with base stations, real-time device type identification, and comprehensive error handling that eliminated fulfillment errors and dramatically improved warehouse operational efficiency',
       },
-    ],
+      {
+        relativePath:
+          'projects/simplisafe-jawa/ss_presskit1-white-simplisafe-system.jpg',
+        alt: 'Complete SimpliSafe home security system showing base station and various wireless sensors that require device pairing and fulfillment processing',
+        caption:
+          'SimpliSafe security system components requiring fulfillment processing',
+        detailedCaption:
+          "SimpliSafe's complete home security system featuring base station and wireless sensors that Project Jawa's fulfillment system processes through advanced device pairing, inventory tracking, and quality assurance workflows, demonstrating the hardware ecosystem that the custom software solution manages for customer orders",
+      },
+      {
+        relativePath:
+          'projects/simplisafe-jawa/ss_presskit2-white-base-station-on-shelf.jpg',
+        alt: 'SimpliSafe base station device that communicates with sensors through the over-the-air pairing system developed in Project Jawa fulfillment software',
+        caption: 'SimpliSafe base station for wireless device communication',
+        detailedCaption:
+          "SimpliSafe base station that serves as the central hub for wireless security sensors, requiring sophisticated device pairing and communication protocols that Project Jawa's fulfillment system manages through over-the-air pairing capabilities, hardware-software integration, and comprehensive quality assurance processes",
+      },
+      {
+        relativePath:
+          'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
+        alt: 'SimpliSafe home security installation showing professional monitoring service that depends on properly paired devices processed through Project Jawa fulfillment system',
+        caption: 'SimpliSafe home security monitoring service implementation',
+        detailedCaption:
+          "SimpliSafe's professional home security monitoring service that relies on properly paired and configured devices processed through Project Jawa's advanced fulfillment system, demonstrating the end-user experience that depends on accurate warehouse operations, device pairing reliability, and comprehensive quality assurance workflows",
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
-      // No video content specified in available documentation
+      // No video content available
     ],
   },
 
@@ -112,7 +160,7 @@ export const simplisafeJawaProject: ProjectData = {
   links: {
     liveDemo: undefined, // Internal enterprise software - no public demo
     repository: undefined, // Proprietary SimpliSafe code
-    caseStudy: 'https://www.joseconchello.com/project-jawa',
+    caseStudy: undefined,
     additionalLinks: [
       {
         title: 'SimpliSafe Company',
@@ -215,8 +263,8 @@ Project Jawa delivered a modern web application enabling over-the-air sensor pai
   // =============================================================================
   metadata: {
     featured: true,
-    status: 'live', // Likely still in use at SimpliSafe
-    lastUpdated: undefined, // Would need clarification from user
+    status: 'live',
+    lastUpdated: undefined,
     tags: [
       'full-stack-development',
       'enterprise-software',

@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const tunecraftProject: ProjectData = {
   // =============================================================================
@@ -66,47 +67,141 @@ export const tunecraftProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: undefined, // Would need to extract from videos
+    thumbnail: {
+      relativePath:
+        'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg',
+      url: getImageUrl(
+        'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg',
+        'full'
+      ),
+      ...getResponsiveImageSet(
+        'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg'
+      ),
+      alt: 'Real-time visual feedback showing tracked shoe object with spotlight positioning and RGB arc rotation indicators for XYZ axis rotations in projected interface',
+      caption: 'Real-time object tracking with visual rotation feedback',
+      detailedCaption:
+        'Advanced projected augmented reality interface demonstrating real-time object tracking visualization with spotlight position tracking and RGB arc system representing XYZ rotation values, providing immediate visual feedback for users to understand their physical interactions and object pose detection accuracy in the interactive music control system',
+    },
     screenshots: [
       {
-        url: 'https://github.com/conc2304/tune-craft-cv/media/touchdesigner-interface.png', // Placeholder
-        alt: 'TouchDesigner visual programming interface showing TuneCraft patch',
-        caption:
-          'Complex TouchDesigner patch integrating computer vision, audio control, and projection mapping systems',
+        relativePath:
+          'projects/tunecraft/tunecraft-ArUco-detection-projection-on-left-cropped-video-stream-right.jpg',
+        alt: 'ArUco marker detection system showing camera-projector calibration with detected markers on projected surface and corresponding cropped video stream processing',
+        caption: 'ArUco marker calibration for camera-projector alignment',
+        detailedCaption:
+          'Sophisticated camera-projector calibration system using ArUco marker detection for precise coordinate alignment between camera input and projector output, featuring automated corner detection, video stream cropping, and coordinate system transformation essential for accurate projection mapping in the interactive audio-visual interface',
       },
       {
-        url: 'https://github.com/conc2304/tune-craft-cv/media/projected-ui.png', // Placeholder
-        alt: 'Projected augmented reality interface tracking shoe with spotlight and rotation arcs',
-        caption:
-          'Real-time projected UI showing object tracking with spotlight and RGB rotation indicators',
+        relativePath:
+          'projects/tunecraft/tunecraft-ableton-live-session-view-interface.jpg',
+        alt: 'Ableton Live session interface showing audio clips, drum loops, and instrument tracks controlled by 6D object pose parameters through TDAbleton integration',
+        caption: 'Ableton Live audio interface controlled by object tracking',
+        detailedCaption:
+          "Ableton Live session view interface demonstrating the audio production environment controlled by TuneCraft's 6D object tracking system, featuring drum loops, melody clips, and instrument tracks with parameters dynamically mapped to object position and rotation data through TDAbleton integration for real-time music generation",
       },
       {
-        url: 'https://github.com/conc2304/tune-craft-cv/media/ableton-integration.png', // Placeholder
-        alt: 'Ableton Live session showing real-time parameter control from object tracking',
+        relativePath:
+          'projects/tunecraft/tunecraft-implementation-of-td-ableton-in-touchdesigner-from-objectron-data.jpg',
+        alt: 'TouchDesigner visual programming interface showing TDAbleton integration nodes processing MediaPipe Objectron pose data for audio parameter control',
         caption:
-          'Ableton Live session view with TDAbleton integration enabling real-time audio parameter control',
+          'TouchDesigner audio control integration with pose detection data',
+        detailedCaption:
+          'Advanced TouchDesigner visual programming implementation featuring TDAbleton integration nodes that process MediaPipe Objectron 6D pose detection data and convert object position and rotation coordinates into audio parameter control signals for real-time music manipulation and dynamic audio generation',
       },
       {
-        url: 'https://github.com/conc2304/tune-craft-cv/media/aruco-calibration.png', // Placeholder
-        alt: 'ArUco marker detection for camera-projector calibration',
-        caption:
-          'ArUco marker-based calibration system aligning camera input with projector output',
+        relativePath:
+          'projects/tunecraft/tunecraft-media-pipe-objectron-example-results.jpg',
+        alt: 'MediaPipe Objectron 6D pose detection results showing 3D bounding box visualization and coordinate tracking for real-time object pose estimation',
+        caption: 'MediaPipe Objectron 6D pose detection visualization',
+        detailedCaption:
+          "MediaPipe Objectron computer vision results demonstrating accurate 6D object pose estimation with 3D bounding box visualization, coordinate tracking, and real-time object detection capabilities that form the foundation of TuneCraft's innovative human-computer interaction paradigm for tangible music control",
       },
-    ],
+      {
+        relativePath:
+          'projects/tunecraft/tunecraft-methodology-and-process-diagram.jpg',
+        alt: 'Technical methodology diagram showing complete TuneCraft system architecture from camera input through computer vision processing to audio output and visual feedback',
+        caption: 'Complete system architecture and data flow methodology',
+        detailedCaption:
+          "Comprehensive system architecture diagram illustrating TuneCraft's complete methodology and data flow from camera input through MediaPipe computer vision processing, TouchDesigner visual programming, coordinate transformation, audio parameter mapping, and dual outputs to Ableton Live audio control and projected visual feedback systems",
+      },
+      {
+        relativePath:
+          'projects/tunecraft/tunecraft-overview-of-touchdesigner-workflow.jpg',
+        alt: 'TouchDesigner visual programming workflow showing node-based processing pipeline for computer vision, audio control, and projection mapping integration',
+        caption: 'TouchDesigner visual programming workflow overview',
+        detailedCaption:
+          'Detailed TouchDesigner visual programming workflow showcasing the complete node-based processing pipeline including video input processing, MediaPipe integration, coordinate transformation, audio parameter mapping, and projection output systems that coordinate real-time computer vision with audio-visual performance capabilities',
+      },
+      {
+        relativePath:
+          'projects/tunecraft/tunecraft-projector-and-camera-setup.jpg',
+        alt: 'Hardware setup showing projector and camera configuration for TuneCraft interactive installation with optimal positioning for object tracking and projection mapping',
+        caption: 'Physical hardware setup for camera tracking and projection',
+        detailedCaption:
+          "Professional hardware installation featuring optimally positioned camera and projector setup for TuneCraft's interactive audio-visual system, demonstrating the physical computing infrastructure required for reliable 6D object tracking, projection mapping, and real-time performance applications with proper mounting and environmental considerations",
+      },
+      {
+        relativePath:
+          'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg',
+        alt: 'Real-time visual feedback showing tracked shoe object with spotlight positioning and RGB arc rotation indicators for XYZ axis rotations in projected interface',
+        caption: 'Real-time object tracking with visual rotation feedback',
+        detailedCaption:
+          'Advanced projected augmented reality interface demonstrating real-time object tracking visualization with spotlight position tracking and RGB arc system representing XYZ rotation values, providing immediate visual feedback for users to understand their physical interactions and object pose detection accuracy in the interactive music control system',
+      },
+      {
+        relativePath:
+          'projects/tunecraft/tunecraft-touchdesigner-td-ableton-and-ableton-side-by-side.jpg',
+        alt: 'Side-by-side interface view showing TouchDesigner TDAbleton integration controls alongside Ableton Live interface demonstrating real-time parameter synchronization',
+        caption: 'TouchDesigner and Ableton Live integration interface',
+        detailedCaption:
+          "Professional software integration showcase featuring TouchDesigner's TDAbleton control interface alongside Ableton Live's audio production environment, demonstrating real-time parameter synchronization, audio control mapping, and the sophisticated multi-application coordination that enables seamless object tracking to music control translation",
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'https://youtu.be/2n1Z5icfN-w',
-        title: 'TuneCraft Project Walkthrough and Demo',
-        type: 'demo',
-        caption:
-          'Complete demonstration of 6D object tracking controlling real-time music generation',
+        url: getVideoUrl(
+          'projects/tunecraft/TUNECRAFT - An interactive Immersive  Art Experience via 6D Object Tracking Final Project Proposal.mp4'
+        ),
+        title: 'TuneCraft Project Proposal',
+        type: 'inspiration',
+        caption: 'Project proposal for 6D object tracking music control system',
+        detailedCaption:
+          "Comprehensive project proposal presentation introducing TuneCraft's innovative concept of using MediaPipe Objectron for 6D object pose detection to create real-time music control through physical object manipulation, featuring planned integration of computer vision, TouchDesigner visual programming, and Ableton Live audio production for immersive audio-visual performance experiences",
       },
       {
-        url: 'https://youtu.be/IWK0HBRLtzk',
-        title: 'TuneCraft Project Presentation',
-        type: 'demo',
+        url: getVideoUrl(
+          'projects/tunecraft/TuneCraft - 3D Object Pose Detection in TouchDesigner to control Ableton.mp4'
+        ),
+        title: '3D Pose Detection Technical Implementation',
+        type: 'process',
         caption:
-          'Academic presentation explaining technical implementation and research findings',
+          '3D pose detection system controlling audio parameters in real-time',
+        detailedCaption:
+          'Advanced technical demonstration showcasing the complete computer vision pipeline using MediaPipe Objectron within TouchDesigner for 6D object pose estimation, real-time coordinate processing, audio parameter mapping, and seamless integration with Ableton Live for dynamic music control through physical object manipulation',
+      },
+      {
+        url: getVideoUrl(
+          'projects/tunecraft/TuneCraft By Jose Conchello - Final Project Demo Video.mp4'
+        ),
+        title: 'Complete System Demonstration',
+        type: 'demo',
+        caption: 'Complete interactive audio-visual system demonstration',
+        detailedCaption:
+          'Comprehensive final project demonstration featuring the complete TuneCraft system with 6D object pose detection, projected augmented reality visual feedback, real-time audio parameter control, camera-projector calibration using ArUco markers, and seamless integration of computer vision, visual programming, and audio production technologies for innovative human-computer interaction',
+      },
+      {
+        url: getVideoUrl(
+          'projects/tunecraft/TuneCraft Final Presentation Video By Jose Conchello.mp4'
+        ),
+        title: 'Academic Research Presentation',
+        type: 'final',
+        caption: 'Academic research presentation with methodology and results',
+        detailedCaption:
+          "Professional academic presentation covering TuneCraft's comprehensive research methodology, technical implementation details, system architecture analysis, performance evaluation results, limitations assessment, and proposed future development directions for 6D object pose estimation in interactive media applications",
       },
     ],
   },

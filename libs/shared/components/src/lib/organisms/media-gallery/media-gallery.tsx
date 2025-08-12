@@ -98,7 +98,6 @@ export const MediaGallery = ({
 
     if (type === 'image') {
       const screenshot = data as ImageMediaData;
-      // const imgSrcProps = getResponsiveImageSet(screenshot.url);
 
       return (
         <Grid size={{ xs: 12, lg: isMobile ? 12 : 6 }} key={`image-${index}`}>

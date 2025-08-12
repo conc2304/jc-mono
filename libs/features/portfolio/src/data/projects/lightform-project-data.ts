@@ -89,113 +89,75 @@ export const lightformWebControllerProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    // Choose your main thumbnail/hero image
+    // Thumbnail/hero image
     thumbnail: {
+      relativePath: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
       url: getImageUrl(
         'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
         'full'
       ),
-      alt: 'Lightform LF2+ AR Projector - Primary Hardware',
       ...getResponsiveImageSet(
         'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg'
       ),
+      alt: 'Lightform LF2+ AR Projector - Primary Hardware',
     },
 
     screenshots: [
       {
-        url: getImageUrl('projects/lightform/App-Header.jpg', 'full'),
-        ...getResponsiveImageSet('projects/lightform/App-Header.jpg'),
+        relativePath: 'projects/lightform/App-Header.jpg',
         alt: 'Web Application Header Interface',
         caption: 'Main application header showing navigation and device status',
       },
       {
-        url: getImageUrl(
+        relativePath:
           'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg'
-        ),
         alt: 'Lightform LF2+ AR Projector - Primary Hardware',
         caption:
           'The Lightform LF2+ AR projector that the web controller interfaces with',
       },
       {
-        url: getImageUrl(
+        relativePath:
           'projects/lightform/LF2plus-front-transparent-square.webp',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/LF2plus-front-transparent-square.webp'
-        ),
         alt: 'LF2+ Front View Technical Specification',
         caption: 'Front view showing camera array and projection lens',
       },
       {
-        url: getImageUrl(
-          'projects/lightform/FTUX-Step-2-Update-Firmware.png',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/FTUX-Step-2-Update-Firmware.png'
-        ),
+        relativePath: 'projects/lightform/FTUX-Step-2-Update-Firmware.png',
         alt: 'First Time User Experience - Firmware Update',
         caption: 'Step 2 of device setup process - firmware update interface',
       },
       {
-        url: getImageUrl(
-          'projects/lightform/FTUX-Step-3-Device-Registration.png',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/FTUX-Step-3-Device-Registration.png'
-        ),
+        relativePath: 'projects/lightform/FTUX-Step-3-Device-Registration.png',
         alt: 'First Time User Experience - Device Registration',
         caption: 'Step 3 of device setup - registering device to user account',
       },
       {
-        url: getImageUrl(
-          'projects/lightform/OAK-Step-1-Object-Scanning.png',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/OAK-Step-1-Object-Scanning.png'
-        ),
+        relativePath: 'projects/lightform/OAK-Step-1-Object-Scanning.png',
         alt: 'Object Alignment Kit - 3D Scanning Interface',
         caption:
           'Real-time 3D scanning interface for object detection and alignment',
       },
       {
-        url: getImageUrl(
-          'projects/lightform/OAK-Step-2-Environments-UI.png',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/OAK-Step-2-Environments-UI.png'
-        ),
+        relativePath: 'projects/lightform/OAK-Step-2-Environments-UI.png',
         alt: 'Object Alignment Kit - Environment Selection',
         caption: 'Environment selection interface for projection mapping setup',
       },
       {
-        url: getImageUrl(
-          'projects/lightform/OAK-Step-2-Object-Alignment.png',
-          'full'
-        ),
-        ...getResponsiveImageSet(
-          'projects/lightform/OAK-Step-2-Object-Alignment.png'
-        ),
+        relativePath: 'projects/lightform/OAK-Step-2-Object-Alignment.png',
         alt: 'Object Alignment Kit - Precision Alignment',
         caption:
           'Fine-tuned object alignment controls for accurate projection mapping',
       },
       {
-        url: getImageUrl('projects/lightform/article-1-step-1-v1.png', 'full'),
-        ...getResponsiveImageSet('projects/lightform/article-1-step-1-v1.png'),
+        relativePath: 'projects/lightform/article-1-step-1-v1.png',
         alt: 'Tutorial Article 1 - Getting Started',
         caption: 'Step-by-step tutorial showing initial device setup process',
       },
-    ],
-
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
         url: getVideoUrl(

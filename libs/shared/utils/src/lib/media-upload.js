@@ -187,9 +187,9 @@ Commands:
   bulk <dir>           Upload all media files from directory
 
 Examples:
-  node upload-media.js project web-app ./media/web-app
-  node upload-media.js project gallery-2024 ./media/gallery
-  node upload-media.js bulk ./all-portfolio-media
+  node media-upload.js project web-app ./media/web-app
+  node media-upload.js project gallery-2024 ./media/gallery
+  node media-upload.js bulk ./all-portfolio-media
 
 Environment variables needed:
   R2_ACCOUNT_ID=your-cloudflare-account-id

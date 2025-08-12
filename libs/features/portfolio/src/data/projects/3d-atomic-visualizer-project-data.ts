@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const atomicVisualizerProject: ProjectData = {
   // =============================================================================
@@ -65,40 +66,86 @@ export const atomicVisualizerProject: ProjectData = {
   // =============================================================================
   media: {
     // TODO GET MEDIA
-    thumbnail: 'https://conc2304.github.io/3D-Atomic-Visualizer/thumbnail.png', // Placeholder
+    thumbnail: {
+      relativePath: 'projects/3d-atomic-visualizer/atomic-structure-hero.png',
+      url: getImageUrl(
+        'projects/3d-atomic-visualizer/atomic-structure-hero.png',
+        'full'
+      ),
+      ...getResponsiveImageSet(
+        'projects/3d-atomic-visualizer/atomic-structure-hero.png'
+      ),
+      alt: 'Atomic Structure Hero',
+    },
     screenshots: [
       {
-        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-carousel.png', // Placeholder
-        alt: '3D periodic table carousel showing element tiles with atomic icons',
-        caption:
-          'Interactive 3D carousel interface displaying periodic elements with hover states and atomic structure previews',
+        relativePath:
+          'projects/3d-atomic-visualizer/Screenshot-atomic-structure-3:4.png',
+        alt: '3D atomic structure visualization showing Bohr model with animated electron orbits around atomic nucleus in WebGL rendered scene',
+        caption: '3D atomic structure with animated electron orbits',
+        detailedCaption:
+          'Detailed atomic structure visualization featuring scientifically accurate Bohr model representation with animated electron orbital paths around the atomic nucleus, demonstrating the electron configuration parsing system that transforms chemistry notation into dynamic 3D visualizations using Three.js WebGL technology',
       },
       {
-        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-atom.png', // Placeholder
-        alt: '3D atomic structure visualization showing electron orbital animation',
-        caption:
-          'Real-time 3D atomic structure visualization using Bohr model with animated electron orbits and shell representations',
+        relativePath:
+          'projects/3d-atomic-visualizer/Screenshot-atomic-structure.png',
+        alt: 'Interactive 3D atomic structure display with electron configuration visualization and orbital animation in React Three Fiber application',
+        caption: 'Interactive atomic structure with orbital mechanics',
+        detailedCaption:
+          'Real-time atomic structure rendering showcasing the sophisticated electron configuration processing system that automatically generates accurate atomic structures from standard chemistry notation strings, complete with animated orbital mechanics and shell-based electron organization using React Three Fiber',
       },
       {
-        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-navigation.png', // Placeholder
-        alt: '3D navigation controls and element search interface',
-        caption:
-          'Intuitive 3D navigation with mouse controls and autocomplete element search functionality',
+        relativePath: 'projects/3d-atomic-visualizer/Screenshot-info-card.png',
+        alt: 'Element information interface displaying periodic table data, atomic properties, and navigation controls integrated with 3D visualization system',
+        caption: 'Element information panel with atomic data',
+        detailedCaption:
+          'Comprehensive element information interface demonstrating seamless integration between external API data and 3D visualization system, featuring atomic properties, electron configuration details, and navigation controls that coordinate with the interactive 3D atomic structure display',
       },
       {
-        url: 'https://conc2304.github.io/3D-Atomic-Visualizer/screenshot-info-modal.png', // Placeholder
-        alt: 'Element information modal displaying detailed atomic properties',
-        caption:
-          'Comprehensive element information modal with scientific properties and electron configuration details',
+        relativePath:
+          'projects/3d-atomic-visualizer/Screenshot-search-menu.png',
+        alt: 'Interactive search interface for periodic table navigation with element filtering and selection controls in 3D web application',
+        caption: 'Search interface for element navigation',
+        detailedCaption:
+          'Intuitive search and filtering system enabling efficient discovery and navigation across all 118 periodic elements, featuring responsive design patterns and smooth integration with the 3D carousel interface while maintaining optimal performance for WebGL rendering',
       },
-    ],
+      {
+        relativePath: 'projects/3d-atomic-visualizer/Screenshot-tile-view.png',
+        alt: 'Periodic table element tile display showing individual element cards with hover interactions and 3D spatial navigation controls',
+        caption: 'Interactive element tiles with hover effects',
+        detailedCaption:
+          'Dynamic element tile interface showcasing 3D spatial navigation design with intuitive hover states and interactive controls that bridge traditional 2D UI patterns with immersive 3D experiences, demonstrating thoughtful user experience design for WebGL applications',
+      },
+      {
+        relativePath:
+          'projects/3d-atomic-visualizer/Screenshot-tile-carousel.png',
+        alt: '3D carousel interface displaying periodic table elements as interactive tiles with smooth navigation and dynamic focus management',
+        caption: '3D carousel navigation through periodic elements',
+        detailedCaption:
+          'Sophisticated 3D carousel system featuring all 118 periodic elements with smooth transitions, dynamic focus management, and responsive layout adaptation. Demonstrates complex state coordination between carousel position, active element selection, and atomic structure updates using React state management',
+      },
+      {
+        relativePath: 'projects/3d-atomic-visualizer/atomic-structure-hero.png',
+        alt: 'Hero image of 3D Atomic Visualizer showing WebGL-rendered periodic table explorer with React Three Fiber implementation and educational interface design',
+        caption: '3D Atomic Visualizer application overview',
+        detailedCaption:
+          'Project hero image highlighting the successful integration of cutting-edge 3D web development technologies with educational applications, showcasing React Three Fiber mastery through interactive atomic structure exploration, modern WebGL implementation, and the intersection of advanced programming skills with scientific visualization',
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'https://youtu.be/1rKQbis-Bmw',
+        url: getVideoUrl(
+          'projects/3d-atomic-visualizer/Jose Conchello - Harvard CS50 Final Project - 3D Atomic Structure Visualizer.mp4'
+        ),
         title: '3D Atomic Visualizer Demo',
         type: 'demo',
-        caption:
-          'Complete demonstration of 3D atomic visualization features and interactive exploration capabilities',
+        caption: 'Complete project walkthrough and feature demonstration',
+        detailedCaption:
+          'Comprehensive video demonstration showcasing the full 3D Atomic Visualizer application, including carousel navigation through 118 periodic elements, real-time atomic structure visualization with Bohr model implementation, electron orbital animations, and interactive WebGL-based educational interface built with React Three Fiber and TypeScript',
       },
     ],
   },

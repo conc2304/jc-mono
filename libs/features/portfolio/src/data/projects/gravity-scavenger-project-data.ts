@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const gravityScavengerProject: ProjectData = {
   // =============================================================================
@@ -66,37 +67,98 @@ export const gravityScavengerProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail:
-      'https://play.unity.com/en/games/f6872dc0-9da6-462f-b037-1d6f705c55d8/gravity-scavenger/thumbnail.png', // Placeholder
+    thumbnail: {
+      relativePath:
+        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
+      url: getImageUrl(
+        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
+        'full'
+      ),
+      ...getResponsiveImageSet(
+        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png'
+      ),
+      alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
+      caption: 'Advanced orbital mechanics with trajectory prediction system',
+      detailedCaption:
+        'Sophisticated physics demonstration showcasing the trajectory prediction system using calculus and trigonometry implementation, where players must strategically use gravitational forces to navigate orbital paths while collecting resources, demonstrating educational value of mathematical concepts applied to engaging interactive gameplay',
+    },
     screenshots: [
       {
-        url: 'https://github.com/conc2304/gravity-scavenger/screenshots/gameplay-trajectory.png', // Placeholder
-        alt: 'Gravity Scavenger gameplay showing trajectory prediction and planetary gravity',
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
+        alt: 'Spacecraft orbiting planet with gravitational physics simulation showing trajectory prediction lines and resource pickup items scattered in space',
         caption:
-          'Real-time trajectory line showing predicted spaceship path influenced by planetary gravitational fields',
+          'Gravitational orbiting mechanics with resource collection gameplay',
+        detailedCaption:
+          "Core gameplay demonstration featuring realistic gravitational physics simulation where spacecraft orbits planetary bodies using Newton's universal gravitation law, with visible trajectory prediction lines showing calculated flight paths and scattered resource pickups requiring strategic navigation through complex gravitational fields",
       },
       {
-        url: 'https://github.com/conc2304/gravity-scavenger/screenshots/procedural-world.png', // Placeholder
-        alt: 'Procedurally generated space environment with planets, asteroids, and enemies',
-        caption:
-          'Infinite procedural world generation featuring diverse planetary systems and dynamic encounters',
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-orbiting-planet-with-pickups.png',
+        alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
+        caption: 'Advanced orbital mechanics with trajectory prediction system',
+        detailedCaption:
+          'Sophisticated physics demonstration showcasing the trajectory prediction system using calculus and trigonometry implementation, where players must strategically use gravitational forces to navigate orbital paths while collecting resources, demonstrating educational value of mathematical concepts applied to engaging interactive gameplay',
       },
       {
-        url: 'https://github.com/conc2304/gravity-scavenger/screenshots/upgrade-system.png', // Placeholder
-        alt: 'Space station upgrade interface showing ship improvement options',
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-pickup-item.png',
+        alt: 'Close-up view of resource pickup item collection in space environment with particle effects and physics-based interaction systems',
         caption:
-          'Comprehensive upgrade system allowing players to enhance ship capabilities using collected parts',
+          'Resource collection with particle effects and physics interaction',
+        detailedCaption:
+          'Detailed view of the resource collection system featuring custom particle effects, physics-based interaction mechanics, and visual feedback systems that reward strategic navigation through gravitational fields, demonstrating the polished game systems integration and attention to user experience design',
       },
       {
-        url: 'https://github.com/conc2304/gravity-scavenger/screenshots/combat-physics.png', // Placeholder
-        alt: 'Space combat utilizing gravitational mechanics for tactical advantage',
-        caption:
-          'Physics-based combat system where players use gravitational fields strategically during dogfights',
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-pickups-fuel-parts-and-health.png',
+        alt: 'Various resource types including fuel, ship parts, and health items scattered in space environment with distinct visual designs for gameplay clarity',
+        caption: 'Diverse resource types with strategic collection mechanics',
+        detailedCaption:
+          'Comprehensive resource management system showcasing different pickup types including fuel, ship parts, and health items with distinct visual designs, supporting the upgrade system and persistent progression mechanics that encourage strategic exploration through procedurally generated infinite space environments',
       },
-    ],
+      {
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-ship-upgrade-center-ui.png',
+        alt: 'Ship upgrade interface showing Unity UI Toolkit implementation with upgrade options, resource costs, and progression systems for spacecraft customization',
+        caption: 'Comprehensive ship upgrade system with resource management',
+        detailedCaption:
+          'Advanced upgrade interface built with Unity UI Toolkit featuring comprehensive ship customization options, resource cost management, and persistent progression systems using singleton pattern for cross-scene state management, demonstrating sophisticated game architecture and player advancement mechanics',
+      },
+      {
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-shoot-asteroids.png',
+        alt: 'Combat system showing spacecraft shooting asteroids with physics-based projectile trajectories influenced by gravitational fields in space environment',
+        caption: 'Physics-based combat with gravitational projectile mechanics',
+        detailedCaption:
+          'Advanced combat system demonstration where projectile trajectories are influenced by gravitational fields, creating strategic gameplay that rewards understanding of physics mechanics, with asteroid destruction yielding resources and requiring tactical positioning to account for complex gravitational influences on weapon trajectories',
+      },
+      {
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-space-station-upgrade-station.png',
+        alt: 'Space station upgrade facility showing procedurally generated structure with docking interface and comprehensive upgrade system integration',
+        caption: 'Procedurally generated space station with upgrade facilities',
+        detailedCaption:
+          'Sophisticated space station system featuring procedural generation algorithms, docking mechanics, and comprehensive upgrade facility integration, demonstrating the chunk-based infinite world generation system that dynamically creates varied encounters and progression opportunities while maintaining efficient memory management',
+      },
+      {
+        relativePath:
+          'projects/gravity-scavenger/gravity-scavenger-start-screen.png',
+        alt: 'Game start screen showing polished UI design with title graphics, navigation options, and space-themed visual presentation for physics-based game experience',
+        caption: 'Polished game start screen with professional UI design',
+        detailedCaption:
+          'Professional game start screen showcasing polished visual design, comprehensive UI systems, and cohesive space-themed aesthetic that introduces players to the physics-based gameplay experience, demonstrating attention to user experience design and the educational game development approach combining academic rigor with engaging presentation',
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'https://youtu.be/Cs_P3tOuU4w',
+        url: getVideoUrl(
+          'projects/gravity-scavenger/Gravity%20Scavenger%20_%20GD50%20Final%20Project%20-%20Game%20Development.mp4'
+        ),
         title: 'Gravity Scavenger Final Project Demo',
         type: 'demo',
         caption:

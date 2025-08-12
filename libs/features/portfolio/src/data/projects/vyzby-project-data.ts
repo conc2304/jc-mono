@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const vyzbyProject: ProjectData = {
   // =============================================================================
@@ -66,36 +67,166 @@ export const vyzbyProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    // TODO GATHER MEDIA
-    thumbnail: undefined, // No specific thumbnail mentioned in documentation
+    thumbnail: {
+      relativePath: 'projects/vyzby/vyzby-screenshot-tunnel-hero.png',
+      ...getResponsiveImageSet(
+        'projects/vyzby/vyzby-screenshot-tunnel-hero.png'
+      ),
+      url: getImageUrl(
+        'projects/vyzby/vyzby-screenshot-tunnel-hero.png',
+        'full'
+      ),
+      alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
+      caption: 'Immersive tunnel visualization hero demonstration',
+      detailedCaption:
+        "Striking tunnel visualization serving as VYZBY's hero demonstration, featuring immersive perspective effects, dynamic lighting, and complex visual algorithms that showcase the framework's potential for creating compelling visual experiences through creative coding and real-time parameter manipulation",
+    },
     screenshots: [
-      // Note: Actual screenshots would need to be captured from the live demo
       {
-        url: 'https://modest-darwin-601c1d.netlify.app/screenshots/main-interface.png', // Placeholder
-        alt: 'VYZBY main visualizer interface with layer controls and parameter sliders',
-        caption:
-          'Main visualizer interface showing layered sketch composition and intuitive parameter controls',
+        relativePath:
+          'projects/vyzby/vyzby-audio-player-interface-music-selection.png',
+        alt: 'VYZBY audio player interface showing music selection controls and Web Audio API integration for audio-reactive visual programming',
+        caption: 'Audio player interface with Web Audio API integration',
+        detailedCaption:
+          "Sophisticated audio player interface demonstrating VYZBY's Web Audio API integration with music selection controls, audio analysis visualization, and real-time parameter mapping system that enables creative coders to create audio-reactive visuals without complex audio programming knowledge",
       },
       {
-        url: 'https://modest-darwin-601c1d.netlify.app/screenshots/layer-library.png', // Placeholder
-        alt: 'Layer library showing available p5.js sketches with preview thumbnails',
+        relativePath:
+          'projects/vyzby/vyzby-home-screen-with-interactive-mouse-chasing-brush-processing-sketch.png',
+        alt: 'VYZBY home screen featuring interactive mouse-chasing brush sketch demonstrating real-time parameter manipulation and creative coding framework capabilities',
         caption:
-          'Layer library interface displaying various creative coding sketches users can add to compositions',
+          'Interactive home screen with mouse-chasing brush sketch demonstration',
+        detailedCaption:
+          "Engaging home screen showcasing VYZBY's interactive capabilities with mouse-chasing brush sketch, demonstrating real-time parameter manipulation, Vue.js and p5.js integration, and the framework's ability to transform static creative coding into dynamic, responsive visual experiences",
       },
       {
-        url: 'https://modest-darwin-601c1d.netlify.app/screenshots/midi-controls.png', // Placeholder
-        alt: 'MIDI controller integration interface for expressive parameter control',
+        relativePath:
+          'projects/vyzby/vyzby-initial-scene-with-sin-wave-sketches.png',
+        alt: 'Initial VYZBY scene displaying mathematical sin wave sketches with parameter controls demonstrating algorithmic visual generation and real-time manipulation',
         caption:
-          'MIDI controller support enabling DJ-like expressive control over visual parameters',
+          'Mathematical sin wave sketches with real-time parameter controls',
+        detailedCaption:
+          "Mathematical visualization showcase featuring sin wave algorithms with real-time parameter manipulation, demonstrating VYZBY's capability to transform mathematical concepts into interactive visual experiences with immediate parameter feedback and algorithmic exploration",
       },
-    ],
+      {
+        relativePath:
+          'projects/vyzby/vyzby-portfolio-1-audio-reactive-sin-wave.gif',
+        alt: 'Animated demonstration of audio-reactive sin wave visualization responding to music input with dynamic parameter changes and real-time visual feedback',
+        caption:
+          'Audio-reactive sin wave visualization with dynamic parameters',
+        detailedCaption:
+          "Dynamic audio-reactive sin wave visualization demonstrating VYZBY's Web Audio API integration, real-time parameter modulation based on audio analysis, and the framework's ability to create responsive visual experiences that react to musical input with sophisticated parameter mapping",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-portfolio-2-audio-reactive-randomized-parameters.gif',
+        alt: 'Audio-reactive sketch with randomized parameter generation showing dynamic visual variations and algorithmic creativity through VYZBY framework',
+        caption: 'Audio-reactive sketch with randomized parameter generation',
+        detailedCaption:
+          "Advanced audio-reactive sketch featuring randomized parameter generation algorithms, demonstrating VYZBY's capability to create unpredictable yet controlled visual variations through algorithmic parameter manipulation and audio-driven creative coding experiences",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-portfolio-3-green-2d-plane-rect-moving-quickly.gif',
+        alt: 'High-speed animated green geometric shapes demonstrating performance optimization and rapid parameter changes in VYZBY creative coding framework',
+        caption:
+          'High-performance geometric animation with rapid parameter changes',
+        detailedCaption:
+          "Performance-optimized geometric animation showcasing VYZBY's ability to handle rapid parameter changes and high-frequency visual updates while maintaining smooth frame rates, demonstrating the framework's sophisticated performance engineering and real-time optimization capabilities",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-portfolio-4-audio-reactive-parametric-line-sketch.gif',
+        alt: 'Audio-reactive parametric line drawing sketch showing mathematical curve generation with real-time audio input modulation and dynamic visual complexity',
+        caption:
+          'Audio-reactive parametric line sketch with mathematical curve generation',
+        detailedCaption:
+          "Sophisticated audio-reactive parametric line sketch demonstrating mathematical curve generation algorithms modulated by audio input, showcasing VYZBY's ability to transform complex mathematical concepts into engaging audio-visual experiences with real-time parameter manipulation",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-portfolio-5-audio-reactive-parametric-line-sketch-variation2.gif',
+        alt: 'Advanced parametric line sketch variation with complex mathematical algorithms and audio reactivity demonstrating VYZBY framework extensibility and creative potential',
+        caption:
+          'Advanced parametric line sketch variation with complex algorithms',
+        detailedCaption:
+          "Advanced parametric line sketch variation featuring complex mathematical algorithms and sophisticated audio reactivity, demonstrating VYZBY's extensibility for creating diverse visual experiences and the framework's potential for supporting advanced creative coding experimentation",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-portfolio-6-multilayer-sketch-with-3d-swords.gif',
+        alt: 'Multi-layer 3D composition featuring sword models with complex scene management and layer control demonstrating VYZBY advanced rendering capabilities',
+        caption: 'Multi-layer 3D composition with advanced scene management',
+        detailedCaption:
+          "Complex multi-layer 3D composition featuring sword models and sophisticated scene management, demonstrating VYZBY's advanced rendering capabilities, layer control systems, and ability to handle complex 3D scenes with multiple concurrent p5.js instances and individual parameter control",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-processing-sketch-parameter-control-panel.png',
+        alt: 'VYZBY parameter control panel interface showing automatic UI generation with sliders, knobs, and controls for real-time sketch manipulation',
+        caption:
+          'Automatic parameter control panel with intuitive UI generation',
+        detailedCaption:
+          "Comprehensive parameter control panel showcasing VYZBY's automatic UI generation system with sliders, knobs, and control interfaces that eliminate the need for code editing during creative experimentation, demonstrating the framework's core value proposition of real-time parameter manipulation",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-screenshot-multi-layer-scene-with-3d-lamborghinis.png',
+        alt: 'Multi-layer scene composition featuring 3D Lamborghini models demonstrating advanced 3D rendering and layer management in VYZBY creative coding framework',
+        caption:
+          'Multi-layer 3D scene with complex model rendering and management',
+        detailedCaption:
+          "Advanced multi-layer scene composition featuring 3D Lamborghini models, demonstrating VYZBY's sophisticated 3D rendering capabilities, layer management system, and ability to handle complex 3D assets with individual parameter control and real-time manipulation",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-screenshot-parametric-lines-sketch.png',
+        alt: 'Parametric line sketch showing mathematical curve generation with real-time parameter control demonstrating algorithmic art creation in VYZBY framework',
+        caption:
+          'Parametric line sketch with mathematical curve generation algorithms',
+        detailedCaption:
+          'Elegant parametric line sketch demonstrating mathematical curve generation with real-time parameter control, showcasing how VYZBY enables creators to explore algorithmic art concepts through immediate parameter feedback and live experimentation with mathematical formulas',
+      },
+      {
+        relativePath: 'projects/vyzby/vyzby-screenshot-tunnel-hero.png',
+        alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
+        caption: 'Immersive tunnel visualization hero demonstration',
+        detailedCaption:
+          "Striking tunnel visualization serving as VYZBY's hero demonstration, featuring immersive perspective effects, dynamic lighting, and complex visual algorithms that showcase the framework's potential for creating compelling visual experiences through creative coding and real-time parameter manipulation",
+      },
+      {
+        relativePath:
+          'projects/vyzby/vyzby-showcase-calm-tunnel-with-lamborghini-and-parametric-lines.gif',
+        alt: 'Sophisticated multi-element composition featuring tunnel environment, 3D Lamborghini, and parametric lines demonstrating VYZBY comprehensive creative capabilities',
+        caption:
+          'Complex multi-element composition showcasing framework capabilities',
+        detailedCaption:
+          "Sophisticated showcase composition combining tunnel environment, 3D Lamborghini model, and parametric line algorithms, demonstrating VYZBY's comprehensive creative coding capabilities, multi-layer composition system, and ability to integrate diverse visual elements with unified parameter control",
+      },
+      {
+        relativePath: 'projects/vyzby/vyzby-sketch-catalogue-menu.png',
+        alt: 'VYZBY sketch catalogue interface showing organized collection of creative coding projects with metadata and selection system for framework extensibility',
+        caption:
+          'Organized sketch catalogue with extensible framework architecture',
+        detailedCaption:
+          "Comprehensive sketch catalogue interface demonstrating VYZBY's extensible architecture with organized creative coding project collection, metadata management, preview system, and easy sketch selection that enables developers to build and share creative coding libraries within the framework",
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'https://modest-darwin-601c1d.netlify.app/demo-video.mp4', // Placeholder
-        title: 'VYZBY Interactive Demo',
+        url: getVideoUrl(
+          'projects/vyzby/vyzby-audio-reactive-demo-jam-session.mp4'
+        ),
+        title: 'Audio-Reactive Live Performance Demo',
         type: 'demo',
         caption:
-          "Demonstration of VYZBY's multi-modal interaction capabilities including audio response, MIDI control, and webcam tracking",
+          'Live audio-reactive performance demonstration with real-time parameter manipulation',
+        detailedCaption:
+          "Dynamic live performance demonstration showcasing VYZBY's audio-reactive capabilities using Web Audio API integration, real-time parameter manipulation through UI controls, MIDI controller integration, and multi-layer visual composition system creating responsive creative coding experiences that react to musical input and enable live visual performance",
       },
     ],
   },

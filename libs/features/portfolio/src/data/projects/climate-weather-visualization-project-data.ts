@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const climateDataVizProject: ProjectData = {
   // =============================================================================
@@ -60,7 +61,7 @@ export const climateDataVizProject: ProjectData = {
     collaborators: [
       {
         name: 'Ben Fulroth',
-        role: 'Team Member - Data Analysis & Visualization Development',
+        role: 'Team Member - Data Analysis & UI Development',
         url: undefined,
       },
       {
@@ -75,35 +76,98 @@ export const climateDataVizProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    // TODO GET MEDIA
-    thumbnail: undefined, // Would need to extract from live demo
+    thumbnail: {
+      relativePath:
+        'projects/climate-data-vis/climate-data-hero-exploration-page.png',
+      url: getImageUrl(
+        'projects/climate-data-vis/climate-data-hero-exploration-page.png',
+        'full'
+      ),
+      ...getResponsiveImageSet(
+        'projects/climate-data-vis/climate-data-hero-exploration-page.png'
+      ),
+      alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
+      caption: 'Complete Planet Habitability application interface overview',
+      detailedCaption:
+        'Project hero showcase highlighting the comprehensive climate data visualization platform featuring integrated US heatmap, temporal analysis tools, comparative charts, and interactive controls, demonstrating the successful integration of React, TypeScript, and D3.js technologies for exploring complex climate science data and regional vulnerability assessment',
+    },
     screenshots: [
       {
-        url: 'https://conc2304.github.io/Climate-Impact-Data-Viz-Final-Project/screenshot-home.png', // Placeholder
-        alt: 'Planet Habitability home page showing temperature anomaly timeline',
+        relativePath:
+          'projects/climate-data-vis/climate-data-exploration-page-initial-state.png',
+        alt: 'Initial state of climate data exploration interface showing US heatmap, temperature anomaly timeline, and navigation controls for interactive data analysis',
         caption:
-          'Interactive homepage featuring temporal exploration of temperature anomalies and severe weather correlations',
+          'Main exploration interface with US heatmap and timeline controls',
+        detailedCaption:
+          'Primary exploration page interface featuring dynamic US state heatmap visualization with climate impact data overlay, temporal temperature anomaly timeline with interactive scrubbing capabilities, and comprehensive navigation controls enabling multi-dimensional climate data analysis and regional vulnerability assessment',
       },
       {
-        url: 'https://conc2304.github.io/Climate-Impact-Data-Viz-Final-Project/screenshot-heatmap.png', // Placeholder
-        alt: 'US heatmap visualization showing climate impact by state',
+        relativePath:
+          'projects/climate-data-vis/climate-data-exploration-page-radar-chart-metric-comparison-with-tooltip.png',
+        alt: 'Radar chart visualization showing multi-dimensional climate metrics comparison between states with interactive tooltip displaying detailed data values',
         caption:
-          'Primary exploration interface with US heatmap highlighting most impacted states and interactive filtering',
+          'Interactive radar chart for multi-state climate metrics comparison',
+        detailedCaption:
+          'Advanced radar chart visualization system enabling comparative analysis of multiple climate metrics across different states, featuring interactive tooltips with detailed data values, multi-dimensional data representation including storm frequency, temperature anomalies, and damage assessments for comprehensive regional climate impact comparison',
       },
       {
-        url: 'https://conc2304.github.io/Climate-Impact-Data-Viz-Final-Project/screenshot-charts.png', // Placeholder
-        alt: 'Auxiliary charts including line graphs and radar visualizations',
+        relativePath:
+          'projects/climate-data-vis/climate-data-exploration-page-timeline-scrubbing-selection.png',
+        alt: 'Interactive timeline interface with temporal scrubbing controls for filtering climate data by specific time periods and observing trend evolution',
         caption:
-          'Comprehensive chart suite including comparative line graphs and radar charts for multi-dimensional analysis',
+          'Temporal filtering with interactive timeline scrubbing controls',
+        detailedCaption:
+          'Sophisticated temporal exploration interface featuring interactive timeline with scrubbing functionality, enabling users to filter climate data by specific time periods, observe temperature anomaly trends over time, and dynamically update all connected visualizations based on temporal selections for comprehensive trend analysis',
       },
-    ],
+      {
+        relativePath:
+          'projects/climate-data-vis/climate-data-exploration-page-weather-type-selection-menu.png',
+        alt: 'Weather event type selection interface showing filtering options for different storm categories and severe weather patterns in climate analysis',
+        caption: 'Weather event type filtering and selection interface',
+        detailedCaption:
+          'Comprehensive weather event categorization system featuring interactive filtering options for different storm types including hurricanes, tornadoes, floods, and other severe weather patterns, enabling focused analysis of specific weather phenomena and their correlation with temperature anomalies across different regions and time periods',
+      },
+      {
+        relativePath:
+          'projects/climate-data-vis/climate-data-hero-exploration-page.png',
+        alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
+        caption: 'Complete Planet Habitability application interface overview',
+        detailedCaption:
+          'Project hero showcase highlighting the comprehensive climate data visualization platform featuring integrated US heatmap, temporal analysis tools, comparative charts, and interactive controls, demonstrating the successful integration of React, TypeScript, and D3.js technologies for exploring complex climate science data and regional vulnerability assessment',
+      },
+      {
+        relativePath:
+          'projects/climate-data-vis/climate-data-intro-storms-events-over-time.png',
+        alt: 'Temporal visualization showing storm events frequency over time with trend analysis and pattern identification for climate impact assessment',
+        caption: 'Storm events frequency trends over time visualization',
+        detailedCaption:
+          'Introductory temporal analysis visualization displaying storm event frequency patterns over extended time periods, featuring trend identification capabilities, seasonal pattern recognition, and baseline establishment for understanding the evolution of severe weather patterns in relation to climate change and temperature anomaly data',
+      },
+      {
+        relativePath:
+          'projects/climate-data-vis/climate-data-line-chart-events-by-state.png',
+        alt: 'Comparative line chart visualization showing climate events data by state with multi-series analysis and interactive legend controls',
+        caption:
+          'Multi-state comparative analysis with interactive line charts',
+        detailedCaption:
+          'Advanced comparative line chart system enabling side-by-side analysis of climate event data across multiple US states, featuring multi-series visualization, interactive legend controls, and dynamic data binding that updates based on user selections, supporting comprehensive regional comparison and vulnerability assessment for climate impact analysis',
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'https://www.youtube.com/watch?v=29FGDYg1OEY',
+        url: getVideoUrl(
+          'projects/climate-data-vis/The Future of Climate and Severe Weather - Data Vis Final Video.mp4'
+        ),
+        caption:
+          'Complete project walkthrough of climate data visualization application',
+        detailedCaption:
+          'Comprehensive demonstration of Planet Habitability application showcasing interactive exploration of climate data through dynamic US heatmaps, temporal temperature anomaly filtering, comparative state analysis, and radar chart visualizations, demonstrating the correlation between rising temperatures and severe weather patterns across the United States',
         title: 'Planet Habitability Project Screencast',
         type: 'demo',
-        caption:
-          'Complete demonstration of interactive features and data exploration capabilities',
       },
     ],
   },

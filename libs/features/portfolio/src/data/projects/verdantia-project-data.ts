@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const verdantiaProject: ProjectData = {
   // =============================================================================
@@ -86,53 +87,189 @@ export const verdantiaProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: undefined, // Would need to extract from actual game screenshots
+    thumbnail: {
+      relativePath:
+        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png',
+      url: getImageUrl(
+        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png'
+      ),
+      ...getResponsiveImageSet(
+        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png'
+      ),
+      alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
+      caption: 'Welcome screen with environmental theme introduction',
+      detailedCaption:
+        "Engaging welcome screen featuring forest imagery that introduces Verdantia's environmental themes and educational objectives, setting the foundation for learning about urban reforestation, sustainable development, and the personal benefits of green spaces in city planning through interactive simulation experience",
+    },
     screenshots: [
       {
-        url: 'https://github.com/conc2304/verdantia/raw/main/screenshot1.png', // Placeholder - actual screenshots would be in GitHub
-        alt: 'Verdantia city builder main interface showing 3D low-poly city grid',
+        relativePath:
+          'projects/verdantia/verdantia-gameplay-building-selection-menu-on-left-city-map-with-heat-map-on-right.png',
+        alt: 'Verdantia gameplay interface showing building selection menu with construction options alongside city map featuring heat island visualization using scientific calculus simulation',
         caption:
-          'Main game interface with touch kiosk controls and 3D city visualization',
+          'Building selection interface with real-time heat map visualization',
+        detailedCaption:
+          "Advanced gameplay interface demonstrating Verdantia's building selection system with comprehensive construction options alongside real-time heat island simulation using Thomas Algorithm implementation, showcasing how different building types affect urban temperature patterns and environmental metrics in the educational city builder game",
       },
       {
-        url: 'https://github.com/conc2304/verdantia/raw/main/heat-map-view.png',
-        alt: 'Urban heat island visualization with color-coded temperature map',
+        relativePath:
+          'projects/verdantia/verdantia-gameplay-screenshot-city-neighborhood-with-parks.png',
+        alt: 'Urban neighborhood gameplay view showing green spaces, parks, and sustainable city planning with low-poly 3D art style and environmental design elements',
         caption:
-          'Real-time heat island simulation using Thomas Algorithm implementation',
+          'Sustainable neighborhood with integrated green spaces and parks',
+        detailedCaption:
+          "Detailed city neighborhood showcasing Verdantia's sustainable urban planning approach with integrated parks, green spaces, and environmentally conscious building placement, demonstrating the game's educational focus on urban reforestation and the positive impact of green infrastructure on city livability and temperature regulation",
       },
       {
-        url: 'https://github.com/conc2304/verdantia/raw/main/building-placement.png',
-        alt: 'Building placement interface with green infrastructure options',
+        relativePath:
+          'projects/verdantia/verdantia-gameplay-screenshot-green-city-with-eco-building.png',
+        alt: 'Eco-friendly city development showing sustainable buildings, green roofs, and environmental architecture integrated into urban planning simulation gameplay',
         caption:
-          'Interactive building placement system with environmental impact preview',
+          'Eco-friendly city development with sustainable building systems',
+        detailedCaption:
+          'Comprehensive eco-friendly city showcase featuring sustainable building types including green roofs, renewable energy systems, and environmentally conscious architecture, demonstrating how Verdantia educates players about the relationship between building choices and environmental impact through scientifically accurate simulation',
       },
       {
-        url: 'https://github.com/conc2304/verdantia/raw/main/metrics-dashboard.png',
-        alt: 'City metrics dashboard showing temperature, happiness, pollution data',
-        caption: 'Real-time city metrics display for educational feedback',
+        relativePath:
+          'projects/verdantia/verdantia-gameplay-screenshot-heatmap-on-left-city-stats-bar-on-top-city-in-main-view.png',
+        alt: 'Complete game interface showing heat map panel, city statistics dashboard, and main city view with comprehensive environmental data visualization and metrics',
+        caption:
+          'Complete interface with heat simulation and city metrics dashboard',
+        detailedCaption:
+          'Comprehensive game interface featuring real-time heat map simulation using advanced mathematical modeling, city statistics dashboard displaying temperature, pollution, happiness, and sustainability metrics, demonstrating the sophisticated data visualization systems that make complex environmental science concepts accessible and engaging for museum visitors',
       },
-    ],
+      {
+        relativePath:
+          'projects/verdantia/verdantia-gameplay-screenshot-heatmap-overlay-with-factoid-popup.png',
+        alt: 'Heat map visualization overlay with educational factoid popup displaying environmental science information and urban heat island effects explanation',
+        caption: 'Heat map overlay with educational popup content integration',
+        detailedCaption:
+          'Educational interface integration showcasing heat map visualization with contextual factoid popups that provide scientific information about urban heat island effects, forest therapy benefits, and environmental science concepts, demonstrating how Verdantia transforms complex climate science into personally meaningful and immediately understandable experiences',
+      },
+      {
+        relativePath: 'projects/verdantia/verdantia-hero-image-city-ai.png',
+        alt: "Verdantia hero image showing futuristic green city with sustainable architecture and urban forest integration representing the game's environmental vision",
+        caption: 'Project hero image showcasing sustainable city vision',
+        detailedCaption:
+          "Inspiring project hero image representing Verdantia's vision of sustainable urban development with integrated green spaces, renewable energy systems, and environmentally conscious architecture, embodying the game's educational mission to demonstrate how thoughtful city planning can create healthier, more livable urban environments",
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-kiosk-and-main-game-game-completion-screen.png',
+        alt: 'Museum kiosk installation showing game completion screen with final city results and environmental impact summary for educational assessment',
+        caption: 'Museum kiosk with game completion and results summary',
+        detailedCaption:
+          'Museum installation completion interface displaying final city development results, environmental impact assessment, and sustainability metrics, demonstrating how Verdantia provides meaningful educational outcomes and allows museum visitors to evaluate their urban planning decisions and environmental stewardship effectiveness',
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-projected-gameplay-intro-scene.png',
+        alt: 'Large-scale projected gameplay introduction scene for museum installation showing immersive environmental storytelling and game narrative presentation',
+        caption:
+          'Large-scale projection intro for museum installation experience',
+        detailedCaption:
+          "Immersive museum installation introduction featuring large-scale projection of Verdantia's opening narrative, designed to engage both active players and passive observers with environmental storytelling, setting the context for urban reforestation education and sustainable city planning learning experience",
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png',
+        alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
+        caption: 'Welcome screen with environmental theme introduction',
+        detailedCaption:
+          "Engaging welcome screen featuring forest imagery that introduces Verdantia's environmental themes and educational objectives, setting the foundation for learning about urban reforestation, sustainable development, and the personal benefits of green spaces in city planning through interactive simulation experience",
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-touchscreen-kiosk-building-selection-menu.png',
+        alt: 'Touch kiosk interface showing comprehensive building selection menu with sustainable construction options and environmental impact indicators for museum visitors',
+        caption: 'Touch kiosk building selection with sustainability metrics',
+        detailedCaption:
+          'Intuitive touch kiosk building selection interface designed for diverse museum audiences, featuring comprehensive sustainable construction options with clear environmental impact indicators, energy efficiency ratings, and educational information that helps visitors understand the relationship between building choices and urban environmental health',
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-touchscreen-kiosk-main-menu-actions-with-virtual-joystick.png',
+        alt: 'Touch kiosk main menu interface with virtual joystick navigation controls and action buttons optimized for museum installation accessibility and user interaction',
+        caption: 'Touch kiosk main menu with virtual navigation controls',
+        detailedCaption:
+          'Accessible touch kiosk main menu featuring virtual joystick navigation and intuitive action buttons designed specifically for museum installation use, accommodating diverse user capabilities and ensuring smooth interaction flow for visitors of all ages and technical backgrounds engaging with the environmental education experience',
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-touchscreen-kiosk-mission-selection-menu.png',
+        alt: 'Mission selection interface showing educational challenges and learning objectives for progressive city building and environmental stewardship skill development',
+        caption:
+          'Mission system for progressive environmental education challenges',
+        detailedCaption:
+          'Structured mission selection system providing progressive environmental education challenges that guide museum visitors through increasingly complex urban planning scenarios, sustainable development objectives, and environmental stewardship skills, ensuring comprehensive learning outcomes and meaningful engagement with climate science concepts',
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-touchscreen-kiosk-screenshot-building-menu-for-eco-high-rise-building-with-building-metrics.png',
+        alt: 'Detailed building information interface showing eco-friendly high-rise specifications with environmental metrics, energy efficiency data, and sustainability indicators',
+        caption:
+          'Detailed building metrics for eco-friendly high-rise construction',
+        detailedCaption:
+          'Comprehensive building information system showcasing eco-friendly high-rise specifications with detailed environmental metrics including energy efficiency ratings, carbon footprint data, sustainability indicators, and educational content about green building technologies, demonstrating how Verdantia integrates scientific accuracy with accessible learning',
+      },
+      {
+        relativePath:
+          'projects/verdantia/verdantia-touchscreen-kiosk-ui-city-metrics.png',
+        alt: 'City metrics dashboard displaying real-time environmental data including temperature, pollution levels, citizen happiness, and sustainability scores for educational assessment',
+        caption:
+          'Real-time city metrics dashboard for environmental assessment',
+        detailedCaption:
+          'Advanced city metrics visualization system displaying real-time environmental data including temperature patterns from heat equation simulation, pollution levels, citizen happiness indices, and comprehensive sustainability scores, providing immediate feedback on urban planning decisions and demonstrating the complex relationships between city design and environmental health',
+      },
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'Arctice_Drone_Exhibit.mov', // From documentation - would need actual path
-        title: 'Arctic Drone Survey Installation Inspiration',
-        type: 'inspiration',
+        url: getVideoUrl(
+          'projects/verdantia/Verdantia - Green City Builder _ Final Graduate Capstone Presentation.mp4'
+        ),
+        title: 'Graduate Capstone Final Presentation',
+        type: 'final',
         caption:
-          'Moment Factory installation that inspired interactive touch kiosk design',
+          'Academic presentation of urban reforestation city builder game',
+        detailedCaption:
+          "Comprehensive graduate capstone presentation covering Verdantia's educational objectives, advanced heat equation implementation using Thomas Algorithm, museum installation design, environmental science integration, and the project's role in transforming climate change education through interactive city building and real-time environmental simulation",
       },
       {
-        url: 'River_Infrastructure_Installation.mov', // From documentation
-        title: 'River Infrastructure Installation Reference',
-        type: 'inspiration',
-        caption:
-          'Museum of Science Boston exhibit that inspired physical interaction design',
-      },
-      {
-        url: 'verdantia_gameplay_demo.mp4', // Would be created from game footage
-        title: 'Verdantia Gameplay Demonstration',
+        url: getVideoUrl(
+          'projects/verdantia/Verdantia _ Green City Builder Game (2024 Graduate Capstone)  Walk Through.mp4'
+        ),
+        title: 'Complete Game Walkthrough',
         type: 'demo',
         caption:
-          'Complete gameplay flow showing city building, heat simulation, and educational elements',
+          'Full gameplay demonstration of museum installation city builder',
+        detailedCaption:
+          "Complete gameplay walkthrough showcasing Verdantia's touch kiosk interface, city building mechanics, real-time heat island simulation, environmental metrics visualization, mission system, and educational pop-up integration designed for museum audiences to learn about urban planning and sustainability through interactive experience",
+      },
+      {
+        url: getVideoUrl(
+          'projects/verdantia/Arctice_Drone_Exhibit-touchscreen-kiosk-gameplay-inspiration-by-moment-factory.mp4'
+        ),
+        title: 'Arctic Drone Exhibit - Moment Factory Inspiration',
+        type: 'inspiration',
+        caption:
+          'Moment Factory touchscreen kiosk design inspiration for museum installations',
+        detailedCaption:
+          "Inspirational reference showcasing Moment Factory's Arctic Drone exhibit with sophisticated touchscreen kiosk interface design, demonstrating professional museum installation standards, interactive experience design principles, and multi-modal engagement strategies that influenced Verdantia's development approach and user interface design philosophy",
+      },
+      {
+        url: getVideoUrl(
+          'projects/verdantia/Charles_River_Infrastructure_Installation-inspiration-documentation.MOV.mp4'
+        ),
+        title: 'Charles River Infrastructure Installation Research',
+        type: 'inspiration',
+        caption:
+          'Environmental infrastructure installation research and documentation',
+        detailedCaption:
+          "Research documentation of Charles River infrastructure installations exploring environmental monitoring systems, public engagement with urban environmental data, and real-world applications of environmental science communication that informed Verdantia's approach to making climate data personally meaningful and accessible through interactive visualization",
       },
     ],
   },

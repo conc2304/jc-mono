@@ -1,4 +1,5 @@
 import { ProjectData } from '@jc/ui-components';
+import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
 export const terrainifyProject: ProjectData = {
   // =============================================================================
@@ -64,40 +65,63 @@ export const terrainifyProject: ProjectData = {
   // =============================================================================
   media: {
     // TODO GET MEDIA
-    thumbnail: undefined, // Would need to capture from Maya interface
+    thumbnail: {
+      relativePath:
+        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
+      url: getImageUrl(
+        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
+        'full'
+      ),
+      ...getResponsiveImageSet(
+        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png'
+      ),
+      alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
+      caption:
+        'High-quality rendered terrain with mountains and water features',
+      detailedCaption:
+        "Sophisticated render result showcasing the final output of Terrainify's procedural generation system, featuring detailed mountainous terrain with realistic water features, demonstrating the complex shading network integration, displacement mapping techniques, and material assignment systems that create production-quality 3D landscapes for motion graphics and visual performance applications",
+    },
     screenshots: [
       {
-        url: 'https://github.com/conc2304/terrainify/screenshots/terrainify-ui.png', // Placeholder
-        alt: 'Terrainify custom UI panel within Maya interface',
+        relativePath:
+          'projects/terrainify/terrainify-noise-based-terrain-generated-over-2d-plane-object.png',
+        alt: 'Procedural terrain generation showing volume noise displacement applied to 2D plane object creating realistic 3D mountainous landscape using Maya shading networks',
         caption:
-          'Custom Maya UI panel showing terrain generation parameters and BPM animation controls',
+          'Procedural terrain generation using volume noise displacement',
+        detailedCaption:
+          'Advanced procedural terrain system demonstrating volume noise generation applied through displacement shaders to transform 2D plane geometry into complex 3D mountainous landscapes, showcasing automated shading network creation, 3D texture processing, and sophisticated Maya API programming for procedural generation workflows',
       },
       {
-        url: 'https://github.com/conc2304/terrainify/screenshots/procedural-terrain.png', // Placeholder
-        alt: 'Generated 3D terrain mesh with displacement mapping',
+        relativePath:
+          'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
+        alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
         caption:
-          'Procedurally generated terrain using volume noise and displacement shaders',
+          'High-quality rendered terrain with mountains and water features',
+        detailedCaption:
+          "Sophisticated render result showcasing the final output of Terrainify's procedural generation system, featuring detailed mountainous terrain with realistic water features, demonstrating the complex shading network integration, displacement mapping techniques, and material assignment systems that create production-quality 3D landscapes for motion graphics and visual performance applications",
       },
       {
-        url: 'https://github.com/conc2304/terrainify/screenshots/shading-network.png', // Placeholder
-        alt: 'Maya Hypershade showing complex node network',
-        caption:
-          'Custom shading network with displacement, volume noise, and placement nodes',
+        relativePath:
+          'projects/terrainify/terrainify-terrain-generator-ui-modal-parameter-settings.png',
+        alt: 'Custom Maya UI panel showing Terrainify plugin interface with terrain generation parameters, BPM settings, and real-time control options for procedural landscape creation',
+        caption: 'Custom Maya plugin interface with terrain and BPM parameters',
+        detailedCaption:
+          "Advanced custom UI development showcasing Terrainify's native Maya interface panel with comprehensive parameter controls for terrain generation, BPM synchronization settings, animation timing configuration, and real-time adjustment capabilities, demonstrating professional Maya plugin development with intuitive workflow integration and immediate visual feedback systems",
       },
-      {
-        url: 'https://github.com/conc2304/terrainify/screenshots/bpm-animation.png', // Placeholder
-        alt: 'Maya timeline showing BPM-synchronized keyframes',
-        caption:
-          'BPM-synchronized animation keyframes for music-reactive terrain movement',
-      },
-    ],
+    ].map((mediaItem) => ({
+      ...mediaItem,
+      ...getResponsiveImageSet(mediaItem.relativePath),
+      url: getImageUrl(mediaItem.relativePath, 'full'),
+    })),
     videos: [
       {
-        url: 'https://youtu.be/jsYO-EFXlmI',
-        title: 'Terrainify BPM Animation Demo',
-        type: 'demo',
+        url: getVideoUrl(
+          'projects/terrainify/Terrainify-Python-Scripting-Final-Project-Demo.mp4'
+        ),
         caption:
-          'Demonstration of procedural terrain generation and BPM-synchronized animation',
+          'Complete Maya plugin demonstration with BPM-synchronized terrain animation',
+        detailedCaption:
+          'Comprehensive walkthrough of Terrainify showcasing advanced Maya Python API programming for procedural terrain generation, custom shading network automation with displacement shaders and volume noise, innovative BPM analysis system creating music-synchronized animation keyframes, and real-time 3D geometry manipulation for audio-visual performance applications',
       },
     ],
   },
