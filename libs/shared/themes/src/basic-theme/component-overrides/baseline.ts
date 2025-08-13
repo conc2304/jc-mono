@@ -1,10 +1,16 @@
 import { Components, Theme, alpha } from '@mui/material/styles';
+import { height, width } from '@mui/system';
 
 export default function BaselineCSS(theme: Theme): Components {
   return {
     MuiCssBaseline: {
       styleOverrides: {
         // Default Scroll Styles
+        body: {
+          height: '100vh',
+          width: '100vw',
+          overflow: 'hidden',
+        },
         '*': {
           '&::-webkit-scrollbar': {
             width: '8px',

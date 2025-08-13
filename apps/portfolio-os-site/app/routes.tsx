@@ -4,5 +4,5 @@ export default [
   index('./app.tsx'),
   route('desktop', './routes/desktop.tsx'),
   route('about', './routes/about.tsx'),
-  route('boot-loader', './routes/boot-loader.tsx'),
+  route('*', './routes/404.tsx'),
 ] satisfies RouteConfig;

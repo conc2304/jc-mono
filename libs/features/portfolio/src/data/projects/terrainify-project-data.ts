@@ -64,7 +64,6 @@ export const terrainifyProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    // TODO GET MEDIA
     thumbnail: {
       relativePath:
         'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',

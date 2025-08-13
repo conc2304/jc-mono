@@ -65,7 +65,6 @@ export const atomicVisualizerProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    // TODO GET MEDIA
     thumbnail: {
       relativePath: 'projects/3d-atomic-visualizer/atomic-structure-hero.png',
       url: getImageUrl(

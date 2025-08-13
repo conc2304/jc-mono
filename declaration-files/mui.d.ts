@@ -26,5 +26,9 @@ declare module '@mui/material/styles' {
   interface Palette {
     getInvertedMode(): 'light' | 'dark';
     getInvertedMode(paletteColor: PaletteOptionNames): string;
+    getInvertedMode(
+      paletteColor: PaletteOptionNames,
+      reInvert: boolean
+    ): string;
   }
 }

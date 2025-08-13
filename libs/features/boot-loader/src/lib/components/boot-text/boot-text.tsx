@@ -473,7 +473,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
   );
 
   return (
-    // TODO - ADD Augmentations
     <Box
       ref={containerRef}
       className={`boot-text-container ${className}`}

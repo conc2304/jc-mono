@@ -79,7 +79,7 @@ const bootMessages: BootMessage[] = [
   ['System boot complete.', 'Welcome, Agent Smith.'],
   '',
   'Welcome to Terminal OS v2.1.0',
-  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
+  // ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
 ];
 
 export default function App() {
