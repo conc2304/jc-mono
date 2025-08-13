@@ -1,6 +1,7 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import { CSSProperties } from 'react';
 import { DiagonalLines } from './diagonal-box';
+import { HorizontalCompass } from './digital-compass';
 
 export const PageNotFound404 = () => {
   const bgOverlayProps: CSSProperties = {
@@ -22,6 +23,71 @@ export const PageNotFound404 = () => {
       }}
     >
       {/* UPPER SECTION */}
+
+      <Box
+        className="digital-compass-container"
+        data-augmented-ui="border bl-clip br-clip"
+        sx={{
+          position: 'absolute',
+          zIndex: 10,
+          top: theme.spacing(2),
+          width: '41%',
+          height: '2.5rem',
+          // height: '10.5rem',
+          '--aug-border-top': '2px',
+          '--aug-border-bottom': '0px',
+          '--aug-border-left': '5px',
+          '--aug-border-right': '5px',
+          '--aug-br': '1.5rem',
+          '--aug-bl': '1.5rem',
+          left: 'calc(50% - 3rem - 1.6rem)',
+          transform: 'translate(-50%, 0)',
+          // border: '1px solid red',
+          overflow: 'clip',
+          background: `linear-gradient(180deg, ${theme.palette.primary.main}80, ${theme.palette.primary.main}50, ${theme.palette.secondary.main}00)`,
+        }}
+      >
+        <HorizontalCompass
+          width="100%"
+          height="100%"
+          showGridLines={false}
+          showCurrentDegree={false}
+          customCardinalComponent={({ name, degree, position }) => (
+            <Stack
+              sx={{
+                position: 'absolute',
+                transform: 'translate(-50%, 0)',
+                alignItems: 'center',
+                height: '100%',
+              }}
+              style={{
+                left: `${position}px`,
+              }}
+            >
+              <Typography variant="caption">{name}</Typography>
+              <Box
+                sx={{
+                  background: 'red',
+                  width: '2px',
+                  height: '100%',
+                }}
+              />
+              {/* <Typography variant="overline">{degree}°</Typography> */}
+            </Stack>
+          )}
+          customCenterMarker={
+            <Box
+              className="all-triangle-up border"
+              data-augmented-ui="all-triangle-up border"
+              sx={(theme) => ({
+                // '--aug-all-width': 50,
+                // '--aug-all-height': 50,
+                '--aug-border-all': '2px',
+              })}
+            />
+          }
+        />
+      </Box>
       <Box
         className="background-upper"
         data-augmented-ui="both tl-clip t-clip-x br-2-clip-y bl-2-clip-y tr-clip"
@@ -32,6 +98,7 @@ export const PageNotFound404 = () => {
           '--aug-inlay-opacity': 1,
           backgroundColor: theme.palette.error.main,
 
+          '--aug-t': '3rem',
           '--aug-t-extend1': '40%',
           '--aug-bl': '3rem',
           '--aug-tr': '10rem',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Box } from '@mui/material';
 
 // Type definitions
@@ -9,7 +9,7 @@ type Direction =
   | 'diagonal-alt'
   | 'cross';
 
-interface TraversingLinesProps {
+interface DiagonalLinesProps {
   lineThickness?: number;
   spacing?: number;
   width?: string | number;
@@ -21,7 +21,7 @@ interface TraversingLinesProps {
   style?: React.CSSProperties;
 }
 
-export const DiagonalLines: React.FC<TraversingLinesProps> = ({
+export const DiagonalLines = ({
   lineThickness = 2,
   spacing = 20,
   width = 400,
@@ -31,7 +31,7 @@ export const DiagonalLines: React.FC<TraversingLinesProps> = ({
   opacity = 1,
   className,
   style,
-}) => {
+}: DiagonalLinesProps) => {
   // Convert CSS units to pixels for SVG calculations
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = React.useState({
@@ -65,7 +65,7 @@ export const DiagonalLines: React.FC<TraversingLinesProps> = ({
   }, [width, height]);
 
   const generateLines = (): JSX.Element[] => {
-    const lines: JSX.Element[] = [];
+    const lines: ReactNode[] = [];
     const { width: actualWidth, height: actualHeight } = dimensions;
 
     if (direction === 'horizontal') {
