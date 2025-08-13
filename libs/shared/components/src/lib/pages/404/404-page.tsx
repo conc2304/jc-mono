@@ -1,7 +1,8 @@
-import { Box, Stack, Typography, useTheme } from '@mui/material';
+import { alpha, Box, Stack, Typography, useTheme } from '@mui/material';
 import { CSSProperties } from 'react';
 import { DiagonalLines } from './diagonal-box';
 import { HorizontalCompass } from './digital-compass';
+import { MinimalThemeSwitcher } from '@jc/themes';
 
 export const PageNotFound404 = () => {
   const bgOverlayProps: CSSProperties = {
@@ -20,6 +21,7 @@ export const PageNotFound404 = () => {
         height: '100%',
         width: '100%',
         padding: 2,
+        bgcolor: theme.palette.background.paper,
       }}
     >
       {/* UPPER SECTION */}
@@ -33,7 +35,6 @@ export const PageNotFound404 = () => {
           top: theme.spacing(2),
           width: '41%',
           height: '2.5rem',
-          // height: '10.5rem',
           '--aug-border-top': '2px',
           '--aug-border-bottom': '0px',
           '--aug-border-left': '5px',
@@ -42,9 +43,8 @@ export const PageNotFound404 = () => {
           '--aug-bl': '1.5rem',
           left: 'calc(50% - 3rem - 1.6rem)',
           transform: 'translate(-50%, 0)',
-          // border: '1px solid red',
-          overflow: 'clip',
-          background: `linear-gradient(180deg, ${theme.palette.primary.main}80, ${theme.palette.primary.main}50, ${theme.palette.secondary.main}00)`,
+          overflow: 'hidden',
+          background: `linear-gradient(180deg, ${theme.palette.error.main}80, ${theme.palette.error.main}50, ${theme.palette.secondary.main}00)`,
         }}
       >
         <HorizontalCompass
@@ -67,7 +67,7 @@ export const PageNotFound404 = () => {
               <Typography variant="caption">{name}</Typography>
               <Box
                 sx={{
-                  background: 'red',
+                  background: theme.palette.getInvertedMode('error'),
                   width: '2px',
                   height: '100%',
                 }}
@@ -80,9 +80,8 @@ export const PageNotFound404 = () => {
               className="all-triangle-up border"
               data-augmented-ui="all-triangle-up border"
               sx={(theme) => ({
-                // '--aug-all-width': 50,
-                // '--aug-all-height': 50,
                 '--aug-border-all': '2px',
+                '--aug-border-bg': theme.palette.text.primary,
               })}
             />
           }
@@ -155,16 +154,14 @@ export const PageNotFound404 = () => {
       {/* MIDDLE LEFT EMBELLISHMENT */}
       <Box
         className="middle-left-embellishment"
-        data-augmented-ui="both   br-clip tr-2-clip-y
-        "
+        data-augmented-ui="both   br-clip tr-2-clip-y"
         sx={(theme) => ({
           m: 2,
           '--aug-border-bg': theme.palette.mode === 'light' ? 'black' : 'white',
           '--aug-border-all': '0px',
           '--aug-inlay-bg': 'transparent',
           '--aug-inlay-opacity': 1,
-          opacity: 0.5,
-          mixBlendMode: 'color-burn',
+          opacity: 0.85,
 
           '--aug-br': '4rem',
           '--aug-tr-inset1': '20px',
@@ -195,9 +192,11 @@ export const PageNotFound404 = () => {
         className="bottom-container"
         data-augmented-ui="both br-clip bl-clip t-clip  tl-2-clip-y br-2-clip-x tr-2-clip-x"
         sx={(theme) => ({
-          '--aug-border-bg': theme.palette.getInvertedMode('secondary'),
-          '--aug-inlay-bg': theme.palette.getInvertedMode('secondary'),
+          '--aug-border-bg': theme.palette.getInvertedMode('primary'),
+          '--aug-inlay-bg': theme.palette.getInvertedMode('primary'),
           backgroundColor: 'black',
+          display: 'flex',
+          justifyContent: 'space-between',
 
           '--aug-tr': '2rem',
           '--aug-tr-extend1': '20%',
@@ -266,12 +265,26 @@ export const PageNotFound404 = () => {
               ...bgOverlayProps,
               background: `url('https://static.vecteezy.com/system/resources/previews/057/274/270/non_2x/monochrome-abstract-with-textured-patterns-and-halftone-effects-creating-a-visually-complex-and-striking-graphic-design-backdrop-free-photo.jpg')`,
               opacity: 0.5,
-              // backgroundSize: '100% 50%',
               backgroundSize: 'cover',
-              mixBlendMode: 'difference',
-              // backgroundColor: 'red',
+              mixBlendMode: 'color-burn',
             })}
           />
+        </Box>
+
+        {/*  */}
+        <Box
+          className="ThemeSwitcher--container"
+          data-augmented-ui="border tr-clip"
+          sx={{
+            height: `calc(100% - 5rem - ${theme.spacing(2)})`,
+            width: 'calc(25% - 2rem)',
+            '--aug-tr': '2rem',
+            my: 1,
+            bgcolor: alpha(theme.palette.background.paper, 0.2),
+            backdropFilter: 'blur(4px)',
+          }}
+        >
+          <MinimalThemeSwitcher />
         </Box>
       </Box>
 
@@ -281,8 +294,8 @@ export const PageNotFound404 = () => {
         data-augmented-ui="both tr-clip tl-clip"
         sx={(theme) => ({
           m: 2,
-          '--aug-border-bg': theme.palette.error.main,
-          '--aug-inlay-bg': theme.palette.error.main,
+          '--aug-border-bg': theme.palette.getInvertedMode('primary', false),
+          '--aug-inlay-bg': theme.palette.getInvertedMode('primary', false),
           '--aug-inlay-opacity': 1,
 
           backgroundColor: theme.palette.mode === 'light' ? 'black' : 'white',
@@ -301,8 +314,8 @@ export const PageNotFound404 = () => {
           direction="diagonal-alt"
           width="99%"
           height="100%"
-          color={theme.palette.mode === 'light' ? 'black' : 'white'}
-          opacity={0.8}
+          color={theme.palette.mode === 'dark' ? 'black' : 'white'}
+          opacity={0.5}
         />
       </Box>
       <Box
@@ -310,8 +323,8 @@ export const PageNotFound404 = () => {
         data-augmented-ui="both  tl-clip br-clip"
         sx={(theme) => ({
           m: 2,
-          '--aug-border-bg': theme.palette.error.main,
-          '--aug-inlay-bg': theme.palette.error.main,
+          '--aug-border-bg': theme.palette.getInvertedMode('primary', true),
+          '--aug-inlay-bg': theme.palette.getInvertedMode('primary', true),
           '--aug-inlay-opacity': 1,
 
           backgroundColor: theme.palette.mode === 'light' ? 'black' : 'white',
