@@ -46,6 +46,9 @@
       "path": "../../libs/shared/themes/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/shared/file-system/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/features/portfolio/tsconfig.lib.json"
     },
     {

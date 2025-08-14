@@ -25,13 +25,6 @@ export const MinimalThemeSwitcher = () => {
     setMode(mode);
   };
 
-  const handleModeToggle = () => {
-    const modes: ColorMode[] = ['light', 'dark', 'system'];
-    const currentIndex = modes.indexOf(mode);
-    const nextMode = modes[(currentIndex + 1) % modes.length];
-    setMode(nextMode);
-  };
-
   // Filter themes based on mode support (same as EnhancedThemeSwitcher)
   const availableThemes = themes.filter((theme) => {
     if (resolvedMode === 'dark') return theme.supportsDark !== false;
@@ -56,33 +49,16 @@ export const MinimalThemeSwitcher = () => {
           display: 'flex',
           justifyContent: 'center',
           flexShrink: 0,
+          px: 2,
         }}
       >
-        <Tooltip title={`Current: ${mode} mode (${resolvedMode})`}>
-          {/* <IconButton
-            onClick={handleModeToggle}
-            sx={{
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 1,
-              p: 1,
-              backgroundColor:
-                mode !== 'system' ? 'transparent' : 'action.selected',
-              '&:hover': {
-                backgroundColor: 'action.hover',
-              },
-            }}
-          >
-            {getModeIcon(mode)}
-          </IconButton> */}
-          <ModeSwitcherButtonGroup
-            compact
-            mode={mode}
-            resolvedMode={resolvedMode}
-            systemMode={systemMode}
-            onModeChange={(nextMode) => setMode(nextMode)}
-          />
-        </Tooltip>
+        <ModeSwitcherButtonGroup
+          compact
+          mode={mode}
+          resolvedMode={resolvedMode}
+          systemMode={systemMode}
+          onModeChange={(nextMode) => setMode(nextMode)}
+        />
       </Box>
 
       {/* Theme Previews */}
@@ -139,32 +115,36 @@ export const MinimalThemeSwitcher = () => {
                     width: '50%',
                     height: 32,
                     backgroundColor: bg,
-                    border: '2px solid',
+                    border: '3px solid',
                     borderColor:
                       isSelected && mode === resolvedMode
-                        ? 'primary.main'
+                        ? 'success.main'
                         : 'transparent',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative',
-                    p: 0.75,
+                    p: 0.5,
                   }}
                 >
                   {/* Color Palette Boxes */}
                   <Box
-                    sx={{
+                    sx={(theme) => ({
                       display: 'flex',
                       gap: 0,
                       width: '100%',
                       height: '100%',
-                    }}
+                      border: '3px solid',
+                      borderColor:
+                        isSelected && mode === resolvedMode
+                          ? theme.palette.getInvertedMode('primary')
+                          : 'transparent',
+                    })}
                   >
                     {colors.map((color, index) => (
                       <Box
                         key={index}
                         sx={{
-                          // width: 12,
                           flexGrow: 1,
                           height: '100%',
                           backgroundColor: color,

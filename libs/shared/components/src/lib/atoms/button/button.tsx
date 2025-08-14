@@ -76,13 +76,7 @@ export const AugmentedButton = React.forwardRef<
   AugmentedButtonProps
 >(
   (
-    {
-      shape = 'buttonClipped',
-      animateClick = false,
-      // borderSize = 0,
-      children,
-      ...props
-    },
+    { shape = 'buttonClipped', animateClick = false, children, ...props },
     ref
   ) => {
     const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;

@@ -1,4 +1,4 @@
-import { alpha, Box, Stack, Typography, useTheme } from '@mui/material';
+import { alpha, Box, darken, Stack, Typography, useTheme } from '@mui/material';
 import { CSSProperties } from 'react';
 import { DiagonalLines } from './diagonal-box';
 import { HorizontalCompass } from './digital-compass';
@@ -271,16 +271,19 @@ export const PageNotFound404 = () => {
           />
         </Box>
 
-        {/*  */}
         <Box
           className="ThemeSwitcher--container"
-          data-augmented-ui="border tr-clip"
+          data-augmented-ui="border tr-clip tl-clip"
           sx={{
-            height: `calc(100% - 5rem - ${theme.spacing(2)})`,
-            width: 'calc(25% - 2rem)',
+            height: `calc(100% - 5rem - ${theme.spacing(4)})`,
+            width: 'calc(25% - 1.1rem)',
             '--aug-tr': '2rem',
-            my: 1,
-            bgcolor: alpha(theme.palette.background.paper, 0.2),
+            '--aug-tl': '2rem',
+            position: 'relative',
+            right: '-1rem',
+            mt: 2,
+
+            bgcolor: theme.palette.background.paper,
             backdropFilter: 'blur(4px)',
           }}
         >

@@ -20,6 +20,13 @@ export const BUTTON_SHAPE_MAPPINGS: ShapeMapping = {
   buttonRight: {
     'data-augmented-ui': 'br-clip',
   },
+
+  buttonLeftTop: {
+    'data-augmented-ui': 'tl-clip',
+  },
+  buttonRightTop: {
+    'data-augmented-ui': 'tr-clip',
+  },
   buttonRounded: {
     'data-augmented-ui': 'tl-round tr-round br-round bl-round',
   },

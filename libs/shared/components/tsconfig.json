@@ -9,6 +9,9 @@
       "path": "../themes"
     },
     {
+      "path": "../file-system"
+    },
+    {
       "path": "./tsconfig.lib.json"
     },
     {

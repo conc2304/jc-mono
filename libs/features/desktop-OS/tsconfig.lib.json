@@ -37,6 +37,9 @@
   ],
   "references": [
     {
+      "path": "../../shared/file-system/tsconfig.lib.json"
+    },
+    {
       "path": "../../shared/components/tsconfig.lib.json"
     }
   ]

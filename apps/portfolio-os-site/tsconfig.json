@@ -9,6 +9,9 @@
       "path": "../../libs/shared/themes"
     },
     {
+      "path": "../../libs/shared/file-system"
+    },
+    {
       "path": "../../libs/features/portfolio"
     },
     {
