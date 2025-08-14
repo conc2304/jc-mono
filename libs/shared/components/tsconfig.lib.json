@@ -41,9 +41,6 @@
     },
     {
       "path": "../themes/tsconfig.lib.json"
-    },
-    {
-      "path": "../file-system/tsconfig.lib.json"
     }
   ]
 }
