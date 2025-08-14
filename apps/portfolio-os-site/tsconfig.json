@@ -3,22 +3,19 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/features/boot-loader"
-    },
-    {
-      "path": "../../libs/shared/file-system"
-    },
-    {
-      "path": "../../libs/features/portfolio"
+      "path": "../../libs/features/desktop-OS"
     },
     {
       "path": "../../libs/shared/themes"
     },
     {
+      "path": "../../libs/features/portfolio"
+    },
+    {
       "path": "../../libs/shared/components"
     },
     {
-      "path": "../../libs/features/desktop-OS"
+      "path": "../../libs/features/boot-loader"
     },
     {
       "path": "./tsconfig.app.json"

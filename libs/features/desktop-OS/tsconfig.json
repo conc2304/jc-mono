@@ -3,9 +3,6 @@
   "include": [],
   "references": [
     {
-      "path": "../../shared/file-system"
-    },
-    {
       "path": "../../shared/components"
     },
     {
