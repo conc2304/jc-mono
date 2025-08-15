@@ -39,7 +39,6 @@ export const MinimalThemeSwitcher = () => {
         flexDirection: 'column',
         gap: 2,
         p: 2,
-        maxWidth: 400,
         height: '100%',
       }}
     >

@@ -435,6 +435,7 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
         display: 'inline-block',
         position: 'relative',
         cursor: 'pointer',
+        ...sx,
       }}
     >
       <Typography

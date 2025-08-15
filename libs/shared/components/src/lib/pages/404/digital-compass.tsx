@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef, ReactNode } from 'react';
-import { Box, Typography, Slider, Paper, Container } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {
+  Box,
+  Typography,
+  Slider,
+  Paper,
+  Container,
+  BoxProps,
+} from '@mui/material';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import { Property } from 'csstype';
 
 // Type definitions
 interface Cardinal {
@@ -30,6 +38,11 @@ interface CardinalComponentProps {
   position: number;
 }
 
+interface MinorTickS {
+  top?: Property.Top;
+  bottom?: Property.Bottom;
+}
+
 interface HorizontalCompassProps {
   customCenterMarker?: ReactNode;
   customCardinalComponent?: React.ComponentType<CardinalComponentProps>;
@@ -37,13 +50,15 @@ interface HorizontalCompassProps {
   showGridLines?: boolean;
   width?: string | number;
   height?: string | number;
+  minorTickCount?: number;
+  minorTickSx?: SxProps<Theme>;
 }
 
 interface StyledComponentProps {
   compassHeight?: number;
 }
 
-const minCompassHeight = 50;
+const minCompassHeight = 20;
 
 // Styled components
 const CompassContainer = styled(Box)<{}>(({ theme }) => ({
@@ -97,11 +112,8 @@ const MajorTick = styled(Box)<StyledComponentProps>(({ compassHeight }) => ({
 
 const MinorTick = styled(Box)<StyledComponentProps>(({ compassHeight }) => ({
   position: 'absolute',
-  transform: 'translateX(-50%)',
-  top: '100%',
   width: '2px',
   height: compassHeight ? Math.max(compassHeight * 0.125, 8) : 8, // 12.5% of compass height, min 8px
-  backgroundColor: '#6b7280', // gray-500
 }));
 
 const CenterMarkerContainer = styled(Box)<{}>({
@@ -154,10 +166,13 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
   showGridLines = true,
   width = '100%',
   height = `${minCompassHeight}px`,
+  minorTickSx = {},
+  minorTickCount = 4,
 }) => {
   const [mouseX, setMouseX] = useState<number>(0);
   const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
-  const [minorTicksCount, setMinorTicksCount] = useState<number>(4);
+  const [minorTicksCount, setMinorTicksCount] =
+    useState<number>(minorTickCount);
   const [compassDimensions, setCompassDimensions] = useState<CompassDimensions>(
     {
       width: 384,
@@ -303,7 +318,7 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
   const bounds = getVisibilityBounds();
 
   return (
-    <Box>
+    <Box height={height}>
       <Box
         display="flex"
         flexDirection="column"
@@ -358,6 +373,7 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
                     key={`minor-${index}`}
                     style={{ left: `${position}px` }}
                     compassHeight={compassDimensions.height}
+                    sx={{ ...minorTickSx }}
                   />
                 ) : null;
               })}

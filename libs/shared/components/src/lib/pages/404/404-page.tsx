@@ -3,6 +3,8 @@ import { CSSProperties } from 'react';
 import { DiagonalLines } from './diagonal-box';
 import { HorizontalCompass } from './digital-compass';
 import { MinimalThemeSwitcher } from '@jc/themes';
+import { Text404 } from './404-text';
+import { NavigationButtons } from './navigation-button';
 
 export const PageNotFound404 = () => {
   const bgOverlayProps: CSSProperties = {
@@ -52,6 +54,11 @@ export const PageNotFound404 = () => {
           height="100%"
           showGridLines={false}
           showCurrentDegree={false}
+          minorTickSx={{
+            top: '50%',
+            transform: 'translateY(-50%)',
+            bgcolor: 'info.main',
+          }}
           customCardinalComponent={({ name, degree, position }) => (
             <Stack
               sx={{
@@ -123,6 +130,72 @@ export const PageNotFound404 = () => {
       </Box>
 
       <Box
+        className="background-up-large-lines"
+        data-augmented-ui="both tl-clip bl-2-clip-y tr-clip-x br-2-clip-x"
+        sx={(theme) => ({
+          '--aug-border-bg': theme.palette.background.paper,
+          '--aug-border-all': '5px',
+          '--aug-border-bottom': '20px',
+
+          '--aug-inlay-bg': 'transparent',
+          '--aug-inlay-opacity': 0.5,
+
+          '--aug-bl1': '8rem',
+          '--aug-bl-inset1': '15%',
+          '--aug-br1': '6rem',
+          '--aug-br2': '2rem',
+
+          '--aug-tr-inset2': '70%',
+          '--aug-tr': '3rem',
+
+          height: `calc(100% - ${theme.spacing(8)})`,
+          width: '72%',
+
+          zIndex: 5,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          m: 4,
+        })}
+      >
+        <DiagonalLines
+          lineThickness={60}
+          spacing={120}
+          direction="diagonal-alt"
+          width="102%"
+          height="105%"
+          color={theme.palette.background.paper}
+          opacity={1}
+        />
+      </Box>
+      {/* MAIN TEXT SECTION */}
+      <Box
+        className="404Text"
+        sx={{
+          position: 'absolute',
+          top: '100px',
+          left: '100px',
+          zIndex: 100,
+          fontSize: '22rem',
+        }}
+      >
+        <Text404 />
+      </Box>
+
+      {/* MAIN BUTTON NAVIGATION SECTION */}
+      <Box
+        sx={{
+          position: 'absolute',
+          zIndex: 150,
+          width: '30%',
+          height: 'calc(30vh)',
+          left: '21%',
+          bottom: '100px',
+        }}
+      >
+        <NavigationButtons />
+      </Box>
+      <Box
         className="background-upper-right-triangle"
         data-augmented-ui="both bl-clip tr-clip"
         sx={(theme) => ({
@@ -154,25 +227,24 @@ export const PageNotFound404 = () => {
       {/* MIDDLE LEFT EMBELLISHMENT */}
       <Box
         className="middle-left-embellishment"
-        data-augmented-ui="both   br-clip tr-2-clip-y"
+        data-augmented-ui=" br-clip tr-2-clip-y"
         sx={(theme) => ({
           m: 2,
           '--aug-border-bg': theme.palette.mode === 'light' ? 'black' : 'white',
-          '--aug-border-all': '0px',
           '--aug-inlay-bg': 'transparent',
           '--aug-inlay-opacity': 1,
           opacity: 0.85,
 
           '--aug-br': '4rem',
           '--aug-tr-inset1': '20px',
-          '--aug-tr-extend2': '90px',
-          '--aug-tr2': '2rem',
+          '--aug-tr-extend2': '95px',
+          '--aug-tr2': '2.2rem',
           '--aug-tr1': '2.5rem',
 
           position: 'absolute',
-          bottom: 'calc(50% - 6.5rem)',
+          bottom: 'calc(50% - 6.75rem)',
           left: 0,
-          height: 'calc(15% + 9rem )',
+          height: 'calc(15% + 9.25rem )',
           width: 'calc(4.5rem)',
         })}
       >
@@ -199,7 +271,7 @@ export const PageNotFound404 = () => {
           justifyContent: 'space-between',
 
           '--aug-tr': '2rem',
-          '--aug-tr-extend1': '20%',
+          '--aug-tr-extend1': 'calc(25% - 2rem)',
           '--aug-t': '2rem',
           '--aug-t-extend1': '25%',
           '--aug-t-center': '35%',
@@ -229,6 +301,7 @@ export const PageNotFound404 = () => {
             // backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/057/274/270/non_2x/monochrome-abstract-with-textured-patterns-and-halftone-effects-creating-a-visually-complex-and-striking-graphic-design-backdrop-free-photo.jpg')`,
             backgroundImage: `url('https://img.freepik.com/free-photo/old-black-fabric-material-with-copy-space_23-2148402339.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
             // backgroundImage: `url('https://img.freepik.com/free-photo/stone-texture_1194-5425.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
+
             backgroundPosition: '0 0%',
             backgroundSize: '100%',
             opacity: 0.5,
@@ -263,10 +336,12 @@ export const PageNotFound404 = () => {
             className="bottom-inner-left-bg--bg-overlay"
             sx={(theme) => ({
               ...bgOverlayProps,
-              background: `url('https://static.vecteezy.com/system/resources/previews/057/274/270/non_2x/monochrome-abstract-with-textured-patterns-and-halftone-effects-creating-a-visually-complex-and-striking-graphic-design-backdrop-free-photo.jpg')`,
+              // background: `url('https://static.vecteezy.com/system/resources/previews/057/274/270/non_2x/monochrome-abstract-with-textured-patterns-and-halftone-effects-creating-a-visually-complex-and-striking-graphic-design-backdrop-free-photo.jpg')`,
+              background: `url('https://img.freepik.com/premium-photo/grunge-dirty-concrete-texture-background_469558-7667.jpg?w=740')`,
+              // background: `url('https://img.freepik.com/free-photo/abstract-background-with-patterned-glass-texture_53876-139928.jpg?t=st=1755184836~exp=1755188436~hmac=533821b13ff03cdb6d1fbf037b9b268bf1acf87f51454e31bf8c78ea42898c22&w=1060')`,
               opacity: 0.5,
               backgroundSize: 'cover',
-              mixBlendMode: 'color-burn',
+              mixBlendMode: 'overlay',
             })}
           />
         </Box>
@@ -311,14 +386,23 @@ export const PageNotFound404 = () => {
           width: 'calc(25% + 3rem)',
         })}
       >
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            bgcolor: theme.palette.getInvertedMode('primary'),
+            position: 'absolute',
+            zIndex: -1,
+          }}
+        />
         <DiagonalLines
           lineThickness={10}
           spacing={25}
           direction="diagonal-alt"
           width="99%"
           height="100%"
-          color={theme.palette.mode === 'dark' ? 'black' : 'white'}
-          opacity={0.5}
+          color={theme.palette.background.paper}
+          opacity={1}
         />
       </Box>
       <Box
@@ -330,7 +414,7 @@ export const PageNotFound404 = () => {
           '--aug-inlay-bg': theme.palette.getInvertedMode('primary', true),
           '--aug-inlay-opacity': 1,
 
-          backgroundColor: theme.palette.mode === 'light' ? 'black' : 'white',
+          backgroundColor: theme.palette.mode === 'dark' ? 'black' : 'white',
 
           '--aug-tl': '1rem',
           position: 'absolute',
@@ -346,7 +430,7 @@ export const PageNotFound404 = () => {
           direction="diagonal-alt"
           width="99%"
           height="100%"
-          color={theme.palette.mode === 'light' ? 'black' : 'white'}
+          color={theme.palette.mode === 'dark' ? 'black' : 'white'}
           opacity={0.8}
         />
       </Box>
