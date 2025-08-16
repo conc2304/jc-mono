@@ -163,19 +163,21 @@ export const PageNotFound404 = () => {
       >
         <Box
           sx={{
+            // make the diagonal line ends not visible
             position: 'absolute',
-            top: 0,
+            top: '-10%',
+            bottom: '-10%',
             left: 0,
-            width: '100%',
-            height: ' 100%',
+            width: '105%',
+            height: ' 105%',
           }}
         >
           <DiagonalLines
             lineThickness={60}
             spacing={120}
             direction="diagonal-alt"
-            width="100%"
-            height="100%"
+            width="105%"
+            height="105%"
             color={theme.palette.background.paper}
             opacity={1}
           />
@@ -184,7 +186,6 @@ export const PageNotFound404 = () => {
         <Box
           className="404Text"
           sx={{
-            // position: 'absolute',
             width: '100%',
             zIndex: 100,
           }}
@@ -370,10 +371,25 @@ export const PageNotFound404 = () => {
             right: '-1rem',
             mt: 2,
 
-            bgcolor: theme.palette.background.paper,
-            backdropFilter: 'blur(4px)',
+            // bgcolor: theme.palette.background.paper,
+            background: `linear-gradient(-135deg, ${theme.palette.background.paper}FF, ${theme.palette.background.paper}AA, ${theme.palette.secondary.main}22)`,
+            // backdropFilter: 'blur(1px)',
+            filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25))',
           }}
         >
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
+              backgroundBlendMode: 'screen',
+              opacity: 0.25,
+              top: 0,
+              zIndex: -1,
+            }}
+          />
+
           <MinimalThemeSwitcher />
         </Box>
       </Box>

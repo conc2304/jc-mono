@@ -1,4 +1,4 @@
-import { Box, Typography, TypographyProps } from '@mui/material';
+import { Box, Typography, TypographyProps, alpha } from '@mui/material';
 import { GlitchText, ScrambleText } from '../../atoms';
 import { ensureContrast } from '@jc/utils';
 
@@ -17,25 +17,35 @@ export const Text404 = () => {
             '--aug-br-inset2': '26%',
             '--aug-tr-inset1': '26%',
             width: '100%',
-            background: ensureContrast(
-              theme.palette.error.main,
-              theme.palette.text.primary,
-              1.5
-            ).color,
+            backdropFilter: 'blur(2px)',
 
-            // [theme.breakpoints.up('sm')]: {
-            //   height: '10rem',
-            // },
-            // [theme.breakpoints.up('md')]: {
-            //   height: '16rem',
-            // },
-            // [theme.breakpoints.up('lg')]: {
-            //   height: '22rem',
-            // },
+            background: alpha(
+              ensureContrast(
+                theme.palette.error.main,
+                theme.palette.text.primary,
+                1.5
+              ).color,
+              0.85
+            ),
           })}
         >
-          {'404'.split('').map((char) => (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
+              backgroundBlendMode: 'screen',
+              backgroundSize: 'cover',
+              opacity: 0.15,
+              top: 0,
+              zIndex: -1,
+              transform: 'scale(-1)',
+            }}
+          />
+          {'404'.split('').map((char, i) => (
             <Box
+              key={char + i}
               sx={(theme) => ({
                 textAlign: 'center',
                 verticalAlign: 'top',
@@ -62,19 +72,9 @@ export const Text404 = () => {
                 sx={(theme) => ({
                   textAlign: 'center',
                   verticalAlign: 'top',
-                  width: '30%',
-                  maxWidth: '30%',
-                  lineHeight: 0,
-
-                  [theme.breakpoints.up('sm')]: {
-                    height: '10rem',
-                  },
-                  [theme.breakpoints.up('md')]: {
-                    height: '16rem',
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    height: '22rem',
-                  },
+                  // width: '30%',
+                  // maxWidth: '30%',
+                  // lineHeight: 0,
                 })}
               >
                 {char}
@@ -89,16 +89,35 @@ export const Text404 = () => {
             textAlign: 'center',
             pl: 4,
             pr: 4,
-            background: ensureContrast(
-              theme.palette.error.main,
-              theme.palette.text.primary,
-              1.5
-            ).color,
+            background: alpha(
+              ensureContrast(
+                theme.palette.error.main,
+                theme.palette.text.primary,
+                1.5
+              ).color,
+              0.65
+            ),
             '--aug-l-extend1': '40%',
             '--aug-br-inset2': '26%',
             '--aug-tr-inset1': '26%',
           })}
         >
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
+              backgroundBlendMode: 'screen',
+              backgroundSize: 'cover',
+              opacity: 0.15,
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: -1,
+              // transform: 'scale(-1)',
+            }}
+          />
           <Typography variant="h2">PAGE NOT FOUND</Typography>
         </Box>
       </Box>

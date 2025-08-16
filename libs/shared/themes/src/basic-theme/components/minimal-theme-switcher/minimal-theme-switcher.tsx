@@ -107,8 +107,9 @@ export const MinimalThemeSwitcher = () => {
                   mode: 'light',
                 },
                 { bg: backgroundPaperDark, colors: colorsDark, mode: 'dark' },
-              ].map(({ bg, colors, mode }) => (
+              ].map(({ bg, colors, mode }, i) => (
                 <Box
+                  key={`${bg}-${colors.primary}-${mode}`}
                   onClick={() => handleThemeSelect(themeDisplay.id, mode)}
                   sx={{
                     width: '50%',
@@ -133,7 +134,7 @@ export const MinimalThemeSwitcher = () => {
                       gap: 0,
                       width: '100%',
                       height: '100%',
-                      border: '3px solid',
+                      border: '3px dotted',
                       borderColor:
                         isSelected && mode === resolvedMode
                           ? theme.palette.getInvertedMode('primary')
