@@ -176,6 +176,7 @@ export const NavigationButtons = () => {
             gap: 0.5,
             position: 'relative',
             flexGrow: 1,
+            width: '250px',
           }}
         >
           {/* LEFT CHEVRON BACKGROUND */}

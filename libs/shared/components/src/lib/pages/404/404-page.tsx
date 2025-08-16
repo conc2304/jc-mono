@@ -5,6 +5,8 @@ import { HorizontalCompass } from './digital-compass';
 import { MinimalThemeSwitcher } from '@jc/themes';
 import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
+import { RetroVideoPanel } from './retro-video-panel';
+import { ensureContrast } from '@jc/utils';
 
 export const PageNotFound404 = () => {
   const bgOverlayProps: CSSProperties = {
@@ -113,20 +115,87 @@ export const PageNotFound404 = () => {
           '--aug-br-extend1': '15%',
           height: '50%',
           width: '100%',
+
+          display: 'flex',
+          justifyContent: 'end',
         })}
       >
         <Box
+          // Upper Panel Background Texture
           sx={{
             backgroundImage: `url('https://img.freepik.com/free-photo/stone-texture_1194-5425.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
             backgroundPosition: '0 0%',
-            backgroundSize: '100%',
+            // backgroundSize: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
             width: '100%',
             height: '100%',
             opacity: 0.15,
-            border: '2px solid green',
             mixBlendMode: 'screen',
+            zIndex: 0,
           }}
         />
+
+        <Box
+          className="gif-player-container"
+          sx={{
+            mt: `8rem`,
+            mr: `5rem`,
+            height: '250px',
+
+            width: 'calc(100% - 72% - 10rem)',
+            // border: '3px solid green',
+            back: 'yellow',
+          }}
+        >
+          <RetroVideoPanel
+            gifs={[
+              '/gifs/404.gif',
+              '/gifs/computer-terminal.gif',
+              '/gifs/dithered-road-loop.gif',
+              '/gifs/clouds-passing.gif',
+              '/gifs/fly-into-space.gif',
+              '/gifs/rocket-takeoff.gif',
+              '/gifs/hands-flying-through-space.gif',
+              '/gifs/space-planet-fly-through.gif',
+              '/gifs/black and white art GIF by Mathew Lucas .gif',
+              '/gifs/animation loop GIF by Winston Duke.gif',
+              '/gifs/black and white loop GIF by Doze Studio.gif',
+              '/gifs/Lizard.gif',
+              '/gifs/pedro-racoon-dancing.gif',
+              '/gifs/the-end.gif',
+              '/gifs/rick-roll.gif',
+            ]}
+            transitionImage="/gifs/tv-test-static-bnw.gif"
+            transitionTime={200}
+            height={'100%'}
+            width={'100%'}
+            colorConfig={{
+              primary: ensureContrast(
+                theme.palette.primary.main,
+                theme.palette.getInvertedMode('error', false),
+                1
+              ).color,
+              // ensureContrast(
+              //   theme.palette.getInvertedMode('error', true),
+              //   theme.palette.getInvertedMode('error', false),
+              //   3
+              // ).color,
+              secondary: ensureContrast(
+                theme.palette.primary.main,
+                theme.palette.getInvertedMode('error', false),
+                2
+              ).color,
+              background: theme.palette.getInvertedMode('error', false),
+              border: theme.palette.error.main,
+              text: theme.palette.text.primary,
+              textSecondary: theme.palette.text.primary,
+              screenOff: darken(theme.palette.error.main, 0),
+              buttonDisabled: theme.palette.action.disabled,
+            }}
+          />
+        </Box>
       </Box>
 
       <Box
@@ -162,6 +231,7 @@ export const PageNotFound404 = () => {
         })}
       >
         <Box
+          // Diagonal Line Container
           sx={{
             // make the diagonal line ends not visible
             position: 'absolute',
@@ -182,6 +252,7 @@ export const PageNotFound404 = () => {
             opacity={1}
           />
         </Box>
+
         {/* MAIN TEXT SECTION */}
         <Box
           className="404Text"
@@ -199,7 +270,6 @@ export const PageNotFound404 = () => {
         sx={{
           position: 'absolute',
           zIndex: 150,
-          width: '30%',
           minWidth: '250px',
           height: 'calc(30vh)',
           left: '21%',
@@ -371,10 +441,8 @@ export const PageNotFound404 = () => {
             right: '-1rem',
             mt: 2,
 
-            // bgcolor: theme.palette.background.paper,
             background: `linear-gradient(-135deg, ${theme.palette.background.paper}FF, ${theme.palette.background.paper}AA, ${theme.palette.secondary.main}22)`,
-            // backdropFilter: 'blur(1px)',
-            filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25))',
+            backdropFilter: 'blur(1px)',
           }}
         >
           <Box
@@ -400,13 +468,12 @@ export const PageNotFound404 = () => {
         data-augmented-ui="both tr-clip tl-clip"
         sx={(theme) => ({
           m: 2,
+          backgroundColor: theme.palette.mode === 'light' ? 'black' : 'white',
           '--aug-border-bg': theme.palette.getInvertedMode('primary', false),
           '--aug-inlay-bg': theme.palette.getInvertedMode('primary', false),
           '--aug-inlay-opacity': 1,
-
-          backgroundColor: theme.palette.mode === 'light' ? 'black' : 'white',
-
           '--aug-tl': '4rem',
+
           position: 'absolute',
           bottom: '2rem',
           right: 0,
