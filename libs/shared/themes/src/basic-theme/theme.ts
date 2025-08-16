@@ -3,6 +3,7 @@ import {
   createTheme,
   Palette,
   PaletteOptions,
+  responsiveFontSizes,
   Theme,
   ThemeOptions,
   TypographyVariantsOptions,
@@ -27,7 +28,11 @@ type PaletteOptionNames =
   | 'success';
 
 const paletteFallback = basicPalette();
-const typographyFallBack = getTypography(`'Roboto', sans-serif`);
+const typographyFallBack = getTypography({
+  primary: `'Roboto', sans-serif`,
+  secondary: `'Saiba', sans-serif`,
+  display: `'Saiba', sans-serif`,
+});
 
 export const createThemeFromOptions = ({
   palette = paletteFallback,
@@ -67,12 +72,25 @@ export const createThemeFromOptions = ({
     typography,
   };
 
-  const theme = createTheme(baseThemeOptions);
+  const theme = responsiveFontSizes(createTheme(baseThemeOptions));
 
   const fullTheme: Theme = {
     ...theme,
     components: { ...theme.components, ...getComponentOverrides(theme) },
     zIndex: { ...theme.zIndex, window: 500 },
+  };
+
+  fullTheme.typography.display = {
+    ...fullTheme.typography.display,
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '10rem',
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: '16rem',
+    },
+    [theme.breakpoints.up('lg')]: {
+      fontSize: '22rem',
+    },
   };
 
   fullTheme.palette.getInvertedMode = ((

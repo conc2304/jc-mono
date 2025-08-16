@@ -1,5 +1,5 @@
 import { Components, Theme, alpha } from '@mui/material/styles';
-import { height, width } from '@mui/system';
+import { fontFaces } from './baseline-font';
 
 export default function BaselineCSS(theme: Theme): Components {
   return {
@@ -40,6 +40,7 @@ export default function BaselineCSS(theme: Theme): Components {
             },
           },
         },
+        fontFaces,
       },
     },
   };

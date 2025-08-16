@@ -1,8 +1,6 @@
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 import { DiagonalLines } from './diagonal-box';
-import { HomeFilled } from '@mui/icons-material';
-import { width } from '@mui/system';
-import { Bold } from 'lucide-react';
+import { HomeFilled, HomeOutlined } from '@mui/icons-material';
 import { ensureContrast } from '@jc/utils';
 
 export const NavigationButtons = () => {
@@ -139,26 +137,41 @@ export const NavigationButtons = () => {
                 opacity={0.8}
               />
             </Box>
-            {'HOME'.split('').map((char, i, arr) => (
-              <Typography
-                variant="h2"
-                fontSize={'5rem'}
-                sx={(theme) => ({
-                  position: 'absolute',
-                  top: `${i * 20}%`,
-                  left: i % 2 === 0 ? '28%' : '73%',
-                  transform: 'translate(-50%, -10%)',
-                  fontWeight: 'bold',
-                  color: ensureContrast(
-                    theme.palette.text.primary,
-                    theme.palette.getInvertedMode('secondary'),
-                    3
-                  ).color,
-                })}
-              >
-                {char}
-              </Typography>
-            ))}
+            {/* Outline over filled font */}
+            {[0, 1].map((j) => {
+              return 'HOME'.split('').map((char, i, arr) => (
+                <Typography
+                  sx={(theme) => ({
+                    fontFamily: `Saiba${j === 1 ? ' Outline' : ''}`,
+                    lineHeight: '2.5rem',
+                    fontSize: '5rem',
+                    position: 'absolute',
+                    top: `${i * 20}%`,
+                    left: i % 2 === 0 ? '28%' : '73%',
+                    transform: 'translate(-50%, 50%)',
+                    fontWeight: 'bold',
+                    color:
+                      j === 1
+                        ? ensureContrast(
+                            theme.palette.text.primary,
+                            theme.palette.getInvertedMode('secondary'),
+                            3
+                          ).color
+                        : ensureContrast(
+                            theme.palette.getInvertedMode('secondary'),
+                            ensureContrast(
+                              theme.palette.text.primary,
+                              theme.palette.getInvertedMode('secondary'),
+                              3
+                            ).color,
+                            3
+                          ),
+                  })}
+                >
+                  {char}
+                </Typography>
+              ));
+            })}
           </Box>
           <Stack width="10%" direction="column">
             {Array(10)

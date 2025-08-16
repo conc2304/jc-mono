@@ -2,7 +2,7 @@ import React, { useRef, useEffect, ReactNode } from 'react';
 import { gsap } from 'gsap';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
-import { duration, Typography, TypographyProps } from '@mui/material';
+import { Typography, TypographyProps } from '@mui/material';
 
 interface GlitchTextProps extends TypographyProps {
   children: ReactNode;
@@ -74,7 +74,13 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
       const glitchChars =
         '█▓▒░▀▄▌▐│┤┐└┴┬├─┼╔╗╚╝║═╬◄►▲▼!@#$%^&*()_+-=[]{}|;:,.<>?~`';
-      const alienFonts = ['Wingdings', 'Webdings', 'Symbol', 'Zapf Dingbats'];
+      const alienFonts = [
+        // 'Wingdings',
+        // 'Webdings',
+        'Symbol',
+        // 'Zapf Dingbats',
+        'Glyphz',
+      ];
 
       const getIntensitySettings = (): IntensitySettings => {
         const settings: Record<string, IntensitySettings> = {
@@ -428,15 +434,18 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
       component="span"
       ref={containerRef}
       className={`select-none ${className}`}
-      sx={{
-        fontFamily: '"JetBrains Mono", monospace',
+      sx={(theme) => ({
+        fontFamily: 'inherit',
         perspective: '1000px',
         transformStyle: 'preserve-3d',
         display: 'inline-block',
         position: 'relative',
         cursor: 'pointer',
         ...sx,
-      }}
+        ...(typographyProps.variant
+          ? theme.typography[typographyProps.variant]
+          : {}),
+      })}
     >
       <Typography
         component={typographyProps.component || 'span'}

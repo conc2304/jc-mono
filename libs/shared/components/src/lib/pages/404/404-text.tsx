@@ -3,21 +3,6 @@ import { GlitchText, ScrambleText } from '../../atoms';
 import { ensureContrast } from '@jc/utils';
 
 export const Text404 = () => {
-  const typographyProps: TypographyProps = {
-    variant: 'h1',
-    color: 'text.primary',
-    sx: {
-      fontSize: '22rem',
-      lineHeight: '20rem',
-      width: '22rem',
-      height: '22rem',
-      // pb: 2,
-      textAlign: 'center',
-      verticalAlign: 'top',
-      // bgcolor: 'error.main',
-    },
-  };
-  const text = '404';
   return (
     <>
       <Box display={'flex'}>
@@ -25,28 +10,76 @@ export const Text404 = () => {
           data-augmented-ui="border bl-clip tl-clip tr-clip-y br-clip-y"
           sx={(theme) => ({
             display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
             '--aug-tl': '2.5rem',
             '--aug-bl': '8rem',
             '--aug-br-inset2': '26%',
             '--aug-tr-inset1': '26%',
+            width: '100%',
             background: ensureContrast(
               theme.palette.error.main,
               theme.palette.text.primary,
               1.5
             ).color,
+
+            // [theme.breakpoints.up('sm')]: {
+            //   height: '10rem',
+            // },
+            // [theme.breakpoints.up('md')]: {
+            //   height: '16rem',
+            // },
+            // [theme.breakpoints.up('lg')]: {
+            //   height: '22rem',
+            // },
           })}
         >
-          {text.split('').map((t) => (
-            <GlitchText
-              {...typographyProps}
-              intensity="extreme"
-              sx={{
-                '--aug-tl': '4rem',
-                ...typographyProps.sx,
-              }}
+          {'404'.split('').map((char) => (
+            <Box
+              sx={(theme) => ({
+                textAlign: 'center',
+                verticalAlign: 'top',
+                width: '30%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+
+                [theme.breakpoints.up('sm')]: {
+                  height: '10rem',
+                },
+                [theme.breakpoints.up('md')]: {
+                  height: '16rem',
+                },
+                [theme.breakpoints.up('lg')]: {
+                  height: '22rem',
+                },
+              })}
             >
-              {t}
-            </GlitchText>
+              <GlitchText
+                color="text.primary"
+                variant="display"
+                intensity="extreme"
+                sx={(theme) => ({
+                  textAlign: 'center',
+                  verticalAlign: 'top',
+                  width: '30%',
+                  maxWidth: '30%',
+                  lineHeight: 0,
+
+                  [theme.breakpoints.up('sm')]: {
+                    height: '10rem',
+                  },
+                  [theme.breakpoints.up('md')]: {
+                    height: '16rem',
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    height: '22rem',
+                  },
+                })}
+              >
+                {char}
+              </GlitchText>
+            </Box>
           ))}
         </Box>
         <Box

@@ -156,30 +156,41 @@ export const PageNotFound404 = () => {
           top: 0,
           left: 0,
           m: 4,
+          pt: 10,
+          pl: 12,
+          pr: 4,
         })}
       >
-        <DiagonalLines
-          lineThickness={60}
-          spacing={120}
-          direction="diagonal-alt"
-          width="102%"
-          height="105%"
-          color={theme.palette.background.paper}
-          opacity={1}
-        />
-      </Box>
-      {/* MAIN TEXT SECTION */}
-      <Box
-        className="404Text"
-        sx={{
-          position: 'absolute',
-          top: '100px',
-          left: '100px',
-          zIndex: 100,
-          fontSize: '22rem',
-        }}
-      >
-        <Text404 />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: ' 100%',
+          }}
+        >
+          <DiagonalLines
+            lineThickness={60}
+            spacing={120}
+            direction="diagonal-alt"
+            width="100%"
+            height="100%"
+            color={theme.palette.background.paper}
+            opacity={1}
+          />
+        </Box>
+        {/* MAIN TEXT SECTION */}
+        <Box
+          className="404Text"
+          sx={{
+            // position: 'absolute',
+            width: '100%',
+            zIndex: 100,
+          }}
+        >
+          <Text404 />
+        </Box>
       </Box>
 
       {/* MAIN BUTTON NAVIGATION SECTION */}
@@ -188,9 +199,10 @@ export const PageNotFound404 = () => {
           position: 'absolute',
           zIndex: 150,
           width: '30%',
+          minWidth: '250px',
           height: 'calc(30vh)',
           left: '21%',
-          bottom: '100px',
+          bottom: '4rem',
         }}
       >
         <NavigationButtons />
