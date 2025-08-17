@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, IconButton, Typography, Stack, keyframes } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Typography,
+  Stack,
+  keyframes,
+  alpha,
+  darken,
+} from '@mui/material';
 import { SkipNext, SkipPrevious, PowerSettingsNew } from '@mui/icons-material';
 
 // Color configuration interface
@@ -185,23 +193,18 @@ export const RetroVideoPanel: React.FC<RetroVideoPanelProps> = ({
         '--aug-border-all': '3px',
         '--aug-border-bg': colors.border,
         '--aug-inlay-bg': colors.background,
+        // isPoweredOn
+        //   ? colors.background
+        //   : alpha(colors.background, 0.7),
         '--aug-inlay-opacity': 0.9,
 
         width,
         height,
-        // background: 'black',
-        // border: `3px solid ${colors.border}`,
+        background: colors.background,
         padding: '20px',
         position: 'relative',
         fontFamily: '"Courier New", monospace',
         animation: `${animations.glowPulse} 4s ease-in-out infinite`,
-        // '&::before': {
-        //   content: '""',
-        //   position: 'absolute',
-        //   inset: '10px',
-        //   border: `2px solid ${colors.primary}`,
-        //   opacity: 0.6,
-        // },
       }}
     >
       {/* Header */}
@@ -250,7 +253,9 @@ export const RetroVideoPanel: React.FC<RetroVideoPanelProps> = ({
         data-augmented-ui="both tr-clip"
         sx={{
           '--aug-border-all': '2px',
-          '--aug-border-bg': colors.border,
+          '--aug-border-bg': 'gray',
+          '--aug-inlay-bg': colors.border,
+
           width: '100%',
           position: 'relative',
           overflow: 'hidden',
@@ -258,6 +263,7 @@ export const RetroVideoPanel: React.FC<RetroVideoPanelProps> = ({
           flexGrow: 1,
           justifyContent: 'center',
           alignItems: 'center',
+          opacity: 0.7,
         }}
       >
         <Box
@@ -379,6 +385,7 @@ export const RetroVideoPanel: React.FC<RetroVideoPanelProps> = ({
                 position: 'absolute',
                 inset: 0,
                 background: colors.screenOff,
+                opacity: 0.5,
                 zIndex: 5,
               }}
             />

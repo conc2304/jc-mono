@@ -172,23 +172,10 @@ export const PageNotFound404 = () => {
             height={'100%'}
             width={'100%'}
             colorConfig={{
-              primary: ensureContrast(
-                theme.palette.primary.main,
-                theme.palette.getInvertedMode('error', false),
-                1
-              ).color,
-              // ensureContrast(
-              //   theme.palette.getInvertedMode('error', true),
-              //   theme.palette.getInvertedMode('error', false),
-              //   3
-              // ).color,
-              secondary: ensureContrast(
-                theme.palette.primary.main,
-                theme.palette.getInvertedMode('error', false),
-                2
-              ).color,
-              background: theme.palette.getInvertedMode('error', false),
-              border: theme.palette.error.main,
+              primary: theme.palette.primary.main,
+              secondary: theme.palette.secondary.main,
+              background: `linear-gradient(-145deg, ${theme.palette.background.default}BB, ${theme.palette.background.paper}33)`,
+              border: `${theme.palette.background.paper}30`,
               text: theme.palette.text.primary,
               textSecondary: theme.palette.text.primary,
               screenOff: darken(theme.palette.error.main, 0),
