@@ -188,11 +188,13 @@ export const NavigationButtons = () => {
                   key={i}
                   className="chevron-bars"
                   sx={(theme) => ({
-                    background: ensureContrast(
-                      theme.palette.text.primary,
-                      theme.palette.getInvertedMode('secondary'),
-                      3
-                    ).color,
+                    background: `${
+                      ensureContrast(
+                        theme.palette.text.primary,
+                        theme.palette.getInvertedMode('secondary'),
+                        3
+                      ).color
+                    }AA`,
                     flexGrow: 0.5 + Math.sin(i) * 0.25,
                     border: '1px solid',
                     borderColor: theme.palette.getInvertedMode('secondary'),
@@ -292,11 +294,13 @@ export const NavigationButtons = () => {
                   key={i}
                   className="chevron-bars"
                   sx={(theme) => ({
-                    background: ensureContrast(
-                      theme.palette.text.primary,
-                      theme.palette.getInvertedMode('secondary'),
-                      3
-                    ).color,
+                    background: `${
+                      ensureContrast(
+                        theme.palette.text.primary,
+                        theme.palette.getInvertedMode('secondary'),
+                        3
+                      ).color
+                    }AA`,
                     flexGrow: Math.tan(i) + 5.5,
                     border: '1px solid',
                     borderColor: theme.palette.getInvertedMode('secondary'),
