@@ -6,8 +6,9 @@ import {
   Typography,
   alpha,
   useTheme,
+  Box,
 } from '@mui/material';
-import { ArrowLeft, Menu as MenuIcon } from '@mui/icons-material';
+import { ArrowLeft, ArrowRight, Menu as MenuIcon } from '@mui/icons-material';
 import { NavigationContext } from '@jc/file-system';
 
 interface MobileNavigationProps {
@@ -15,11 +16,9 @@ interface MobileNavigationProps {
   onMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const MobileNavigation: React.FC<MobileNavigationProps & NavigationContext> = ({
-  hasNavigation,
-  onMenuClick,
-  onNext, onPrevious, navigationInfo
-}) => {
+export const MobileNavigation: React.FC<
+  MobileNavigationProps & NavigationContext
+> = ({ hasNavigation, onMenuClick, onNext, onPrevious, navigationInfo }) => {
   const theme = useTheme();
   const showNavigation = onNext || onPrevious;
 
@@ -35,12 +34,25 @@ export const MobileNavigation: React.FC<MobileNavigationProps & NavigationContex
     >
       <Toolbar sx={{ justifyContent: 'space-between', px: 1.5 }}>
         {showNavigation && (
-          <Button
-            startIcon={<ArrowLeft />}
-            sx={{ color: theme.palette.grey[400], textTransform: 'none' }}
-          >
-            <Typography variant="caption">Back</Typography>
-          </Button>
+          <Box>
+            <Button
+              startIcon={<ArrowLeft />}
+              sx={{ color: theme.palette.grey[400], textTransform: 'none' }}
+              onClick={onPrevious}
+              disabled={!onPrevious}
+            >
+              <Typography variant="caption">Prev</Typography>
+            </Button>
+
+            <Button
+              endIcon={<ArrowRight />}
+              sx={{ color: theme.palette.grey[400], textTransform: 'none' }}
+              onClick={onNext}
+              disabled={!onNext}
+            >
+              <Typography variant="caption">Next</Typography>
+            </Button>
+          </Box>
         )}
         <IconButton
           onClick={onMenuClick}
