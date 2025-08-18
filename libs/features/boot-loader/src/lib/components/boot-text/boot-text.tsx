@@ -483,7 +483,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         width: '100%',
         height: '100%',
 
-        minHeight: '200px',
         fontSize: '16px',
         lineHeight: 1.4,
         overflow: 'hidden',

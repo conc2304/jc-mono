@@ -14,18 +14,20 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   fontSize: '0.75rem',
 }));
 
-export const Footer = () => (
-  <FooterContainer>
-    <Typography variant="caption" sx={{ color: 'primary.main' }}>
-      © 2157 - ALL RIGHTS RESERVED
-    </Typography>
-    <Box display="flex" gap={2}>
+export const Footer = () => {
+  return (
+    <FooterContainer>
       <Typography variant="caption" sx={{ color: 'primary.main' }}>
-        SECURE CONNECTION
+        © 2157 - ALL RIGHTS RESERVED
       </Typography>
-      <Typography variant="caption" sx={{ color: 'primary.main' }}>
-        ENCRYPTED
-      </Typography>
-    </Box>
-  </FooterContainer>
-);
+      <Box display="flex" gap={2}>
+        <Typography variant="caption" sx={{ color: 'primary.main' }}>
+          SECURE CONNECTION
+        </Typography>
+        <Typography variant="caption" sx={{ color: 'primary.main' }}>
+          ENCRYPTED
+        </Typography>
+      </Box>
+    </FooterContainer>
+  );
+};

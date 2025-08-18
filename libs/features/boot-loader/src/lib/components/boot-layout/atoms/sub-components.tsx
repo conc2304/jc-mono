@@ -143,19 +143,11 @@ export const BottomPanel = styled(Box)(({ theme }) => ({
 }));
 
 export const MultiplexText = styled(Typography)(({ theme }) => ({
-  fontSize: '2.5rem',
-  fontWeight: 'bold',
   letterSpacing: '0.1em',
-  fontFamily: 'monospace',
-  color: theme.palette.primary.main,
 }));
 
 export const SystemsText = styled(Typography)(({ theme }) => ({
-  fontSize: '1.5rem',
-  fontWeight: 'bold',
   letterSpacing: '0.1em',
-  fontFamily: 'monospace',
-  color: theme.palette.primary.main,
   marginTop: 4,
 }));
 

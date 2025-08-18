@@ -142,7 +142,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           {/* Mobile Content - Minimal Layout */}
           <Box
             p={1}
-            // height="calc(100vh - 200px)"
             display="flex"
             flexDirection="column"
             gap={1}
@@ -156,10 +155,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           >
             {/* Boot Text Panel - Takes most of the space */}
             <Box
-              flex={1}
+              // flex={1}
               data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
               sx={(theme) => ({
-                minHeight: '300px',
                 '&[data-augmented-ui]': {
                   '--aug-bl': '0.5rem',
                   '--aug-br': '0.5rem',
@@ -225,14 +223,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               shape="buttonRight"
               fullWidth
               size="large"
-              sx={{ height: '60px' }}
+              sx={{ flexGrow: 1 }}
               href="/desktop"
             >
-              <Typography fontSize={'1.5rem'}>ENTER</Typography>
+              <Typography variant="h2">ENTER</Typography>
             </AugmentedButton>
           </Box>
-
-          <Footer />
         </BrowserFrame>
       </BootContainer>
     );
@@ -366,8 +362,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           <BottomPanel>
             <Grid container columns={12} spacing={4}>
               <Grid size={7}>
-                <MultiplexText>MULTIPLEX</MultiplexText>
-                <SystemsText>SYSTEMS</SystemsText>
+                <MultiplexText variant="display">MULTIPLEX</MultiplexText>
+                <SystemsText variant="display">SYSTEMS</SystemsText>
               </Grid>
 
               <BackgroundControls
@@ -391,7 +387,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   sx={{ height: '100%' }}
                   href="/desktop"
                 >
-                  <Typography fontSize={'2.5rem'}>ENTER</Typography>
+                  <Typography variant="h2">ENTER</Typography>
                 </AugmentedButton>
               </Grid>
             </Grid>
@@ -590,8 +586,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             {/* Large Text Display */}
             {/* TODO UPDATE THIS TEXT */}
             <Grid size={8}>
-              <MultiplexText>MULTIPLEX</MultiplexText>
-              <SystemsText>SYSTEMS</SystemsText>
+              <MultiplexText variant="h1" color="primary">
+                MULTIPLEX
+              </MultiplexText>
+              <SystemsText variant="h1" color="primary">
+                SYSTEMS
+              </SystemsText>
             </Grid>
 
             {/* Control Icons */}
@@ -622,13 +622,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 sx={{ height: '100%' }}
                 href="/desktop"
               >
-                <Typography fontSize={'2.5rem'}>ENTER</Typography>
+                <Typography variant="h1">ENTER</Typography>
               </AugmentedButton>
             </Grid>
           </Grid>
         </BottomPanel>
 
-        {/* Footer */}
         <Footer />
       </BrowserFrame>
     </BootContainer>

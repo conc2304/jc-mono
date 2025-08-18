@@ -7,8 +7,8 @@ export default function BaselineCSS(theme: Theme): Components {
       styleOverrides: {
         // Default Scroll Styles
         body: {
-          height: '100vh',
-          width: '100vw',
+          height: '100dvh',
+          width: '100dvw',
           overflow: 'hidden',
         },
         '*': {

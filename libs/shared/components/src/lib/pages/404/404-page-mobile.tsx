@@ -22,7 +22,7 @@ export const MobilePageNotFound404 = ({
         height: '75%',
         zIndex: 1,
         px: 1,
-        fontSize: '75cqh !important',
+        fontSize: '65cqh !important',
         textAlign: 'center',
         WebkitTextStrokeWidth: '2px',
         WebkitTextStrokeColor: theme.palette.getInvertedMode('error', true),
@@ -41,8 +41,7 @@ export const MobilePageNotFound404 = ({
         padding: 2,
         bgcolor: theme.palette.background.paper,
         backgroundImage: `url('https://img.freepik.com/free-photo/old-black-fabric-material-with-copy-space_23-2148402339.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
-        // mixBlendMode: 'screen',
-        backgroundPosition: '0 0%',
+        backgroundPosition: '0% 0%',
         backgroundSize: '100%',
         justifyContent: 'space-between',
         gap: 2,
@@ -66,8 +65,8 @@ export const MobilePageNotFound404 = ({
           direction="diagonal-alt"
           width="100%"
           height="100%"
-          color={theme.palette.getInvertedMode('error', true)}
-          opacity={1}
+          color={theme.palette.background.paper}
+          opacity={0.8}
         />
       </Box>
       <Box
@@ -75,7 +74,7 @@ export const MobilePageNotFound404 = ({
         data-augmented-ui="border bl-clip br-clip"
         sx={{
           position: 'absolute',
-          zIndex: 10,
+          zIndex: 1000,
           top: theme.spacing(2),
           width: '45%',
           height: '2.5rem',
@@ -88,7 +87,7 @@ export const MobilePageNotFound404 = ({
           left: '50%',
           transform: 'translate(-50%, 0)',
           overflow: 'hidden',
-          background: `linear-gradient(180deg, ${theme.palette.error.main}80, ${theme.palette.error.main}50, ${theme.palette.secondary.main}00)`,
+          background: `linear-gradient(180deg, ${theme.palette.error.main}FF, ${theme.palette.error.main}80, ${theme.palette.secondary.main}00)`,
           textAlign: 'center',
           display: 'flex',
           justifyContent: 'center',
@@ -182,7 +181,7 @@ export const MobilePageNotFound404 = ({
           >
             <Box
               sx={{
-                flexGrow: 1,
+                // flexGrow: 1,
                 display: 'flex',
                 justifyContent: 'space-evenly',
               }}
@@ -198,7 +197,11 @@ export const MobilePageNotFound404 = ({
                 height: '20%',
                 width: '100%',
                 fontSize: '20cqh !important',
+                textWrap: 'nowrap',
                 color: theme.palette.mode === 'dark' ? 'black' : 'white', // inverse of lines
+                p: 1,
+                backgroundColor:
+                  theme.palette.mode === 'light' ? 'black' : 'white',
               }}
             >
               Page Not Found
@@ -207,13 +210,16 @@ export const MobilePageNotFound404 = ({
         </Box>
       </Box>
 
-      <Box
-        maxHeight={'33vh'}
-        sx={{
-          aspectRatio: '1.85 / 1',
-        }}
-      >
-        <NavigationButtons onHomeClick={onHomeClick} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 0.25 }}>
+        <Box
+          sx={{
+            // aspectRatio: '1.85 / 1',
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <NavigationButtons onHomeClick={onHomeClick} />
+        </Box>
       </Box>
     </Stack>
   );

@@ -87,7 +87,11 @@ export const NavigationButtons = ({
         sx={(theme) => ({
           height: '100%',
           width: '100%',
-          background: `linear-gradient(135deg, ${theme.palette.primary.main}FF, ${theme.palette.secondary.main}00)`,
+          background: `linear-gradient(${
+            isMobile || isTablet ? '-' : ''
+          }135deg, ${theme.palette.primary.main}FF, ${
+            theme.palette.secondary.main
+          }00)`,
           border: '1px solid',
           borderRadius: '4px',
           backdropFilter: 'blur(1px)',
@@ -119,7 +123,7 @@ export const NavigationButtons = ({
               animation: `${diagonalShift} 3s ease-in-out infinite`,
             },
           },
-          p: '2rem',
+          p: isMobile ? '1rem' : '2rem',
           display: 'flex',
           justifyContent: 'space-around',
           gap: 2,
