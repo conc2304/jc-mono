@@ -2,7 +2,6 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 import { ProjectData, ProjectContent } from '../../types';
-import { MobileThumbnails } from './mobile-thumbnails';
 import { MobileTabContent } from './mobile-tab-content';
 import { MobileProjectDetails } from './mobile-project-details';
 import { MobileTechnologies } from './mobile-technologies';
@@ -21,8 +20,6 @@ export const MobileContent: React.FC<MobileContentProps> = ({
 }) => {
   return (
     <Box className="mobile-layout" sx={{ p: 2 }}>
-      {/* <MobileThumbnails screenshots={screenshots} /> */}
-
       <MediaGallery
         images={data.media.screenshots}
         videos={data.media.videos}
