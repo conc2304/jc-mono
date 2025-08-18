@@ -7,17 +7,18 @@ import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
 
-export const MobilePageNotFound404 = () => {
+export const MobilePageNotFound404 = ({
+  onHomeClick,
+}: {
+  onHomeClick: () => void;
+}) => {
   const theme = useTheme();
 
   const HeroText = ({ children }: { children: ReactNode }) => (
     <Typography
       variant="display"
-      // letterSpacing={'5rem'}
-      // mr={'-5rem'}
       color="error"
       sx={{
-        // width: '100%',
         height: '75%',
         zIndex: 1,
         px: 1,
@@ -186,8 +187,8 @@ export const MobilePageNotFound404 = () => {
                 justifyContent: 'space-evenly',
               }}
             >
-              {'404'.split('').map((char) => (
-                <HeroText>{char}</HeroText>
+              {'404'.split('').map((char, i) => (
+                <HeroText key={char + i}>{char}</HeroText>
               ))}
             </Box>
             <Typography
@@ -212,7 +213,7 @@ export const MobilePageNotFound404 = () => {
           aspectRatio: '1.85 / 1',
         }}
       >
-        <NavigationButtons />
+        <NavigationButtons onHomeClick={onHomeClick} />
       </Box>
     </Stack>
   );

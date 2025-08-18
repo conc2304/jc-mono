@@ -39,7 +39,11 @@ const diagonalShift = keyframes`
   50% { transform: translateX(2px); }
 `;
 
-export const NavigationButtons = () => {
+export const NavigationButtons = ({
+  onHomeClick,
+}: {
+  onHomeClick: () => void;
+}) => {
   const theme = useTheme();
 
   // Mobile breakpoint detection
@@ -50,7 +54,10 @@ export const NavigationButtons = () => {
 
   const handleClick = () => {
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 200);
+    setTimeout(() => {
+      setIsClicked(false);
+      onHomeClick && onHomeClick();
+    }, 200);
   };
 
   // Responsive sizing
@@ -73,7 +80,6 @@ export const NavigationButtons = () => {
         height: '100%',
         width: '100%',
         cursor: 'pointer',
-        // aspectRatio: '1.85 / 1',
       }}
       onClick={handleClick}
     >

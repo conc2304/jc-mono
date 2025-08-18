@@ -6,8 +6,13 @@ import { MinimalThemeSwitcher } from '@jc/themes';
 import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
+import { useNavigate } from 'react-router-dom';
 
-export const DesktopPageNotFound404 = () => {
+export const DesktopPageNotFound404 = ({
+  onHomeClick,
+}: {
+  onHomeClick: () => void;
+}) => {
   const bgOverlayProps: CSSProperties = {
     position: 'absolute',
     top: 0,
@@ -144,7 +149,6 @@ export const DesktopPageNotFound404 = () => {
             height: '250px',
 
             width: 'calc(100% - 72% - 10rem)',
-            // border: '3px solid green',
             back: 'yellow',
           }}
         >
@@ -224,14 +228,12 @@ export const DesktopPageNotFound404 = () => {
         sx={{
           position: 'absolute',
           zIndex: 150,
-          // minWidth: '250px',
-          // height: 'calc(30vh)',
           width: '35rem',
           left: '21%',
           bottom: '4rem',
         }}
       >
-        <NavigationButtons />
+        <NavigationButtons onHomeClick={onHomeClick} />
       </Box>
       <Box
         className="background-upper-right-triangle"
