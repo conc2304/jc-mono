@@ -29,9 +29,9 @@ type PaletteOptionNames =
 
 const paletteFallback = basicPalette();
 const typographyFallBack = getTypography({
-  primary: `'Roboto', sans-serif`,
-  secondary: `'Saiba', sans-serif`,
-  display: `'Saiba', sans-serif`,
+  primary: `'TimeBurner', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
+  secondary: `'Eightgon', Impact, 'Arial Black', 'Trebuchet MS', Arial, sans-serif`,
+  display: `'Saiba', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
 });
 
 export const createThemeFromOptions = ({

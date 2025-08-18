@@ -51,7 +51,7 @@ export const DesktopNavigation: React.FC<
               }}
             >
               <ChevronLeft />
-              <Typography variant="body2" sx={{ ml: 1 }}>
+              <Typography variant="h6" sx={{ ml: 1 }}>
                 Previous
               </Typography>
             </IconButton>
@@ -152,7 +152,7 @@ export const DesktopNavigation: React.FC<
                 },
               }}
             >
-              <Typography variant="body2" sx={{ mr: 1 }}>
+              <Typography variant="h6" sx={{ mr: 1 }}>
                 Next
               </Typography>
               <ChevronRight />
