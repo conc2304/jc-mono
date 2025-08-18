@@ -163,7 +163,6 @@ export const BrutalistTemplate: React.FC<
       />
 
       <MobileContent
-        screenshots={screenshots}
         activeTab={activeTab}
         data={data}
         renderContent={renderContent}

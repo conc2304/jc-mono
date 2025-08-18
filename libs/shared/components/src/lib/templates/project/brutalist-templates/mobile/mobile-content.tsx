@@ -6,29 +6,27 @@ import { MobileThumbnails } from './mobile-thumbnails';
 import { MobileTabContent } from './mobile-tab-content';
 import { MobileProjectDetails } from './mobile-project-details';
 import { MobileTechnologies } from './mobile-technologies';
-
-interface Screenshot {
-  url: string;
-  alt: string;
-  caption?: string;
-}
+import { MediaGallery } from '../../../../organisms';
 
 interface MobileContentProps {
-  screenshots: Screenshot[];
   activeTab: string;
   data: ProjectData;
   renderContent: (content?: string | string[]) => React.ReactNode;
 }
 
 export const MobileContent: React.FC<MobileContentProps> = ({
-  screenshots,
   activeTab,
   data,
   renderContent,
 }) => {
   return (
     <Box className="mobile-layout" sx={{ p: 2 }}>
-      <MobileThumbnails screenshots={screenshots} />
+      {/* <MobileThumbnails screenshots={screenshots} /> */}
+
+      <MediaGallery
+        images={data.media.screenshots}
+        videos={data.media.videos}
+      />
 
       <MobileTabContent
         activeTab={activeTab}

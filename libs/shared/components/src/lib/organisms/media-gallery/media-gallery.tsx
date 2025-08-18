@@ -15,13 +15,13 @@ import { MediaModal } from './components';
 import { ensureContrast } from '@jc/utils';
 
 interface MediaGalleryProps {
-  screenshots: ImageMediaData[];
+  images?: ImageMediaData[];
   videos?: VideoMediaData[];
   onMediaClick?: (mediaItem: MediaItem) => void;
 }
 
 export const MediaGallery = ({
-  screenshots,
+  images = [],
   videos = [],
   onMediaClick,
 }: MediaGalleryProps) => {
@@ -33,7 +33,7 @@ export const MediaGallery = ({
 
   // Combine screenshots and videos into a single media array
   const mediaItems: MediaItem[] = [
-    ...screenshots.map((screenshot, index) => ({
+    ...images.map((screenshot, index) => ({
       type: 'image' as const,
       data: screenshot,
       index,
@@ -41,7 +41,7 @@ export const MediaGallery = ({
     ...videos.map((video, index) => ({
       type: 'video' as const,
       data: video,
-      index: screenshots.length + index,
+      index: images.length + index,
     })),
   ];
 
@@ -93,14 +93,87 @@ export const MediaGallery = ({
     setCurrentModalIndex(index);
   };
 
-  const renderMediaItem = (mediaItem: MediaItem) => {
+  const renderMobileThumbnail = (mediaItem: MediaItem, index: number) => {
+    const { type, data } = mediaItem;
+
+    return (
+      <Box
+        key={`mobile-${type}-${index}`}
+        component="button"
+        onClick={() => handleMediaClick(mediaItem)}
+        sx={{
+          flexShrink: 0,
+          width: 80,
+          height: 64,
+          borderRadius: 1,
+          overflow: 'hidden',
+          border: 2,
+          p: 0,
+          borderColor: theme.palette.primary.main,
+          cursor: 'pointer',
+          transition: 'border-color 0.3s, transform 0.2s',
+          position: 'relative',
+          '&:hover': {
+            borderColor: theme.palette.grey[500],
+            transform: 'scale(1.05)',
+          },
+        }}
+      >
+        {type === 'image' ? (
+          <ImageContainer
+            src={(data as ImageMediaData).src}
+            srcSet={(data as ImageMediaData).srcSet}
+            sizes={(data as ImageMediaData).sizes}
+            alt={(data as ImageMediaData).alt}
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          <>
+            <VideoPlayer
+              video={data as VideoMediaData}
+              sx={{
+                width: '100%',
+                height: '100%',
+              }}
+              muted={true}
+              controls={false}
+            />
+            {/* Play icon overlay for videos */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                bgcolor: 'rgba(0, 0, 0, 0.6)',
+                borderRadius: '50%',
+                width: 24,
+                height: 24,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <PlayArrow sx={{ color: 'white', fontSize: 14 }} />
+            </Box>
+          </>
+        )}
+      </Box>
+    );
+  };
+
+  const renderDesktopMediaItem = (mediaItem: MediaItem) => {
     const { type, data, index } = mediaItem;
 
     if (type === 'image') {
-      const screenshot = data as ImageMediaData;
+      const image = data as ImageMediaData;
 
       return (
-        <Grid size={{ xs: 12, lg: isMobile ? 12 : 6 }} key={`image-${index}`}>
+        <Grid size={{ xs: 12, lg: 6 }} key={`image-${index}`}>
           <Paper
             sx={{
               overflow: 'hidden',
@@ -118,12 +191,12 @@ export const MediaGallery = ({
             }}
             onClick={() => handleMediaClick(mediaItem)}
           >
-            <Box sx={{ height: isMobile ? 200 : 256, overflow: 'hidden' }}>
+            <Box sx={{ height: 256, overflow: 'hidden' }}>
               <ImageContainer
-                src={screenshot.src}
-                srcSet={screenshot.srcSet}
-                sizes={screenshot.sizes}
-                alt={screenshot.alt}
+                src={image.src}
+                srcSet={image.srcSet}
+                sizes={image.sizes}
+                alt={image.alt}
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -133,8 +206,8 @@ export const MediaGallery = ({
                 }}
               />
             </Box>
-            {screenshot.caption && (
-              <CardContent sx={{ p: isMobile ? 1.5 : 2 }}>
+            {image.caption && (
+              <CardContent sx={{ p: 2, overflowY: 'auto' }}>
                 <Typography
                   variant="body2"
                   sx={{
@@ -143,7 +216,6 @@ export const MediaGallery = ({
                       theme.palette.getInvertedMode('secondary'),
                       2.5
                     ),
-                    // color: theme.palette.text.primary,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
@@ -151,7 +223,7 @@ export const MediaGallery = ({
                     WebkitBoxOrient: 'vertical',
                   }}
                 >
-                  {screenshot.caption}
+                  {image.caption}
                 </Typography>
               </CardContent>
             )}
@@ -164,7 +236,7 @@ export const MediaGallery = ({
       const video = { ...(data as VideoMediaData) };
 
       return (
-        <Grid size={{ xs: 12, lg: isMobile ? 12 : 6 }} key={`video-${index}`}>
+        <Grid size={{ xs: 12, lg: 6 }} key={`video-${index}`}>
           <Paper
             sx={{
               overflow: 'hidden',
@@ -181,7 +253,7 @@ export const MediaGallery = ({
             }}
             onClick={() => handleMediaClick(mediaItem)}
           >
-            <Box sx={{ height: isMobile ? 200 : 256, position: 'relative' }}>
+            <Box sx={{ height: 256, position: 'relative' }}>
               <VideoPlayer
                 video={video}
                 sx={{
@@ -189,7 +261,7 @@ export const MediaGallery = ({
                   height: '100%',
                 }}
                 muted={true}
-                controls={false} // Disable controls in gallery view
+                controls={false}
               />
               {/* Click overlay with play icon */}
               <Box
@@ -211,13 +283,11 @@ export const MediaGallery = ({
                   },
                 }}
               >
-                <PlayArrow
-                  sx={{ color: 'white', fontSize: isMobile ? 40 : 48 }}
-                />
+                <PlayArrow sx={{ color: 'white', fontSize: 48 }} />
               </Box>
             </Box>
             {(video.caption || video.title || video.type) && (
-              <CardContent sx={{ p: isMobile ? 1.5 : 2 }}>
+              <CardContent sx={{ p: 2 }}>
                 <Box
                   display="flex"
                   alignItems="flex-start"
@@ -304,11 +374,9 @@ export const MediaGallery = ({
           Gallery
         </Typography>
         <Box display="flex" gap={1} flexWrap="wrap">
-          {screenshots.length > 0 && (
+          {images.length > 0 && (
             <Chip
-              label={`${screenshots.length} Image${
-                screenshots.length !== 1 ? 's' : ''
-              }`}
+              label={`${images.length} Image${images.length !== 1 ? 's' : ''}`}
               size="small"
               variant="outlined"
               sx={{ color: theme.palette.text.secondary }}
@@ -325,9 +393,43 @@ export const MediaGallery = ({
         </Box>
       </Box>
 
-      <Grid container spacing={isMobile ? 2 : 3}>
-        {mediaItems.map(renderMediaItem)}
-      </Grid>
+      {/* Mobile: Horizontal scrolling thumbnails */}
+      {isMobile && mediaItems.length > 1 ? (
+        <Box sx={{ mb: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1.5,
+              overflowX: 'auto',
+              pb: 1.5,
+              // Custom scrollbar styling
+              '&::-webkit-scrollbar': {
+                height: 4,
+              },
+              '&::-webkit-scrollbar-track': {
+                bgcolor: theme.palette.grey[200],
+                borderRadius: 2,
+              },
+              '&::-webkit-scrollbar-thumb': {
+                bgcolor: theme.palette.grey[400],
+                borderRadius: 2,
+                '&:hover': {
+                  bgcolor: theme.palette.grey[600],
+                },
+              },
+            }}
+          >
+            {mediaItems.map((mediaItem, index) =>
+              renderMobileThumbnail(mediaItem, index)
+            )}
+          </Box>
+        </Box>
+      ) : (
+        /* Desktop: Grid layout */
+        <Grid container spacing={isMobile ? 2 : 3}>
+          {mediaItems.map(renderDesktopMediaItem)}
+        </Grid>
+      )}
 
       {/* Media Modal */}
       <MediaModal

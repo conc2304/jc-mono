@@ -84,7 +84,7 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
       {/* Gallery Component */}
       {(screenshots.length > 0 || videos.length > 0) && (
         <MediaGallery
-          screenshots={screenshots}
+          images={screenshots}
           videos={videos}
           onMediaClick={onMediaClick}
         />

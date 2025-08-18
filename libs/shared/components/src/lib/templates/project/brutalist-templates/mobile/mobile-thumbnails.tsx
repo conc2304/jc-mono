@@ -24,7 +24,6 @@ export const MobileThumbnails: React.FC<MobileThumbnailsProps> = ({
           <Box
             key={index}
             component="button"
-            // onClick={() => onIndexChange(index)}
             sx={{
               flexShrink: 0,
               width: 80,
@@ -32,6 +31,7 @@ export const MobileThumbnails: React.FC<MobileThumbnailsProps> = ({
               borderRadius: 1,
               overflow: 'hidden',
               border: 2,
+              p: 0,
               borderColor: theme.palette.primary.main,
               cursor: 'pointer',
               transition: 'border-color 0.3s',
