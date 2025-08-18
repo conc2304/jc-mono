@@ -34,6 +34,9 @@ export const EducationExperienceSection = ({
             '--aug-tr': '1.25rem',
             '--aug-tl-inset1': '0%',
             '--aug-tr-extend1': '70%',
+            '@container (max-width: 769px)': {
+              '--aug-tr-extend1': '30%',
+            },
             '--aug-border-bg': theme.palette.primary[theme.palette.mode],
             '--aug-border-all': '1px',
             '--aug-inlay-bg': theme.palette.background.paper,

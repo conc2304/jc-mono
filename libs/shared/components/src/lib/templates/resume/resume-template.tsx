@@ -44,7 +44,6 @@ export const ResumeTemplate = ({
       className="ResumeTemplate--root"
       maxWidth="lg"
       sx={{
-        // py: 4,
         height: '100%',
         overflowY: 'auto',
         containerType: 'inline-size',
@@ -57,7 +56,6 @@ export const ResumeTemplate = ({
           p: 4,
           '@container (max-width: 769px)': {
             px: 1,
-            // border: '3px solid red',
           },
         }}
       >

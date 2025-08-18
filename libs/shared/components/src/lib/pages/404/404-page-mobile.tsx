@@ -74,7 +74,7 @@ export const MobilePageNotFound404 = ({
         data-augmented-ui="border bl-clip br-clip"
         sx={{
           position: 'absolute',
-          zIndex: 1000,
+          zIndex: 100,
           top: theme.spacing(2),
           width: '45%',
           height: '2.5rem',

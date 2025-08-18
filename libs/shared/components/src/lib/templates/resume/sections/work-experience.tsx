@@ -41,14 +41,19 @@ export const WorkExperienceSection = ({
             mx: 'auto',
             background: 'unset',
             border: 'unset',
-            p: 5,
+            px: 2,
+            '@container (min-width: 769px)': {
+              px: 5,
+              '--aug-tl-extend2': '20%',
+              '--aug-tr-extend1': '20%',
+            },
             pt: 0,
             '--aug-tl': '1.25rem',
             '--aug-tr': '1.25rem',
             '--aug-tl-inset1': '0%',
             '--aug-tr-inset2': '0%',
-            '--aug-tl-extend2': '20%',
-            '--aug-tr-extend1': '20%',
+            '--aug-tl-extend2': '10%',
+            '--aug-tr-extend1': '10%',
             '--aug-bl': '1.25rem',
             '--aug-br': '1.25rem',
             '--aug-b-extend1': '60%',
@@ -61,15 +66,30 @@ export const WorkExperienceSection = ({
           <CardContent>
             <Box
               display="flex"
-              justifyContent="space-between"
+              // justifyContent="space-between"
+              justifyContent="center"
               alignItems="flex-end"
               flexWrap="wrap"
               mb={2}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  '@container (max-width: 769px)': { display: 'none' },
+                }}
+              >
                 {job.location}
               </Typography>
-              <Stack textAlign="center">
+              <Stack
+                textAlign="center"
+                sx={{
+                  width: '80%',
+                  '@container (min-width: 769px)': {
+                    width: '60%',
+                  },
+                }}
+              >
                 <Typography variant="subtitle1" color="primary">
                   {job.position}
                 </Typography>
@@ -92,11 +112,37 @@ export const WorkExperienceSection = ({
                 variant="body2"
                 color="text.secondary"
                 fontWeight="medium"
+                sx={{
+                  '@container (max-width: 769px)': { display: 'none' },
+                }}
+              >
+                {job.duration}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+                '@container (min-width: 769px)': {
+                  display: 'none',
+                },
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                {job.location}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                fontWeight="medium"
               >
                 {job.duration}
               </Typography>
             </Box>
             <Divider sx={{ my: 2.5 }} />
+
             <Typography variant="body2" fontStyle="italic">
               {job.description}
             </Typography>
