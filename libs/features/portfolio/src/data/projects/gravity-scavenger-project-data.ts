@@ -6,7 +6,8 @@ export const gravityScavengerProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'gravity-scavenger-physics-space-game',
-  projectName: 'Gravity Scavenger: Physics-Based Procedural Space Game',
+  projectName: 'Gravity Scavenger',
+  projectSubtitle: 'Physics-Based Procedural Space Game',
   slug: 'gravity-scavenger',
 
   // =============================================================================

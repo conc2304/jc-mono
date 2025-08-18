@@ -29,33 +29,6 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
       display: 'block',
     },
   },
-  '& .hero-mobile': {
-    height: '250px',
-    '@container (min-width: 769px)': {
-      height: '500px',
-    },
-    '@container (min-width: 1200px)': {
-      height: '600px',
-    },
-  },
-  '& .title-mobile': {
-    fontSize: '2rem',
-    '@container (min-width: 769px)': {
-      fontSize: '4rem',
-    },
-    '@container (min-width: 1200px)': {
-      fontSize: '6rem',
-    },
-  },
-  '& .description-mobile': {
-    fontSize: '1rem',
-    '@container (min-width: 769px)': {
-      fontSize: '1.25rem',
-    },
-    '@container (min-width: 1200px)': {
-      fontSize: '1.5rem',
-    },
-  },
 }));
 
 export interface BrutalistTemplateProps {
@@ -186,6 +159,7 @@ export const BrutalistTemplate: React.FC<
         heroImage={data.media.thumbnail}
         projectName={data.projectName}
         description={data.basics?.description}
+        projectSubtitle={data.projectSubtitle}
       />
 
       <MobileContent

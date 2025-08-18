@@ -6,7 +6,8 @@ export const tunecraftProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'tunecraft-6d-object-tracking-audio-control',
-  projectName: 'TuneCraft: Dynamic Audio Control via 6D Object Tracking',
+  projectName: 'TuneCraft',
+  projectSubtitle: 'Dynamic Audio Control via 6D Object Tracking',
   slug: 'tune-craft-cv',
 
   // =============================================================================

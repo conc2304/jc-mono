@@ -7,6 +7,7 @@ import { ImageMediaData, VideoMediaData } from '../../organisms';
 interface ProjectCore {
   id: string; // unique identifier for routing/linking
   projectName: string;
+  projectSubtitle?: string;
   slug?: string; // URL-friendly version, auto-generated if not provided
 }
 interface ProjectBasics {

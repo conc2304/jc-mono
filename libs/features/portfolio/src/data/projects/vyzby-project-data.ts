@@ -6,8 +6,9 @@ export const vyzbyProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'vyzby-interactive-audio-visualizer',
-  projectName: 'VYZBY: Interactive Audio Visualizer & Digital Playground',
-  slug: 'vyzby-about',
+  projectName: 'VYZBY',
+  projectSubtitle: 'Interactive Audio Visualizer & Digital Playground',
+  slug: 'vyzby',
 
   // =============================================================================
   // PROJECT BASICS

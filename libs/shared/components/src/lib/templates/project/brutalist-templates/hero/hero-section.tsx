@@ -10,84 +10,125 @@ import {
 import { ImageContainer } from '../../../../atoms';
 import { ImageMediaData } from '../../../../organisms';
 
-const HeroSectionContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  '& .hero-image': {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  '& .hero-overlay': {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: `linear-gradient(to top, ${alpha(
-      theme.palette.background.paper,
-      0.7
-    )}, ${alpha(theme.palette.grey[900], 0.2)}, transparent)`,
-  },
-  '& .hero-content': {
-    zIndex: 0,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    background: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
-    padding: theme.spacing(4),
-  },
-}));
-
 interface HeroSectionProps {
   heroImage: ImageMediaData;
   projectName: string;
+  projectSubtitle?: string;
   description?: string;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   heroImage,
   projectName,
+  projectSubtitle,
   description,
 }) => {
   const theme = useTheme();
 
   const { relativePath, ...imgAttributes } = heroImage;
   return (
-    <HeroSectionContainer>
+    <Box sx={{ position: 'relative' }}>
       <Box
-        className="hero-mobile"
-        sx={{ position: 'relative', overflow: 'hidden' }}
+        className="hero-image--container"
+        sx={{
+          position: 'absolute',
+          overflow: 'hidden',
+          height: '100%',
+          width: '100%',
+        }}
       >
         <ImageContainer
           {...imgAttributes}
           lazy={false}
           showSkeletonDuration={50}
           className="hero-image"
+          sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
-        <Box className="hero-overlay" />
+        <Box
+          className="hero-overlay"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `linear-gradient(to top, ${alpha(
+              theme.palette.background.paper,
+              0.7
+            )}, ${alpha(theme.palette.grey[900], 0.2)}, transparent)`,
+          }}
+        />
       </Box>
 
-      <Box className="hero-content">
+      <Box
+        className="hero-content"
+        sx={{
+          zIndex: 0,
+          position: 'relative',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
+          padding: theme.spacing(4),
+        }}
+      >
         <Container maxWidth="xl">
           <Typography
             variant="h1"
-            className="title-mobile"
+            className="hero-title"
             sx={{
               fontWeight: 'bold',
               mb: 1,
               color: theme.palette.primary.main,
               lineHeight: 1,
+
+              fontSize: '2rem',
+              '@container (min-width: 769px)': {
+                fontSize: '4rem',
+              },
+              '@container (min-width: 1200px)': {
+                fontSize: '6rem',
+              },
             }}
           >
             {projectName}
           </Typography>
+          {projectSubtitle && (
+            <Typography
+              variant="h3"
+              className="hero-title"
+              sx={{
+                fontWeight: 'bold',
+                mb: 1,
+                color: theme.palette.primary.main,
+                lineHeight: 1,
+
+                fontSize: '1.25rem',
+                '@container (min-width: 769px)': {
+                  fontSize: '2.5rem',
+                },
+                '@container (min-width: 1200px)': {
+                  fontSize: '3.75rem',
+                },
+              }}
+            >
+              {projectSubtitle}
+            </Typography>
+          )}
           {description && (
             <Typography
-              className="description-mobile"
+              className="hero-description"
               sx={{
                 color: theme.palette.text.primary,
                 maxWidth: '768px',
+
+                fontSize: '1rem',
+                '@container (min-width: 769px)': {
+                  fontSize: '1.25rem',
+                },
+                '@container (min-width: 1200px)': {
+                  fontSize: '1.5rem',
+                },
               }}
             >
               {description}
@@ -95,6 +136,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           )}
         </Container>
       </Box>
-    </HeroSectionContainer>
+    </Box>
   );
 };

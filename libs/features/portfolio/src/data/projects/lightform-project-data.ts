@@ -6,7 +6,8 @@ export const lightformWebControllerProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'lightform-web-controller',
-  projectName: 'Lightform Web Controller & FTUX Experience',
+  projectName: 'Lightform OAK App',
+  projectSubtitle: 'Web Controller & FTUX Experience',
   slug: 'lightforms-web-app-controller',
 
   // =============================================================================

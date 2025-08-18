@@ -6,7 +6,8 @@ export const atomicVisualizerProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: '3d-atomic-visualizer',
-  projectName: '3D Atomic Visualizer: Interactive Periodic Table Explorer',
+  projectName: '3D Atomic Visualizer',
+  projectSubtitle: 'Interactive Periodic Table Explorer',
   slug: '3d-atomic-visualizer',
 
   // =============================================================================

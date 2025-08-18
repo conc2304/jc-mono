@@ -6,7 +6,8 @@ export const terrainifyProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'terrainify-procedural-terrain-generator',
-  projectName: 'Terrainify: Procedural Terrain Generator with BPM Animation',
+  projectName: 'Terrainify',
+  projectSubtitle: 'Procedural Terrain Generator with BPM Animation',
   slug: 'terrainify',
 
   // =============================================================================

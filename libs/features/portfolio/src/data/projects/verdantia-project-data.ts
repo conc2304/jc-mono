@@ -6,7 +6,8 @@ export const verdantiaProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'verdantia-urban-reforestation-city-builder',
-  projectName: 'Verdantia: Urban Reforestation City Builder Game',
+  projectName: 'Verdantia',
+  projectSubtitle: 'Urban Reforestation City Builder Game',
   slug: 'verdantia',
 
   // =============================================================================

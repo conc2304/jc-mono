@@ -6,7 +6,8 @@ export const climateDataVizProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'climate-impact-data-visualization',
-  projectName: 'Planet Habitability: Climate Impact Data Visualization',
+  projectName: 'Planet Habitability',
+  projectSubtitle: 'Climate Impact Data Visualization',
   slug: 'climate-impact-data-viz',
 
   // =============================================================================

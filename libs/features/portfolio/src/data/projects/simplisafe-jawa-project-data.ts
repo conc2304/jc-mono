@@ -6,7 +6,8 @@ export const simplisafeJawaProject: ProjectData = {
   // CORE PROJECT INFORMATION
   // =============================================================================
   id: 'simplisafe-project-jawa',
-  projectName: 'Project Jawa - SimpliSafe Fulfillment System Redesign',
+  projectName: 'Project Jawa',
+  projectSubtitle: 'SimpliSafe Fulfillment System Redesign',
   slug: 'project-jawa',
 
   // =============================================================================
