@@ -1,8 +1,10 @@
 import { Box, Stack, Typography, useTheme, keyframes } from '@mui/material';
 import { DiagonalLines } from './diagonal-box';
-import { HomeFilled, HomeOutlined } from '@mui/icons-material';
+import { HomeFilled } from '@mui/icons-material';
 import { ensureContrast } from '@jc/utils';
 import { useState } from 'react';
+import { useMediaQuery } from '@mui/system';
+import { HomeTextBox } from './home-text-box';
 
 // Keyframe animations
 const floatAnimation = keyframes`
@@ -39,11 +41,29 @@ const diagonalShift = keyframes`
 
 export const NavigationButtons = () => {
   const theme = useTheme();
+
+  // Mobile breakpoint detection
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
     setIsClicked(true);
     setTimeout(() => setIsClicked(false), 200);
+  };
+
+  // Responsive sizing
+  const getIconSize = () => {
+    if (isMobile) return '4rem';
+    if (isTablet) return '7rem';
+    return '10.5rem';
+  };
+
+  const getFontSize = () => {
+    if (isMobile) return '3rem';
+    if (isTablet) return '4rem';
+    return '5rem';
   };
 
   return (
@@ -53,6 +73,7 @@ export const NavigationButtons = () => {
         height: '100%',
         width: '100%',
         cursor: 'pointer',
+        // aspectRatio: '1.85 / 1',
       }}
       onClick={handleClick}
     >
@@ -135,8 +156,7 @@ export const NavigationButtons = () => {
         <Box
           sx={(theme) => ({
             aspectRatio: '1 / 1',
-            maxHeight: '100%',
-            maxWidth: '100%',
+            maxWidth: '45%',
             borderRadius: '50%',
             background: `linear-gradient(-135deg, ${theme.palette.primary.main}00, ${theme.palette.secondary.main}00)`,
             border: '1px solid #ffffff50',
@@ -161,7 +181,8 @@ export const NavigationButtons = () => {
             className="home-icon"
             color="secondary"
             sx={{
-              fontSize: '10.5rem',
+              // fontSize: '10.5rem',
+              fontSize: getIconSize(),
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))',
             }}
@@ -176,17 +197,16 @@ export const NavigationButtons = () => {
             gap: 0.5,
             position: 'relative',
             flexGrow: 1,
-            width: '250px',
+            maxWidth: '55%',
           }}
         >
-          {/* LEFT CHEVRON BACKGROUND */}
+          {/* LEFT BOX STACK */}
           <Stack width="10%" direction="column" gap={0.5}>
             {Array(12)
               .fill(1)
               .map((_, i, arr) => (
                 <Box
                   key={i}
-                  className="chevron-bars"
                   sx={(theme) => ({
                     background: `${
                       ensureContrast(
@@ -213,15 +233,22 @@ export const NavigationButtons = () => {
               width: '100%',
             }}
           >
+            <HomeTextBox />
+
             <Box
               className="diagonal-lines"
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 height: '100%',
                 width: '100%',
                 transition: 'transform 0.3s ease',
+                zIndex: -1,
               }}
             >
               <DiagonalLines
@@ -243,49 +270,9 @@ export const NavigationButtons = () => {
                 opacity={0.8}
               />
             </Box>
-
-            {/* HOME TEXT with layered effect */}
-            {[0, 1].map((j) => {
-              return 'HOME'.split('').map((char, i, arr) => (
-                <Typography
-                  key={`${j}-${i}`}
-                  className="home-text"
-                  sx={(theme) => ({
-                    fontFamily: `Saiba${j === 1 ? ' Outline' : ''}`,
-                    lineHeight: '2.5rem',
-                    fontSize: '5rem',
-                    position: 'absolute',
-                    top: `${i * 20}%`,
-                    left: i % 2 === 0 ? '28%' : '73%',
-                    transform: 'translate(-50%, 50%)',
-                    fontWeight: 'bold',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    animationDelay: `${i * 0.1}s`,
-                    color:
-                      j === 1
-                        ? ensureContrast(
-                            theme.palette.text.primary,
-                            theme.palette.getInvertedMode('secondary'),
-                            3
-                          ).color
-                        : ensureContrast(
-                            theme.palette.getInvertedMode('secondary'),
-                            ensureContrast(
-                              theme.palette.text.primary,
-                              theme.palette.getInvertedMode('secondary'),
-                              3
-                            ).color,
-                            3
-                          ),
-                  })}
-                >
-                  {char}
-                </Typography>
-              ));
-            })}
           </Box>
 
-          {/* RIGHT CHEVRON BACKGROUND */}
+          {/* RIGHT BOX STACK */}
           <Stack width="10%" direction="column">
             {Array(10)
               .fill(1)

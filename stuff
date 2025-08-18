@@ -1,0 +1,19 @@
+save stuff
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch dev
+# Changes to be committed:
+#	modified:   apps/portfolio-site/src/app/boot-loader/temp.tsx
+#	new file:   libs/shared/components/src/lib/organisms/gif-player/gif-player.tsx
+#	new file:   libs/shared/components/src/lib/organisms/gif-player/index.ts
+#	modified:   libs/shared/components/src/lib/organisms/index.ts
+#	new file:   libs/shared/components/src/lib/pages/404/404-page-desktop.tsx
+#	new file:   libs/shared/components/src/lib/pages/404/404-page-mobile.tsx
+#	modified:   libs/shared/components/src/lib/pages/404/404-page.tsx
+#	modified:   libs/shared/components/src/lib/pages/404/404-text.tsx
+#	new file:   libs/shared/components/src/lib/pages/404/home-text-box.tsx
+#	modified:   libs/shared/components/src/lib/pages/404/navigation-button.tsx
+#	modified:   libs/shared/components/src/lib/pages/404/retro-video-panel.tsx
+#

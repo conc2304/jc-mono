@@ -72,9 +72,6 @@ export const Text404 = () => {
                 sx={(theme) => ({
                   textAlign: 'center',
                   verticalAlign: 'top',
-                  // width: '30%',
-                  // maxWidth: '30%',
-                  // lineHeight: 0,
                 })}
               >
                 {char}
