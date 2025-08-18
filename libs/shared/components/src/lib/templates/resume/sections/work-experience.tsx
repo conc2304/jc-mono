@@ -8,8 +8,6 @@ import {
   CardContent,
   Divider,
   Stack,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 import { WorkExperience } from '../types';
 import { SectionTitle } from './section-title';
@@ -66,7 +64,6 @@ export const WorkExperienceSection = ({
           <CardContent>
             <Box
               display="flex"
-              // justifyContent="space-between"
               justifyContent="center"
               alignItems="flex-end"
               flexWrap="wrap"

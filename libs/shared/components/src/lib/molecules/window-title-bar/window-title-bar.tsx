@@ -60,6 +60,7 @@ export const WindowTitleBar = ({
             pl: 1.5,
             pr: 2.5,
             background,
+            backdropFilter: 'blur(4px)',
             color: ensureContrast(theme.palette.text.primary, background, 3)
               .color,
 
@@ -107,6 +108,7 @@ export const WindowTitleBar = ({
             pl: 1,
             transition: theme.transitions.create(['background']),
             background,
+            backdropFilter: 'blur(4px)',
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',

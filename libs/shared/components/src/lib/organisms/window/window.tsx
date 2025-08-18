@@ -302,6 +302,7 @@ export const Window = React.memo(
             background: 'transparent',
             overflow: 'hidden',
             visibility: getVisibility(),
+
             pointerEvents: shouldDisableInteraction ? 'none' : 'auto',
             // Performance optimizations
             willChange: isDragging ? 'transform' : 'auto',
@@ -329,7 +330,7 @@ export const Window = React.memo(
             id={id}
             isActive={isActive}
             icon={icon}
-            onMouseDown={handleWindowMouseDown} // Use context handler directly
+            onMouseDown={handleWindowMouseDown}
           />
 
           <Fade
@@ -341,10 +342,11 @@ export const Window = React.memo(
               data-augmented-ui="border tl-clip bl-clip b-clip-x br-clip"
               sx={(theme) => ({
                 height: `calc(100% - ${theme.mixins.window.titleBar.height})`,
-                // overflow: 'auto',
                 p: 0.5,
                 pt: 0,
                 m: 0,
+                backdropFilter: 'blur(4px)',
+
                 background: alpha(
                   theme.palette.background.paper,
                   Number(theme.mixins.paper.opacity) || 1
