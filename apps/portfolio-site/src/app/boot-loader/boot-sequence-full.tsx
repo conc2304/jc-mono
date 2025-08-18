@@ -29,7 +29,11 @@ const gridPulse = keyframes`
 
 // Styled components
 const MainContainer = styled(Box)(({ theme }) => ({
-  minHeight: '100vh',
+  // minHeight: '100vh',
+    height: [
+    '100vh',    // Fallback
+    '100dvh'    // Preferred value
+  ],
   background: 'radial-gradient(ellipse at center, #0a0a0a 0%, #000 70%)',
   color: '#00ff88',
   fontFamily: '"JetBrains Mono", monospace',

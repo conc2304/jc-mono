@@ -11,7 +11,10 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.primary.main,
   fontFamily: 'monospace',
-  height: '100vh',
+  height: [
+    '100vh', // Fallback
+    '100dvh', // Preferred value
+  ],
   padding: theme.spacing(2),
   transition: 'background-size 0.1s ease-in',
   pb: '100px',

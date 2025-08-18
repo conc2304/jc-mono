@@ -25,7 +25,10 @@ const DesktopContent = () => {
       className="DesktopOS--root"
       sx={(theme) => ({
         width: '100vw',
-        height: '100vh',
+        height: [
+          '100vh', // Fallback
+          '100dvh', // Preferred value
+        ],
         background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         position: 'relative',
         overflow: 'hidden',

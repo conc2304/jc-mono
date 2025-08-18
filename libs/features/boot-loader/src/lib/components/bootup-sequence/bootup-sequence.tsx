@@ -37,10 +37,13 @@ export const BootUpSequence = ({ bootMessages }: BootUpSequenceProps) => {
   return (
     <Box className="BootUpSequence--root">
       <Box
-        style={{
+        sx={{
           // padding: '40px',
           // backgroundColor: '#1a1a1a',
-          minHeight: '100vh',
+          height: [
+            '100vh', // Fallback
+            '100dvh', // Preferred value
+          ],
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-around',

@@ -142,11 +142,17 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           {/* Mobile Content - Minimal Layout */}
           <Box
             p={1}
-            height="calc(100vh - 200px)"
+            // height="calc(100vh - 200px)"
             display="flex"
             flexDirection="column"
             gap={1}
             flex={1}
+            sx={{
+              height: [
+                '100vh', // Fallback
+                '100dvh', // Preferred value
+              ],
+            }}
           >
             {/* Boot Text Panel - Takes most of the space */}
             <Box

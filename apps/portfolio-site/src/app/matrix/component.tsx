@@ -532,7 +532,10 @@ export const MatrixWebcamWithControls = () => {
     <Box
       sx={{
         width: '100%',
-        height: '100vh',
+        height: [
+          '100vh', // Fallback
+          '100dvh', // Preferred value
+        ],
         backgroundColor: 'black',
         position: 'relative',
       }}

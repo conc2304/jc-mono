@@ -26,8 +26,11 @@ export const DesktopPageNotFound404 = ({
   return (
     <Box
       sx={{
-        height: '100%',
-        width: '100%',
+        height: [
+          '100vh', // Fallback
+          '100dvh', // Preferred value
+        ],
+        width: '100vw',
         padding: 2,
         bgcolor: theme.palette.background.paper,
       }}
