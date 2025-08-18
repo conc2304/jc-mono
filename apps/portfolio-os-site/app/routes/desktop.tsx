@@ -47,7 +47,7 @@ export function App() {
         navigationGroups={[PROJECT_NAVIGATION_GROUP]}
         iconArrangement={isXs ? 'grid' : 'linear'}
       />
-      {/* <GradientShader
+      <GradientShader
         className={key}
         key={key}
         colors={bgColors}
@@ -70,7 +70,7 @@ export function App() {
           width: '100vw',
           height: '100dvh',
         }}
-      /> */}
+      />
     </>
   );
 }
