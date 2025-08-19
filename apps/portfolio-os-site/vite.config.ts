@@ -7,11 +7,13 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/apps/portfolio-os-site',
   server: {
     port: 4200,
-    host: '0.0.0.0', // Changed from 'localhost'
+    // host: '0.0.0.0', // Changed from 'localhost'
+    host: 'localhost',
   },
   preview: {
     port: 4200,
-    host: '0.0.0.0', // Changed from 'localhost'
+    // host: '0.0.0.0', // Changed from 'localhost'
+    host: 'localhost',
   },
   plugins: [!process.env.VITEST && reactRouter()],
   // Uncomment this if you are using workers.

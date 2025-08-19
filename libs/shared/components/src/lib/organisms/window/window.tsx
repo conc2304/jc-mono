@@ -18,8 +18,9 @@ import { getCursorForDirection, getResizeDimensions } from './utils';
 import { useWindowManager } from '../../context';
 import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
+import { remToPixels } from '@jc/themes';
 
-// Extended interface to include animation properties
+// Extended interface with animation properties
 interface WindowProps extends WindowMetaData {
   isActive: boolean;
   minWidth?: number;
@@ -67,6 +68,7 @@ export const Window = React.memo(
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down('md'));
+    const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
     const [resizeState, setResizeState] = useState<ResizeState>({
       isResizing: false,
@@ -85,6 +87,37 @@ export const Window = React.memo(
     const shouldDisableInteraction =
       animationState === 'closing' || isAnimating;
     const isDragging = draggedWindow === id;
+
+    // Handle screen resize for maximized windows
+    useEffect(() => {
+      if (!maximized) return;
+
+      const handleScreenResize = () => {
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight - (isXs ? 0 : taskbarHeight);
+
+        updateWindow?.(id, {
+          x: 0,
+          y: 0,
+          width: newWidth,
+          height: newHeight,
+        });
+      };
+
+      // Debounce the resize handler to avoid too many updates
+      let resizeTimeout: NodeJS.Timeout;
+      const debouncedHandleScreenResize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleScreenResize, 100);
+      };
+
+      window.addEventListener('resize', debouncedHandleScreenResize);
+
+      return () => {
+        window.removeEventListener('resize', debouncedHandleScreenResize);
+        clearTimeout(resizeTimeout);
+      };
+    }, [maximized, id, updateWindow, isXs, theme.mixins.taskbar?.height]);
 
     // Handle animation completion
     useEffect(() => {
@@ -277,7 +310,7 @@ export const Window = React.memo(
 
     return (
       <>
-        {/* Add keyframes CSS */}
+        {/* Keyframes CSS */}
         <style>
           {`
           @keyframes windowOpen {
@@ -296,7 +329,7 @@ export const Window = React.memo(
         <Box
           ref={windowRef}
           className="Window--root"
-          data-window-id={id} // Required for optimized drag system
+          data-window-id={id} // Required for drag system
           sx={(theme) => ({
             position: 'absolute',
             background: 'transparent',

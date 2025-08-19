@@ -77,8 +77,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 }) => {
   const theme = useTheme();
 
-  const isSm = useMediaQuery(theme.breakpoints.down('md'));
-  const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const [progress, setProgress] = useState({
     current: 0,
@@ -362,8 +362,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           <BottomPanel>
             <Grid container columns={12} spacing={4}>
               <Grid size={7}>
-                <MultiplexText variant="display">MULTIPLEX</MultiplexText>
-                <SystemsText variant="display">SYSTEMS</SystemsText>
+                <MultiplexText variant="h1">MULTIPLEX</MultiplexText>
+                <SystemsText variant="h1">SYSTEMS</SystemsText>
               </Grid>
 
               <BackgroundControls
