@@ -14,26 +14,14 @@ import { BaseFileSystemItem } from '@jc/file-system';
 import { OverflowChipContainer } from '../../overflow-chip-container';
 import { Star } from 'lucide-react';
 import { ensureContrast } from '@jc/utils';
+import { FileListViewProps } from './types';
 
-interface ListViewProps {
-  items: BaseFileSystemItem[];
-  onItemClick: (item: BaseFileSystemItem, event: React.MouseEvent) => void;
-  onItemDoubleClick: (
-    item: BaseFileSystemItem,
-    event: React.MouseEvent | React.TouchEvent
-  ) => void;
-  onDragStart: (item: BaseFileSystemItem) => void;
-  onDragOver: (targetItem: BaseFileSystemItem, e: React.DragEvent) => void;
-  onDrop: (targetItem: BaseFileSystemItem, e: React.DragEvent) => void;
-}
 export const ListView = ({
   items,
-  onItemClick,
-  onItemDoubleClick,
-  onDragStart,
-  onDragOver,
-  onDrop,
-}: ListViewProps) => {
+  handlers,
+  useFileSystemItem,
+  viewConfig,
+}: FileListViewProps) => {
   const context = useContext(FileSystemContext);
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up('sm'));
@@ -64,17 +52,14 @@ export const ListView = ({
     <List className="FileListView--root">
       {items.map((item) => {
         const isSelected = context?.selectedItems.includes(item.id);
+        const fileSystemItem = useFileSystemItem(item, handlers, viewConfig);
+
         return (
           <ListItem
             key={item.id}
             // component="button"
             draggable
-            onClick={(e) => onItemClick(item, e)}
-            onDoubleClick={(e) => onItemDoubleClick(item, e)}
-            onTouchEnd={(e) => onItemDoubleClick(item, e)}
-            onDragStart={() => onDragStart(item)}
-            onDragOver={(e) => onDragOver(item, e)}
-            onDrop={(e) => onDrop(item, e)}
+            {...fileSystemItem.itemProps}
             sx={(theme) => ({
               background: isSelected ? alpha(selectedBg, 0.5) : 'transparent',
               borderWidth: 0,
@@ -90,6 +75,7 @@ export const ListView = ({
                 transition: 'border-color 0s ease-in',
               },
             })}
+            style={fileSystemItem.mergeStyles({})}
           >
             <ListItemIcon
               sx={{

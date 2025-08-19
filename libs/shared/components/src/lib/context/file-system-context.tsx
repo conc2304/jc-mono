@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 import { SortBy, SortOrder, ViewMode } from '../types';
 import { BaseFileSystemItem } from '@jc/file-system';
+import { ScrollAwareClickConfig } from '../hooks';
 
 export const FileSystemContext = createContext<{
   fs: BaseFileSystemItem[];
@@ -18,4 +19,5 @@ export const FileSystemContext = createContext<{
   moveItems: (itemIds: string[], targetPath: string) => void;
   draggedItems: string[];
   setDraggedItems: (items: string[]) => void;
+  scrollConfig?: ScrollAwareClickConfig;
 } | null>(null);

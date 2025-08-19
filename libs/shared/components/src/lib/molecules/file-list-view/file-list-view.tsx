@@ -1,13 +1,15 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 
 import { IconsView, ListView, DetailsView } from './views';
 import { FileSystemContext, useWindowActions } from '../../context';
 import { BaseFileSystemItem } from '@jc/file-system';
+import { useFileSystemItem } from '../../hooks/use-file-list-item';
 
 export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
   const { openWindow } = useWindowActions();
 
+  // Your existing handlers remain the same
   const handleItemClick = useCallback(
     (item: BaseFileSystemItem, event: React.MouseEvent) => {
       event.preventDefault();
@@ -36,6 +38,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     },
     [context]
   );
+
   const handleDragOver = useCallback(
     (targetItem: BaseFileSystemItem, e: React.DragEvent) => {
       e.preventDefault();
@@ -44,6 +47,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     },
     []
   );
+
   const handleDrop = useCallback(
     (targetItem: BaseFileSystemItem, e: React.DragEvent) => {
       e.preventDefault();
@@ -54,27 +58,43 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     },
     [context]
   );
-  if (context?.viewMode === 'details')
+
+  // Create handlers object for the hook
+  const handlers = useMemo(
+    () => ({
+      onItemClick: handleItemClick,
+      onItemDoubleClick: handleItemDoubleClick,
+      onDragStart: handleDragStart,
+      onDragOver: handleDragOver,
+      onDrop: handleDrop,
+    }),
+    [
+      handleItemClick,
+      handleItemDoubleClick,
+      handleDragStart,
+      handleDragOver,
+      handleDrop,
+    ]
+  );
+
+  if (context?.viewMode === 'details') {
     return (
       <DetailsView
         items={items}
-        onItemClick={handleItemClick}
-        onItemDoubleClick={handleItemDoubleClick}
-        onDragOver={handleDragOver}
-        onDragStart={handleDragStart}
-        onDrop={handleDrop}
+        handlers={handlers} // Pass handlers object instead of individual props
+        useFileSystemItem={useFileSystemItem} // Pass the hook
+        viewConfig={{ touchAction: 'pan-y', threshold: 12 }} // Table-specific config
       />
     );
+  }
 
   if (context?.viewMode === 'icons') {
     return (
       <IconsView
         items={items}
-        onItemClick={handleItemClick}
-        onItemDoubleClick={handleItemDoubleClick}
-        onDragOver={handleDragOver}
-        onDragStart={handleDragStart}
-        onDrop={handleDrop}
+        handlers={handlers}
+        useFileSystemItem={useFileSystemItem}
+        viewConfig={{ touchAction: 'manipulation', threshold: 8 }} // Grid-specific config
       />
     );
   }
@@ -82,11 +102,9 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   return (
     <ListView
       items={items}
-      onItemClick={handleItemClick}
-      onItemDoubleClick={handleItemDoubleClick}
-      onDragOver={handleDragOver}
-      onDragStart={handleDragStart}
-      onDrop={handleDrop}
+      handlers={handlers}
+      useFileSystemItem={useFileSystemItem}
+      viewConfig={{ touchAction: 'pan-y', threshold: 10 }} // List-specific config
     />
   );
 };

@@ -4,6 +4,7 @@ import { alpha, Box } from '@mui/material';
 import { FileSystemIcon } from './file-system-icon';
 import { useIconDrag, useWindowActions, useWindowManager } from '../../context';
 import { DesktopIconMetaData } from '../../types';
+import { useScrollAwareClick } from '../../hooks';
 
 interface DesktopIconProps extends DesktopIconMetaData {
   position: { x: number; y: number };
@@ -28,8 +29,6 @@ export const DesktopIcon = React.memo<DesktopIconProps>(
         sx={(theme) => ({
           position: 'absolute',
           cursor: 'pointer',
-          // width: theme.mixins.desktopIcon.width,
-          // maxHeight: theme.mixins.desktopIcon.maxHeight,
           // Performance optimizations
           contain: 'layout style paint',
           willChange: effectiveIsDragging ? 'transform' : 'auto',

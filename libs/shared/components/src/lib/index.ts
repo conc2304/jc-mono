@@ -5,3 +5,4 @@ export * from './organisms';
 export * from './templates';
 export * from './types';
 export * from './pages';
+export * from './hooks';
