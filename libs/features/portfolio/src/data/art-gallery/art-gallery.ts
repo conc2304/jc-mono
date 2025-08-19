@@ -1,4 +1,15 @@
-export const ArtGalleryItems: Imaga = [
+export interface PortfolioItem {
+  filename: string;
+  title: string;
+  caption: string;
+  medium: string;
+  categories: string[];
+  tags: string[];
+  year: number | null;
+  imageUrl: string;
+}
+
+export const ArtGalleryItems: PortfolioItem[] = [
   {
     filename: '8337569_orig.jpg',
     title: 'Hipster Damask Pattern',

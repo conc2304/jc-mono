@@ -12,7 +12,14 @@ import {
   styled,
 } from '@mui/material';
 import { ProjectData } from '../../types';
-import { Code, People, Visibility } from '@mui/icons-material';
+import {
+  Cases,
+  Code,
+  GitHub,
+  People,
+  Preview,
+  Visibility,
+} from '@mui/icons-material';
 
 const DetailItem = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -120,6 +127,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <Preview />
               <Typography variant="body2">Live Demo</Typography>
             </LinkStyled>
           )}
@@ -129,7 +137,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Code sx={{ fontSize: 16 }} />
+              <GitHub />
               <Typography variant="body2">Source Code</Typography>
             </LinkStyled>
           )}
@@ -139,7 +147,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Visibility sx={{ fontSize: 16 }} />
+              <Cases />
               <Typography variant="body2">Case Study</Typography>
             </LinkStyled>
           )}

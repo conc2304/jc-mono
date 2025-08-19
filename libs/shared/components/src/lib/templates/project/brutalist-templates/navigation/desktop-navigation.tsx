@@ -30,8 +30,8 @@ export const DesktopNavigation: React.FC<
       position="sticky"
       className="desktop-layout"
       sx={{
-        backgroundColor: alpha(theme.palette.secondary.main, 0.5),
-        backdropFilter: 'blur(8px)',
+        backgroundColor: alpha(theme.palette.secondary.main, 0.7),
+        backdropFilter: 'blur(10px)',
         borderBottom: `1px solid ${theme.palette.getInvertedMode('secondary')}`,
       }}
     >
@@ -64,7 +64,7 @@ export const DesktopNavigation: React.FC<
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 1,
+                  py: 1,
                 }}
               >
                 <FormControl sx={{ minWidth: 300 }}>
@@ -125,7 +125,7 @@ export const DesktopNavigation: React.FC<
                   </Select>
                 </FormControl>
 
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="text.primary">
                   Project {navigationInfo.currentIndex + 1} of{' '}
                   {navigationInfo.totalItems}
                 </Typography>
