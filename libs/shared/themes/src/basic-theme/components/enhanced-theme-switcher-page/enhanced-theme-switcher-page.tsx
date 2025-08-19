@@ -631,15 +631,6 @@ export const ThemeCustomizerPage: React.FC = () => {
           <Box
             sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1 }}
           >
-            <Box
-              sx={{
-                p: 1.5,
-                border: `2px solid ${theme.palette.primary.main}`,
-                backgroundColor: 'transparent',
-              }}
-            >
-              <SettingsIcon sx={{ color: 'primary.main', fontSize: 24 }} />
-            </Box>
             <Box>
               <CyberTypography variant="h6" sx={{ color: 'primary.main' }}>
                 THEME_CONTROL_CENTER

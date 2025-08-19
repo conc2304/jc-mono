@@ -1,5 +1,5 @@
 import { ImageMediaData } from '@jc/ui-components';
-import { PortfolioItem } from './art-gallery';
+import { PortfolioGalleryItem } from './art-gallery';
 import { getImageUrl, getResponsiveImageSet } from '@jc/utils';
 
 /**
@@ -10,7 +10,7 @@ import { getImageUrl, getResponsiveImageSet } from '@jc/utils';
  * @returns Array of ImageMediaData objects
  */
 export function convertPortfolioToImageData(
-  portfolioData: PortfolioItem[],
+  portfolioData: PortfolioGalleryItem[],
   baseRelativePath: string = '/gallery/'
 ): ImageMediaData[] {
   return portfolioData.map((item) => {
@@ -57,7 +57,7 @@ export function convertPortfolioToImageData(
  * Filter function to get images by category
  */
 export function filterByCategory(
-  portfolioData: PortfolioItem[],
+  portfolioData: PortfolioGalleryItem[],
   category: string
 ): ImageMediaData[] {
   const filteredPortfolioData = portfolioData.filter((item) =>
@@ -71,7 +71,7 @@ export function filterByCategory(
  * Filter function to get images by tag
  */
 export function filterByTag(
-  portfolioData: PortfolioItem[],
+  portfolioData: PortfolioGalleryItem[],
   tag: string
 ): ImageMediaData[] {
   const filteredPortfolioData = portfolioData.filter((item) =>
@@ -85,7 +85,7 @@ export function filterByTag(
  * Filter function to get images by year
  */
 export function filterByYear(
-  portfolioData: PortfolioItem[],
+  portfolioData: PortfolioGalleryItem[],
   year: number
 ): ImageMediaData[] {
   const filteredPortfolioData = portfolioData.filter(

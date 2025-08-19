@@ -1,0 +1,1572 @@
+{
+  "summary": {
+    "totalPortfolioEntries": 162,
+    "totalImageFiles": 22,
+    "exactMatches": 35,
+    "missingFromImages": 127,
+    "missingFromPortfolio": 1,
+    "analysisDate": "2025-08-19T21:02:53.212Z"
+  },
+  "exactMatches": [
+    {
+      "filename": "Digital_Media_Hipster_Damask_Pattern_-_2013.jpg",
+      "title": "Hipster Damask Pattern – 2013",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Mass_Art_Holiday_Sale_Poster_-_2013.jpg",
+      "title": "Mass Art Holiday Sale Poster – 2013",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_New_Vintage_2_-_2009.jpg",
+      "title": "New Vintage 2 – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_New_Vintage_1_-_2009.jpg",
+      "title": "New Vintage 1 – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Summer_Lasers-_2010.jpg",
+      "title": "Summer Lasers- 2010",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Indie_Crack_-_2010.jpg",
+      "title": "Indie Crack – 2010",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Bad_Kitty_-_2009.jpg",
+      "title": "Bad Kitty – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Raptured_-_2009.jpg",
+      "title": "Raptured – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Junk_in_the_Trunk_-_2009.jpg",
+      "title": "Junk in the Trunk – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Pandamonium_-_2009.jpg",
+      "title": "Pandamonium – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Coyote_Ugly_-_2009.jpg",
+      "title": "Coyote Ugly – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Bear_Necessity_-_2009.jpg",
+      "title": "Bear Necessity – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Yelling_(red)_-_2009.jpg",
+      "title": "Yelling (red) – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Yelling_-_2009.jpg",
+      "title": "Yelling – 2009",
+      "categories": [
+        "Digital Media"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Bad_Kitty_-_2009.jpg",
+      "title": "Digital Media Bad Kitty 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Bear_Necessity_-_2009.jpg",
+      "title": "Digital Media Bear Necessity 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Coyote_Ugly_-_2009.jpg",
+      "title": "Digital Media Coyote Ugly 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Hipster_Damask_Pattern_-_2013.jpg",
+      "title": "Digital Media Hipster Damask Pattern 2013",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Indie_Crack_-_2010.jpg",
+      "title": "Digital Media Indie Crack 2010",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Junk_in_the_Trunk_-_2009.jpg",
+      "title": "Digital Media Junk In The Trunk 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Mass_Art_Holiday_Sale_Poster_-_2013.jpg",
+      "title": "Digital Media Mass Art Holiday Sale Poster 2013",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_New_Vintage_1_-_2009.jpg",
+      "title": "Digital Media New Vintage 1 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_New_Vintage_2_-_2009.jpg",
+      "title": "Digital Media New Vintage 2 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Pandamonium_-_2009.jpg",
+      "title": "Digital Media Pandamonium 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Raptured_-_2009.jpg",
+      "title": "Digital Media Raptured 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Summer_Lasers-_2010.jpg",
+      "title": "Digital Media Summer Lasers 2010",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Yelling_(red)_-_2009.jpg",
+      "title": "Digital Media Yelling (red) 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "Digital_Media_Yelling_-_2009.jpg",
+      "title": "Digital Media Yelling 2009",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "boy-yelling-remix-red-n-blue.jpg",
+      "title": "Boy Yelling Remix Red N Blue",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "face.jpg",
+      "title": "Face",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "holiday-sale.jpg",
+      "title": "Holiday Sale",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "my-fishy.jpg",
+      "title": "My Fishy",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "onepointone.jpg",
+      "title": "Onepointone",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "puppy.jpg",
+      "title": "Puppy",
+      "categories": [
+        "iOS Made"
+      ]
+    },
+    {
+      "filename": "twinpeaks.jpg",
+      "title": "Twinpeaks",
+      "categories": [
+        "iOS Made"
+      ]
+    }
+  ],
+  "missingFromImages": [
+    {
+      "index": 2,
+      "filename": "Uncategorized_Propaganda_Inspired_Poster_-_2009.jpg",
+      "title": "Propaganda Inspired Poster – 2009",
+      "categories": [],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2019/11/retro-style.jpg"
+    },
+    {
+      "index": 15,
+      "filename": "5579536_orig.jpg",
+      "title": "Spinal Fossil Profile",
+      "categories": [
+        "Sculpture"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2020/01/5579536_orig.jpg"
+    },
+    {
+      "index": 16,
+      "filename": "IMG_9492-copy.jpg",
+      "title": "Spinal Fossil",
+      "categories": [
+        "Sculpture"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2019/11/IMG_9492-copy.jpg"
+    },
+    {
+      "index": 17,
+      "filename": "IMG_4488.jpg",
+      "title": "Intersection Profile",
+      "categories": [
+        "Sculpture"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2019/11/IMG_4488.jpg"
+    },
+    {
+      "index": 18,
+      "filename": "Intersections2_alabaster.jpg",
+      "title": "Intersections Rear Profile",
+      "categories": [
+        "Sculpture"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2019/11/Intersections2_alabaster.jpg"
+    },
+    {
+      "index": 19,
+      "filename": "9440341_orig.jpg",
+      "title": "Intersections 1",
+      "categories": [
+        "Sculpture"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2019/11/9440341_orig.jpg"
+    },
+    {
+      "index": 20,
+      "filename": "Flow-Double-expo.jpg",
+      "title": "Flow",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Flow-Double-expo.jpg"
+    },
+    {
+      "index": 21,
+      "filename": "Mob-Queen.jpg",
+      "title": "Mob Queen",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Mob-Queen.jpg"
+    },
+    {
+      "index": 22,
+      "filename": "Raphaelite-square.jpg",
+      "title": "Raphaelite",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Raphaelite-square.jpg"
+    },
+    {
+      "index": 23,
+      "filename": "Identify.jpg",
+      "title": "Identify",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Identify.jpg"
+    },
+    {
+      "index": 24,
+      "filename": "Sneak.jpg",
+      "title": "Sneak",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Sneak.jpg"
+    },
+    {
+      "index": 25,
+      "filename": "Last-Seer.jpg",
+      "title": "Last Seer",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Last-Seer.jpg"
+    },
+    {
+      "index": 26,
+      "filename": "Selfie.jpg",
+      "title": "Selfie",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Selfie.jpg"
+    },
+    {
+      "index": 27,
+      "filename": "Jean-In-black.jpg",
+      "title": "Leer",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Jean-In-black.jpg"
+    },
+    {
+      "index": 28,
+      "filename": "Mind-of-Society-Collab.jpg",
+      "title": "Mind of Society Collab",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Mind-of-Society-Collab.jpg"
+    },
+    {
+      "index": 29,
+      "filename": "Dog-1.jpg",
+      "title": "Next Today Sir",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Dog-1.jpg"
+    },
+    {
+      "index": 30,
+      "filename": "0051.jpg",
+      "title": "Jergalo",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/0051.jpg"
+    },
+    {
+      "index": 31,
+      "filename": "Novi-Squared.jpg",
+      "title": "Novi Squared",
+      "categories": [],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Novi-Squared.jpg"
+    },
+    {
+      "index": 32,
+      "filename": "0111.jpg",
+      "title": "Lo-Rez",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/0111.jpg"
+    },
+    {
+      "index": 33,
+      "filename": "Billy-Upclose.jpg",
+      "title": "Billy (close up)",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Billy-Upclose.jpg"
+    },
+    {
+      "index": 34,
+      "filename": "260.jpg",
+      "title": "Starfoxxx",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/260.jpg"
+    },
+    {
+      "index": 35,
+      "filename": "165.jpg",
+      "title": "Baby Portraits",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/165.jpg"
+    },
+    {
+      "index": 36,
+      "filename": "057.png",
+      "title": "Fragile",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/057.png"
+    },
+    {
+      "index": 37,
+      "filename": "Ballin.jpg",
+      "title": "Ballin",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Ballin.jpg"
+    },
+    {
+      "index": 38,
+      "filename": "Grime.jpg",
+      "title": "Grime",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Grime.jpg"
+    },
+    {
+      "index": 39,
+      "filename": "Rose-Cave-reflection.jpg",
+      "title": "Rose Cave Reflection",
+      "categories": [],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Rose-Cave-reflection.jpg"
+    },
+    {
+      "index": 40,
+      "filename": "Rucking-Fut.jpg",
+      "title": "Rucking Fut",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Rucking-Fut.jpg"
+    },
+    {
+      "index": 41,
+      "filename": "Spokane.jpg",
+      "title": "Spokane",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Spokane.jpg"
+    },
+    {
+      "index": 42,
+      "filename": "Tronnin.jpg",
+      "title": "Tronnin",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Tronnin.jpg"
+    },
+    {
+      "index": 43,
+      "filename": "Turn-Around.jpg",
+      "title": "Turn Around",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Turn-Around.jpg"
+    },
+    {
+      "index": 44,
+      "filename": "Tycho.jpg",
+      "title": "Tycho",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Tycho.jpg"
+    },
+    {
+      "index": 45,
+      "filename": "Underground-Mantra.jpg",
+      "title": "Underground Mantra",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Underground-Mantra.jpg"
+    },
+    {
+      "index": 46,
+      "filename": "Mt-Sur-le-_.jpg",
+      "title": "Mt Sur le _",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Mt-Sur-le-_.jpg"
+    },
+    {
+      "index": 47,
+      "filename": "Nautilus.jpg",
+      "title": "Nautilus",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Nautilus.jpg"
+    },
+    {
+      "index": 48,
+      "filename": "pre-glitch.jpg",
+      "title": "Pre Glitch",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/pre-glitch.jpg"
+    },
+    {
+      "index": 49,
+      "filename": "Restrepo.jpg",
+      "title": "Restrepo",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Restrepo.jpg"
+    },
+    {
+      "index": 50,
+      "filename": "Temple-of-Boom.jpg",
+      "title": "Temple of Boom",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Temple-of-Boom.jpg"
+    },
+    {
+      "index": 51,
+      "filename": "Tesselate.jpg",
+      "title": "Tesselate",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Tesselate.jpg"
+    },
+    {
+      "index": 52,
+      "filename": "Water-Analysis.jpg",
+      "title": "Water Analysis",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Water-Analysis.jpg"
+    },
+    {
+      "index": 53,
+      "filename": "Water-Scan.jpg",
+      "title": "Water Scan",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Water-Scan.jpg"
+    },
+    {
+      "index": 54,
+      "filename": "008.jpg",
+      "title": "Aztec Rain",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/008.jpg"
+    },
+    {
+      "index": 55,
+      "filename": "014.jpg",
+      "title": "Polka Sith",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/014.jpg"
+    },
+    {
+      "index": 56,
+      "filename": "027.jpg",
+      "title": "Something Blue",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/027.jpg"
+    },
+    {
+      "index": 57,
+      "filename": "028.jpg",
+      "title": "Flux and Decay",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/028.jpg"
+    },
+    {
+      "index": 58,
+      "filename": "033.jpg",
+      "title": "Buttons",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/033.jpg"
+    },
+    {
+      "index": 59,
+      "filename": "042.jpg",
+      "title": "/_\\",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/042.jpg"
+    },
+    {
+      "index": 60,
+      "filename": "051.jpg",
+      "title": "Pills",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/051.jpg"
+    },
+    {
+      "index": 61,
+      "filename": "052.jpg",
+      "title": "Shape Porn",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/052.jpg"
+    },
+    {
+      "index": 62,
+      "filename": "062-2.jpg",
+      "title": "Storm Front",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/062-2.jpg"
+    },
+    {
+      "index": 63,
+      "filename": "081.jpg",
+      "title": "Light Rope",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/081.jpg"
+    },
+    {
+      "index": 64,
+      "filename": "137.jpg",
+      "title": "Fault",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/137.jpg"
+    },
+    {
+      "index": 65,
+      "filename": "160.png",
+      "title": "Bedouin",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/160.png"
+    },
+    {
+      "index": 66,
+      "filename": "196.jpg",
+      "title": "Pipe Dream",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/196.jpg"
+    },
+    {
+      "index": 67,
+      "filename": "218.jpg",
+      "title": "Ø",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/218.jpg"
+    },
+    {
+      "index": 68,
+      "filename": "277.jpg",
+      "title": "Slice",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/277.jpg"
+    },
+    {
+      "index": 69,
+      "filename": "Arithmetricks.jpg",
+      "title": "",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Arithmetricks.jpg"
+    },
+    {
+      "index": 70,
+      "filename": "Baru.jpg",
+      "title": "Baru",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Baru.jpg"
+    },
+    {
+      "index": 71,
+      "filename": "BeetleJuice.jpg",
+      "title": "BeetleJuice",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/BeetleJuice.jpg"
+    },
+    {
+      "index": 72,
+      "filename": "Black-Gold.jpg",
+      "title": "Black Gold",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Black-Gold.jpg"
+    },
+    {
+      "index": 73,
+      "filename": "Brother.jpg",
+      "title": "Brother",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Brother.jpg"
+    },
+    {
+      "index": 74,
+      "filename": "Carried-Away.jpg",
+      "title": "Carried Away",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Carried-Away.jpg"
+    },
+    {
+      "index": 75,
+      "filename": "Cualicino.jpg",
+      "title": "Cualicino",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Cualicino.jpg"
+    },
+    {
+      "index": 76,
+      "filename": "Do-Less.jpg",
+      "title": "Do Less",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Do-Less.jpg"
+    },
+    {
+      "index": 77,
+      "filename": "Droplet-Like-its-Hot.jpg",
+      "title": "Droplet Like It's Hot",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Droplet-Like-its-Hot.jpg"
+    },
+    {
+      "index": 78,
+      "filename": "Electric-Funk.jpg",
+      "title": "Electro  Funk",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Electric-Funk.jpg"
+    },
+    {
+      "index": 79,
+      "filename": "Fire-Marshall.jpg",
+      "title": "Fire Marshall",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Fire-Marshall.jpg"
+    },
+    {
+      "index": 80,
+      "filename": "Fjorb.jpg",
+      "title": "Fjorb",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Fjorb.jpg"
+    },
+    {
+      "index": 81,
+      "filename": "Flapkack-Union-Abstract.jpg",
+      "title": "Flapjack",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Flapkack-Union-Abstract.jpg"
+    },
+    {
+      "index": 82,
+      "filename": "Flume.jpg",
+      "title": "Flume",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Flume.jpg"
+    },
+    {
+      "index": 83,
+      "filename": "Food-Chain.jpg",
+      "title": "Food Chain",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Food-Chain.jpg"
+    },
+    {
+      "index": 84,
+      "filename": "Harvest.jpg",
+      "title": "Harvest",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Harvest.jpg"
+    },
+    {
+      "index": 85,
+      "filename": "Past.jpg",
+      "title": "Past",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Past.jpg"
+    },
+    {
+      "index": 86,
+      "filename": "Maine-Solitude.jpg",
+      "title": "Mainely Solitude",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Maine-Solitude.jpg"
+    },
+    {
+      "index": 87,
+      "filename": "Basick.jpg",
+      "title": "Basick",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Basick.jpg"
+    },
+    {
+      "index": 88,
+      "filename": "Diagon-Alley.jpg",
+      "title": "Diagon Alley",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Diagon-Alley.jpg"
+    },
+    {
+      "index": 89,
+      "filename": "Okemo.jpg",
+      "title": "Okemo",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Okemo.jpg"
+    },
+    {
+      "index": 90,
+      "filename": "Above.jpg",
+      "title": "Above",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Above.jpg"
+    },
+    {
+      "index": 91,
+      "filename": "Treachy-Track.jpg",
+      "title": "Treachery Track",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Treachy-Track.jpg"
+    },
+    {
+      "index": 92,
+      "filename": "247.jpg",
+      "title": "A Place Beyond",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/247.jpg"
+    },
+    {
+      "index": 93,
+      "filename": "Stumped.jpg",
+      "title": "Stumped",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Stumped.jpg"
+    },
+    {
+      "index": 94,
+      "filename": "Three-Amigos-v3.jpg",
+      "title": "3 Amigos",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Three-Amigos-v3.jpg"
+    },
+    {
+      "index": 95,
+      "filename": "Monolith.jpg",
+      "title": "Monolith",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Monolith.jpg"
+    },
+    {
+      "index": 96,
+      "filename": "061.jpg",
+      "title": "Riser",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/061.jpg"
+    },
+    {
+      "index": 97,
+      "filename": "Glazed.jpg",
+      "title": "F-Stop Fitzgerald",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Glazed.jpg"
+    },
+    {
+      "index": 98,
+      "filename": "025-2.jpg",
+      "title": "Kairn",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/025-2.jpg"
+    },
+    {
+      "index": 99,
+      "filename": "302.jpg",
+      "title": "Discover",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/302.jpg"
+    },
+    {
+      "index": 100,
+      "filename": "287.jpg",
+      "title": "Journeymen",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/287.jpg"
+    },
+    {
+      "index": 101,
+      "filename": "201.jpg",
+      "title": "Vantawave",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/201.jpg"
+    },
+    {
+      "index": 102,
+      "filename": "Jaguar-Shark.jpg",
+      "title": "Jaguar Shark",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Jaguar-Shark.jpg"
+    },
+    {
+      "index": 103,
+      "filename": "Four-Square-Beach.jpg",
+      "title": "Framed",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Four-Square-Beach.jpg"
+    },
+    {
+      "index": 104,
+      "filename": "Get-Bent.jpg",
+      "title": "Warped",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Get-Bent.jpg"
+    },
+    {
+      "index": 105,
+      "filename": "116.jpg",
+      "title": "Dual Spires",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/116.jpg"
+    },
+    {
+      "index": 106,
+      "filename": "Fog-Triangle.jpg",
+      "title": "Unassuming",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Fog-Triangle.jpg"
+    },
+    {
+      "index": 107,
+      "filename": "035.jpg",
+      "title": "Line",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/035.jpg"
+    },
+    {
+      "index": 108,
+      "filename": "Skypiercer.jpg",
+      "title": "Skypiercer",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Skypiercer.jpg"
+    },
+    {
+      "index": 109,
+      "filename": "cascades.jpg",
+      "title": "Washed Out",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/cascades.jpg"
+    },
+    {
+      "index": 110,
+      "filename": "Tree-Sq.jpg",
+      "title": "Tre",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Tree-Sq.jpg"
+    },
+    {
+      "index": 111,
+      "filename": "006.jpg",
+      "title": "Swan Lake",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/006.jpg"
+    },
+    {
+      "index": 112,
+      "filename": "Comm1.jpg",
+      "title": "Best Living Communications",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Comm1.jpg"
+    },
+    {
+      "index": 113,
+      "filename": "005-2.jpg",
+      "title": "Microcosm",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/005-2.jpg"
+    },
+    {
+      "index": 114,
+      "filename": "0141.jpg",
+      "title": "Play Time",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/0141.jpg"
+    },
+    {
+      "index": 115,
+      "filename": "021.jpg",
+      "title": "Natural Idols",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/021.jpg"
+    },
+    {
+      "index": 116,
+      "filename": "025.jpg",
+      "title": "Mother's Day",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/025.jpg"
+    },
+    {
+      "index": 117,
+      "filename": "276.jpg",
+      "title": "Pitch Shift",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/276.jpg"
+    },
+    {
+      "index": 118,
+      "filename": "Maine-Alex-Orange.jpg",
+      "title": "Nutrient Rich",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Maine-Alex-Orange.jpg"
+    },
+    {
+      "index": 119,
+      "filename": "011.jpg",
+      "title": "Calvin and Hobbes",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/011.jpg"
+    },
+    {
+      "index": 120,
+      "filename": "Frag-Shapes-at-BH.jpg",
+      "title": "Fragments at Blue Hills",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Frag-Shapes-at-BH.jpg"
+    },
+    {
+      "index": 121,
+      "filename": "357.jpg",
+      "title": "Mass Ave",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/357.jpg"
+    },
+    {
+      "index": 122,
+      "filename": "005.jpg",
+      "title": "Work From Home",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/005.jpg"
+    },
+    {
+      "index": 123,
+      "filename": "037.jpg",
+      "title": "Coast Wave",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/037.jpg"
+    },
+    {
+      "index": 124,
+      "filename": "Snowed.jpg",
+      "title": "Snowed",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Snowed.jpg"
+    },
+    {
+      "index": 125,
+      "filename": "Clear-the-Mind1.jpg",
+      "title": "Clear the Mind",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Clear-the-Mind1.jpg"
+    },
+    {
+      "index": 126,
+      "filename": "Mount-Washington-deconstruct.jpg",
+      "title": "Mt. Washington: Deconstructed",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Mount-Washington-deconstruct.jpg"
+    },
+    {
+      "index": 127,
+      "filename": "Butter1.jpg",
+      "title": "Butter",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Butter1.jpg"
+    },
+    {
+      "index": 128,
+      "filename": "089.jpg",
+      "title": "Wizards",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/089.jpg"
+    },
+    {
+      "index": 129,
+      "filename": "050.jpg",
+      "title": "Tre – Anaglyph",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/050.jpg"
+    },
+    {
+      "index": 130,
+      "filename": "Rose-For-you-water-and-land1.jpg",
+      "title": "RF Album Art: Maine V1",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Rose-For-you-water-and-land1.jpg"
+    },
+    {
+      "index": 131,
+      "filename": "blue-hills-bnw.jpg",
+      "title": "For the Forest",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/blue-hills-bnw.jpg"
+    },
+    {
+      "index": 132,
+      "filename": "flooded-city.jpg",
+      "title": "Flooded",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/flooded-city.jpg"
+    },
+    {
+      "index": 133,
+      "filename": "ETA.jpg",
+      "title": "ETA",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/ETA.jpg"
+    },
+    {
+      "index": 134,
+      "filename": "Cyanocity.jpg",
+      "title": "Cyanocity",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Cyanocity.jpg"
+    },
+    {
+      "index": 135,
+      "filename": "133.jpg",
+      "title": "Digital Collage: Challenge",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/133.jpg"
+    },
+    {
+      "index": 136,
+      "filename": "Docked-Up.jpg",
+      "title": "Docked Up",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Docked-Up.jpg"
+    },
+    {
+      "index": 137,
+      "filename": "dopular.jpg",
+      "title": "Dopular",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/dopular.jpg"
+    },
+    {
+      "index": 138,
+      "filename": "Flow.jpg",
+      "title": "Flow",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Flow.jpg"
+    },
+    {
+      "index": 139,
+      "filename": "Sailor-and-the-Sea.jpg",
+      "title": "Sailor and the Sea",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": "https://www.joseconchello.com/wp-content/uploads/2015/10/Sailor-and-the-Sea.jpg"
+    },
+    {
+      "index": 154,
+      "filename": "Uncategorized_Propaganda_Inspired_Poster_-_2009.jpg",
+      "title": "Uncategorized Propaganda Inspired Poster 2009",
+      "categories": [
+        "iOS Made"
+      ],
+      "originalImageUrl": ""
+    }
+  ],
+  "missingFromPortfolio": [
+    "Digital-Media_Propaganda_Inspired_Poster_-_2009.jpg"
+  ],
+  "allImageFiles": [
+    "Digital-Media_Propaganda_Inspired_Poster_-_2009.jpg",
+    "Digital_Media_Bad_Kitty_-_2009.jpg",
+    "Digital_Media_Bear_Necessity_-_2009.jpg",
+    "Digital_Media_Coyote_Ugly_-_2009.jpg",
+    "Digital_Media_Hipster_Damask_Pattern_-_2013.jpg",
+    "Digital_Media_Indie_Crack_-_2010.jpg",
+    "Digital_Media_Junk_in_the_Trunk_-_2009.jpg",
+    "Digital_Media_Mass_Art_Holiday_Sale_Poster_-_2013.jpg",
+    "Digital_Media_New_Vintage_1_-_2009.jpg",
+    "Digital_Media_New_Vintage_2_-_2009.jpg",
+    "Digital_Media_Pandamonium_-_2009.jpg",
+    "Digital_Media_Raptured_-_2009.jpg",
+    "Digital_Media_Summer_Lasers-_2010.jpg",
+    "Digital_Media_Yelling_(red)_-_2009.jpg",
+    "Digital_Media_Yelling_-_2009.jpg",
+    "boy-yelling-remix-red-n-blue.jpg",
+    "face.jpg",
+    "holiday-sale.jpg",
+    "my-fishy.jpg",
+    "onepointone.jpg",
+    "puppy.jpg",
+    "twinpeaks.jpg"
+  ],
+  "allPortfolioFilenames": [
+    "Digital_Media_Hipster_Damask_Pattern_-_2013.jpg",
+    "Digital_Media_Mass_Art_Holiday_Sale_Poster_-_2013.jpg",
+    "Uncategorized_Propaganda_Inspired_Poster_-_2009.jpg",
+    "Digital_Media_New_Vintage_2_-_2009.jpg",
+    "Digital_Media_New_Vintage_1_-_2009.jpg",
+    "Digital_Media_Summer_Lasers-_2010.jpg",
+    "Digital_Media_Indie_Crack_-_2010.jpg",
+    "Digital_Media_Bad_Kitty_-_2009.jpg",
+    "Digital_Media_Raptured_-_2009.jpg",
+    "Digital_Media_Junk_in_the_Trunk_-_2009.jpg",
+    "Digital_Media_Pandamonium_-_2009.jpg",
+    "Digital_Media_Coyote_Ugly_-_2009.jpg",
+    "Digital_Media_Bear_Necessity_-_2009.jpg",
+    "Digital_Media_Yelling_(red)_-_2009.jpg",
+    "Digital_Media_Yelling_-_2009.jpg",
+    "5579536_orig.jpg",
+    "IMG_9492-copy.jpg",
+    "IMG_4488.jpg",
+    "Intersections2_alabaster.jpg",
+    "9440341_orig.jpg",
+    "Flow-Double-expo.jpg",
+    "Mob-Queen.jpg",
+    "Raphaelite-square.jpg",
+    "Identify.jpg",
+    "Sneak.jpg",
+    "Last-Seer.jpg",
+    "Selfie.jpg",
+    "Jean-In-black.jpg",
+    "Mind-of-Society-Collab.jpg",
+    "Dog-1.jpg",
+    "0051.jpg",
+    "Novi-Squared.jpg",
+    "0111.jpg",
+    "Billy-Upclose.jpg",
+    "260.jpg",
+    "165.jpg",
+    "057.png",
+    "Ballin.jpg",
+    "Grime.jpg",
+    "Rose-Cave-reflection.jpg",
+    "Rucking-Fut.jpg",
+    "Spokane.jpg",
+    "Tronnin.jpg",
+    "Turn-Around.jpg",
+    "Tycho.jpg",
+    "Underground-Mantra.jpg",
+    "Mt-Sur-le-_.jpg",
+    "Nautilus.jpg",
+    "pre-glitch.jpg",
+    "Restrepo.jpg",
+    "Temple-of-Boom.jpg",
+    "Tesselate.jpg",
+    "Water-Analysis.jpg",
+    "Water-Scan.jpg",
+    "008.jpg",
+    "014.jpg",
+    "027.jpg",
+    "028.jpg",
+    "033.jpg",
+    "042.jpg",
+    "051.jpg",
+    "052.jpg",
+    "062-2.jpg",
+    "081.jpg",
+    "137.jpg",
+    "160.png",
+    "196.jpg",
+    "218.jpg",
+    "277.jpg",
+    "Arithmetricks.jpg",
+    "Baru.jpg",
+    "BeetleJuice.jpg",
+    "Black-Gold.jpg",
+    "Brother.jpg",
+    "Carried-Away.jpg",
+    "Cualicino.jpg",
+    "Do-Less.jpg",
+    "Droplet-Like-its-Hot.jpg",
+    "Electric-Funk.jpg",
+    "Fire-Marshall.jpg",
+    "Fjorb.jpg",
+    "Flapkack-Union-Abstract.jpg",
+    "Flume.jpg",
+    "Food-Chain.jpg",
+    "Harvest.jpg",
+    "Past.jpg",
+    "Maine-Solitude.jpg",
+    "Basick.jpg",
+    "Diagon-Alley.jpg",
+    "Okemo.jpg",
+    "Above.jpg",
+    "Treachy-Track.jpg",
+    "247.jpg",
+    "Stumped.jpg",
+    "Three-Amigos-v3.jpg",
+    "Monolith.jpg",
+    "061.jpg",
+    "Glazed.jpg",
+    "025-2.jpg",
+    "302.jpg",
+    "287.jpg",
+    "201.jpg",
+    "Jaguar-Shark.jpg",
+    "Four-Square-Beach.jpg",
+    "Get-Bent.jpg",
+    "116.jpg",
+    "Fog-Triangle.jpg",
+    "035.jpg",
+    "Skypiercer.jpg",
+    "cascades.jpg",
+    "Tree-Sq.jpg",
+    "006.jpg",
+    "Comm1.jpg",
+    "005-2.jpg",
+    "0141.jpg",
+    "021.jpg",
+    "025.jpg",
+    "276.jpg",
+    "Maine-Alex-Orange.jpg",
+    "011.jpg",
+    "Frag-Shapes-at-BH.jpg",
+    "357.jpg",
+    "005.jpg",
+    "037.jpg",
+    "Snowed.jpg",
+    "Clear-the-Mind1.jpg",
+    "Mount-Washington-deconstruct.jpg",
+    "Butter1.jpg",
+    "089.jpg",
+    "050.jpg",
+    "Rose-For-you-water-and-land1.jpg",
+    "blue-hills-bnw.jpg",
+    "flooded-city.jpg",
+    "ETA.jpg",
+    "Cyanocity.jpg",
+    "133.jpg",
+    "Docked-Up.jpg",
+    "dopular.jpg",
+    "Flow.jpg",
+    "Sailor-and-the-Sea.jpg",
+    "boy-yelling-remix-red-n-blue.jpg",
+    "face.jpg",
+    "holiday-sale.jpg",
+    "my-fishy.jpg",
+    "onepointone.jpg",
+    "puppy.jpg",
+    "twinpeaks.jpg"
+  ]
+}

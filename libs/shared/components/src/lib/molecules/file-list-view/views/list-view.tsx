@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 
 import { FileSystemContext } from '../../../context';
-import { BaseFileSystemItem } from '@jc/file-system';
 import { OverflowChipContainer } from '../../overflow-chip-container';
 import { Star } from 'lucide-react';
 import { ensureContrast } from '@jc/utils';
