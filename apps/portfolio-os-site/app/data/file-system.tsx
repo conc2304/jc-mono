@@ -6,7 +6,7 @@ import { setFileSystemHierarchy } from './utils';
 import { BaseFileSystemItem } from '@jc/file-system';
 
 import { SettingsFileSystem } from './settings-files';
-import { iOSImageGallery } from './photo-gallery/iOS-Made';
+import { iOSImageGallery } from './photo-gallery/iOS-Made-File-Item';
 
 const fontSize = '80px';
 

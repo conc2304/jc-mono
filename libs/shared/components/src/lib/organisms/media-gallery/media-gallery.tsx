@@ -9,12 +9,16 @@ import {
   Chip,
 } from '@mui/material';
 import { PlayArrow } from '@mui/icons-material';
-import { ImageContainer, VideoPlayer } from '@jc/ui-components';
+import {
+  ImageContainer,
+  ImageLoadingProps,
+  VideoPlayer,
+} from '@jc/ui-components';
 import { MediaItem, ImageMediaData, VideoMediaData } from './types';
 import { MediaModal } from './components';
 import { ensureContrast } from '@jc/utils';
 
-export interface MediaGalleryProps {
+export interface MediaGalleryProps extends ImageLoadingProps {
   images?: ImageMediaData[];
   videos?: VideoMediaData[];
   onMediaClick?: (mediaItem: MediaItem) => void;
@@ -23,6 +27,10 @@ export interface MediaGalleryProps {
 export const MediaGallery = ({
   images = [],
   videos = [],
+  showSkeletonDuration,
+  lazy,
+  rootMargin,
+  threshold,
   onMediaClick,
 }: MediaGalleryProps) => {
   const theme = useTheme();
@@ -130,6 +138,10 @@ export const MediaGallery = ({
               height: '100%',
               objectFit: 'cover',
             }}
+            showSkeletonDuration={showSkeletonDuration}
+            lazy={lazy}
+            rootMargin={rootMargin}
+            threshold={threshold}
           />
         ) : (
           <>

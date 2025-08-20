@@ -1,0 +1,36 @@
+import { FileSystemItem } from '@jc/file-system';
+import { ArtGalleryMedia_iOS_Made } from '@jc/portfolio';
+import { MediaGalleryPage, MediaGalleryProps } from '@jc/ui-components';
+import { Image } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
+
+export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
+  id: uuidv4(),
+  name: 'Pictures',
+  icon: <Image fontSize="large" />,
+  type: 'file',
+  size: 206862749, // 206.9 MB from Storage
+  mimeType: 'jpegs',
+  dateModified: new Date('2024-01-30'),
+  dateCreated: new Date('2021-03-01'),
+  path: '',
+  parentId: '',
+  permissions: { read: true, write: false, execute: false },
+  metadata: {
+    tags: [],
+    favorite: true,
+    thumbnail: ArtGalleryMedia_iOS_Made[0],
+    description: 'Photos and stuff I guess...',
+  },
+  fileData: undefined,
+  renderer: {
+    component: MediaGalleryPage,
+    props: {
+      images: ArtGalleryMedia_iOS_Made,
+      lazy: true,
+      showSkeletonDuration: 0,
+      rootMargin: '250px',
+      threshold: 0.05,
+    },
+  },
+};

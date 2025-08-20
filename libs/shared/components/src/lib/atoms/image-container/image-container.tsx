@@ -2,7 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Image, Error } from '@mui/icons-material';
 
-interface ImageContainerProps extends Omit<BoxProps, 'component'> {
+interface ImageContainerProps
+  extends Omit<BoxProps, 'component'>,
+    ImageLoadingProps {
   src: string;
   srcSet?: string;
   sizes?: string;
@@ -12,6 +14,9 @@ interface ImageContainerProps extends Omit<BoxProps, 'component'> {
   sx?: SxProps;
   skeletonSx?: SxProps;
   errorSx?: SxProps;
+}
+
+export interface ImageLoadingProps {
   /**
    * Minimum duration (in milliseconds) to show the skeleton loader
    * This ensures the skeleton is visible for a minimum time for better UX
