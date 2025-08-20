@@ -6,6 +6,7 @@ import { setFileSystemHierarchy } from './utils';
 import { BaseFileSystemItem } from '@jc/file-system';
 
 import { SettingsFileSystem } from './settings-files';
+import { iOSImageGallery } from './photo-gallery/iOS-Made';
 
 const fontSize = '80px';
 
@@ -23,18 +24,19 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
     children: [...allPortfolioProjectFiles],
   },
   resumeFile,
-  {
-    id: uuidv4(),
-    name: 'Pictures',
-    icon: <ImageIcon fontSize={fontSize} />,
-    type: 'folder',
-    dateModified: new Date('2024-01-20'),
-    dateCreated: new Date('2024-01-01'),
-    path: '/Pictures',
-    permissions: { read: true, write: true, execute: true },
-    metadata: { tags: [], favorite: false },
-    children: [],
-  },
+  // {
+  //   id: uuidv4(),
+  //   name: 'Pictures',
+  //   icon: <ImageIcon fontSize={fontSize} />,
+  //   type: 'folder',
+  //   dateModified: new Date('2024-01-20'),
+  //   dateCreated: new Date('2024-01-01'),
+  //   path: '/Pictures',
+  //   permissions: { read: true, write: true, execute: true },
+  //   metadata: { tags: [], favorite: false },
+  //   children: [],
+  // },
+  iOSImageGallery,
   SettingsFileSystem,
 ];
 

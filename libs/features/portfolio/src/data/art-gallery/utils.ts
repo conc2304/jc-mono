@@ -1,5 +1,5 @@
 import { ImageMediaData } from '@jc/ui-components';
-import { PortfolioGalleryItem } from './art-gallery';
+import { PortfolioGalleryItem } from './iOS-made-media';
 import { getImageUrl, getResponsiveImageSet } from '@jc/utils';
 
 /**
@@ -38,7 +38,7 @@ export function convertPortfolioToImageData(
 
     const detailedCaption = detailedParts.join(' | ');
 
-    const { sizes, srcSet, src } = getResponsiveImageSet(item.imageUrl);
+    const { sizes, srcSet, src } = getResponsiveImageSet(relativePath);
 
     return {
       relativePath,

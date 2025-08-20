@@ -14,7 +14,7 @@ import { MediaItem, ImageMediaData, VideoMediaData } from './types';
 import { MediaModal } from './components';
 import { ensureContrast } from '@jc/utils';
 
-interface MediaGalleryProps {
+export interface MediaGalleryProps {
   images?: ImageMediaData[];
   videos?: VideoMediaData[];
   onMediaClick?: (mediaItem: MediaItem) => void;
