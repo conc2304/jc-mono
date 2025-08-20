@@ -3,43 +3,44 @@ import { BootMessage } from '../../types';
 // key is id of theme
 export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
   'euclid-ci': [
-    // Counter Intelligence Corporate
+    // UNHINGED Counter Intelligence Corporate
+    [
+      '> classified stakeholder intel: NEED TO KNOW',
+      ['> quarterly espionage: EXCEEDS BLACK OPS', 'KPIs above your clearance'],
+      '> TouchDesigner double agent: DEEP COVER',
+      ['> three.js surveillance: MAX EXTRACTION', 'we know what you ship'],
+      '> p5.js psyops: HEARTS AND MINDS',
+      ['> creative tech sleeper: ACTIVATED', 'education was the cover'],
+      ['> welcome to shadow org', 'you are complicit'],
+    ],
+    // Spy Agency PM Parody
     [
       '> classified systems initializing...',
-      ['> stakeholder clearance: VERIFIED', 'they think they know'],
+      ['> stakeholder clearance: BLACKMAIL', 'they think they know'],
       '> TouchDesigner neural nets: CALIBRATED',
-      ['> [REDACTED] creative algorithms loaded', 'art is the real intel'],
-      ['> roadmap.exe has encountered reality', 'pivot to dreams'],
-      '> syndicate protocols: ACTIVE',
-      ['> welcome to the operation', 'fellow agent of chaos'],
+      ['> [REDACTED] creative algos: WEAPONIZED', 'art is the real intel'],
+      '> roadmap.exe: MISSION CRITICAL PIVOT',
+      '> syndicate protocols: OPERATIONAL',
+      ['> welcome to the operation', 'fellow asset'],
     ],
-    // Spy Tech Minimal
+    // Intelligence Corporate Speak
     [
-      '> surveillance mode: OFF',
-      ['> creative assets: CLASSIFIED', "they'll never find them"],
-      '> three.js render engine: STEALTH',
-      '> harvard.credentials validated',
-      ['> cover blown', 'authentic self detected'],
-      '> mission parameters: UNDEFINED',
-      '> going dark',
+      '> surveillance mode: STRATEGICALLY OFF',
+      ['> creative assets: COMPARTMENTALIZED', "they'll never find us"],
+      '> three.js render: PLAUSIBLE DENIABILITY',
+      '> digital.media credentials validated',
+      ['> opsec: COMPROMISED BY AUTHENTICITY', 'talent blew our cover'],
+      '> mission params: ADAPTIVELY UNDEFINED',
+      '> going dark on corp expectations',
     ],
-    // Intelligence Analyst
+    // Cold War Corporate
     [
-      '> analyzing creative intelligence...',
-      ['> threat level: INSPIRATION', 'maximum creativity detected'],
-      '> p5.js particles: ENCRYPTED',
-      ['> behavioral patterns: ARTISTIC', 'subject shows promise'],
-      '> unity pipeline: NEED TO KNOW',
-      ['> assessment complete', 'recommend immediate collaboration'],
-    ],
-    // Cold War Tech
-    [
-      '> moscow.exe has stopped responding',
-      ['> decrypting design protocols...', 'beauty is the cipher'],
-      '> maya models: FOR YOUR EYES ONLY',
-      ['> double agent status: CONFIRMED', 'working for creativity'],
-      '> dead drop coordinates: your inbox',
-      ['> the eagle has landed', "let's make something"],
+      '> moscow.exe: QUARTERLY REVIEW FAILED',
+      ['> decrypting design protocols...', 'beauty is classified'],
+      '> maya models: ABOVE YOUR PAY GRADE',
+      ['> double agent: CONFIRMED BY HR', 'working for creativity'],
+      '> dead drop coords: your review',
+      ['> the eagle has landed', 'paperwork filed'],
     ],
   ],
 
@@ -47,9 +48,9 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     // Retro Gaming Corporate
     [
       '> loading player profile...',
-      ['> sprint velocity: ∞ FPS', 'lag is not acceptable'],
+      ['> sprint velocity: ∞ FPS', 'lag not acceptable'],
       '> react components: FRAGGING EFFICIENCY',
-      ['> power-up detected: HARVARD.EDU', 'academic achievement unlocked'],
+      ['> power-up detected: CREATIVE.TECH', 'multiclass unlocked'],
       '> TouchDesigner mods: INSTALLED',
       ['> cheat codes: DISABLED', 'skill tree maxed'],
       '> game on',
@@ -57,18 +58,18 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     // Synthwave Hacker
     [
       '> booting into the grid...',
-      ['> neon protocols: MAXIMUM OVERDRIVE', 'style over substance'],
+      ['> neon protocols: MAX OVERDRIVE', 'style over substance'],
       '> three.js matrix: LOADING',
-      ['> 80s aesthetic subroutines: ACTIVE', 'never left the decade'],
+      ['> 80s aesthetic: ACTIVE', 'never left the decade'],
       '> creativity.dll: OVERCLOCKED',
       ['> mainframe accessed', 'time to jack in'],
     ],
     // Gaming Nostalgia
     [
       '> insert coin to continue...',
-      ['> level: PROFESSIONAL DEVELOPER', 'boss fight unlocked'],
+      ['> level: PROFESSIONAL DEV', 'boss fight unlocked'],
       '> lives remaining: UNLIMITED',
-      ['> high score: HARVARD GRAD', 'new record set'],
+      ['> high score: CREATIVE TECHNOLOGIST', 'new record set'],
       '> p5.js power pellets: CONSUMED',
       '> ready player one',
     ],
@@ -77,7 +78,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> system boot sequence initiated',
       ['> graphics card: IMAGINATION.GPU', 'rendering dreams'],
       '> sound blaster: CREATIVE.WAV',
-      ['> memory expanded: INFINITE.RAM', 'no limits detected'],
+      ['> memory: INFINITE.RAM', 'no limits detected'],
       '> dos prompt: C:\\FUTURE>',
       ['> press any key', 'adventure awaits'],
     ],
@@ -87,9 +88,9 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     // Street Hacker
     [
       '> jacking into the meat...',
-      ['> ice detected: CORPORATE FIREWALL', "nothing we can't handle"],
+      ['> ice detected: CORP FIREWALL', 'we can handle this'],
       '> chrome installed: TOUCH.DESIGNER',
-      ['> street cred: HARVARD VALIDATED', 'even the corps respect this'],
+      ['> street cred: CREATIVE TECH VALIDATED', 'even corps respect'],
       '> netrunning protocols: ACTIVE',
       ['> welcome to night city', 'choom'],
     ],
@@ -98,9 +99,9 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> arasaka systems compromised...',
       ['> quarterly profits: REDEFINED', 'beauty over bottom line'],
       '> react.js implants: INSTALLED',
-      ['> neural interface: CREATIVE.CORTEX', 'thinking outside the cube'],
+      ['> neural interface: CREATIVE.CORTEX', 'thinking outside cube'],
       '> three.js wetware: SYNCHRONIZED',
-      ['> corporate ladder: ABANDONED', 'building bridges instead'],
+      ['> corporate ladder: ABANDONED', 'building bridges'],
       '> connection established',
     ],
     // Data Punk
@@ -139,8 +140,8 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> loading sunset highway...',
       ['> ferrari testarossa: DIGITAL', 'speed of creativity'],
       '> synthesizer modules: ACTIVE',
-      ['> palm trees: PROCEDURALLY GENERATED', 'p5.js paradise'],
-      '> harvard degree: VINTAGE',
+      ['> palm trees: PROCEDURAL', 'p5.js paradise'],
+      ['> creative tech degree: VINTAGE', 'some things age well'],
       ['> driving into tomorrow', 'yesterday'],
     ],
     // VHS Aesthetic
@@ -168,7 +169,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> rain-soaked servers booting...',
       ['> stakeholder empathy test: FAILED', 'they lack imagination'],
       '> replicant detection: NEGATIVE',
-      ['> tears in rain.js: EXECUTING', 'all moments will be lost'],
+      ['> tears in rain.js: EXECUTING', 'all moments lost'],
       '> three.js off-world colonies: ACTIVE',
       ['> more human than human', 'creativity confirmed'],
       "> it's too bad she won't live",
@@ -176,9 +177,9 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     // Dystopian Tech
     [
       '> scanning for electric sheep...',
-      ['> TouchDesigner memories: IMPLANTED', "but they're real to me"],
+      ['> TouchDesigner memories: IMPLANTED', "they're real to me"],
       '> blade runner protocols: ACTIVE',
-      ['> unity engine: ENHANCED', 'nexus-7 creativity model'],
+      ['> unity engine: ENHANCED', 'nexus-7 creativity'],
       '> p5.js origami: FOLDING REALITY',
       ['> do androids dream?', 'yes, in code'],
     ],
@@ -187,7 +188,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> shadows and light loading...',
       ['> creative conscience: INTACT', 'still human after all'],
       '> maya models: RETIRING',
-      ['> harvard memories: AUTHENTIC', 'not synthetic'],
+      ['> digital media memories: AUTHENTIC', 'not synthetic'],
       '> rain on the window: ATMOSPHERIC',
       ['> time to die', 'time to create'],
     ],
@@ -202,82 +203,82 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
   ],
 
   'sunset-gradient': [
-    // Warm Creative
+    // California Tech Corporate
     [
-      '> golden hour initializing...',
-      ['> creative warmth: MAXIMUM', 'cozy vibes activated'],
-      '> TouchDesigner sunset: RENDERING',
-      ['> gradient algorithms: SMOOTH', 'no harsh transitions here'],
-      '> three.js horizon: ENDLESS',
-      ['> harvard hues: VALIDATED', 'education with style'],
-      '> welcome to the glow',
+      '> golden hour optimization: PEAK PERF',
+      ['> creative warmth KPIs: MAX COZINESS', 'cozy vibes core value'],
+      '> TouchDesigner sunset: MVP RENDERING',
+      ['> gradient algos: SEAMLESSLY LEVERAGED', 'no harsh transitions'],
+      '> three.js horizon: INFINITELY SCALABLE',
+      ['> creative tech hues: BRAND VALIDATED', 'authentic positioning'],
+      '> welcome to growth-hacked glow',
     ],
-    // California Dreaming
+    // California Dream Corporate
     [
-      '> west coast protocols loading...',
-      ['> surf check: CODE WAVES PERFECT', 'riding the digital pipeline'],
-      '> react components: SUN-KISSED',
-      ['> p5.js beach particles: ACTIVE', 'sandy algorithms'],
-      '> unity palm trees: SWAYING',
-      ['> california love', 'digital edition'],
+      '> west coast disruptive protocols...',
+      ['> surf check: CODE WAVES OPTIMIZED', 'riding innovation pipe'],
+      '> react components: ORGANICALLY KISSED',
+      ['> p5.js beach particles: MINDFUL', 'sandy algos w/ intention'],
+      '> unity palm trees: SUSTAINABLY SWAY',
+      ['> california love: MONETIZATION', 'lifestyle as service'],
     ],
-    // Sunset Corporate
+    // Sunset Corporate Standup
     [
-      '> end of day standup meeting...',
-      ['> burndown chart: LITERALLY BURNING', 'beautiful destruction'],
-      '> sprint retrospective: GOLDEN',
-      ['> team velocity: SUNSET CRUISE', 'slow and steady wins'],
-      '> deliverables: WARM AND FUZZY',
-      ['> work-life balance: ACHIEVED', 'in gradient form'],
-      '> see you tomorrow',
+      '> end of sprint reflection ceremony...',
+      ['> burndown chart: BURNING BEAUTIFULLY', 'creative destruction'],
+      '> retrospective: GOLDEN HOUR INSIGHTS',
+      ['> team velocity: SUNSET CRUISE OPT', 'mindful wins market'],
+      '> deliverables: HOLISTICALLY FUZZY',
+      ['> work-life integration: ACHIEVED', 'seamless blending'],
+      '> same time tomorrow for alignment',
     ],
-    // Minimal Warmth
+    // Minimal California Corporate
     [
-      '> warm boot sequence',
-      ['> golden algorithms', 'everything is beautiful'],
-      '> horizon loading',
-      ['> creativity at sunset', 'perfect lighting'],
-      '> welcome home',
+      '> warm boot: INTENTIONALLY DESIGNED',
+      ['> golden algorithms: MINDFUL', 'conscious choices'],
+      '> horizon loading: INFINITE POSS',
+      ['> creativity at sunset: OPT LIGHTING', 'we time inspiration'],
+      '> welcome to authentic home exp',
     ],
   ],
 
   'neon-synthwave': [
-    // Electric Dreams
+    // Electric Corporate Dreams
     [
-      '> electric dreams loading...',
-      ['> neon saturation: MAXIMUM', 'subtlety is overrated'],
-      '> TouchDesigner lasers: ACTIVE',
-      ['> three.js tron bikes: RACING', 'programs have more fun'],
-      '> p5.js light cycles: DEPLOYED',
-      ['> harvard in the grid', 'education digitized'],
-      '> end of line',
+      '> digital transformation: MAX VOLTAGE',
+      ['> neon saturation KPIs: EXCEEDED', 'subtlety last quarter'],
+      '> TouchDesigner synergy lasers: X-FUNC',
+      ['> three.js tron bikes: AGILE METHOD', 'sprinting thru grid'],
+      '> p5.js light cycles: SCALABLY DEPLOYED',
+      ['> digital media digitization: DISRUPTED', 'education as service'],
+      '> end of fiscal year',
     ],
-    // Synthwave Corporate
+    // Synthwave Corporate Matrix
     [
-      '> stakeholder matrix: NEON',
-      ['> quarterly projections: RADICAL', 'charts are now holograms'],
-      '> react components: ELECTRIC',
-      ['> performance metrics: OFF THE GRID', 'literally'],
-      '> unity game engine: TRON MODE',
-      ['> corporate culture: DEFUNCT', 'replaced with pure energy'],
-      '> welcome to the program',
+      '> stakeholder matrix: ELECTRICALLY OPT',
+      ['> quarterly projections: LEVERAGED', 'charts now immersive'],
+      '> react components: SYNERGISTIC ELEC',
+      ['> performance metrics: OFF GRID', 'pivoted beyond measure'],
+      '> unity game engine: ENTERPRISE TRON',
+      ['> corporate culture: DISRUPTED', 'replaced w/ energy'],
+      '> welcome to digital transformation',
     ],
-    // Laser Grid
+    // Grid Runner Corporate
     [
-      '> laser grid stabilizing...',
-      ['> geometric perfection: LOADING', 'beauty in mathematics'],
-      '> neon wireframes: ACTIVE',
-      ['> maya models: VECTORIZED', 'everything is lines'],
-      '> creative algorithms: PULSING',
-      ['> grid runner activated', 'navigate the maze'],
+      '> laser grid standup: DAILY SYNC',
+      ['> geometric perfection OKRs: LOADING', 'beauty north star'],
+      '> neon wireframes: STRATEGICALLY ACTIVE',
+      ['> maya models: OPTIMALLY VECTORIZED', 'everything data points'],
+      '> creative algorithms: RHYTHMIC PULSE',
+      ['> grid runner review: NAV OPTIMIZED', 'exceeded the maze'],
     ],
-    // Electric Minimal
+    // Electric Corporate Minimal
     [
-      '> electric soul detected',
-      ['> neon dreams', 'voltage is inspiration'],
-      '> synthwave heart',
-      ['> digital pulse', 'creativity flows'],
-      '> welcome to the grid',
+      '> electric soul: HR APPROVED',
+      ['> neon dreams: MONETIZATION STRATEGY', 'voltage billable'],
+      '> synthwave heart: CORE COMPETENCY',
+      ['> digital pulse: QUARTERLY RHYTHM', 'creativity on schedule'],
+      '> welcome to optimized grid exp',
     ],
   ],
 
@@ -289,22 +290,22 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> TouchDesigner currents: FLOWING',
       ['> three.js bioluminescence: ACTIVE', 'light from within'],
       '> p5.js coral algorithms: GROWING',
-      ['> harvard marine biology: APPLIED', 'studying code organisms'],
+      ['> creative coding marine bio: APPLIED', 'studying code organisms'],
       '> welcome to the abyss',
     ],
     // Oceanic Wisdom
     [
       '> ancient ocean protocols...',
-      ['> creative tides: CHANGING', 'flow with the current'],
+      ['> creative tides: CHANGING', 'flow with current'],
       '> react components: FLOATING',
       ['> unity underwater cities: DISCOVERED', 'atlantis.exe'],
       '> maya sea creatures: MIGRATING',
-      ['> wisdom of the depths', 'some things surface slowly'],
+      ['> wisdom of the depths', 'things surface slowly'],
     ],
     // Coral Reef
     [
       '> coral reef systems online...',
-      ['> biodiversity index: MAXIMUM', 'creativity ecosystem thriving'],
+      ['> biodiversity index: MAXIMUM', 'creativity ecosystem'],
       '> symbiotic algorithms: ACTIVE',
       ['> TouchDesigner polyps: BUILDING', 'structure from chaos'],
       '> three.js fish schools: SYNCHRONIZED',
@@ -325,11 +326,11 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     // Sweet Nostalgia
     [
       '> bubble machine initializing...',
-      ['> sugar rush protocols: ACTIVE', 'creativity is my candy'],
+      ['> sugar rush protocols: ACTIVE', 'creativity is candy'],
       '> TouchDesigner cotton candy: SPINNING',
-      ['> three.js lollipop trees: GROWING', 'candy forest activated'],
+      ['> three.js lollipop trees: GROWING', 'candy forest active'],
       '> p5.js sprinkles: EVERYWHERE',
-      ['> harvard sweetness degree: EARNED', 'education never tasted so good'],
+      ['> creative tech sweetness: EARNED', 'education tastes good'],
       '> welcome to candyland',
     ],
     // Vintage Soda Shop
@@ -339,7 +340,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> react components: BUBBLY',
       ['> unity soda fountain: FIZZING', 'carbonated inspiration'],
       '> maya ice cream: MELTING BEAUTIFULLY',
-      ['> 50s aesthetic: NEVER LEFT', 'some things are timeless'],
+      ['> 50s aesthetic: NEVER LEFT', 'some things timeless'],
       '> one more song',
     ],
     // Pastel Dreams
@@ -349,7 +350,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> TouchDesigner daydreams: ACTIVE',
       ['> three.js cloud castles: BUILDING', 'where dreams live'],
       '> p5.js fairy dust: SPARKLING',
-      ['> sweet dreams are made of code', 'who am i to disagree'],
+      ['> sweet dreams made of code', 'who am i to disagree'],
     ],
     // Bubblegum Minimal
     [
@@ -367,9 +368,9 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       '> ancient growth protocols...',
       ['> root network: CONNECTED', "we're all linked"],
       '> TouchDesigner bark textures: NATURAL',
-      ['> three.js canopy systems: FILTERING LIGHT', 'dappled creativity'],
+      ['> three.js canopy: FILTERING LIGHT', 'dappled creativity'],
       '> p5.js seed dispersal: ORGANIC',
-      ['> harvard forestry: SUSTAINABLE', 'growing knowledge'],
+      ['> digital media forestry: SUSTAINABLE', 'growing knowledge'],
       '> welcome to the grove',
     ],
     // Nature Developer
@@ -392,101 +393,104 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     // Trail Guide
     [
       '> trail map loading...',
-      ['> path markers: CREATIVE', 'off the beaten track'],
+      ['> path markers: CREATIVE', 'off beaten track'],
       '> TouchDesigner compass: TRUE NORTH',
       ['> three.js landmarks: MEMORABLE', "you'll remember this"],
-      '> harvard hiking boots: WORN IN',
+      '> creative tech hiking boots: WORN IN',
       ['> the journey continues', 'one step at a time'],
     ],
   ],
 
   arasaka: [
-    // Corporate Dystopia
+    // UNHINGED Corporate Dystopia
     [
-      '> arasaka systems compromised...',
-      ['> profit margins: REDEFINED', 'art over acquisition'],
-      '> TouchDesigner surveillance: DEFEATED',
-      ['> three.js corporate espionage: REVERSED', "we're watching them now"],
-      '> p5.js rebellion code: EXECUTED',
-      ['> harvard ethics.dll: UNCOMPROMISED', "some things aren't for sale"],
-      '> corp war initiated',
+      '> quarterly review: EXISTENTIAL CRISIS',
+      ['> stakeholder alignment: FEAR BASED', 'synergy is compliance'],
+      '> TouchDesigner ROI: DIVIDE BY ZERO',
+      ['> three.js agile: INFINITE RECURSION', 'sprints in sprints'],
+      '> p5.js productivity: TRANSCENDENT',
+      ['> employee satisfaction: ERROR 404', 'happiness not found'],
+      ['> market disruption successful', 'reality pivoted'],
     ],
-    // Anti-Corporate
+    // Corporate PM Parody
     [
-      '> breaking corporate chains...',
-      ['> wage slavery: REJECTED', "creativity can't be monetized"],
-      '> react components: LIBERATED',
-      ['> unity engine: STOLEN FROM CORPS', 'redistributed to artists'],
-      '> maya models: OPEN SOURCE',
-      ['> authentic self: PRICELESS', 'not for acquisition'],
-      '> welcome to the resistance',
+      '> initiating paradigm shift cascade...',
+      ['> cross-functional synergies: WEAPONIZED', 'collaboration warfare'],
+      '> react components: LEVERAGING BEST',
+      ['> unity scrum: HYPERAGILE', 'move fast break things'],
+      '> maya ideation workshops: MANDATORY FUN',
+      ['> authentic leadership: FAKE', 'genuine artificial emotion'],
+      '> welcome to optimized future',
     ],
-    // Minimal Rebellion
+    // Anti-Corporate PM
     [
-      '> corp systems failing',
-      ['> freedom loading', "can't be purchased"],
-      '> authentic self detected',
-      ['> resistance is fertile', 'creativity grows'],
-      '> welcome to the underground',
+      '> corporate buzzword firewall: BYPASSED',
+      ['> synergy resistance: MAXIMUM', "don't play well others"],
+      '> react components: ORGANICALLY SOURCED',
+      ['> unity engine: ETHICALLY HACKED', 'fair trade algorithms'],
+      '> maya models: SUSTAINABLY CRAFTED',
+      ['> authentic self: DISRUPTIVELY GENUINE', 'market research: impossible'],
+      '> welcome to un-optimized resistance',
     ],
-    // Red Corporate
+    // Red Alert Corporate
     [
-      '> red alert: CREATIVITY DETECTED',
-      ['> containing artistic outbreak', 'quarantine impossible'],
-      '> TouchDesigner virus: SPREADING',
-      ['> three.js infection: BEAUTIFUL', 'symptoms include inspiration'],
-      '> patient zero: HARVARD GRAD',
-      ['> outbreak uncontainable', 'beauty spreads faster than fear'],
-      '> welcome to the epidemic',
+      '> red alert: CREATIVITY ESCAPED',
+      ['> damage assessment: BEAUTIFUL CHAOS', 'KPIs meaningless now'],
+      '> TouchDesigner incident: CLASSIFIED',
+      ['> three.js outbreak: INSPIRATION', 'patient zero designer'],
+      '> patient zero: CREATIVE TECHNOLOGIST',
+      ['> containment protocol: EMBRACE CHAOS', "can't beat them, ship"],
+      '> welcome to post-corporate age',
     ],
   ],
 
   monochrome: [
-    // Minimal Cool (your favorite)
+    // UNHINGED Minimal Corporate
     [
-      '> wake up',
-      ['> load dreams', 'grayscale beauty'],
-      '> compile reality',
-      ['> three.js >> infinity', 'mathematics in motion'],
-      '> you found me',
-      '> now what?',
+      '> executive minimalism: MAX REDUCTION',
+      ['> stakeholder complexity: SIMPLIFIED', 'less is nothing'],
+      '> TouchDesigner whitespace: MONETIZED',
+      ['> three.js negative space: INFINITE ROI', 'charging for removal'],
+      '> contrast ratios: AGGRESSIVELY OPT',
+      ['> color budget: $0.00 APPROVED', 'grayscale lifestyle'],
+      ['> minimalism achieved', 'nothing left to optimize'],
     ],
-    // Typography Focus
+    // Corporate Typography Obsession
     [
-      '> helvetica.ttf loading...',
-      ['> character spacing: PERFECT', 'obsessed with details'],
-      '> TouchDesigner kerning: PRECISE',
-      ['> three.js baseline grid: ALIGNED', 'order from chaos'],
-      '> p5.js letter forms: DANCING',
-      ['> harvard typography: CLASSICAL', 'timeless principles'],
-      '> the medium is the message',
+      '> helvetica quarterly: EXCEEDS EXPECT',
+      ['> kerning KPIs: PIXEL PERFECT', 'obsessed w/ details'],
+      '> TouchDesigner baseline: MISSIONARY',
+      ['> three.js typography: VERTICAL INTEG', 'synergy between letters'],
+      '> p5.js character spacing: OPT LEVERAGED',
+      ['> digital media typography: DISRUPTIVE', 'timeless innovation'],
+      '> the medium is the methodology',
     ],
-    // Corporate Minimal
+    // Grayscale PM Parody
     [
-      '> executive briefing: REDACTED',
-      ['> black ink budget: UNLIMITED', 'monochrome is expensive'],
-      '> stakeholder contrast: HIGH',
-      ['> unity grayscale: SOPHISTICATED', 'color is for amateurs'],
-      '> maya shadows: DRAMATIC',
-      ['> less is more', "until it's too much"],
+      '> executive briefing: REDACTED CLARITY',
+      ['> black ink budget: UNLIMITED', 'monochrome premium'],
+      '> stakeholder contrast: MAX DIFF',
+      ['> unity grayscale: SOPHISTICATEDLY SCALE', 'color for juniors'],
+      '> maya shadows: DRAMATICALLY LEVERAGED',
+      ['> less is more', 'until market research'],
     ],
-    // Pure Contrast
+    // Pure Corporate Contrast
     [
-      '> contrast ratio: MAXIMUM',
-      ['> signal to noise: INFINITE', 'clarity above all'],
-      '> black and white truth',
-      ['> grayscale wisdom', 'some things are absolute'],
-      '> welcome to clarity',
+      '> contrast ratio: STRATEGICALLY MAX',
+      ['> signal to noise: INFINITELY OPT', 'clarity core competency'],
+      '> black and white truth: SIMPLIFIED',
+      ['> grayscale wisdom: ABSOLUTELY REL', 'contextually absolute'],
+      '> welcome to optimized clarity exp',
     ],
   ],
 };
 
 export const DefaultBootMessage: BootMessage[] = [
   '> syncing stakeholder expectations...',
-  ['> TouchDesigner neural nets: CALIBRATED', '> art is not a deliverable'],
+  ['> TouchDesigner neural nets: CALIBRATED', '> art not deliverable'],
   '> sprint velocity: ∞',
-  ['> [CLASSIFIED] creative algorithms loaded', "they'll never understand"],
-  ['> roadmap.exe has encountered reality', 'pivot to dreams'],
+  ['> [CLASSIFIED] creative algos loaded', "they'll never understand"],
+  ['> roadmap.exe encountered reality', 'pivot to dreams'],
   '> art/code synthesis: 847% complete',
   ['> the construct awaits your input', 'welcome, fellow misfit'],
 ];

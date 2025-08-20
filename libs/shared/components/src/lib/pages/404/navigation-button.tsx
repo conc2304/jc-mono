@@ -1,5 +1,5 @@
 import { Box, Stack, Typography, useTheme, keyframes } from '@mui/material';
-import { DiagonalLines } from './diagonal-box';
+import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
 import { HomeFilled } from '@mui/icons-material';
 import { ensureContrast } from '@jc/utils';
 import { useState } from 'react';

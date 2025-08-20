@@ -39,9 +39,12 @@ import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
 
 import { Property } from 'csstype';
 import { BackgroundControls } from './molecules/background-controls/background-controls';
-import { AugmentedButton, ScrambleText } from '@jc/ui-components';
-import { DefaultBootMessage, ThemedBootMessages } from './boot-messages';
-import { useEnhancedTheme } from '@jc/themes';
+import {
+  AugmentedButton,
+  DiagonalLines,
+  ScrambleText,
+} from '@jc/ui-components';
+import { DefaultBootMessage } from './boot-messages';
 
 interface SciFiLayoutProps {
   className?: string;
@@ -272,7 +275,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           <Box p={2} flex={10}>
             <Grid container spacing={2} height="100%">
               {/* Left Panel - Reduced */}
-              <Grid size={{ xs: 5 }}>
+              <Grid size={{ xs: 6.5 }}>
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -351,7 +354,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               </Grid>
 
               {/* Right Panel */}
-              <Grid size={{ xs: 7 }}>
+              <Grid size={{ xs: 5.5 }}>
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -482,7 +485,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             </Grid>
 
             {/* Center Panel */}
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 5 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Main Scanner */}
                 <TorusLoaderCardAug>
@@ -506,7 +509,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             </Grid>
 
             {/* Right Panel */}
-            <Grid size={{ xs: 3 }}>
+            <Grid size={{ xs: 4 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <DataPanel />
 
@@ -531,25 +534,14 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     },
                   })}
                 >
-                  <WarningStripes
-                    sx={{
-                      minHeight: '80px',
-                      m: 0,
-                      gap: 5,
-                      backgroundColor: theme.palette.background.paper,
-                    }}
-                  >
-                    {[...Array(8)].map((_, i) => (
-                      <WarningStripe
-                        key={i}
-                        sx={{
-                          height: '250%',
-                          px: 2,
-                          backgroundColor: theme.palette.action.focus,
-                        }}
-                      />
-                    ))}
-                  </WarningStripes>
+                  <DiagonalLines
+                    lineThickness={25}
+                    spacing={65}
+                    width="100%"
+                    height="80px"
+                    direction="diagonal-alt"
+                    color={theme.palette.action.focus}
+                  />
                 </Box>
 
                 {/* BootText Panel */}
@@ -593,7 +585,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         </Box>
 
         {/* Bottom Panel */}
-        <BottomPanel>
+        <BottomPanel flexShrink={0}>
           <Grid container columns={12} spacing={4}>
             {/* Large Text Display */}
             <Grid size={7}>

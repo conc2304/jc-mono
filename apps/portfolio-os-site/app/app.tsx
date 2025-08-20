@@ -68,33 +68,31 @@
 // export default App;
 
 import { Box } from '@mui/system';
-import { BootMessage, BootLayout } from '@jc/boot-loader';
-import { useEnhancedTheme } from '@jc/themes';
-import { randomInt } from 'd3';
 import {
   DefaultBootMessage,
   ThemedBootMessages,
-} from '../../../libs/features/boot-loader/src/lib/components/boot-layout/boot-messages';
-
-// const bootMessages: BootMessage[] = [
-//   'Initializing system...',
-//   ['Loading kernel modules...', 'Injecting backdoor...'],
-//   'Starting network services...',
-//   ['Mounting file systems...', 'Accessing classified data...'],
-//   'Starting user services...',
-//   ['System boot complete.', 'Welcome, Agent Smith.'],
-//   '',
-//   'Welcome to Terminal OS v2.1.0',
-//   // ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
-// ];
+  BootLayout,
+} from '@jc/boot-loader';
+import { useEnhancedTheme } from '@jc/themes';
+import { randomInt } from 'd3';
 
 export default function App() {
   const { currentThemeId } = useEnhancedTheme();
   const numGenerator = randomInt(ThemedBootMessages[currentThemeId].length - 1); // set max to length
-  const initialMessage = '> Reinitializing with new identity ...';
+  const initialMessage = '> Reinitializing new identity ...';
+  const newLine = '';
+
   const bootMessagesThemed =
     ThemedBootMessages[currentThemeId][numGenerator()] || DefaultBootMessage;
-  const bootMessages = [initialMessage, ...bootMessagesThemed];
+
+  const bootMessages = [
+    initialMessage,
+    ...bootMessagesThemed.slice(0, -1),
+    newLine,
+    bootMessagesThemed[bootMessagesThemed.length - 1],
+    newLine,
+  ];
+
   return (
     <Box>
       <BootLayout bootMessages={bootMessages} />

@@ -1,6 +1,6 @@
 import { Box, darken, Stack, Typography, useTheme } from '@mui/material';
 import { CSSProperties, ReactNode } from 'react';
-import { DiagonalLines } from './diagonal-box';
+import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
 import { HorizontalCompass } from './digital-compass';
 import { MinimalThemeSwitcher } from '@jc/themes';
 import { Text404 } from './404-text';
