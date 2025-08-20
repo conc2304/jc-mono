@@ -26,7 +26,7 @@ import {
 } from './atoms';
 import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
-import { easeSinInOut } from 'd3';
+import { easeSinInOut, randomInt } from 'd3';
 import { remap } from '../utils';
 import {
   DataPanel,
@@ -40,23 +40,13 @@ import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
 import { Property } from 'csstype';
 import { BackgroundControls } from './molecules/background-controls/background-controls';
 import { AugmentedButton, ScrambleText } from '@jc/ui-components';
+import { DefaultBootMessage, ThemedBootMessages } from './boot-messages';
+import { useEnhancedTheme } from '@jc/themes';
 
 interface SciFiLayoutProps {
   className?: string;
   bootMessages?: BootMessage[];
 }
-
-const defaultBootMessages: BootMessage[] = [
-  'Initializing system...',
-  ['Loading kernel modules...', 'Injecting backdoor...'],
-  'Starting network services...',
-  ['Mounting file systems...', 'Accessing classified data...'],
-  'Starting user services...',
-  ['System boot complete.', 'Welcome, Agent Smith.'],
-  '',
-  'Welcome to Terminal OS v2.1.0',
-  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
-];
 
 const scrambleCharacterSet =
   '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -109,10 +99,9 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
   className = '',
-  bootMessages = defaultBootMessages,
+  bootMessages = DefaultBootMessage,
 }) => {
   const theme = useTheme();
-
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 

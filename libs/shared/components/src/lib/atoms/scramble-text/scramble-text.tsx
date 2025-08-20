@@ -265,6 +265,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
         style={{ display: 'inline' }}
         component="span"
         {...typographyProps}
+        sx={{ ...typographyProps.sx, '*': { minWidth: '0.5rem' } }}
       >
         {/* Character spans will be dynamically generated here */}
       </Typography>

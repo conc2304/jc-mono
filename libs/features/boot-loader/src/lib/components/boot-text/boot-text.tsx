@@ -123,7 +123,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         charSpan.style.display = 'inline-block';
         charSpan.style.width = 'auto';
         charSpan.style.overflow = 'hidden';
-        charSpan.style.whiteSpace = 'nowrap';
+        charSpan.style.whiteSpace = 'pre';
         charSpan.style.verticalAlign = 'text-top';
         charSpan.textContent = ' ';
         textElement.appendChild(charSpan);
@@ -372,7 +372,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
           charSpan.style.display = 'inline-block';
           charSpan.style.width = '0';
           charSpan.style.overflow = 'hidden';
-          charSpan.style.whiteSpace = 'nowrap';
+          charSpan.style.whiteSpace = 'pre';
           charSpan.style.verticalAlign = 'text-top';
 
           textElement.appendChild(charSpan);
@@ -477,7 +477,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       ref={containerRef}
       className={`boot-text-container ${className}`}
       sx={(theme) => ({
-        fontFamily: '"JetBrains Mono", monospace',
+        fontFamily: '"JetBrains Mono", monospace', // TODO REPLACE WITH NEW FONT
         color: textColor,
         padding: 2.5,
         width: '100%',
@@ -502,7 +502,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
           '& .boot-message': {
             fontFamily: '"JetBrains Mono", monospace',
             color: textColor,
-            whiteSpace: 'pre-wrap',
+            whiteSpace: 'pre',
             display: 'flex',
             alignItems: 'flex-start',
           },
