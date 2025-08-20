@@ -22,6 +22,18 @@ export interface MediaGalleryProps extends ImageLoadingProps {
   images?: ImageMediaData[];
   videos?: VideoMediaData[];
   onMediaClick?: (mediaItem: MediaItem) => void;
+  /**
+   * Whether to enable horizontal scrolling layout on mobile devices
+   * When false, will always use grid layout regardless of screen size
+   * @default true
+   */
+  allowMobileScrolling?: boolean;
+  /**
+   * Breakpoint width (in pixels) to determine mobile layout
+   * Only applies when allowMobileScrolling is true
+   * @default 768
+   */
+  mobileBreakpoint?: number;
 }
 
 export const MediaGallery = ({
@@ -32,6 +44,8 @@ export const MediaGallery = ({
   rootMargin,
   threshold,
   onMediaClick,
+  allowMobileScrolling = true,
+  mobileBreakpoint = 768,
 }: MediaGalleryProps) => {
   const theme = useTheme();
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -70,7 +84,10 @@ export const MediaGallery = ({
     return () => resizeObserver.disconnect();
   }, []);
 
-  const isMobile = containerWidth < 768; // Responsive based on container width
+  // Determine if we should use mobile layout
+  const isMobile = containerWidth < mobileBreakpoint;
+  const useMobileScrolling =
+    allowMobileScrolling && isMobile && mediaItems.length > 1;
 
   const getVideoTypeColor = (type?: string) => {
     switch (type) {
@@ -181,11 +198,16 @@ export const MediaGallery = ({
   const renderDesktopMediaItem = (mediaItem: MediaItem) => {
     const { type, data, index } = mediaItem;
 
+    // Adjust grid sizing based on whether we're forcing desktop layout on mobile
+    const gridSize = useMobileScrolling
+      ? { xs: 12, lg: 6 }
+      : { xs: 12, sm: 6, lg: 6 };
+
     if (type === 'image') {
       const image = data as ImageMediaData;
 
       return (
-        <Grid size={{ xs: 12, lg: 6 }} key={`image-${index}`}>
+        <Grid size={gridSize} key={`image-${index}`}>
           <Paper
             sx={{
               overflow: 'hidden',
@@ -203,7 +225,12 @@ export const MediaGallery = ({
             }}
             onClick={() => handleMediaClick(mediaItem)}
           >
-            <Box sx={{ height: 256, overflow: 'hidden' }}>
+            <Box
+              sx={{
+                height: isMobile && !useMobileScrolling ? 200 : 256,
+                overflow: 'hidden',
+              }}
+            >
               <ImageContainer
                 src={image.src}
                 srcSet={image.srcSet}
@@ -216,6 +243,10 @@ export const MediaGallery = ({
                   transition: 'transform 0.3s ease',
                   background: theme.palette.background.default,
                 }}
+                showSkeletonDuration={showSkeletonDuration}
+                lazy={lazy}
+                rootMargin={rootMargin}
+                threshold={threshold}
               />
             </Box>
             {image.caption && (
@@ -248,7 +279,7 @@ export const MediaGallery = ({
       const video = { ...(data as VideoMediaData) };
 
       return (
-        <Grid size={{ xs: 12, lg: 6 }} key={`video-${index}`}>
+        <Grid size={gridSize} key={`video-${index}`}>
           <Paper
             sx={{
               overflow: 'hidden',
@@ -265,7 +296,12 @@ export const MediaGallery = ({
             }}
             onClick={() => handleMediaClick(mediaItem)}
           >
-            <Box sx={{ height: 256, position: 'relative' }}>
+            <Box
+              sx={{
+                height: isMobile && !useMobileScrolling ? 200 : 256,
+                position: 'relative',
+              }}
+            >
               <VideoPlayer
                 video={video}
                 sx={{
@@ -405,8 +441,9 @@ export const MediaGallery = ({
         </Box>
       </Box>
 
-      {/* Mobile: Horizontal scrolling thumbnails */}
-      {isMobile && mediaItems.length > 1 ? (
+      {/* Conditional rendering based on mobile scrolling setting */}
+      {useMobileScrolling ? (
+        /* Mobile: Horizontal scrolling thumbnails */
         <Box sx={{ mb: 3 }}>
           <Box
             sx={{
@@ -437,7 +474,7 @@ export const MediaGallery = ({
           </Box>
         </Box>
       ) : (
-        /* Desktop: Grid layout */
+        /* Desktop/Grid layout */
         <Grid container spacing={isMobile ? 2 : 3}>
           {mediaItems.map(renderDesktopMediaItem)}
         </Grid>

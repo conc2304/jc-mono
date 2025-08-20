@@ -40,6 +40,7 @@ export const MediaGalleryPage = ({
           lazy={lazy}
           rootMargin={rootMargin}
           threshold={threshold}
+          allowMobileScrolling={false}
         />
       </Paper>
     </Container>
