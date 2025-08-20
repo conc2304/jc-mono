@@ -142,10 +142,6 @@ export const BottomPanel = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-export const MultiplexText = styled(Typography)(({ theme }) => ({
-  letterSpacing: '0.1em',
-}));
-
 export const SystemsText = styled(Typography)(({ theme }) => ({
   letterSpacing: '0.1em',
   marginTop: 4,

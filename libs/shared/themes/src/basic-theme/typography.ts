@@ -4,6 +4,7 @@ interface FontOptions {
   primary: string;
   secondary?: string;
   display?: string;
+  displayOutline?: string;
 }
 
 const TypographyTheme = (
@@ -16,6 +17,7 @@ const TypographyTheme = (
     primary,
     secondary = primary, // Fallback to primary if not provided
     display = primary, // Fallback to primary if not provided
+    displayOutline = display, // Fallback to primary if not provided
   } = fontConfig;
 
   return {
@@ -27,7 +29,14 @@ const TypographyTheme = (
     fontWeightBold: 700, // Updated to match TimeBurner bold weight
     display: {
       fontFamily: display,
-      fontWeight: 700, // Using Saiba/Ireon bold weight
+      fontWeight: 700,
+      fontSize: '3.5rem',
+      lineHeight: 1.14,
+      letterSpacing: '-0.02em',
+    },
+    displayOutline: {
+      fontFamily: displayOutline,
+      fontWeight: 700,
       fontSize: '3.5rem',
       lineHeight: 1.14,
       letterSpacing: '-0.02em',

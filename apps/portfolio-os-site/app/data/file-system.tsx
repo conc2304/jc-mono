@@ -1,4 +1,4 @@
-import { Folder, ImageIcon } from 'lucide-react'; // TODO replace with other icon library
+import { Folder } from 'lucide-react'; // TODO replace with other icon library
 import { v4 as uuidv4 } from 'uuid';
 import { resumeFile } from './resume-file';
 import { allPortfolioProjectFiles } from './project-files';

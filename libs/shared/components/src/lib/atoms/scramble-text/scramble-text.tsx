@@ -1,5 +1,5 @@
 'use client';
-import React, { memo, useRef, useCallback } from 'react';
+import React, { memo, useRef, useCallback, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
@@ -35,6 +35,9 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const hoverAnimationRef = useRef<gsap.core.Timeline | null>(null);
 
+  // Generate a unique ID for this component instance
+  const uniqueId = useMemo(() => Math.random().toString(36).substr(2, 9), []);
+
   // Function to get random character from scramble set
   const getRandomChar = () => {
     return scrambleCharSet[Math.floor(Math.random() * scrambleCharSet.length)];
@@ -55,9 +58,9 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
 
     const tl = gsap.timeline();
 
-    // Get all character spans
+    // Get all character spans with the unique ID
     const charElements = textElement.querySelectorAll(
-      '[class*="scramble-char-"]'
+      `[class*="scramble-char-${uniqueId}-"]`
     ) as NodeListOf<HTMLElement>;
 
     // Calculate the maximum length to handle different text lengths
@@ -69,7 +72,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
       // Add more character spans if needed
       for (let i = currentLength; i < maxLength; i++) {
         const charSpan = document.createElement('span');
-        charSpan.className = `scramble-char-${i}`;
+        charSpan.className = `scramble-char-${uniqueId}-${i}`;
         charSpan.style.display = 'inline-block';
         charSpan.style.width = 'auto';
         charSpan.style.overflow = 'hidden';
@@ -82,7 +85,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
 
     // Update charElements to include new spans
     const allCharElements = textElement.querySelectorAll(
-      '[class*="scramble-char-"]'
+      `[class*="scramble-char-${uniqueId}-"]`
     ) as NodeListOf<HTMLElement>;
 
     // Animate each character position
@@ -93,7 +96,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
       const fromChar = i < fromText.length ? fromText[i] : '';
       const toChar = i < toText.length ? toText[i] : '';
 
-      const charSelector = `.scramble-char-${i}`;
+      const charSelector = `.scramble-char-${uniqueId}-${i}`;
       const startTime = i * 0.02; // Slight stagger for effect
 
       // If characters are the same, just set directly without scrambling
@@ -150,7 +153,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
     // Hide extra characters if target text is shorter
     if (toText.length < fromText.length) {
       for (let i = toText.length; i < fromText.length; i++) {
-        const charSelector = `.scramble-char-${i}`;
+        const charSelector = `.scramble-char-${uniqueId}-${i}`;
         tl.set(
           charSelector,
           {
@@ -165,7 +168,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
     // Show characters if target text is longer
     if (toText.length > fromText.length) {
       for (let i = fromText.length; i < toText.length; i++) {
-        const charSelector = `.scramble-char-${i}`;
+        const charSelector = `.scramble-char-${uniqueId}-${i}`;
         tl.set(
           charSelector,
           {
@@ -197,7 +200,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
       // Play the animation
       hoverAnimation.play();
     },
-    [defaultText, hoverText, scrambleChars, scrambleDuration]
+    [defaultText, hoverText, scrambleChars, scrambleDuration, uniqueId]
   );
 
   // Initialize the component with character spans
@@ -220,7 +223,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
 
       for (let i = 0; i < maxLength; i++) {
         const charSpan = document.createElement('span');
-        charSpan.className = `scramble-char-${i}`;
+        charSpan.className = `scramble-char-${uniqueId}-${i}`;
         charSpan.textContent = i < defaultText.length ? defaultText[i] : '';
         charSpan.style.display = 'inline-block';
         charSpan.style.width = 'auto';
@@ -238,7 +241,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
     },
     {
       scope: containerRef,
-      dependencies: [defaultText, hoverText],
+      dependencies: [defaultText, hoverText, uniqueId],
     }
   );
 
@@ -251,11 +254,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
         cursor: 'pointer',
         transition: 'background-color 0.2s ease',
         padding: '2px 4px',
-        borderRadius: '2px',
         color: textColor,
-        '&:hover': {
-          backgroundColor: 'rgba(0, 255, 65, 0.05)',
-        },
         ...style,
       }}
       onMouseEnter={() => handleHover(true)}

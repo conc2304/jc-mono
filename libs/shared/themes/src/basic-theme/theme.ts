@@ -32,6 +32,7 @@ const typographyFallBack = getTypography({
   primary: `'TimeBurner', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
   secondary: `'Eightgon', Impact, 'Arial Black', 'Trebuchet MS', Arial, sans-serif`,
   display: `'Saiba', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
+  displayOutline: `'Saiba Outline', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
 });
 
 export const createThemeFromOptions = ({

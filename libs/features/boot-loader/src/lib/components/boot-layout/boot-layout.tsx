@@ -7,6 +7,7 @@ import {
   useMediaQuery,
   lighten,
   darken,
+  Stack,
 } from '@mui/material';
 import { TorusFieldProgressMemo } from '../torus-field-progress';
 import { BootText } from '../boot-text';
@@ -17,7 +18,6 @@ import {
   BottomPanel,
   BrowserFrame,
   RadarChartBox,
-  MultiplexText,
   TorusLoaderCardAug,
   ScanLinesOverlay,
   SystemsText,
@@ -39,7 +39,7 @@ import { ThemePickerPanel } from './molecules/theme-picker/theme-picker';
 
 import { Property } from 'csstype';
 import { BackgroundControls } from './molecules/background-controls/background-controls';
-import { AugmentedButton } from '@jc/ui-components';
+import { AugmentedButton, ScrambleText } from '@jc/ui-components';
 
 interface SciFiLayoutProps {
   className?: string;
@@ -70,6 +70,42 @@ const sampleData: RadarData = [
     { axis: 'e', value: 75, metricGroupName: '1' },
   ],
 ];
+
+const HeroText = () => (
+  <>
+    <ScrambleText
+      variant="h1"
+      color="primary"
+      defaultText="Jose Conchello"
+      hoverText="Powered by CLYZBY_OS"
+    />
+    <ScrambleText
+      variant="h3"
+      color="primary"
+      defaultText="Engineer & Artist"
+      hoverText="Creative Technologist"
+    />
+  </>
+);
+
+const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
+  <AugmentedButton
+    variant="contained"
+    shape="buttonRight"
+    fullWidth
+    size="large"
+    sx={{ flexGrow: 1, height: '100%' }}
+    href="/desktop"
+  >
+    <ScrambleText
+      variant="displayOutline"
+      defaultText="ENTER"
+      hoverText="???"
+      scrambleDuration={0.1}
+      fontSize={fontSize}
+    />
+  </AugmentedButton>
+);
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
   className = '',
@@ -140,6 +176,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           <Header compact={true} />
 
           {/* Mobile Content - Minimal Layout */}
+          <Stack sx={{ textAlign: 'center' }}>
+            <HeroText />
+          </Stack>
           <Box
             p={1}
             display="flex"
@@ -155,7 +194,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           >
             {/* Boot Text Panel - Takes most of the space */}
             <Box
-              // flex={1}
               data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
               sx={(theme) => ({
                 '&[data-augmented-ui]': {
@@ -215,19 +253,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
             <ThemePickerPanel />
 
-            <GifContainer url={cloudGif} sx={{ height: '15%' }} />
+            <GifContainer
+              url={cloudGif}
+              sx={{ minHeight: '15%', flexGrow: 1 }}
+            />
 
-            {/* Enter Button */}
-            <AugmentedButton
-              variant="contained"
-              shape="buttonRight"
-              fullWidth
-              size="large"
-              sx={{ flexGrow: 1 }}
-              href="/desktop"
-            >
-              <Typography variant="h2">ENTER</Typography>
-            </AugmentedButton>
+            <EnterButton />
           </Box>
         </BrowserFrame>
       </BootContainer>
@@ -330,7 +361,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 </Box>
               </Grid>
 
-              {/* Center Panel */}
+              {/* Right Panel */}
               <Grid size={{ xs: 7 }}>
                 <Box
                   display="flex"
@@ -361,9 +392,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
           <BottomPanel>
             <Grid container columns={12} spacing={4}>
-              <Grid size={7}>
-                <MultiplexText variant="h1">MULTIPLEX</MultiplexText>
-                <SystemsText variant="h1">SYSTEMS</SystemsText>
+              <Grid size={6}>
+                <Stack>
+                  <HeroText />
+                </Stack>
               </Grid>
 
               <BackgroundControls
@@ -378,17 +410,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 blendModeActive={backgroundBlendMode}
               />
 
-              <Grid size={{ xs: 3 }} sx={{ flex: 1 }}>
-                <AugmentedButton
-                  variant="contained"
-                  shape="buttonRight"
-                  fullWidth
-                  size="large"
-                  sx={{ height: '100%' }}
-                  href="/desktop"
-                >
-                  <Typography variant="h2">ENTER</Typography>
-                </AugmentedButton>
+              <Grid size={{ xs: 4 }} sx={{ flex: 1 }}>
+                <EnterButton fontSize={'2.25rem'} />
               </Grid>
             </Grid>
           </BottomPanel>
@@ -584,14 +607,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         <BottomPanel>
           <Grid container columns={12} spacing={4}>
             {/* Large Text Display */}
-            {/* TODO UPDATE THIS TEXT */}
-            <Grid size={8}>
-              <MultiplexText variant="h1" color="primary">
-                MULTIPLEX
-              </MultiplexText>
-              <SystemsText variant="h1" color="primary">
-                SYSTEMS
-              </SystemsText>
+            <Grid size={7}>
+              <Stack>
+                <HeroText />
+              </Stack>
             </Grid>
 
             {/* Control Icons */}
@@ -609,21 +628,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
             {/* Right Display */}
             <Grid
-              size={{ xs: 2 }}
+              size={{ xs: 3 }}
               sx={{
                 flex: 1,
               }}
             >
-              <AugmentedButton
-                variant="contained"
-                shape="buttonRight"
-                fullWidth
-                size="large"
-                sx={{ height: '100%' }}
-                href="/desktop"
-              >
-                <Typography variant="h1">ENTER</Typography>
-              </AugmentedButton>
+              <EnterButton />
             </Grid>
           </Grid>
         </BottomPanel>
