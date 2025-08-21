@@ -106,6 +106,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 }) => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'));
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const [progress, setProgress] = useState({
@@ -163,9 +164,16 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           backgroundRepeat: 'repeat',
           backgroundBlendMode: backgroundBlendMode,
         }}
+        sx={{
+          overflowY: 'auto',
+          height: [
+            '100vh', // Fallback
+            '100dvh', // Preferred value
+          ],
+        }}
       >
         <BrowserFrame elevation={0}>
-          <Header compact={true} />
+          {!isXs && <Header compact={true} />}
 
           {/* Mobile Content - Minimal Layout */}
           <Stack sx={{ textAlign: 'center' }}>
@@ -177,12 +185,14 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             flexDirection="column"
             gap={1}
             flex={1}
-            sx={{
-              height: [
-                '100vh', // Fallback
-                '100dvh', // Preferred value
-              ],
-            }}
+            sx={
+              {
+                // height: [
+                //   '100vh', // Fallback
+                //   '100dvh', // Preferred value
+                // ],
+              }
+            }
           >
             {/* Boot Text Panel - Takes most of the space */}
             <Box
@@ -249,7 +259,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
             <GifContainer
               url={cloudGif}
-              sx={{ minHeight: '15%', flexGrow: 1 }}
+              sx={{ minHeight: '15%', flexGrow: 0.5 }}
             />
 
             <EnterButton />
