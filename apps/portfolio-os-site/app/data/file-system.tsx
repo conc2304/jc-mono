@@ -7,6 +7,7 @@ import { BaseFileSystemItem } from '@jc/file-system';
 
 import { SettingsFileSystem } from './settings-files';
 import { iOSImageGallery } from './photo-gallery/iOS-Made-File-Item';
+import { ProjectsTileContent } from '@jc/ui-components';
 
 const fontSize = '80px';
 
@@ -21,10 +22,22 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
     path: '/Projects',
     metadata: { tags: [], favorite: true },
     children: [...allPortfolioProjectFiles],
+    tileRenderer: {
+      component: ProjectsTileContent,
+      config: {
+        size: 'large',
+        color: '#FF0000',
+        showLiveContent: false,
+        updateInterval: 5000,
+      },
+    },
+    tileData: allPortfolioProjectFiles.map(
+      (projectData) => projectData.fileData
+    ),
   },
-  resumeFile,
-  iOSImageGallery,
-  SettingsFileSystem,
+  // resumeFile,
+  // iOSImageGallery,
+  // SettingsFileSystem,
 ];
 
 export const FileSystem = setFileSystemHierarchy(unMappedFileSystem);

@@ -77,6 +77,7 @@ export const LiveTile = memo<LiveTileProps>(
     type = 'file',
   }) => {
     const theme = useTheme();
+    const isSm = theme.breakpoints.down('md');
     const { handleIconMouseDown, draggedIcon } = useIconDrag();
     const { openWindow } = useWindowActions();
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -113,7 +114,7 @@ export const LiveTile = memo<LiveTileProps>(
     const getTileSize = () => {
       switch (config.size) {
         case 'large':
-          return { width: 320, height: 240 };
+          return { width: isSm ? 'calc(100% - 40px)' : 320, height: 340 };
         case 'medium':
           return { width: 240, height: 150 };
         case 'small':
@@ -128,6 +129,7 @@ export const LiveTile = memo<LiveTileProps>(
 
     return (
       <TileContainer
+        className="LiveTile--root"
         data-icon-id={id}
         effectiveIsDragging={effectiveIsDragging}
         tileSize={tileSize}
@@ -171,7 +173,7 @@ export const LiveTile = memo<LiveTileProps>(
             }}
           >
             {/* Header */}
-            <Box
+            {/* <Box
               display="flex"
               alignItems="center"
               justifyContent="space-between"
@@ -196,8 +198,7 @@ export const LiveTile = memo<LiveTileProps>(
                 size={16}
                 style={{ color: alpha(theme.palette.common.white, 0.6) }}
               />
-            </Box>
-
+            </Box> */}
             {/* Dynamic Content Area */}
             <Box display="flex" flexDirection="column" flex={1}>
               <ContentComponent
@@ -214,7 +215,6 @@ export const LiveTile = memo<LiveTileProps>(
                 {...(renderer.props || {})}
               />
             </Box>
-
             {/* Footer */}
             <Box
               display="flex"

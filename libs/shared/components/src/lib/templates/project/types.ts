@@ -10,6 +10,7 @@ interface ProjectCore {
   projectSubtitle?: string;
   slug?: string; // URL-friendly version, auto-generated if not provided
 }
+
 interface ProjectBasics {
   type: 'professional' | 'graduate' | 'personal' | 'school';
   category:

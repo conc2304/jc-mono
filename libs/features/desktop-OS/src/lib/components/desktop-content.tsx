@@ -37,8 +37,8 @@ const DesktopContent = () => {
       })}
     >
       {/* Desktop Icons */}
-      {desktopItems.map((icon) => {
-        const position = desktopItemPositions[icon.id] || { x: 0, y: 0 };
+      {desktopItems.map((dItem) => {
+        const position = desktopItemPositions[dItem.id] || { x: 0, y: 0 };
 
         return (
           // <DesktopIcon
@@ -50,12 +50,18 @@ const DesktopContent = () => {
           //   isDragging={draggedIcon === icon.id}
           // />
           <LiveTile
-            key={icon.id}
-            id={icon.id}
-            name={icon.name}
-            icon={icon.icon}
+            key={dItem.id}
+            id={dItem.id}
+            name={dItem.name}
+            icon={dItem.icon}
             position={position}
-            isDragging={draggedIcon === icon.id}
+            isDragging={draggedIcon === dItem.id}
+            tileRenderer={dItem.tileRenderer}
+            tileData={dItem.tileData}
+            metadata={dItem.metadata}
+            dateModified={dItem.dateModified}
+            size={dItem.size}
+            type={dItem.type}
           />
         );
       })}
