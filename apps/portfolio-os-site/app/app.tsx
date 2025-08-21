@@ -107,8 +107,8 @@ export default function App() {
   ];
 
   return (
-    <Box>
-      <BootLayout bootMessages={bootMessages} />
-    </Box>
+    // <Box>
+    <BootLayout bootMessages={bootMessages} />
+    // </Box>
   );
 }

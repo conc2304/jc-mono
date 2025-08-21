@@ -2,9 +2,8 @@ import React from 'react';
 import { alpha, Box } from '@mui/material';
 
 import { FileSystemIcon } from './file-system-icon';
-import { useIconDrag, useWindowActions, useWindowManager } from '../../context';
+import { useIconDrag, useWindowActions } from '../../context';
 import { DesktopIconMetaData } from '../../types';
-import { useScrollAwareClick } from '../../hooks';
 
 interface DesktopIconProps extends DesktopIconMetaData {
   position: { x: number; y: number };
