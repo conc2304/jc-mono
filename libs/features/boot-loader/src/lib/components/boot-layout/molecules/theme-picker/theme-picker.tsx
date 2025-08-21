@@ -44,10 +44,18 @@ const StatusIcon = styled(Box)<{}>(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-export const ThemePickerPanel = () => {
+export const ThemePickerPanel = ({
+  compact = false,
+  compactMenu = false,
+  compactToggle = false,
+}: {
+  compact?: boolean;
+  compactMenu?: boolean;
+  compactToggle?: boolean;
+}) => {
   const { currentTheme } = useEnhancedTheme();
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSm = useMediaQuery(theme.breakpoints.down('sm')) || compact;
 
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -141,7 +149,11 @@ export const ThemePickerPanel = () => {
             },
           })}
         >
-          <PickerPanel />
+          <PickerPanel
+            compact={compact}
+            compactMenu={compactMenu}
+            compactToggle={compactToggle}
+          />
         </Box>
       </Dialog>
     </>

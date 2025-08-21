@@ -250,7 +250,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
       ref={containerRef}
       className={`scramble-text-container ${className}`}
       sx={{
-        display: 'inline-block',
+        // display: 'inline-block',
         cursor: 'pointer',
         transition: 'background-color 0.2s ease',
         padding: '2px 4px',

@@ -67,30 +67,43 @@
 
 // export default App;
 
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import {
   DefaultBootMessage,
   ThemedBootMessages,
   BootLayout,
+  MobileThemedBootMessages,
+  MobileDefaultBootMessage,
 } from '@jc/boot-loader';
 import { useEnhancedTheme } from '@jc/themes';
 import { randomInt } from 'd3';
 
 export default function App() {
+  const theme = useTheme();
+  const isSm = theme.breakpoints.down('sm');
+
   const { currentThemeId } = useEnhancedTheme();
-  const numGenerator = randomInt(ThemedBootMessages[currentThemeId].length - 1); // set max to length
-  const initialMessage = '> Reinitializing new identity ...';
+
+  const messageBankByScreenSize = isSm
+    ? MobileThemedBootMessages
+    : ThemedBootMessages;
+  const fallbackMessages = isSm ? MobileDefaultBootMessage : DefaultBootMessage;
+
+  const numGenerator = randomInt(
+    messageBankByScreenSize[currentThemeId].length
+  ); // set max to length
+
+  const initialMessage = 'Reinitializing new identity ...';
   const newLine = '';
 
   const bootMessagesThemed =
-    ThemedBootMessages[currentThemeId][numGenerator()] || DefaultBootMessage;
+    messageBankByScreenSize[currentThemeId][numGenerator()] || fallbackMessages;
 
   const bootMessages = [
     initialMessage,
     ...bootMessagesThemed.slice(0, -1),
     newLine,
     bootMessagesThemed[bootMessagesThemed.length - 1],
-    newLine,
   ];
 
   return (

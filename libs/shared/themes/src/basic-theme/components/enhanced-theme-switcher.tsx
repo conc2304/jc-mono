@@ -224,6 +224,8 @@ export interface EnhancedThemeSwitcherProps {
   onThemeChange: (themeId: string, theme: EnhancedThemeOption) => void;
   showModeToggle?: boolean;
   compact?: boolean;
+  compactToggle?: boolean;
+  compactMenu?: boolean;
 }
 
 export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
@@ -232,6 +234,8 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
   onThemeChange,
   showModeToggle = true,
   compact = false,
+  compactToggle = false,
+  compactMenu = false,
 }) => {
   const theme = useTheme();
   const { mode, setMode, resolvedMode, systemMode } = useColorMode();
@@ -295,7 +299,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
       },
     ];
 
-    if (compact) {
+    if (compactToggle) {
       return (
         <Stack direction="row" spacing={0.5}>
           {modeButtons.map(
@@ -370,16 +374,18 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
     return true;
   });
 
-  if (compact) {
+  if (compactMenu) {
     return (
       <Box sx={{ position: 'relative' }}>
         <MainPanel sx={{ p: 2 }}>
           <Stack
-            direction="row"
+            // direction="row"
             spacing={2}
             alignItems="center"
             sx={{ position: 'relative', zIndex: 2 }}
           >
+            {renderModeToggle()}
+
             <CyberFormControl size="small" sx={{ minWidth: 180 }}>
               <Select
                 value={selectedThemeId}
@@ -402,6 +408,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                 {availableThemes.map((themeOption) => (
                   <CyberMenuItem key={themeOption.id} value={themeOption.id}>
                     <Box
+                      className="ThemePicker-Compact--MenuItem"
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -425,7 +432,6 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                 ))}
               </Select>
             </CyberFormControl>
-            {renderModeToggle()}
           </Stack>
         </MainPanel>
       </Box>

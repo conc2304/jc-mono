@@ -216,6 +216,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 hoverScrambleDuration={0.5}
                 onProgress={handleProgress}
                 onComplete={handleBootComplete}
+                textWrapMode="ellipsis"
+                flex={0}
               />
 
               <Box
@@ -224,7 +226,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   height: '100%',
                   width: '100%',
                   top: 0,
-                  zIndex: 0,
+                  zIndex: -1,
                   opacity: 0.5,
                 }}
               >
@@ -243,7 +245,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               </Box>
             </Box>
 
-            <ThemePickerPanel />
+            <ThemePickerPanel compactMenu />
 
             <GifContainer
               url={cloudGif}
@@ -313,6 +315,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       hoverScrambleDuration={0.5}
                       onProgress={handleProgress}
                       onComplete={handleBootComplete}
+                      textWrapMode="wrap"
                     />
                   </Box>
                   <RadarChartBox flex={1}>

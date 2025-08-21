@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
-import { alpha, Box } from '@mui/system';
+import { alpha, Box, useMediaQuery, useTheme } from '@mui/system';
 import { BootMessage } from '../../types';
 import { Property } from 'csstype';
 
@@ -27,8 +27,17 @@ interface BootTextProps {
   scrambleDuration?: number;
   charDelay?: number;
   scrambleCharSet?: string;
-  hoverScrambleChars?: number; // Number of characters to cycle through on hover
-  hoverScrambleDuration?: number; // Duration of scrambling on hover
+  hoverScrambleChars?: number;
+  hoverScrambleDuration?: number;
+
+  // Flex properties for flexibility
+  flex?: string | number; // Allow custom flex value
+  maxHeight?: string | number; // Maximum height for scrolling
+  minHeight?: string | number; // Minimum height
+  autoScroll?: boolean; // Enable terminal-style scrolling
+
+  // Text wrapping behavior
+  textWrapMode?: 'ellipsis' | 'wrap' | 'nowrap'; // How to handle long text
 
   onComplete?: () => void;
   onProgress?: (current: number, total: number, message: string) => void;
@@ -52,10 +61,59 @@ const BootTextInner: React.FC<BootTextProps> = ({
     left: '4px',
     top: '-2px',
   },
+  // Flex defaults
+  flex = 1, // Default to flex: 1 for most use cases
+  maxHeight, // No default - let flex container decide
+  minHeight = 0, // Critical: allow shrinking below content size to prevent overflow
+  autoScroll = true,
+  textWrapMode = 'ellipsis', // Default to ellipsis behavior
   onComplete,
   onProgress,
 }) => {
-  // const theme = useTheme();
+  const theme = useTheme();
+
+  // Mobile breakpoint detection
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
+  const getFontSize = () => {
+    if (isMobile) return '0.75rem';
+    if (isTablet) return '1rem';
+    return '1rem';
+  };
+
+  const getMaxHeight = () => {
+    if (maxHeight) return maxHeight;
+    // For flex containers, we need to ensure the component doesn't grow beyond available space
+    return '100%'; // Use available space from flex container
+  };
+
+  // Get text wrapping styles based on mode
+  const getTextWrapStyles = () => {
+    switch (textWrapMode) {
+      case 'wrap':
+        return {
+          whiteSpace: 'normal' as const,
+          overflow: 'visible' as const,
+          textOverflow: 'unset' as const,
+          wordBreak: 'break-word' as const,
+        };
+      case 'nowrap':
+        return {
+          whiteSpace: 'nowrap' as const,
+          overflow: 'hidden' as const,
+          textOverflow: 'unset' as const,
+        };
+      case 'ellipsis':
+      default:
+        return {
+          whiteSpace: 'nowrap' as const,
+          overflow: 'hidden' as const,
+          textOverflow: 'ellipsis' as const,
+        };
+    }
+  };
+
   const containerRef = useRef<HTMLDivElement>(null);
   const currentLineRef = useRef<number>(0);
   const hoverAnimationsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
@@ -67,6 +125,22 @@ const BootTextInner: React.FC<BootTextProps> = ({
   // Update refs when callbacks change
   onCompleteRef.current = onComplete;
   onProgressRef.current = onProgress;
+
+  // Auto-scroll function for terminal behavior
+  const scrollToBottom = useCallback(() => {
+    if (!autoScroll || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    if (scrollHeight > clientHeight) {
+      container.scrollTo({
+        top: scrollHeight - clientHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [autoScroll]);
 
   // Helper function to normalize boot messages
   const normalizeBootMessage = (message: BootMessage): [string, string?] => {
@@ -434,6 +508,8 @@ const BootTextInner: React.FC<BootTextProps> = ({
               bootMessages.length,
               defaultMessage
             );
+            // Auto-scroll after each message completes
+            scrollToBottom();
           }
         );
 
@@ -468,6 +544,11 @@ const BootTextInner: React.FC<BootTextProps> = ({
         scrambleCharSet,
         hoverScrambleChars,
         hoverScrambleDuration,
+        flex,
+        maxHeight,
+        minHeight,
+        autoScroll,
+        textWrapMode,
       ],
     }
   );
@@ -477,16 +558,36 @@ const BootTextInner: React.FC<BootTextProps> = ({
       ref={containerRef}
       className={`boot-text-container ${className}`}
       sx={(theme) => ({
-        fontFamily: '"JetBrains Mono", monospace', // TODO REPLACE WITH NEW FONT
-        color: textColor,
-        padding: 2.5,
-        width: '100%',
-        height: '100%',
+        // Flex properties for flexibility - CRITICAL for preventing overflow
+        flex: flex,
+        minHeight: 0, // Allow flex item to shrink below content size
+        maxHeight: getMaxHeight(),
 
-        fontSize: '16px',
+        // Layout properties
+        display: 'flex',
+        flexDirection: 'column',
+        alignSelf: 'stretch', // Stretch to fill cross-axis
+
+        // Typography and visual
+        fontFamily: '"JetBrains Mono", monospace',
+        color: textColor,
+        fontSize: getFontSize(),
         lineHeight: 1.4,
-        overflow: 'hidden',
+        padding: 2.5,
+
+        // CRITICAL: Overflow behavior to prevent container growth
+        overflow: 'hidden auto',
         position: 'relative',
+
+        // Ensure the component doesn't grow beyond its container
+        flexShrink: 1, // Allow shrinking
+        flexGrow: flex === 1 ? 1 : 0, // Only grow if explicitly set to flex: 1
+
+        // Hide scrollbar for clean terminal look
+        scrollbarWidth: 'none', // Firefox
+        '&::-webkit-scrollbar': {
+          display: 'none', // Chrome, Safari, Edge
+        },
 
         '&::before': {
           content: '""',
@@ -495,25 +596,10 @@ const BootTextInner: React.FC<BootTextProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          background:
-            'radial-gradient(ellipse at center, rgba(0,255,65,0.03) 0%, transparent 70%)',
+          // background: 'red',
+          // background:
+          // 'radial-gradient(ellipse at center, rgba(0,255,65,0.03) 0%, transparent 70%)',
           pointerEvents: 'none',
-
-          '& .boot-message': {
-            fontFamily: '"JetBrains Mono", monospace',
-            color: textColor,
-            whiteSpace: 'pre',
-            display: 'flex',
-            alignItems: 'flex-start',
-          },
-
-          '& .boot-cursor': {
-            color: textColor,
-            marginLeft: String(cursorAdjustment?.left ?? ''),
-            marginTop: String(cursorAdjustment?.top ?? ''),
-            marginBottom: String(cursorAdjustment?.bottom ?? ''),
-            marginRight: String(cursorAdjustment?.right ?? ''),
-          },
         },
 
         boxShadow: `inset 0 0 20px ${alpha(textColor, 0.1)}`,
@@ -523,10 +609,20 @@ const BootTextInner: React.FC<BootTextProps> = ({
           margin: 0,
           padding: '2px 4px',
           borderRadius: '2px',
+          minHeight: '1.4em', // Consistent line height
+          ...getTextWrapStyles(), // Apply text wrapping styles based on mode
+        },
+
+        '& .boot-cursor': {
+          color: textColor,
+          marginLeft: String(cursorAdjustment?.left ?? ''),
+          marginTop: String(cursorAdjustment?.top ?? ''),
+          marginBottom: String(cursorAdjustment?.bottom ?? ''),
+          marginRight: String(cursorAdjustment?.right ?? ''),
         },
       })}
     >
-      {/* NOTE - Content will be dynamically generated here */}
+      {/* Content will be dynamically generated here */}
     </Box>
   );
 };

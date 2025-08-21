@@ -1,6 +1,14 @@
 import { EnhancedThemeSwitcher, useEnhancedTheme } from '@jc/themes';
 
-export const PickerPanel = () => {
+export const PickerPanel = ({
+  compact = false,
+  compactMenu = false,
+  compactToggle = false,
+}: {
+  compact?: boolean;
+  compactMenu?: boolean;
+  compactToggle?: boolean;
+}) => {
   const { themes, currentThemeId, changeTheme } = useEnhancedTheme();
 
   return (
@@ -9,7 +17,9 @@ export const PickerPanel = () => {
       selectedThemeId={currentThemeId}
       onThemeChange={(themeId, theme) => changeTheme(themeId)}
       showModeToggle={true}
-      compact={false}
+      compact={compact}
+      compactMenu={compactMenu}
+      compactToggle={compactToggle}
     />
   );
 };
