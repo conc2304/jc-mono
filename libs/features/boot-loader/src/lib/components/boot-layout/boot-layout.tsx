@@ -166,11 +166,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         }}
         sx={{
           overflowY: 'auto',
-          height: [
-            '100%',
-            // '100vh', // Fallback
-            // '100dvh', // Preferred value
-          ],
+          height: '100%',
         }}
       >
         <BrowserFrame elevation={0}>
@@ -180,21 +176,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           <Stack sx={{ textAlign: 'center' }}>
             <HeroText />
           </Stack>
-          <Box
-            p={1}
-            display="flex"
-            flexDirection="column"
-            gap={1}
-            flex={1}
-            sx={
-              {
-                // height: [
-                //   '100vh', // Fallback
-                //   '100dvh', // Preferred value
-                // ],
-              }
-            }
-          >
+          <Box p={1} display="flex" flexDirection="column" gap={1} flex={1}>
             {/* Boot Text Panel - Takes most of the space */}
             <Box
               data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"

@@ -89,7 +89,7 @@ export default function App() {
     : ThemedBootMessages;
   const fallbackMessages = isSm ? MobileDefaultBootMessage : DefaultBootMessage;
 
-  const numGenerator = randomInt(
+  const getRandomMessageIndexFn = randomInt(
     messageBankByScreenSize[currentThemeId].length
   ); // set max to length
 
@@ -97,7 +97,8 @@ export default function App() {
   const newLine = '';
 
   const bootMessagesThemed =
-    messageBankByScreenSize[currentThemeId][numGenerator()] || fallbackMessages;
+    messageBankByScreenSize[currentThemeId][getRandomMessageIndexFn()] ||
+    fallbackMessages;
 
   const bootMessages = [
     initialMessage,
@@ -106,9 +107,5 @@ export default function App() {
     bootMessagesThemed[bootMessagesThemed.length - 1],
   ];
 
-  return (
-    // <Box>
-    <BootLayout bootMessages={bootMessages} />
-    // </Box>
-  );
+  return <BootLayout bootMessages={bootMessages} />;
 }
