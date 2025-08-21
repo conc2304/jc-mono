@@ -1,0 +1,58 @@
+import { Star } from '@mui/icons-material';
+import { alpha, Box, Typography, useTheme } from '@mui/material';
+import { TileContentProps } from './live-tile';
+
+export const DefaultTileContent: React.FC<TileContentProps> = ({
+  name,
+  icon,
+  size,
+  dateModified,
+  metadata,
+  isLarge,
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+    >
+      {!isLarge && (
+        <>
+          <Typography variant="h3" fontWeight="bold" noWrap sx={{ mb: 0.5 }}>
+            {name}
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: alpha(theme.palette.common.white, 0.8),
+              fontSize: '0.65rem',
+            }}
+          >
+            {size ? `${Math.round(size / 1024)} KB` : 'File'}
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: alpha(theme.palette.common.white, 0.7),
+              fontSize: '0.65rem',
+              mt: 0.5,
+            }}
+          >
+            {dateModified?.toLocaleDateString() || 'Recent'}
+          </Typography>
+        </>
+      )}
+      {metadata?.favorite && (
+        <Star
+          // size=''
+          style={{ marginTop: 8, color: '#fbbf24' }}
+          fill="currentColor"
+        />
+      )}
+    </Box>
+  );
+};
