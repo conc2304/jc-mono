@@ -167,8 +167,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         sx={{
           overflowY: 'auto',
           height: [
-            '100vh', // Fallback
-            '100dvh', // Preferred value
+            '100%',
+            // '100vh', // Fallback
+            // '100dvh', // Preferred value
           ],
         }}
       >
