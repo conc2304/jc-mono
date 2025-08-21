@@ -11,7 +11,6 @@ export const SettingsFileSystem: FileSystemItem<{}, {}> = {
   dateModified: new Date('2024-01-25'),
   dateCreated: new Date('2024-01-01'),
   path: '/Settings',
-  permissions: { read: true, write: true, execute: true },
   metadata: { tags: ['development'], favorite: true },
   children: [],
   fileData: {},

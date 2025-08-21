@@ -1,5 +1,6 @@
 import {
   DesktopIcon,
+  LiveTile,
   TaskBar,
   useWindowManager,
   Window,
@@ -10,13 +11,13 @@ import { useMemo } from 'react';
 
 export // Inner component that uses the context
 const DesktopContent = () => {
-  const { windows, iconPositions, fileSystemItems, draggedIcon } =
+  const { windows, desktopItemPositions, fileSystemItems, draggedIcon } =
     useWindowManager();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
   // Get desktop icons (root-level items only)
-  const desktopIcons = useMemo(() => {
+  const desktopItems = useMemo(() => {
     return fileSystemItems.filter((item) => !item.parentId);
   }, [fileSystemItems]);
 
@@ -36,10 +37,19 @@ const DesktopContent = () => {
       })}
     >
       {/* Desktop Icons */}
-      {desktopIcons.map((icon) => {
-        const position = iconPositions[icon.id] || { x: 0, y: 0 };
+      {desktopItems.map((icon) => {
+        const position = desktopItemPositions[icon.id] || { x: 0, y: 0 };
+
         return (
-          <DesktopIcon
+          // <DesktopIcon
+          //   key={icon.id}
+          //   id={icon.id}
+          //   name={icon.name}
+          //   icon={icon.icon}
+          //   position={position}
+          //   isDragging={draggedIcon === icon.id}
+          // />
+          <LiveTile
             key={icon.id}
             id={icon.id}
             name={icon.name}

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { IconPosition, WindowProvider } from '@jc/ui-components';
+import { ItemPosition, WindowProvider } from '@jc/ui-components';
 
-import { generateDefaultIconPositions } from '../utils';
+import { generateDefaultDesktopItemPositions } from '../utils';
 import { BaseFileSystemItem, NavigationGroup } from '@jc/file-system';
 import { DesktopContent } from './desktop-content';
 
@@ -9,7 +9,7 @@ type DesktopOSProps = {
   fileSystem?: BaseFileSystemItem[];
   navigationGroups?: NavigationGroup[];
   iconArrangement?: 'linear' | 'grid' | 'circular';
-  customIconPositions?: Record<string, IconPosition>;
+  customDesktopItemPositions?: Record<string, ItemPosition>;
 };
 
 // Main component that provides the context
@@ -17,20 +17,20 @@ export const DesktopOS = ({
   fileSystem = [],
   navigationGroups = [],
   iconArrangement = 'linear',
-  customIconPositions,
+  customDesktopItemPositions,
 }: DesktopOSProps) => {
   // Generate default icon positions
-  const defaultIconPositions = useMemo(() => {
-    if (customIconPositions) {
-      return customIconPositions;
+  const defaultDesktopItemPositions = useMemo(() => {
+    if (customDesktopItemPositions) {
+      return customDesktopItemPositions;
     }
-    return generateDefaultIconPositions(fileSystem, iconArrangement);
-  }, [fileSystem, iconArrangement, customIconPositions]);
+    return generateDefaultDesktopItemPositions(fileSystem, iconArrangement);
+  }, [fileSystem, iconArrangement, customDesktopItemPositions]);
 
   return (
     <WindowProvider
       fileSystemItems={fileSystem}
-      defaultIconPositions={defaultIconPositions}
+      defaultDesktopItemPositions={defaultDesktopItemPositions}
       navigationGroups={navigationGroups}
     >
       <DesktopContent />

@@ -20,7 +20,6 @@ export const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
   dateCreated: new Date('2024-01-10'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: ['work', 'important'],
     favorite: true,

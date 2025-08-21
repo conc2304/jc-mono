@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 
-export interface DesktopIconMetaData {
+export interface DesktopItemMetaData {
   id: string;
   name: string;
   icon: ReactNode;
 }
 
-export interface IconPosition {
+export interface ItemPosition {
   x: number;
   y: number;
 }

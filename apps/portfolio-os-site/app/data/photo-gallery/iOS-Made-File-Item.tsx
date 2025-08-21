@@ -15,7 +15,6 @@ export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
   dateCreated: new Date('2021-03-01'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: false, execute: false },
   metadata: {
     tags: [],
     favorite: true,

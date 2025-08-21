@@ -1,6 +1,6 @@
 export interface ImageMediaData {
-  relativePath: string;
-  url: string;
+  // relativePath: string;
+  // url: string;
   src: string;
   srcSet?: string;
   sizes?: string;

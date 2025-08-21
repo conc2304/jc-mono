@@ -1,5 +1,5 @@
 // Desktop OS Utilities
-import { IconPosition } from '@jc/ui-components';
+import { ItemPosition } from '@jc/ui-components';
 import { FileSystemItem } from '@jc/file-system';
 
 export const snapToGrid = (x: number, y: number, gridSize = 20) => {
@@ -12,7 +12,7 @@ export const snapToGrid = (x: number, y: number, gridSize = 20) => {
 // Default position generator function
 export const defaultPositionGenerator = (
   items: FileSystemItem[]
-): Record<string, IconPosition> => {
+): Record<string, ItemPosition> => {
   return items.reduce((acc, item, index) => {
     // Only create positions for root-level items (desktop icons)
     if (!item.parentId) {
@@ -22,12 +22,12 @@ export const defaultPositionGenerator = (
       };
     }
     return acc;
-  }, {} as Record<string, IconPosition>);
+  }, {} as Record<string, ItemPosition>);
 };
 
 export const gridPositionGenerator = (
   items: FileSystemItem[]
-): Record<string, IconPosition> => {
+): Record<string, ItemPosition> => {
   const ICON_SIZE = 80; // Icon width + margin
   const GRID_MARGIN = 20;
   const ICONS_PER_COLUMN = Math.floor((window.innerHeight - 100) / ICON_SIZE); // Account for taskbar
@@ -44,25 +44,25 @@ export const gridPositionGenerator = (
       };
     }
     return acc;
-  }, {} as Record<string, IconPosition>);
+  }, {} as Record<string, ItemPosition>);
 };
 
 export const positionGenerators = {
   // Linear arrangement (your original)
-  linear: (items: FileSystemItem[]): Record<string, IconPosition> => {
+  linear: (items: FileSystemItem[]): Record<string, ItemPosition> => {
     return items.reduce((acc, item, index) => {
       if (!item.parentId) {
         acc[item.id] = { x: 50, y: 50 + index * 100 };
       }
       return acc;
-    }, {} as Record<string, IconPosition>);
+    }, {} as Record<string, ItemPosition>);
   },
 
   // Grid arrangement
   grid: gridPositionGenerator,
 
   // Circular arrangement
-  circular: (items: FileSystemItem[]): Record<string, IconPosition> => {
+  circular: (items: FileSystemItem[]): Record<string, ItemPosition> => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     const radius = 200;
@@ -79,26 +79,26 @@ export const positionGenerators = {
         };
       }
       return acc;
-    }, {} as Record<string, IconPosition>);
+    }, {} as Record<string, ItemPosition>);
   },
 
   // Left edge arrangement
-  leftEdge: (items: FileSystemItem[]): Record<string, IconPosition> => {
+  leftEdge: (items: FileSystemItem[]): Record<string, ItemPosition> => {
     return items.reduce((acc, item, index) => {
       if (!item.parentId) {
         const rootIndex = Object.keys(acc).length;
         acc[item.id] = { x: 20, y: 20 + rootIndex * 90 };
       }
       return acc;
-    }, {} as Record<string, IconPosition>);
+    }, {} as Record<string, ItemPosition>);
   },
 };
 
 // Helper to generate default icon positions
-export const generateDefaultIconPositions = (
+export const generateDefaultDesktopItemPositions = (
   fileSystem: FileSystemItem[],
   arrangement: 'linear' | 'grid' | 'circular' = 'linear'
-): Record<string, IconPosition> => {
+): Record<string, ItemPosition> => {
   const rootItems = fileSystem.filter((item) => !item.parentId);
 
   switch (arrangement) {
@@ -118,7 +118,7 @@ export const generateDefaultIconPositions = (
           y: GRID_MARGIN + row * ICON_SIZE,
         };
         return acc;
-      }, {} as Record<string, IconPosition>);
+      }, {} as Record<string, ItemPosition>);
     }
 
     case 'circular': {
@@ -133,13 +133,13 @@ export const generateDefaultIconPositions = (
           y: centerY + Math.sin(angle) * radius - 40,
         };
         return acc;
-      }, {} as Record<string, IconPosition>);
+      }, {} as Record<string, ItemPosition>);
     }
 
     default: // linear (your original)
       return rootItems.reduce((acc, item, index) => {
         acc[item.id] = { x: 50, y: 50 + index * 100 };
         return acc;
-      }, {} as Record<string, IconPosition>);
+      }, {} as Record<string, ItemPosition>);
   }
 };

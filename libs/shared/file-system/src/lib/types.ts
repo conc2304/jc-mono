@@ -1,4 +1,6 @@
 import { ComponentType, ReactNode } from 'react';
+import { ImageMediaData, TileContentProps } from '@jc/ui-components';
+import { Property } from 'csstype';
 
 export interface BaseFileSystemItem {
   id: string;
@@ -13,25 +15,18 @@ export interface BaseFileSystemItem {
   path: string;
   parentId?: string | null;
   children?: BaseFileSystemItem[];
-  permissions: {
-    read: boolean;
-    write: boolean;
-    execute: boolean;
-  };
-  metadata: {
-    description?: string;
-    tags: string[];
-    favorite: boolean;
-    thumbnail?: {
-      url: string;
-      src: string;
-      srcSet?: string;
-      sizes?: string;
-      alt: string;
-      caption?: string;
-    };
-    customProperties?: Record<string, any>;
-  };
+  metadata: FileSystemMetaData;
+
+  tileRenderer?: TileRenderer<any, any>;
+  tileData?: any; // Custom data for the tile
+}
+
+export interface FileSystemMetaData {
+  description?: string;
+  tags: string[];
+  favorite: boolean;
+  thumbnail?: ImageMediaData;
+  customProperties?: Record<string, any>;
 }
 
 // Navigation context interface that any file can implement
@@ -65,4 +60,29 @@ export interface FileSystemItem<TData = {}, TProps = {}>
 
   // Renderer configuration (only for files with data)
   renderer?: FileRenderer<TData, TProps>;
+}
+
+// Generic Desktop Tile Item
+export interface TileConfig {
+  size: 'small' | 'medium' | 'large'; // 1x1, 1x2, 2x2
+  color:
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'warning'
+    | 'info'
+    | 'success'
+    | Property.BackgroundColor;
+  showLiveContent?: boolean;
+  updateInterval?: number; // ms for content rotation
+}
+
+export interface TileRenderer<TData = {}, TProps = {}> {
+  component: React.ComponentType<TileContentProps<TData> & TProps>;
+  props?: TProps;
+  config: TileConfig;
+}
+export interface DesktopTile<TData = {}, TProps = {}> {
+  tileRenderer?: TileRenderer<TData, TProps>;
+  tileData?: TData;
 }

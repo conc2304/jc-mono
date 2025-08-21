@@ -1,4 +1,4 @@
-import { FileSystemItem } from '@jc/ui-components';
+import { FileSystemItem } from '@jc/file-system';
 
 export function setFileSystemHierarchy<T = any, P = any>(
   items: FileSystemItem<T, P>[],

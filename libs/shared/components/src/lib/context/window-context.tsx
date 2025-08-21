@@ -12,7 +12,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { remToPixels } from '@jc/themes';
 
 import { FileManager } from '../organisms/file-manager';
-import { WindowMetaData, IconPosition } from '../types';
+import { WindowMetaData, ItemPosition } from '../types';
 import { findFileSystemItemByIdWithPath } from '../utils';
 import {
   FileSystemItem,
@@ -45,7 +45,7 @@ interface WindowState {
   windows: AnimatedWindowMetaData[];
   draggedWindow: string | null;
   windowZIndex: number;
-  iconPositions: Record<string, IconPosition>;
+  desktopItemPositions: Record<string, ItemPosition>;
   draggedIcon: string | null;
   fileSystemItems: FileSystemItem[];
 }
@@ -93,8 +93,8 @@ interface WindowActions {
 
   // State setters (for internal use)
   setWindows: React.Dispatch<React.SetStateAction<AnimatedWindowMetaData[]>>;
-  setIconPositions: React.Dispatch<
-    React.SetStateAction<Record<string, IconPosition>>
+  setDesktopItemPositions: React.Dispatch<
+    React.SetStateAction<Record<string, ItemPosition>>
   >;
   setDraggedWindow: React.Dispatch<React.SetStateAction<string | null>>;
   setDraggedIcon: React.Dispatch<React.SetStateAction<string | null>>;
@@ -115,11 +115,11 @@ export const WindowProvider: React.FC<{
   children: React.ReactNode;
   fileSystemItems: FileSystemItem[];
   navigationGroups?: NavigationGroup[];
-  defaultIconPositions?: Record<string, IconPosition>;
+  defaultDesktopItemPositions?: Record<string, ItemPosition>;
 }> = ({
   children,
   fileSystemItems,
-  defaultIconPositions = {},
+  defaultDesktopItemPositions = {},
   navigationGroups = [],
 }) => {
   const theme = useTheme();
@@ -130,8 +130,9 @@ export const WindowProvider: React.FC<{
   const [windows, setWindows] = useState<AnimatedWindowMetaData[]>([]);
   const [draggedWindow, setDraggedWindow] = useState<string | null>(null);
   const [windowZIndex, setWindowZIndex] = useState(theme.zIndex.window);
-  const [iconPositions, setIconPositions] =
-    useState<Record<string, IconPosition>>(defaultIconPositions);
+  const [desktopItemPositions, setDesktopItemPositions] = useState<
+    Record<string, ItemPosition>
+  >(defaultDesktopItemPositions);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
 
   // Create navigation manager with provided groups
@@ -288,8 +289,8 @@ export const WindowProvider: React.FC<{
       iconDragRef.current = {
         startX: e.clientX,
         startY: e.clientY,
-        elementX: iconPositions[iconId]?.x || 0,
-        elementY: iconPositions[iconId]?.y || 0,
+        elementX: desktopItemPositions[iconId]?.x || 0,
+        elementY: desktopItemPositions[iconId]?.y || 0,
         isDragging: true,
         lastUpdateTime: 0,
       };
@@ -303,7 +304,7 @@ export const WindowProvider: React.FC<{
 
       setDraggedIcon(iconId);
     },
-    [iconPositions]
+    [desktopItemPositions]
   );
 
   const handleOptimizedIconMouseMove = useCallback(
@@ -384,7 +385,7 @@ export const WindowProvider: React.FC<{
         const snappedPos = snapToGrid(newX, newY);
 
         // Single state update with final position
-        setIconPositions((prev) => ({
+        setDesktopItemPositions((prev) => ({
           ...prev,
           [draggedIcon]: snappedPos,
         }));
@@ -846,7 +847,7 @@ export const WindowProvider: React.FC<{
     windows,
     draggedWindow,
     windowZIndex,
-    iconPositions,
+    desktopItemPositions,
     draggedIcon,
     fileSystemItems,
 
@@ -866,7 +867,7 @@ export const WindowProvider: React.FC<{
 
     // State setters
     setWindows,
-    setIconPositions,
+    setDesktopItemPositions,
     setDraggedWindow,
     setDraggedIcon,
     setWindowZIndex,
@@ -916,15 +917,26 @@ export const useWindowActions = () => {
 };
 
 export const useWindowState = () => {
-  const { windows, draggedWindow, windowZIndex, iconPositions, draggedIcon } =
-    useWindowManager();
-  return { windows, draggedWindow, windowZIndex, iconPositions, draggedIcon };
+  const {
+    windows,
+    draggedWindow,
+    windowZIndex,
+    desktopItemPositions,
+    draggedIcon,
+  } = useWindowManager();
+  return {
+    windows,
+    draggedWindow,
+    windowZIndex,
+    desktopItemPositions,
+    draggedIcon,
+  };
 };
 
 export const useIconDrag = () => {
-  const { handleIconMouseDown, iconPositions, draggedIcon } =
+  const { handleIconMouseDown, desktopItemPositions, draggedIcon } =
     useWindowManager();
-  return { handleIconMouseDown, iconPositions, draggedIcon };
+  return { handleIconMouseDown, desktopItemPositions, draggedIcon };
 };
 
 export const useWindowDrag = () => {

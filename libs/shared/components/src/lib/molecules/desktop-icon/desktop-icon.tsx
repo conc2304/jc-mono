@@ -3,10 +3,10 @@ import { alpha, Box } from '@mui/material';
 
 import { FileSystemIcon } from './file-system-icon';
 import { useIconDrag, useWindowActions } from '../../context';
-import { DesktopIconMetaData } from '../../types';
+import { DesktopItemMetaData, ItemPosition } from '../../types';
 
-interface DesktopIconProps extends DesktopIconMetaData {
-  position: { x: number; y: number };
+interface DesktopIconProps extends DesktopItemMetaData {
+  position: ItemPosition;
   isDragging?: boolean;
 }
 

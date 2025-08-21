@@ -12,14 +12,7 @@ import {
   styled,
 } from '@mui/material';
 import { ProjectData } from '../../types';
-import {
-  Cases,
-  Code,
-  GitHub,
-  People,
-  Preview,
-  Visibility,
-} from '@mui/icons-material';
+import { Cases, GitHub, People, Preview } from '@mui/icons-material';
 
 const DetailItem = ({ label, value }: { label: string; value: string }) => {
   return (
