@@ -36,7 +36,6 @@ import {
 } from '@mui/material';
 import {
   Palette as PaletteIcon,
-  Settings as SettingsIcon,
   Monitor as MonitorIcon,
   LightMode,
   DarkMode,
@@ -46,8 +45,6 @@ import {
   Save,
   RestartAlt,
   PlayArrow,
-  Download,
-  Upload,
   Delete as DeleteIcon,
   FlashOn,
 } from '@mui/icons-material';
@@ -79,7 +76,7 @@ const CyberCard = styled(Card)(({ theme }) => ({
 const CyberButton = styled(Button)(({ theme }) => ({
   borderRadius: 0,
   border: `2px solid ${theme.palette.primary.main}`,
-  fontFamily: 'monospace',
+
   fontSize: '12px',
   fontWeight: 'bold',
   letterSpacing: '2px',
@@ -115,14 +112,13 @@ const ModeButton = styled(IconButton)<{ isActive?: boolean }>(
 const CyberTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
     color: theme.palette.primary.main,
-    fontFamily: 'monospace',
+
     fontSize: '12px',
     fontWeight: 'bold',
     letterSpacing: '2px',
     textTransform: 'uppercase',
   },
   '& .MuiOutlinedInput-root': {
-    fontFamily: 'monospace',
     fontSize: '12px',
     borderRadius: 0,
     '& fieldset': {
@@ -140,7 +136,6 @@ const CyberTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const CyberSelect = styled(Select)(({ theme }) => ({
-  fontFamily: 'monospace',
   fontSize: '12px',
   borderRadius: 0,
   '& .MuiOutlinedInput-notchedOutline': {
@@ -157,7 +152,6 @@ const CyberSelect = styled(Select)(({ theme }) => ({
 }));
 
 const CyberTypography = styled(Typography)(({ theme }) => ({
-  fontFamily: 'monospace',
   fontWeight: 'bold',
   letterSpacing: '2px',
   textTransform: 'uppercase',
@@ -219,8 +213,6 @@ export const ThemeCustomizerPage: React.FC = () => {
     themeId: string;
     themeName: string;
   }>({ open: false, themeId: '', themeName: '' });
-  const [importDialog, setImportDialog] = useState(false);
-  const [importText, setImportText] = useState('');
 
   // Custom theme state
   const [customColors, setCustomColors] = useState({
@@ -313,52 +305,6 @@ export const ThemeCustomizerPage: React.FC = () => {
     });
   };
 
-  const handleExportTheme = async () => {
-    try {
-      const themeData = exportThemes();
-      await navigator.clipboard.writeText(themeData);
-      setSnackbar({
-        open: true,
-        message: 'Themes exported to clipboard!',
-        severity: 'success',
-      });
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: 'Failed to export themes',
-        severity: 'error',
-      });
-    }
-  };
-
-  const handleImportThemes = () => {
-    if (!importText.trim()) {
-      setSnackbar({
-        open: true,
-        message: 'Please paste theme data',
-        severity: 'error',
-      });
-      return;
-    }
-
-    const success = importThemes(importText);
-    if (success) {
-      setSnackbar({
-        open: true,
-        message: 'Themes imported successfully!',
-        severity: 'success',
-      });
-      setImportDialog(false);
-      setImportText('');
-    } else {
-      setSnackbar({
-        open: true,
-        message: 'Failed to import themes. Check the format.',
-        severity: 'error',
-      });
-    }
-  };
-
   const handleDeleteTheme = (themeId: string, themeName: string) => {
     setDeleteDialog({
       open: true,
@@ -428,7 +374,7 @@ export const ThemeCustomizerPage: React.FC = () => {
           onChange={(e) => onChange(e.target.value)}
           sx={{ flex: 1 }}
           slotProps={{
-            htmlInput: { style: { fontFamily: 'monospace', fontSize: '12px' } },
+            htmlInput: { style: { fontSize: '12px' } },
           }}
         />
       </Stack>
@@ -471,7 +417,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                 color: customColors.background,
                 border: `2px solid ${customColors.primary}`,
                 borderRadius: 0,
-                fontFamily: 'monospace',
+
                 fontSize: '12px',
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
@@ -491,7 +437,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                 borderColor: customColors.secondary,
                 borderWidth: '2px',
                 borderRadius: 0,
-                fontFamily: 'monospace',
+
                 fontSize: '12px',
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
@@ -508,7 +454,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                 color: customColors.background,
                 border: `2px solid ${customColors.success}`,
                 borderRadius: 0,
-                fontFamily: 'monospace',
+
                 fontSize: '12px',
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
@@ -549,9 +495,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                 }}
               >
                 <StatusIndicator color={status.color} />
-                <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
-                  {status.text}
-                </Typography>
+                <Typography variant="caption">{status.text}</Typography>
               </Box>
             ))}
           </Stack>
@@ -576,7 +520,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                   <Typography
                     variant="caption"
                     sx={{
-                      fontFamily: 'monospace',
                       fontSize: '10px',
                       textTransform: 'uppercase',
                       color: customColors.textSecondary,
@@ -611,11 +554,14 @@ export const ThemeCustomizerPage: React.FC = () => {
 
   return (
     <Box
+      className="EnhancedThemeSwitcher--root"
       sx={{
         height: '100%',
+        // pb: 8,
         // overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
         backgroundColor: 'background.default',
-        fontFamily: 'monospace',
       }}
     >
       {/* Header */}
@@ -627,18 +573,21 @@ export const ThemeCustomizerPage: React.FC = () => {
           borderBottom: `2px solid ${theme.palette.primary.main}`,
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ flexWrap: 'wrap', justifyContent: 'center', py: 1 }}>
           <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              flexGrow: 1,
+              flexWrap: 'wrap',
+            }}
           >
             <Box>
               <CyberTypography variant="h6" sx={{ color: 'primary.main' }}>
                 THEME_CONTROL_CENTER
               </CyberTypography>
-              <Typography
-                variant="caption"
-                sx={{ color: 'success.main', fontFamily: 'monospace' }}
-              >
+              <Typography variant="caption" sx={{ color: 'success.main' }}>
                 Advanced theme management & customization
               </Typography>
             </Box>
@@ -674,8 +623,9 @@ export const ThemeCustomizerPage: React.FC = () => {
 
       {/* Main Content */}
       <Container
+        className="EnhancedThemeSwitcher--main-content"
         maxWidth="xl"
-        sx={{ py: 4, height: '100%', overflowY: 'auto' }}
+        sx={{ pt: 4, height: '100%', overflowY: 'auto', flexGrow: 1 }}
       >
         <Grid container spacing={4}>
           {/* Theme Selector Panel */}
@@ -730,7 +680,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                                 variant="subtitle2"
                                 sx={{
                                   color: 'success.main',
-                                  fontFamily: 'monospace',
+
                                   fontWeight: 'bold',
                                 }}
                               >
@@ -740,7 +690,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                                 variant="caption"
                                 sx={{
                                   color: 'text.secondary',
-                                  fontFamily: 'monospace',
                                 }}
                               >
                                 {themeOption.description}
@@ -759,7 +708,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                                   borderRadius: 0,
                                   color: 'info.main',
                                   borderColor: 'info.main',
-                                  fontFamily: 'monospace',
+
                                   fontSize: '10px',
                                   textTransform: 'uppercase',
                                 }}
@@ -866,41 +815,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                       startIcon={<PaletteIcon />}
                     >
                       {isCustomizing ? 'Exit Customizer' : 'Create Custom'}
-                    </CyberButton>
-
-                    <CyberButton
-                      fullWidth
-                      variant="outlined"
-                      onClick={handleExportTheme}
-                      sx={{
-                        borderColor: 'info.main',
-                        color: 'info.main',
-                        '&:hover': {
-                          backgroundColor: alpha(theme.palette.info.main, 0.1),
-                        },
-                      }}
-                      startIcon={<Download />}
-                    >
-                      Export Themes
-                    </CyberButton>
-
-                    <CyberButton
-                      fullWidth
-                      variant="outlined"
-                      onClick={() => setImportDialog(true)}
-                      sx={{
-                        borderColor: 'success.main',
-                        color: 'success.main',
-                        '&:hover': {
-                          backgroundColor: alpha(
-                            theme.palette.success.main,
-                            0.1
-                          ),
-                        },
-                      }}
-                      startIcon={<Upload />}
-                    >
-                      Import Themes
                     </CyberButton>
 
                     <CyberButton
@@ -1163,7 +1077,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="h5"
                             sx={{
                               color: 'success.main',
-                              fontFamily: 'monospace',
+
                               fontWeight: 'bold',
                             }}
                           >
@@ -1173,7 +1087,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="body2"
                             sx={{
                               color: 'text.secondary',
-                              fontFamily: 'monospace',
+
                               mt: 1,
                             }}
                           >
@@ -1197,7 +1111,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                               borderRadius: 0,
                               color: 'info.main',
                               borderColor: 'info.main',
-                              fontFamily: 'monospace',
+
                               fontSize: '10px',
                             }}
                           />
@@ -1209,7 +1123,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                               borderRadius: 0,
                               color: 'warning.main',
                               borderColor: 'warning.main',
-                              fontFamily: 'monospace',
+
                               fontSize: '10px',
                             }}
                           />
@@ -1222,7 +1136,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                                 borderRadius: 0,
                                 color: 'secondary.main',
                                 borderColor: 'secondary.main',
-                                fontFamily: 'monospace',
+
                                 fontSize: '10px',
                               }}
                             />
@@ -1261,7 +1175,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                                     <Typography
                                       variant="caption"
                                       sx={{
-                                        fontFamily: 'monospace',
                                         fontSize: '10px',
                                         textTransform: 'uppercase',
                                         color: 'text.secondary',
@@ -1273,7 +1186,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                                     <Typography
                                       variant="caption"
                                       sx={{
-                                        fontFamily: 'monospace',
                                         fontSize: '9px',
                                         color: 'text.secondary',
                                         display: 'block',
@@ -1303,7 +1215,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                           variant="h3"
                           sx={{
                             color: 'success.main',
-                            fontFamily: 'monospace',
+
                             fontWeight: 'bold',
                           }}
                         >
@@ -1328,7 +1240,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                           variant="h3"
                           sx={{
                             color: 'warning.main',
-                            fontFamily: 'monospace',
+
                             fontWeight: 'bold',
                           }}
                         >
@@ -1353,7 +1265,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                           variant="h3"
                           sx={{
                             color: 'info.main',
-                            fontFamily: 'monospace',
+
                             fontWeight: 'bold',
                           }}
                         >
@@ -1391,7 +1303,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                       sx={{
                         mb: 4,
                         '& .MuiTab-root': {
-                          fontFamily: 'monospace',
                           fontSize: '12px',
                           fontWeight: 'bold',
                           textTransform: 'uppercase',
@@ -1434,7 +1345,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                                 color={btn.color as any}
                                 sx={{
                                   borderRadius: 0,
-                                  fontFamily: 'monospace',
+
                                   fontSize: '12px',
                                   fontWeight: 'bold',
                                   textTransform: 'uppercase',
@@ -1493,9 +1404,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                                   borderRadius: 0,
                                   border: `2px solid ${status.color}`,
                                   backgroundColor: alpha(status.color, 0.1),
-                                  '& .MuiAlert-message': {
-                                    fontFamily: 'monospace',
-                                  },
+                                  '& .MuiAlert-message': {},
                                   '& .MuiAlert-icon': {
                                     fontSize: '20px',
                                   },
@@ -1530,7 +1439,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="h2"
                             sx={{
                               color: 'primary.main',
-                              fontFamily: 'monospace',
+
                               fontWeight: 'bold',
                             }}
                           >
@@ -1540,7 +1449,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="h3"
                             sx={{
                               color: 'secondary.main',
-                              fontFamily: 'monospace',
+
                               fontWeight: 'bold',
                             }}
                           >
@@ -1550,7 +1459,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="h4"
                             sx={{
                               color: 'text.primary',
-                              fontFamily: 'monospace',
+
                               fontWeight: 'semibold',
                             }}
                           >
@@ -1560,7 +1469,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="body1"
                             sx={{
                               color: 'text.primary',
-                              fontFamily: 'monospace',
                             }}
                           >
                             Body text with normal weight and primary color
@@ -1569,7 +1477,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="body2"
                             sx={{
                               color: 'text.secondary',
-                              fontFamily: 'monospace',
                             }}
                           >
                             Secondary text with smaller size and muted color
@@ -1578,7 +1485,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                             variant="caption"
                             sx={{
                               color: 'info.main',
-                              fontFamily: 'monospace',
+
                               fontWeight: 'bold',
                               textTransform: 'uppercase',
                               letterSpacing: '2px',
@@ -1610,7 +1517,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                               <FormControl fullWidth>
                                 <InputLabel
                                   sx={{
-                                    fontFamily: 'monospace',
                                     fontSize: '12px',
                                     fontWeight: 'bold',
                                     textTransform: 'uppercase',
@@ -1622,24 +1528,9 @@ export const ThemeCustomizerPage: React.FC = () => {
                                   label="Select Dropdown"
                                   defaultValue=""
                                 >
-                                  <MenuItem
-                                    value="option1"
-                                    sx={{ fontFamily: 'monospace' }}
-                                  >
-                                    Option 1
-                                  </MenuItem>
-                                  <MenuItem
-                                    value="option2"
-                                    sx={{ fontFamily: 'monospace' }}
-                                  >
-                                    Option 2
-                                  </MenuItem>
-                                  <MenuItem
-                                    value="option3"
-                                    sx={{ fontFamily: 'monospace' }}
-                                  >
-                                    Option 3
-                                  </MenuItem>
+                                  <MenuItem value="option1">Option 1</MenuItem>
+                                  <MenuItem value="option2">Option 2</MenuItem>
+                                  <MenuItem value="option3">Option 3</MenuItem>
                                 </CyberSelect>
                               </FormControl>
                             </Stack>
@@ -1670,7 +1561,6 @@ export const ThemeCustomizerPage: React.FC = () => {
                                 label={
                                   <Typography
                                     sx={{
-                                      fontFamily: 'monospace',
                                       fontSize: '12px',
                                       fontWeight: 'bold',
                                       textTransform: 'uppercase',
@@ -1694,14 +1584,14 @@ export const ThemeCustomizerPage: React.FC = () => {
       </Container>
 
       {/* Footer Status */}
-      <Paper
-        elevation={0}
+      <Box
+        className="EnhancedThemeSwitcher--footer"
         sx={{
           borderTop: `2px solid ${theme.palette.primary.main}`,
           borderRadius: 0,
           backgroundColor: 'background.paper',
           p: 3,
-          mt: 6,
+          // mt: 6,
         }}
       >
         <Container maxWidth="xl">
@@ -1722,35 +1612,29 @@ export const ThemeCustomizerPage: React.FC = () => {
                   <StatusIndicator color={theme.palette.success.main} />
                   <Typography
                     variant="caption"
-                    sx={{ fontFamily: 'monospace', color: 'text.secondary' }}
+                    sx={{ color: 'text.secondary' }}
                   >
                     SYSTEM_ACTIVE
                   </Typography>
                 </Box>
-                <Typography
-                  variant="caption"
-                  sx={{ fontFamily: 'monospace', color: 'text.secondary' }}
-                >
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   Theme: {currentTheme?.name?.toUpperCase() || 'NONE'} | Mode:{' '}
                   {resolvedMode.toUpperCase()}
                   {mode === 'system' && ` (${systemMode?.toUpperCase()})`}
                 </Typography>
               </Stack>
             </Grid>
-            <Grid
+            {/* <Grid
               size={{ xs: 12, sm: 4 }}
               sx={{ textAlign: { xs: 'left', sm: 'right' } }}
             >
-              <Typography
-                variant="caption"
-                sx={{ fontFamily: 'monospace', color: 'info.main' }}
-              >
+              <Typography variant="caption" sx={{ color: 'info.main' }}>
                 THEME_CONTROL_v2.1.0
               </Typography>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Container>
-      </Paper>
+      </Box>
 
       {/* Snackbar for notifications */}
       <Snackbar
@@ -1763,7 +1647,7 @@ export const ThemeCustomizerPage: React.FC = () => {
           onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
           sx={{
             borderRadius: 0,
-            fontFamily: 'monospace',
+
             textTransform: 'uppercase',
             fontSize: '12px',
           }}
@@ -1782,17 +1666,14 @@ export const ThemeCustomizerPage: React.FC = () => {
           sx: {
             borderRadius: 0,
             border: `2px solid ${theme.palette.error.main}`,
-            fontFamily: 'monospace',
           },
         }}
       >
-        <DialogTitle
-          sx={{ fontFamily: 'monospace', textTransform: 'uppercase' }}
-        >
+        <DialogTitle sx={{ textTransform: 'uppercase' }}>
           Confirm Delete
         </DialogTitle>
         <DialogContent>
-          <Typography sx={{ fontFamily: 'monospace' }}>
+          <Typography>
             Are you sure you want to delete "{deleteDialog.themeName}"? This
             action cannot be undone.
           </Typography>
@@ -1802,7 +1683,7 @@ export const ThemeCustomizerPage: React.FC = () => {
             onClick={() =>
               setDeleteDialog({ open: false, themeId: '', themeName: '' })
             }
-            sx={{ fontFamily: 'monospace', textTransform: 'uppercase' }}
+            sx={{ textTransform: 'uppercase' }}
           >
             Cancel
           </Button>
@@ -1811,66 +1692,11 @@ export const ThemeCustomizerPage: React.FC = () => {
             color="error"
             variant="contained"
             sx={{
-              fontFamily: 'monospace',
               textTransform: 'uppercase',
               borderRadius: 0,
             }}
           >
             Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Import Themes Dialog */}
-      <Dialog
-        open={importDialog}
-        onClose={() => setImportDialog(false)}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 0,
-            border: `2px solid ${theme.palette.info.main}`,
-            fontFamily: 'monospace',
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{ fontFamily: 'monospace', textTransform: 'uppercase' }}
-        >
-          Import Themes
-        </DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontFamily: 'monospace', mb: 2 }}>
-            Paste your exported theme data below:
-          </Typography>
-          <CyberTextField
-            fullWidth
-            multiline
-            rows={10}
-            value={importText}
-            onChange={(e) => setImportText(e.target.value)}
-            placeholder="Paste theme JSON data here..."
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setImportDialog(false)}
-            sx={{ fontFamily: 'monospace', textTransform: 'uppercase' }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleImportThemes}
-            color="primary"
-            variant="contained"
-            sx={{
-              fontFamily: 'monospace',
-              textTransform: 'uppercase',
-              borderRadius: 0,
-            }}
-          >
-            Import
           </Button>
         </DialogActions>
       </Dialog>
