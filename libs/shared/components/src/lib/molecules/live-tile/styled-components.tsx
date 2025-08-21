@@ -1,6 +1,9 @@
 import { styled, Box, alpha } from '@mui/material';
 
-export const TileContainer = styled(Box)<{
+export const TileContainer = styled(Box, {
+  shouldForwardProp: (prop) =>
+    !['effectiveIsDragging', 'tileSize', 'gradient'].includes(prop as string),
+})<{
   effectiveIsDragging: boolean;
   tileSize: { width: number; height: number };
   gradient: { from: string; to: string };
@@ -66,18 +69,18 @@ export const BackgroundPattern = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const IconContainer = styled(Box)<{ isLarge: boolean }>(
-  ({ theme, isLarge }) => ({
-    width: isLarge ? 40 : 32,
-    height: isLarge ? 40 : 32,
-    backgroundColor: alpha(theme.palette.common.white, 0.2),
-    borderRadius: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.common.white,
-  })
-);
+export const IconContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isLarge',
+})<{ isLarge: boolean }>(({ theme, isLarge }) => ({
+  width: isLarge ? 40 : 32,
+  height: isLarge ? 40 : 32,
+  backgroundColor: alpha(theme.palette.common.white, 0.2),
+  borderRadius: theme.spacing(1),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.common.white,
+}));
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.common.white, 0.1),
