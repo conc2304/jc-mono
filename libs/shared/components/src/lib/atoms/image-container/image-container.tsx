@@ -153,7 +153,18 @@ export const ImageContainer = ({
           bottom: 0,
         }}
       />
-      <Image sx={{ color: 'grey.400', zIndex: 1 }} />
+      {/* <Image sx={{ color: 'grey.400', zIndex: 1 }} /> */}
+      <Box
+        component="img"
+        src="gifs/Static.gif"
+        alt={'Loading'}
+        sx={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: 0.2,
+        }}
+      />
     </Box>
   );
 
@@ -239,7 +250,18 @@ export const ImageContainer = ({
             animation="wave"
             sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
           />
-          <Image sx={{ color: 'grey.400', zIndex: 1 }} />
+          {/* <Image sx={{ color: 'grey.400', zIndex: 1 }} /> */}
+          <Box
+            component="img"
+            src="gifs/Static.gif"
+            alt={'Loading'}
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: 0.2,
+            }}
+          />
         </Box>
       )}
     </Box>
