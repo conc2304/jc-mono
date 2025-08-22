@@ -1,40 +1,94 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import {
-  Folder,
-  FileText,
-  Settings,
-  Image,
-  Code,
-  ChevronRight,
-  Star,
-} from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
-// Responsive breakpoints
-const BREAKPOINTS = {
-  mobile: 768,
-  tablet: 1024,
-  desktop: 1200,
-};
+// Type definitions
+type TileSize = 'small' | 'medium' | 'large';
+type Breakpoint = 'mobile' | 'tablet' | 'desktop';
+type InsertionSide =
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'before-all'
+  | 'after-all';
+type InsertionType = 'horizontal' | 'vertical';
 
-// Device type detection
-type DeviceType = 'mobile' | 'tablet' | 'desktop';
+interface TileConfig {
+  width: number;
+  height: number;
+  gridWidth: number;
+  gridHeight: number;
+}
 
-const getDeviceType = (width: number): DeviceType => {
-  if (width < BREAKPOINTS.mobile) return 'mobile';
-  if (width < BREAKPOINTS.tablet) return 'tablet';
-  return 'desktop';
-};
+interface ResponsiveBreakpointConfig {
+  gridSize: number;
+  tilePadding: number;
+  containerPadding: number;
+  sizes: Record<TileSize, TileConfig>;
+}
 
-// Responsive grid configuration
-const RESPONSIVE_CONFIG = {
+interface ResponsiveConfig {
+  mobile: ResponsiveBreakpointConfig;
+  tablet: ResponsiveBreakpointConfig;
+  desktop: ResponsiveBreakpointConfig;
+}
+
+interface Tile {
+  id: number;
+  size: TileSize;
+  color: string;
+  title: string;
+  content: string;
+}
+
+interface PlacedTile extends Tile {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  orderIndex: number;
+  gridRow: number;
+  gridCol: number;
+}
+
+interface InsertionZone {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  insertIndex: number;
+  type: InsertionType;
+  side: InsertionSide;
+}
+
+interface DragState {
+  isDragging: boolean;
+  draggedTile: Tile | null;
+  hoveredInsertionIndex: number | null;
+  hoveredZoneSide: InsertionSide | null;
+}
+
+interface WindowSize {
+  width: number;
+  height: number;
+}
+
+interface TilePlacementResult {
+  placedTiles: PlacedTile[];
+  gridHeight: number;
+  insertionZones: InsertionZone[];
+}
+
+// Configuration
+const RESPONSIVE_CONFIG: ResponsiveConfig = {
   mobile: {
-    gridSize: 16, // Smaller grid for mobile
+    gridSize: 16,
     tilePadding: 4,
     containerPadding: 8,
     sizes: {
       small: { width: 140, height: 140, gridWidth: 9, gridHeight: 9 },
-      medium: { width: 140, height: 200, gridWidth: 9, gridHeight: 13 }, // Tall on mobile
-      large: { width: 300, height: 160, gridWidth: 19, gridHeight: 10 }, // Wide but short on mobile
+      medium: { width: 140, height: 200, gridWidth: 9, gridHeight: 13 },
+      large: { width: 300, height: 160, gridWidth: 19, gridHeight: 10 },
     },
   },
   tablet: {
@@ -59,668 +113,661 @@ const RESPONSIVE_CONFIG = {
   },
 };
 
-// Hook for responsive configuration
+// Sample tile data
+const SAMPLE_TILES: Tile[] = [
+  { id: 1, size: 'large', color: '#e74c3c', title: 'Weather', content: '72°F' },
+  {
+    id: 2,
+    size: 'medium',
+    color: '#3498db',
+    title: 'Calendar',
+    content: '5 events',
+  },
+  { id: 3, size: 'small', color: '#2ecc71', title: 'Messages', content: '12' },
+  { id: 4, size: 'small', color: '#f39c12', title: 'Photos', content: '128' },
+  {
+    id: 5,
+    size: 'medium',
+    color: '#9b59b6',
+    title: 'Music',
+    content: 'Now Playing',
+  },
+  { id: 6, size: 'small', color: '#1abc9c', title: 'Settings', content: '' },
+  {
+    id: 7,
+    size: 'large',
+    color: '#34495e',
+    title: 'News',
+    content: 'Breaking',
+  },
+  { id: 8, size: 'small', color: '#e67e22', title: 'Store', content: '' },
+  { id: 9, size: 'medium', color: '#95a5a6', title: 'Mail', content: '3 new' },
+  { id: 10, size: 'small', color: '#c0392b', title: 'Games', content: '' },
+];
+
+// Custom hooks
 const useResponsiveConfig = () => {
-  const [config, setConfig] = useState(RESPONSIVE_CONFIG.desktop);
-  const [deviceType, setDeviceType] = useState<DeviceType>('desktop');
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800,
+  });
 
   useEffect(() => {
-    const updateConfig = () => {
-      const width = window.innerWidth;
-      const newDeviceType = getDeviceType(width);
-      setDeviceType(newDeviceType);
-      setConfig(RESPONSIVE_CONFIG[newDeviceType]);
+    const handleResize = (): void => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
 
-    updateConfig();
-    window.addEventListener('resize', updateConfig);
-    return () => window.removeEventListener('resize', updateConfig);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return { config, deviceType };
+  const breakpoint: Breakpoint = useMemo(() => {
+    if (windowSize.width < 768) return 'mobile';
+    if (windowSize.width < 1024) return 'tablet';
+    return 'desktop';
+  }, [windowSize.width]);
+
+  return {
+    config: RESPONSIVE_CONFIG[breakpoint],
+    breakpoint,
+    windowSize,
+  };
 };
 
-// Grid position type
-interface GridPosition {
-  x: number;
-  y: number;
-}
+const useTilePlacement = (
+  tiles: Tile[],
+  config: ResponsiveBreakpointConfig | null,
+  containerWidth: number,
+  tileOrder: number[] = []
+): TilePlacementResult => {
+  return useMemo(() => {
+    if (!containerWidth || !config || tiles.length === 0) {
+      return { placedTiles: [], gridHeight: 0, insertionZones: [] };
+    }
 
-// Pixel position type
-interface PixelPosition {
-  x: number;
-  y: number;
-}
-
-// Tile configuration
-interface TileConfig {
-  size: 'small' | 'medium' | 'large';
-  gradient: { from: string; to: string };
-  showLiveContent?: boolean;
-  updateInterval?: number;
-}
-
-// Tile data interface
-interface TileData {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  config: TileConfig;
-  gridPosition: GridPosition;
-  children?: any[];
-  metadata?: {
-    favorite?: boolean;
-    description?: string;
-  };
-  dateModified?: Date;
-}
-
-// Responsive Grid Manager
-class ResponsiveGridManager {
-  private gridWidth: number;
-  private gridHeight: number;
-  private occupiedCells: Set<string> = new Set();
-  private config: typeof RESPONSIVE_CONFIG.desktop;
-
-  constructor(
-    containerWidth: number,
-    containerHeight: number,
-    config: typeof RESPONSIVE_CONFIG.desktop
-  ) {
-    this.config = config;
-    this.gridWidth = Math.floor(
+    const gridColumns: number = Math.floor(
       (containerWidth - config.containerPadding * 2) / config.gridSize
     );
-    this.gridHeight = Math.floor(
-      (containerHeight - config.containerPadding * 2) / config.gridSize
-    );
-  }
+    const grid: boolean[][] = [];
+    const placedTiles: PlacedTile[] = [];
+    const insertionZones: InsertionZone[] = [];
 
-  pixelToGrid(pixel: PixelPosition): GridPosition {
-    return {
-      x: Math.round(
-        (pixel.x - this.config.containerPadding) / this.config.gridSize
-      ),
-      y: Math.round(
-        (pixel.y - this.config.containerPadding) / this.config.gridSize
-      ),
-    };
-  }
+    // Use custom order if provided, otherwise use original tile order
+    const orderedTiles: Tile[] =
+      tileOrder.length > 0
+        ? (tileOrder
+            .map((id) => tiles.find((tile) => tile.id === id))
+            .filter(Boolean) as Tile[])
+        : tiles;
 
-  gridToPixel(grid: GridPosition): PixelPosition {
-    return {
-      x: grid.x * this.config.gridSize + this.config.containerPadding,
-      y: grid.y * this.config.gridSize + this.config.containerPadding,
-    };
-  }
-
-  getTileSize(tileSize: 'small' | 'medium' | 'large') {
-    return this.config.sizes[tileSize];
-  }
-
-  canPlaceTile(
-    position: GridPosition,
-    tileSize: 'small' | 'medium' | 'large',
-    excludeTileId?: string
-  ): boolean {
-    const { gridWidth, gridHeight } = this.getTileSize(tileSize);
-
-    if (
-      position.x < 0 ||
-      position.y < 0 ||
-      position.x + gridWidth > this.gridWidth ||
-      position.y + gridHeight > this.gridHeight
-    ) {
-      return false;
+    // Initialize grid
+    const initGridRows: number = Math.ceil(orderedTiles.length * 2);
+    for (let row = 0; row < initGridRows; row++) {
+      grid[row] = new Array(gridColumns).fill(false);
     }
 
-    for (let x = position.x; x < position.x + gridWidth; x++) {
-      for (let y = position.y; y < position.y + gridHeight; y++) {
-        const cellKey = `${x},${y}`;
-        const occupiedBy = this.getCellOccupant(cellKey);
-        if (occupiedBy && occupiedBy !== excludeTileId) {
-          return false;
+    const canPlaceTile = (
+      startRow: number,
+      startCol: number,
+      tileConfig: TileConfig
+    ): boolean => {
+      const endRow: number = startRow + tileConfig.gridHeight;
+      const endCol: number = startCol + tileConfig.gridWidth;
+
+      if (endCol > gridColumns || startCol < 0 || startRow < 0) return false;
+
+      while (endRow > grid.length) {
+        grid.push(new Array(gridColumns).fill(false));
+      }
+
+      for (let row = startRow; row < endRow; row++) {
+        for (let col = startCol; col < endCol; col++) {
+          if (grid[row][col]) return false;
         }
       }
-    }
+      return true;
+    };
 
-    return true;
-  }
+    const placeTile = (
+      startRow: number,
+      startCol: number,
+      tileConfig: TileConfig
+    ): void => {
+      const endRow: number = startRow + tileConfig.gridHeight;
+      const endCol: number = startCol + tileConfig.gridWidth;
 
-  findNearestValidPosition(
-    targetPosition: GridPosition,
-    tileSize: 'small' | 'medium' | 'large',
-    excludeTileId?: string
-  ): GridPosition {
-    if (this.canPlaceTile(targetPosition, tileSize, excludeTileId)) {
-      return targetPosition;
-    }
+      for (let row = startRow; row < endRow; row++) {
+        for (let col = startCol; col < endCol; col++) {
+          grid[row][col] = true;
+        }
+      }
+    };
 
-    const maxDistance = Math.max(this.gridWidth, this.gridHeight);
-
-    for (let distance = 1; distance <= maxDistance; distance++) {
-      for (let dx = -distance; dx <= distance; dx++) {
-        for (let dy = -distance; dy <= distance; dy++) {
-          if (Math.abs(dx) !== distance && Math.abs(dy) !== distance) continue;
-
-          const candidatePosition = {
-            x: targetPosition.x + dx,
-            y: targetPosition.y + dy,
-          };
-
-          if (this.canPlaceTile(candidatePosition, tileSize, excludeTileId)) {
-            return candidatePosition;
+    const findPlacement = (
+      tileConfig: TileConfig
+    ): { row: number; col: number } => {
+      for (let row = 0; row < grid.length + 10; row++) {
+        for (let col = 0; col <= gridColumns - tileConfig.gridWidth; col++) {
+          if (canPlaceTile(row, col, tileConfig)) {
+            return { row, col };
           }
         }
       }
-    }
 
-    return targetPosition;
-  }
-
-  occupyCells(
-    position: GridPosition,
-    tileSize: 'small' | 'medium' | 'large',
-    tileId: string
-  ) {
-    const { gridWidth, gridHeight } = this.getTileSize(tileSize);
-
-    for (let x = position.x; x < position.x + gridWidth; x++) {
-      for (let y = position.y; y < position.y + gridHeight; y++) {
-        this.occupiedCells.add(`${x},${y}:${tileId}`);
+      const row: number = grid.length;
+      while (grid.length < row + tileConfig.gridHeight) {
+        grid.push(new Array(gridColumns).fill(false));
       }
+      return { row, col: 0 };
+    };
+
+    // Place tiles in order
+    orderedTiles.forEach((tile: Tile, index: number) => {
+      const tileConfig: TileConfig = config.sizes[tile.size];
+      const placement = findPlacement(tileConfig);
+
+      placeTile(placement.row, placement.col, tileConfig);
+
+      const tileData: PlacedTile = {
+        ...tile,
+        x: placement.col * config.gridSize + config.containerPadding,
+        y: placement.row * config.gridSize + config.containerPadding,
+        width: tileConfig.width,
+        height: tileConfig.height,
+        orderIndex: index,
+        gridRow: placement.row,
+        gridCol: placement.col,
+      };
+
+      placedTiles.push(tileData);
+
+      // Create insertion zones around each tile (4 sides)
+      const zoneOffset: number = 8;
+      const zoneThickness: number = 4;
+
+      // Top insertion zone
+      insertionZones.push({
+        id: `top-${tile.id}`,
+        x: tileData.x,
+        y: tileData.y - zoneOffset,
+        width: tileData.width,
+        height: zoneThickness,
+        insertIndex: index,
+        type: 'horizontal',
+        side: 'top',
+      });
+
+      // Bottom insertion zone
+      insertionZones.push({
+        id: `bottom-${tile.id}`,
+        x: tileData.x,
+        y: tileData.y + tileData.height + zoneOffset - zoneThickness,
+        width: tileData.width,
+        height: zoneThickness,
+        insertIndex: index + 1,
+        type: 'horizontal',
+        side: 'bottom',
+      });
+
+      // Left insertion zone
+      insertionZones.push({
+        id: `left-${tile.id}`,
+        x: tileData.x - zoneOffset,
+        y: tileData.y,
+        width: zoneThickness,
+        height: tileData.height,
+        insertIndex: index,
+        type: 'vertical',
+        side: 'left',
+      });
+
+      // Right insertion zone
+      insertionZones.push({
+        id: `right-${tile.id}`,
+        x: tileData.x + tileData.width + zoneOffset - zoneThickness,
+        y: tileData.y,
+        width: zoneThickness,
+        height: tileData.height,
+        insertIndex: index + 1,
+        type: 'vertical',
+        side: 'right',
+      });
+    });
+
+    // Add insertion zone at the very beginning (before first tile)
+    if (placedTiles.length > 0) {
+      const firstTile: PlacedTile = placedTiles[0];
+      insertionZones.unshift({
+        id: 'before-all',
+        x: firstTile.x,
+        y: firstTile.y - 20,
+        width: firstTile.width,
+        height: 4,
+        insertIndex: 0,
+        type: 'horizontal',
+        side: 'before-all',
+      });
     }
-  }
 
-  freeCells(tileId: string) {
-    const cellsToRemove = Array.from(this.occupiedCells).filter((cell) =>
-      cell.endsWith(`:${tileId}`)
-    );
-    cellsToRemove.forEach((cell) => this.occupiedCells.delete(cell));
-  }
+    // Add insertion zone at the very end (after last tile)
+    if (placedTiles.length > 0) {
+      const lastTile: PlacedTile = placedTiles[placedTiles.length - 1];
+      insertionZones.push({
+        id: 'after-all',
+        x: lastTile.x,
+        y: lastTile.y + lastTile.height + 20,
+        width: lastTile.width,
+        height: 4,
+        insertIndex: placedTiles.length,
+        type: 'horizontal',
+        side: 'after-all',
+      });
+    }
 
-  private getCellOccupant(cellKey: string): string | null {
-    const occupant = Array.from(this.occupiedCells).find((cell) =>
-      cell.startsWith(cellKey + ':')
-    );
-    return occupant ? occupant.split(':')[1] : null;
-  }
+    const gridHeight: number =
+      grid.length * config.gridSize + config.containerPadding * 2;
 
-  updateTilePosition(
-    tileId: string,
-    newPosition: GridPosition,
-    tileSize: 'small' | 'medium' | 'large'
-  ) {
-    this.freeCells(tileId);
-    const validPosition = this.findNearestValidPosition(
-      newPosition,
-      tileSize,
-      tileId
-    );
-    this.occupyCells(validPosition, tileSize, tileId);
-    return validPosition;
-  }
+    return { placedTiles, gridHeight, insertionZones };
+  }, [tiles, config, containerWidth, tileOrder]);
+};
 
-  // Convert positions when switching between device types
-  convertPositionForDevice(
-    position: GridPosition,
-    fromConfig: typeof RESPONSIVE_CONFIG.desktop,
-    toConfig: typeof RESPONSIVE_CONFIG.desktop
-  ): GridPosition {
-    // Convert to pixel position with old config
-    const pixelPos = {
-      x: position.x * fromConfig.gridSize + fromConfig.containerPadding,
-      y: position.y * fromConfig.gridSize + fromConfig.containerPadding,
-    };
-
-    // Convert back to grid position with new config
-    return {
-      x: Math.round(
-        (pixelPos.x - toConfig.containerPadding) / toConfig.gridSize
-      ),
-      y: Math.round(
-        (pixelPos.y - toConfig.containerPadding) / toConfig.gridSize
-      ),
-    };
-  }
+// Component interfaces
+interface TileComponentProps {
+  tile: PlacedTile;
+  config: ResponsiveBreakpointConfig;
+  onDragStart: (tile: Tile) => void;
+  onDragEnd: () => void;
+  isDragging: boolean;
+  isBeingReordered: boolean;
 }
 
-// Responsive Tile Component
-const ResponsiveTile: React.FC<{
-  tile: TileData;
-  onDragStart: (tileId: string, startPos: PixelPosition) => void;
-  onDragEnd: (tileId: string, endPos: PixelPosition) => void;
-  isDragging: boolean;
-  dragOffset?: PixelPosition;
-  config: typeof RESPONSIVE_CONFIG.desktop;
-  deviceType: DeviceType;
-}> = ({
+interface InsertionZoneProps {
+  zone: InsertionZone;
+  isActive: boolean;
+  onDrop: (insertIndex: number) => void;
+  onHover: (insertIndex: number, zoneSide: InsertionSide) => void;
+}
+
+// Components
+const TileComponent: React.FC<TileComponentProps> = ({
   tile,
+  config,
   onDragStart,
   onDragEnd,
   isDragging,
-  dragOffset,
-  config,
-  deviceType,
+  isBeingReordered,
 }) => {
-  const tileRef = useRef<HTMLDivElement>(null);
-  const [dragStartPos, setDragStartPos] = useState<PixelPosition | null>(null);
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>): void => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const offsetX: number = e.clientX - rect.left;
+    const offsetY: number = e.clientY - rect.top;
 
-  const tileSize = config.sizes[tile.config.size];
-  const pixelPosition = {
-    x: tile.gridPosition.x * config.gridSize + config.containerPadding,
-    y: tile.gridPosition.y * config.gridSize + config.containerPadding,
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', tile.id.toString());
+
+    // Create a custom drag image
+    const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+    dragImage.style.opacity = '0.8';
+    dragImage.style.transform = 'rotate(3deg)';
+    document.body.appendChild(dragImage);
+    e.dataTransfer.setDragImage(dragImage, offsetX, offsetY);
+
+    setTimeout(() => {
+      document.body.removeChild(dragImage);
+    }, 0);
+
+    onDragStart(tile);
   };
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      const rect = tileRef.current?.getBoundingClientRect();
-      if (rect) {
-        const startPos = {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-        };
-        setDragStartPos(startPos);
-        onDragStart(tile.id, startPos);
-      }
-    },
-    [tile.id, onDragStart]
-  );
-
-  // Touch support for mobile
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      e.preventDefault();
-      const rect = tileRef.current?.getBoundingClientRect();
-      if (rect && e.touches[0]) {
-        const startPos = {
-          x: e.touches[0].clientX - rect.left,
-          y: e.touches[0].clientY - rect.top,
-        };
-        setDragStartPos(startPos);
-        onDragStart(tile.id, startPos);
-      }
-    },
-    [tile.id, onDragStart]
-  );
-
-  const handleMouseUp = useCallback(
-    (e: React.MouseEvent) => {
-      if (dragStartPos) {
-        const endPos = {
-          x: e.clientX - dragStartPos.x,
-          y: e.clientY - dragStartPos.y,
-        };
-        onDragEnd(tile.id, endPos);
-        setDragStartPos(null);
-      }
-    },
-    [tile.id, onDragEnd, dragStartPos]
-  );
-
-  const displayPosition = isDragging && dragOffset ? dragOffset : pixelPosition;
-
-  // Responsive font sizes and spacing
-  const isLarge = tile.config.size === 'large';
-  const isMobile = deviceType === 'mobile';
-
-  const fontSize = {
-    title: isMobile
-      ? isLarge
-        ? '0.875rem'
-        : '0.75rem'
-      : isLarge
-      ? '1rem'
-      : '0.75rem',
-    subtitle: isMobile ? '0.625rem' : '0.75rem',
-    caption: '0.625rem',
-  };
-
-  const iconSize = isMobile ? (isLarge ? 20 : 16) : isLarge ? 24 : 20;
-  const iconContainerSize = isMobile ? (isLarge ? 32 : 24) : isLarge ? 40 : 32;
 
   return (
     <div
-      ref={tileRef}
-      className="absolute cursor-pointer rounded-2xl overflow-hidden transition-all duration-200"
+      draggable
+      onDragStart={handleDragStart}
+      onDragEnd={onDragEnd}
+      className={`absolute transition-all duration-300 ease-in-out cursor-grab active:cursor-grabbing select-none
+        ${isDragging ? 'opacity-30 z-50' : 'hover:scale-105 hover:z-10'}
+        ${isBeingReordered ? 'z-40' : ''}
+      `}
       style={{
-        left: displayPosition.x,
-        top: displayPosition.y,
-        width: tileSize.width,
-        height: tileSize.height,
-        background: `linear-gradient(135deg, ${tile.config.gradient.from}, ${tile.config.gradient.to})`,
-        transform: isDragging ? 'scale(1.05) rotate(2deg)' : 'scale(1)',
+        left: tile.x,
+        top: tile.y,
+        width: tile.width,
+        height: tile.height,
+        backgroundColor: tile.color,
+        padding: config.tilePadding,
+        borderRadius: '8px',
         boxShadow: isDragging
-          ? '0 20px 40px rgba(0, 0, 0, 0.3)'
-          : '0 8px 24px rgba(0, 0, 0, 0.15)',
-        transition: isDragging ? 'none' : 'transform 0.2s, box-shadow 0.2s',
-        zIndex: isDragging ? 1000 : 1,
-        borderRadius: isMobile ? '12px' : '24px',
+          ? '0 8px 32px rgba(0,0,0,0.3)'
+          : '0 2px 8px rgba(0,0,0,0.1)',
+        transform: isBeingReordered ? 'scale(0.95)' : 'scale(1)',
       }}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
-      onMouseUp={handleMouseUp}
     >
-      <div
-        className="h-full text-white relative"
-        style={{ padding: isMobile ? '12px' : '16px' }}
-      >
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="absolute top-0 right-0 bg-white/20 rounded-full"
-            style={{
-              width: isMobile ? '80px' : '128px',
-              height: isMobile ? '80px' : '128px',
-              transform: isMobile
-                ? 'translate(40px, -40px)'
-                : 'translate(64px, -64px)',
-            }}
-          />
-        </div>
-
-        <div className="relative z-10 h-full flex flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div
-                className="bg-white/20 rounded-lg flex items-center justify-center"
-                style={{
-                  width: iconContainerSize,
-                  height: iconContainerSize,
-                }}
-              >
-                {React.isValidElement(tile.icon) &&
-                  React.cloneElement(tile.icon as React.ReactElement, {
-                    size: iconSize,
-                  })}
-              </div>
-              {(isLarge || !isMobile) && (
-                <div>
-                  <h3
-                    style={{
-                      fontSize: fontSize.title,
-                      fontWeight: 'bold',
-                      margin: 0,
-                    }}
-                  >
-                    {tile.name}
-                  </h3>
-                  {!isMobile && (
-                    <p
-                      style={{
-                        fontSize: fontSize.subtitle,
-                        opacity: 0.8,
-                        margin: 0,
-                      }}
-                    >
-                      {tile.children?.length || 0} items
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-            <ChevronRight size={isMobile ? 12 : 16} className="opacity-60" />
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 flex flex-col justify-center">
-            {(!isLarge || isMobile) && (
-              <div className="text-center">
-                <h3
-                  style={{
-                    fontSize: fontSize.title,
-                    fontWeight: 'bold',
-                    margin: 0,
-                    marginBottom: '4px',
-                  }}
-                >
-                  {tile.name}
-                </h3>
-                <p
-                  style={{
-                    fontSize: fontSize.caption,
-                    opacity: 0.8,
-                    margin: 0,
-                  }}
-                >
-                  {tile.children?.length
-                    ? `${tile.children.length} items`
-                    : 'File'}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className="flex justify-between items-center">
-            <span style={{ fontSize: fontSize.caption, opacity: 0.7 }}>
-              {isMobile
-                ? 'Recent'
-                : tile.dateModified?.toLocaleDateString() || 'Recent'}
-            </span>
-            {tile.metadata?.favorite && (
-              <Star
-                size={isMobile ? 10 : 12}
-                className="text-yellow-300"
-                fill="currentColor"
-              />
-            )}
-          </div>
+      <div className="w-full h-full flex flex-col justify-between text-white pointer-events-none">
+        <div className="font-bold text-lg">{tile.title}</div>
+        <div className="text-xl font-light">{tile.content}</div>
+        <div className="absolute top-1 right-1 text-xs bg-black/30 px-1 rounded">
+          {tile.orderIndex + 1}
         </div>
       </div>
     </div>
   );
 };
 
-// Main Responsive Grid Desktop Component
-const ResponsiveGridDesktop: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { config, deviceType } = useResponsiveConfig();
-  const [gridManager, setGridManager] = useState<ResponsiveGridManager | null>(
-    null
+const InsertionZone: React.FC<InsertionZoneProps> = ({
+  zone,
+  isActive,
+  onDrop,
+  onHover,
+}) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    onHover(zone.insertIndex, zone.side);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    onDrop(zone.insertIndex);
+  };
+
+  const getZoneColor = (): string => {
+    switch (zone.side) {
+      case 'top':
+      case 'before-all':
+        return isActive
+          ? 'bg-green-500 shadow-lg shadow-green-500/50'
+          : 'bg-green-300/50 hover:bg-green-400/70';
+      case 'bottom':
+      case 'after-all':
+        return isActive
+          ? 'bg-blue-500 shadow-lg shadow-blue-500/50'
+          : 'bg-blue-300/50 hover:bg-blue-400/70';
+      case 'left':
+        return isActive
+          ? 'bg-purple-500 shadow-lg shadow-purple-500/50'
+          : 'bg-purple-300/50 hover:bg-purple-400/70';
+      case 'right':
+        return isActive
+          ? 'bg-orange-500 shadow-lg shadow-orange-500/50'
+          : 'bg-orange-300/50 hover:bg-orange-400/70';
+      default:
+        return isActive
+          ? 'bg-blue-500 shadow-lg shadow-blue-500/50'
+          : 'bg-blue-300/50 hover:bg-blue-400/70';
+    }
+  };
+
+  return (
+    <div
+      className={`absolute transition-all duration-200 pointer-events-auto rounded-sm
+        ${getZoneColor()}
+      `}
+      style={{
+        left: zone.x,
+        top: zone.y,
+        width: zone.width,
+        height: zone.height,
+        zIndex: isActive ? 60 : 30,
+      }}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDrop={handleDrop}
+      title={`Insert ${
+        zone.side === 'left' ||
+        zone.side === 'top' ||
+        zone.side === 'before-all'
+          ? 'before'
+          : 'after'
+      } tile`}
+    />
   );
-  const [draggedTile, setDraggedTile] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState<PixelPosition>({ x: 0, y: 0 });
-  const [prevConfig, setPrevConfig] = useState(config);
+};
 
-  // Sample tiles data with mobile-optimized positions
-  const [tiles, setTiles] = useState<TileData[]>([
-    {
-      id: 'projects',
-      name: 'Projects',
-      icon: <Code />,
-      config: {
-        size: 'large',
-        gradient: { from: '#2563eb', to: '#0891b2' },
-        showLiveContent: true,
-      },
-      gridPosition: { x: 1, y: 1 },
-      children: [{ name: 'React App' }, { name: 'Vue Project' }],
-      dateModified: new Date('2024-01-15'),
-      metadata: { favorite: true },
-    },
-    {
-      id: 'resume',
-      name: 'Resume.pdf',
-      icon: <FileText />,
-      config: {
-        size: 'small',
-        gradient: { from: '#10b981', to: '#059669' },
-      },
-      gridPosition: { x: 12, y: 1 },
-      dateModified: new Date('2024-01-10'),
-    },
-    {
-      id: 'gallery',
-      name: 'Gallery',
-      icon: <Image />,
-      config: {
-        size: 'small',
-        gradient: { from: '#8b5cf6', to: '#ec4899' },
-      },
-      gridPosition: { x: 1, y: 12 },
-      children: [{ name: 'photo1.jpg' }, { name: 'photo2.jpg' }],
-      dateModified: new Date('2024-01-20'),
-      metadata: { favorite: true },
-    },
-    {
-      id: 'settings',
-      name: 'Settings',
-      icon: <Settings />,
-      config: {
-        size: 'small',
-        gradient: { from: '#4b5563', to: '#1f2937' },
-      },
-      gridPosition: { x: 12, y: 12 },
-      dateModified: new Date('2024-01-22'),
-    },
-  ]);
+// Main component
+const MetroTileGrid: React.FC = () => {
+  const { config, breakpoint } = useResponsiveConfig();
+  const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [tiles, setTiles] = useState<Tile[]>(SAMPLE_TILES);
+  const [tileOrder, setTileOrder] = useState<number[]>(
+    SAMPLE_TILES.map((tile) => tile.id)
+  );
+  const [dragState, setDragState] = useState<DragState>({
+    isDragging: false,
+    draggedTile: null,
+    hoveredInsertionIndex: null,
+    hoveredZoneSide: null,
+  });
 
-  // Initialize/update grid manager when config changes
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const manager = new ResponsiveGridManager(
-        rect.width,
-        rect.height,
-        config
-      );
-
-      // Convert tile positions if device type changed
-      if (prevConfig !== config) {
-        setTiles((prevTiles) =>
-          prevTiles.map((tile) => ({
-            ...tile,
-            gridPosition: manager.convertPositionForDevice(
-              tile.gridPosition,
-              prevConfig,
-              config
-            ),
-          }))
-        );
-        setPrevConfig(config);
-      }
-
-      // Initialize grid with current tile positions
-      tiles.forEach((tile) => {
-        manager.occupyCells(tile.gridPosition, tile.config.size, tile.id);
-      });
-
-      setGridManager(manager);
-    }
-  }, [config, prevConfig]);
-
-  const handleDragStart = useCallback(
-    (tileId: string, startPos: PixelPosition) => {
-      setDraggedTile(tileId);
-
-      const handleMouseMove = (e: MouseEvent) => {
-        setDragOffset({
-          x: e.clientX - startPos.x,
-          y: e.clientY - startPos.y,
-        });
-      };
-
-      const handleTouchMove = (e: TouchEvent) => {
-        if (e.touches[0]) {
-          setDragOffset({
-            x: e.touches[0].clientX - startPos.x,
-            y: e.touches[0].clientY - startPos.y,
-          });
+      const updateWidth = (): void => {
+        if (containerRef.current) {
+          setContainerWidth(containerRef.current.offsetWidth);
         }
       };
 
-      const handleEnd = () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleEnd);
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleEnd);
-      };
+      updateWidth();
 
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleEnd);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', handleEnd);
-    },
-    []
+      const resizeObserver = new ResizeObserver(updateWidth);
+      resizeObserver.observe(containerRef.current);
+
+      return () => resizeObserver.disconnect();
+    }
+  }, []);
+
+  // Update tile order when tiles change (add/remove)
+  useEffect(() => {
+    const currentIds: number[] = tiles.map((tile) => tile.id);
+    const newOrder: number[] = tileOrder.filter((id) =>
+      currentIds.includes(id)
+    );
+
+    // Add any new tiles to the end
+    currentIds.forEach((id) => {
+      if (!newOrder.includes(id)) {
+        newOrder.push(id);
+      }
+    });
+
+    // Only update if the order actually changed (to avoid infinite loops)
+    if (
+      newOrder.length !== tileOrder.length ||
+      !newOrder.every((id, index) => id === tileOrder[index])
+    ) {
+      setTileOrder(newOrder);
+    }
+  }, [tiles]); // Removed tileOrder from dependencies to prevent shuffle resets
+
+  const { placedTiles, gridHeight, insertionZones } = useTilePlacement(
+    tiles,
+    config,
+    containerWidth,
+    tileOrder
   );
 
-  const handleDragEnd = useCallback(
-    (tileId: string, endPos: PixelPosition) => {
-      if (!gridManager) return;
+  const handleDragStart = (tile: Tile): void => {
+    setDragState({
+      isDragging: true,
+      draggedTile: tile,
+      hoveredInsertionIndex: null,
+      hoveredZoneSide: null,
+    });
+  };
 
-      const tile = tiles.find((t) => t.id === tileId);
-      if (!tile) return;
+  const handleDragEnd = (): void => {
+    setDragState({
+      isDragging: false,
+      draggedTile: null,
+      hoveredInsertionIndex: null,
+      hoveredZoneSide: null,
+    });
+  };
 
-      const targetGridPos = gridManager.pixelToGrid(endPos);
-      const newGridPos = gridManager.updateTilePosition(
-        tileId,
-        targetGridPos,
-        tile.config.size
-      );
+  const handleInsertionZoneHover = (
+    insertIndex: number,
+    zoneSide: InsertionSide
+  ): void => {
+    setDragState((prev) => ({
+      ...prev,
+      hoveredInsertionIndex: insertIndex,
+      hoveredZoneSide: zoneSide,
+    }));
+  };
 
-      setTiles((prevTiles) =>
-        prevTiles.map((t) =>
-          t.id === tileId ? { ...t, gridPosition: newGridPos } : t
-        )
-      );
+  const handleInsertionDrop = (insertIndex: number): void => {
+    if (!dragState.draggedTile) return;
 
-      setDraggedTile(null);
-      setDragOffset({ x: 0, y: 0 });
-    },
-    [gridManager, tiles]
-  );
+    const draggedId: number = dragState.draggedTile.id;
+    const currentIndex: number = tileOrder.indexOf(draggedId);
+
+    if (currentIndex === -1) return;
+
+    const newOrder: number[] = [...tileOrder];
+
+    // Remove the dragged tile from its current position
+    newOrder.splice(currentIndex, 1);
+
+    // Adjust insert index if we removed an item before it
+    const adjustedInsertIndex: number =
+      insertIndex > currentIndex ? insertIndex - 1 : insertIndex;
+
+    // Insert the tile at the new position
+    newOrder.splice(adjustedInsertIndex, 0, draggedId);
+
+    setTileOrder(newOrder);
+    handleDragEnd();
+  };
+
+  const addRandomTile = (): void => {
+    const colors: string[] = [
+      '#e74c3c',
+      '#3498db',
+      '#2ecc71',
+      '#f39c12',
+      '#9b59b6',
+      '#1abc9c',
+    ];
+    const sizes: TileSize[] = ['small', 'medium', 'large'];
+    const newTile: Tile = {
+      id: Date.now(),
+      size: sizes[Math.floor(Math.random() * sizes.length)],
+      color: colors[Math.floor(Math.random() * colors.length)],
+      title: `Tile ${tiles.length + 1}`,
+      content: Math.floor(Math.random() * 100).toString(),
+    };
+    setTiles((prev) => [...prev, newTile]);
+  };
+
+  const removeTile = (id: number): void => {
+    setTiles((prev) => prev.filter((tile) => tile.id !== id));
+    setTileOrder((prev) => prev.filter((tileId) => tileId !== id));
+  };
+
+  const resetTiles = (): void => {
+    setTiles(SAMPLE_TILES);
+    setTileOrder(SAMPLE_TILES.map((tile) => tile.id));
+  };
+
+  const shuffleTiles = (): void => {
+    const shuffled: number[] = [...tileOrder].sort(() => Math.random() - 0.5);
+    setTileOrder(shuffled);
+  };
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-screen relative overflow-hidden"
-      style={{
-        background:
-          'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-        padding: config.containerPadding,
-      }}
-    >
-      {/* Device indicator */}
-      <div className="absolute top-4 left-4 bg-black/20 text-white px-3 py-1 rounded-lg text-sm z-50">
-        {deviceType} - {config.gridSize}px grid
-      </div>
+    <div className="w-full min-h-screen bg-gray-900 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-6 text-center">
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Metro UI Tile Grid with Reordering (TypeScript)
+          </h1>
+          <p className="text-gray-300 mb-4">
+            Current breakpoint:{' '}
+            <span className="font-semibold text-blue-400">{breakpoint}</span>
+          </p>
+          <div className="space-x-4">
+            <button
+              onClick={addRandomTile}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            >
+              Add Tile
+            </button>
+            <button
+              onClick={shuffleTiles}
+              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+            >
+              Shuffle
+            </button>
+            <button
+              onClick={resetTiles}
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
 
-      {/* Grid visualization for development */}
-      {process.env.NODE_ENV === 'development' && (
         <div
-          className="absolute opacity-5 pointer-events-none"
-          style={{
-            left: config.containerPadding,
-            top: config.containerPadding,
-            right: config.containerPadding,
-            bottom: config.containerPadding,
-            backgroundImage: `
-              linear-gradient(to right, #fff 1px, transparent 1px),
-              linear-gradient(to bottom, #fff 1px, transparent 1px)
-            `,
-            backgroundSize: `${config.gridSize}px ${config.gridSize}px`,
-          }}
-        />
-      )}
+          ref={containerRef}
+          className="relative w-full bg-gray-800 rounded-lg"
+          style={{ height: gridHeight }}
+        >
+          {/* Insertion zones */}
+          {dragState.isDragging &&
+            insertionZones.map((zone) => (
+              <InsertionZone
+                key={zone.id}
+                zone={zone}
+                isActive={
+                  dragState.hoveredInsertionIndex === zone.insertIndex &&
+                  dragState.hoveredZoneSide === zone.side
+                }
+                onDrop={handleInsertionDrop}
+                onHover={handleInsertionZoneHover}
+              />
+            ))}
 
-      {/* Render tiles */}
-      {tiles.map((tile) => (
-        <ResponsiveTile
-          key={tile.id}
-          tile={tile}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          isDragging={draggedTile === tile.id}
-          dragOffset={draggedTile === tile.id ? dragOffset : undefined}
-          config={config}
-          deviceType={deviceType}
-        />
-      ))}
+          {/* Tiles */}
+          {placedTiles.map((tile) => (
+            <div key={tile.id} onDoubleClick={() => removeTile(tile.id)}>
+              <TileComponent
+                tile={tile}
+                config={config}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                isDragging={
+                  dragState.isDragging && dragState.draggedTile?.id === tile.id
+                }
+                isBeingReordered={
+                  dragState.isDragging && dragState.draggedTile?.id !== tile.id
+                }
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 text-sm text-gray-400 text-center">
+          <div>
+            Drag tiles to the colored insertion zones around each tile to
+            reorder them.
+          </div>
+          <div>
+            🟢 Green (top) • 🔵 Blue (bottom) • 🟣 Purple (left) • 🟠 Orange
+            (right)
+          </div>
+          <div>Numbers show current order. Double-click to remove tiles.</div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default ResponsiveGridDesktop;
+export default MetroTileGrid;

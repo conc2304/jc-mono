@@ -46,14 +46,6 @@ const DesktopContent = () => {
         const position = desktopItemPositions[dItem.id] || { x: 0, y: 0 };
 
         return (
-          // <DesktopIcon
-          //   key={icon.id}
-          //   id={icon.id}
-          //   name={icon.name}
-          //   icon={icon.icon}
-          //   position={position}
-          //   isDragging={draggedIcon === icon.id}
-          // />
           <LiveTile
             key={dItem.id}
             id={dItem.id}
