@@ -20,6 +20,8 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
   const projects: ProjectData[] = tileData || [];
   const currentProject = projects[currentIndex];
 
+  const { relativePath, detailedCaption, ...imageProps } =
+    currentProject.media.thumbnail;
   return (
     <Box display="flex" flexDirection="column" height="100%">
       {/* {isLarge && (
@@ -40,8 +42,8 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
         <ContentContainer sx={{ mb: 2 }}>
           <Box textAlign="center" position={'relative'}>
             <ImageContainer
-              className="ProjecetImageContainer--root"
-              {...currentProject.media.thumbnail}
+              className="ProjectImageContainer--root"
+              {...imageProps}
               showSkeletonDuration={0}
               lazy={false}
               sx={{ height: '100px', pb: 1, '*': { objectFit: 'contain' } }}
