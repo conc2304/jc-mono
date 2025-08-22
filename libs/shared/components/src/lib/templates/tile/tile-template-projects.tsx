@@ -22,7 +22,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      {isLarge && (
+      {/* {isLarge && (
         <Box mb={2}>
           <Typography variant="h6" color="white" fontWeight="bold">
             {name}
@@ -34,7 +34,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
             {projects.length} projects
           </Typography>
         </Box>
-      )}
+      )} */}
 
       {currentProject && isLarge && (
         <ContentContainer sx={{ mb: 2 }}>
@@ -84,7 +84,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
               display: 'block',
             }}
           >
-            {projects.length} projects available
+            {projects.length} projects loaded
           </Typography>
         </Box>
       )}

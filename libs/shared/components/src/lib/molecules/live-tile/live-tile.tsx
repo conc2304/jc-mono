@@ -17,6 +17,7 @@ import { TileRenderer } from '@jc/file-system';
 import { DefaultTileContent } from './default-tile-content';
 import { ChevronRight, Folder } from 'lucide-react';
 import { Star } from '@mui/icons-material';
+import { useMediaQuery } from '@mui/system';
 
 export interface TileContentProps<TData = {}> {
   name: string;
@@ -77,7 +78,7 @@ export const LiveTile = memo<LiveTileProps>(
     type = 'file',
   }) => {
     const theme = useTheme();
-    const isSm = theme.breakpoints.down('md');
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const { handleIconMouseDown, draggedIcon } = useIconDrag();
     const { openWindow } = useWindowActions();
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -103,22 +104,23 @@ export const LiveTile = memo<LiveTileProps>(
     useEffect(() => {
       if (config.showLiveContent && ((children?.length || 0) > 1 || tileData)) {
         const interval = setInterval(() => {
-          const maxIndex = children?.length || 4;
+          const maxIndex = Math.min(children?.length || 4, 4); // only cycle through the first 4 projects (is this a good idea)
           setCurrentIndex((prev) => (prev + 1) % maxIndex);
         }, config.updateInterval || 3000);
         return () => clearInterval(interval);
       }
+      return;
     }, [children, tileData, config.showLiveContent, config.updateInterval]);
 
     // Get tile dimensions based on size
     const getTileSize = () => {
       switch (config.size) {
         case 'large':
-          return { width: isSm ? 'calc(100% - 40px)' : 320, height: 340 };
+          return { width: isSm ? '100%' : 320, height: 300 };
         case 'medium':
-          return { width: 240, height: 150 };
+          return { width: isSm ? '45%' : 240, height: 150 };
         case 'small':
-          return { width: 150, height: 150 };
+          return { width: isSm ? '27%' : 150, height: 150 };
         default:
           return { width: 150, height: 150 };
       }
@@ -143,9 +145,10 @@ export const LiveTile = memo<LiveTileProps>(
           to: alpha(config.color, 0.4),
         }}
         sx={{
-          left: position.x,
-          top: position.y,
+          left: isSm ? undefined : position.x,
+          top: isSm ? undefined : position.y,
           zIndex: effectiveIsDragging ? 10000 : 1,
+          position: isSm ? 'relative' : undefined,
         }}
         onMouseDown={(e) => handleIconMouseDown(e, id)}
         onDoubleClick={() => openWindow(id)}
@@ -173,7 +176,7 @@ export const LiveTile = memo<LiveTileProps>(
             }}
           >
             {/* Header */}
-            {/* <Box
+            <Box
               display="flex"
               alignItems="center"
               justifyContent="space-between"
@@ -193,12 +196,25 @@ export const LiveTile = memo<LiveTileProps>(
                     />
                   )}
                 </IconContainer>
+                {isLarge && (
+                  <Box>
+                    <Typography variant="h6" color="white" fontWeight="bold">
+                      {name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: alpha(theme.palette.common.white, 0.8) }}
+                    >
+                      {children?.length ? `${children.length} items` : 'Folder'}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
               <ChevronRight
                 size={16}
                 style={{ color: alpha(theme.palette.common.white, 0.6) }}
               />
-            </Box> */}
+            </Box>
             {/* Dynamic Content Area */}
             <Box display="flex" flexDirection="column" flex={1}>
               <ContentComponent
@@ -234,13 +250,13 @@ export const LiveTile = memo<LiveTileProps>(
               </Typography>
 
               <Box display="flex" alignItems="center" gap={1}>
-                {metadata?.favorite && (
+                {/* {metadata?.favorite && (
                   <Star
                     size={12}
                     style={{ color: '#fbbf24' }}
                     fill="currentColor"
                   />
-                )}
+                )} */}
                 {config.showLiveContent && children && children.length > 1 && (
                   <Box display="flex" gap={0.5}>
                     {children.slice(0, 4).map((_, index) => (

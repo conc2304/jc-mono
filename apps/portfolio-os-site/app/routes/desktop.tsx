@@ -67,8 +67,8 @@ export function App() {
           right: 0,
           zIndex: -1,
           opacity: 0.3,
-          width: '100vw',
-          height: '100dvh',
+          width: '100%',
+          height: '100%',
         }}
       /> */}
     </>

@@ -27,7 +27,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
       config: {
         size: 'large',
         color: '#FF0000',
-        showLiveContent: false,
+        showLiveContent: true,
         updateInterval: 5000,
       },
     },
@@ -35,9 +35,9 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
       (projectData) => projectData.fileData
     ),
   },
-  // resumeFile,
-  // iOSImageGallery,
-  // SettingsFileSystem,
+  resumeFile,
+  iOSImageGallery,
+  SettingsFileSystem,
 ];
 
 export const FileSystem = setFileSystemHierarchy(unMappedFileSystem);
