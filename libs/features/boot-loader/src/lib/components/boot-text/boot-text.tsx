@@ -338,6 +338,10 @@ const BootTextInner: React.FC<BootTextProps> = ({
         messageBlocks.push(messageBlock);
       });
 
+      const bottomSpacer = document.createElement('div');
+      bottomSpacer.style.flexGrow = '1';
+      container.appendChild(bottomSpacer);
+
       // Create cursor element
       const cursorElement = document.createElement('span');
       cursorElement.className = 'boot-cursor';
@@ -623,6 +627,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       })}
     >
       {/* Content will be dynamically generated here */}
+      <Box flexGrow={1} />
     </Box>
   );
 };
