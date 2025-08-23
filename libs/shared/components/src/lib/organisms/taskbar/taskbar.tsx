@@ -24,7 +24,7 @@ export const TaskBar = () => {
         zIndex: theme.zIndex.appBar,
       })}
     >
-      <AugmentedButton
+      {/* <AugmentedButton
         shape="buttonLeft"
         size="medium"
         variant="contained"
@@ -33,7 +33,7 @@ export const TaskBar = () => {
         Start
       </AugmentedButton>
 
-      <Divider orientation="vertical" flexItem sx={{ mx: 2.5 }} />
+      <Divider orientation="vertical" flexItem sx={{ mx: 2.5 }} /> */}
       <Box
         className="Taskbar--right"
         sx={{

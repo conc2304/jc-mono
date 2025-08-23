@@ -32,6 +32,7 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
 
   return (
     <Box
+      className="InsertionZone--root"
       sx={(theme) => ({
         position: 'absolute',
         transition: 'all 0.2s ease-in-out',

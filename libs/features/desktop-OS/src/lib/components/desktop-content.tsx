@@ -33,13 +33,9 @@ const DesktopContent = () => {
         ],
         background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         position: 'relative',
-        overflow: isSm ? 'auto' : 'hidden',
+        // overflow: isSm ? 'auto' : 'hidden',
+        overflow: 'hidden',
         contain: 'layout style paint',
-        p: isSm ? 2 : 0,
-        display: isSm ? 'flex' : undefined,
-        flexWrap: isSm ? 'wrap' : undefined,
-        gap: isSm ? 2 : undefined,
-        // flexDirection: isXs ? 'column'
       })}
     >
       {/* Desktop Icons */}
@@ -71,7 +67,7 @@ const DesktopContent = () => {
       {windows.map((window) => (
         <Window key={window.id} {...window} isActive={window.isActive} />
       ))}
-      {!isSm && <TaskBar />}
+      {/* {!isSm && <TaskBar />} */}
     </Box>
   );
 };

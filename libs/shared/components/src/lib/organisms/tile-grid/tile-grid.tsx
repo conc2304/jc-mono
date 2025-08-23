@@ -143,18 +143,26 @@ export const TileGrid = ({
       className="TileGrid--root"
       sx={{
         width: '100%',
-        minHeight: '100vh',
+        // minHeight: '100vh',
+        // overflowY:
+        height: '100%',
         backgroundColor: 'grey.900',
         p: breakpoint === 'mobile' ? 0 : 2,
       }}
     >
       <Container
-        maxWidth="lg"
+        maxWidth="xl"
         sx={{
+          height: '100%',
           px: breakpoint === 'mobile' ? 0 : undefined,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <Box sx={{ mb: 3, textAlign: 'center' }}>
+        <Box
+          className="TileGrid--control-btns"
+          sx={{ mb: 3, textAlign: 'center' }}
+        >
           <Stack direction="row" spacing={2} justifyContent="center">
             <Button
               onClick={shuffleTiles}
@@ -185,13 +193,17 @@ export const TileGrid = ({
         </Box>
 
         <Box
+          className="TileGrid--tile-container"
           ref={containerRef}
           sx={{
             position: 'relative',
             width: '100%',
             backgroundColor: 'grey.800',
             borderRadius: 1,
-            height: gridHeight,
+            // height: gridHeight,
+            flexGrow: 1,
+            // height: '100%',
+            overflowY: 'auto',
           }}
         >
           {/* Insertion zones */}
@@ -211,7 +223,10 @@ export const TileGrid = ({
 
           {/* Tiles */}
           {placedTiles.map((tile) => (
-            <Box key={tile.id} onDoubleClick={() => console.log(tile.id)}>
+            <Box
+              key={tile.id}
+              onDoubleClick={() => console.log(tile.id, tile.y)}
+            >
               <TileComponent
                 tile={tile}
                 tileConfig={config}
@@ -226,6 +241,19 @@ export const TileGrid = ({
               />
             </Box>
           ))}
+          <Box
+            className="TileGrid--bottom-spacer"
+            sx={{
+              position: 'absolute',
+              top: placedTiles.reduce(
+                (prev, curr, i, arr) => Math.max(prev, curr.y + curr.height),
+                0
+              ),
+              // border: '1px solid',
+              width: '100%',
+              height: config.containerPadding,
+            }}
+          />
         </Box>
       </Container>
     </Box>
