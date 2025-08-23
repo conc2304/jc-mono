@@ -23,53 +23,68 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
   const { relativePath, detailedCaption, ...imageProps } =
     currentProject.media.thumbnail;
   return (
-    <Box display="flex" flexDirection="column" height="100%">
-      {/* {isLarge && (
-        <Box mb={2}>
-          <Typography variant="h6" color="white" fontWeight="bold">
-            {name}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: alpha(theme.palette.common.white, 0.8) }}
-          >
-            {projects.length} projects
-          </Typography>
-        </Box>
-      )} */}
-
+    <Box
+      className="TileTemplate--projects"
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      width="100%"
+    >
       {currentProject && isLarge && (
-        <ContentContainer sx={{ mb: 2 }}>
-          <Box textAlign="center" position={'relative'}>
-            <ImageContainer
-              className="ProjectImageContainer--root"
-              {...imageProps}
-              showSkeletonDuration={0}
-              lazy={false}
-              sx={{ height: '100px', pb: 1, '*': { objectFit: 'contain' } }}
-            />
-            <Typography
-              variant="body2"
-              color="white"
-              fontWeight="medium"
-              noWrap
-            >
-              {currentProject.projectName}
-              {currentProject.metadata?.featured && (
-                <Star
-                  sx={{ pt: 0.25, ml: 1, color: '#fbbf24', fontSize: 12 }}
-                  fill="currentColor"
-                />
-              )}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="white"
-              fontWeight="medium"
-              noWrap
-            >
-              {currentProject.projectSubtitle}
-            </Typography>
+        <ContentContainer>
+          <Box
+            textAlign="center"
+            position={'relative'}
+            sx={{
+              textAlign: 'center',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              alignContent: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <Box maxWidth="60%">
+              <ImageContainer
+                className="ProjectImageContainer--root"
+                {...imageProps}
+                showSkeletonDuration={0}
+                lazy={false}
+                sx={{
+                  // height: '100px',
+                  // maxHeight: '50%',
+                  // pb: 1,
+                  // flexShrink: 1,
+                  '*': { objectFit: 'contain' },
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography
+                variant="body2"
+                color="white"
+                fontWeight="medium"
+                noWrap
+              >
+                {currentProject.projectName}
+                {currentProject.metadata?.featured && (
+                  <Star
+                    sx={{ pt: 0.25, ml: 1, color: '#fbbf24', fontSize: 12 }}
+                    fill="currentColor"
+                  />
+                )}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="white"
+                fontWeight="medium"
+                noWrap
+              >
+                {currentProject.projectSubtitle}
+              </Typography>
+            </Box>
           </Box>
         </ContentContainer>
       )}

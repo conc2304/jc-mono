@@ -242,14 +242,13 @@ export const TileGrid = ({
             </Box>
           ))}
           <Box
-            className="TileGrid--bottom-spacer"
+            className="TileGrid--bottom-padding-spacer"
             sx={{
               position: 'absolute',
               top: placedTiles.reduce(
-                (prev, curr, i, arr) => Math.max(prev, curr.y + curr.height),
+                (prev, curr) => Math.max(prev, curr.y + curr.height),
                 0
               ),
-              // border: '1px solid',
               width: '100%',
               height: config.containerPadding,
             }}

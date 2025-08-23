@@ -27,7 +27,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
       config: {
         size: 'large',
         color: '#FF0000',
-        showLiveContent: true,
+        showLiveContent: false,
         updateInterval: 5000,
       },
     },

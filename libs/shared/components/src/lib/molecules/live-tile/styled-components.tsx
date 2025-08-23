@@ -83,8 +83,8 @@ export const IconContainer = styled(Box, {
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.common.white, 0.1),
-  borderRadius: theme.spacing(2),
-  padding: theme.spacing(2),
+  // borderRadius: theme.spacing(2),
+  // padding: theme.spacing(2),
   flex: 1,
   display: 'flex',
   alignItems: 'center',

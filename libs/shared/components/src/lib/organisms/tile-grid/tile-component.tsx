@@ -9,6 +9,7 @@ import {
   useTheme,
   Box,
   Typography,
+  Button,
 } from '@mui/material';
 import {
   BackgroundPattern,
@@ -17,6 +18,7 @@ import {
 } from '../../molecules/live-tile/styled-components';
 import { ChevronRight, Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
+import { AugmentedButton } from '../../atoms';
 interface TileComponentProps {
   tile: PlacedTile;
   tileConfig: ResponsiveBreakpointConfig;
@@ -126,9 +128,16 @@ export const TileComponent = ({
         transform: isBeingReordered ? 'scale(0.95)' : 'scale(1)',
       }}
     >
-      <Box sx={{ width: '100%', height: '100%', p: 2, position: 'relative' }}>
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          p: 2,
+          position: 'relative',
+          pointerEvents: 'none',
+        }}
+      >
         <BackgroundPattern />
-
         <Box
           sx={{
             position: 'relative',
@@ -179,7 +188,20 @@ export const TileComponent = ({
             />
           </Box>
           {/* Dynamic Content Area */}
-          <Box display="flex" flexDirection="column" flex={1}>
+          <AugmentedButton
+            className="TileComponent--content-area"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              cursor: 'pointer',
+              pointerEvents: 'initial',
+              p: 0,
+            }}
+            fullWidth
+            variant="outlined"
+            color="info"
+          >
             <ContentComponent
               name={name}
               icon={icon}
@@ -193,7 +215,7 @@ export const TileComponent = ({
               totalItems={children?.length || 0}
               {...(renderer.props || {})}
             />
-          </Box>
+          </AugmentedButton>
           {/* Footer */}
           <Box
             display="flex"

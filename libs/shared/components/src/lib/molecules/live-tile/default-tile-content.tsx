@@ -22,13 +22,24 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
     >
       {!isLarge && (
         <>
-          <Typography variant="h3" fontWeight="bold" noWrap sx={{ mb: 0.5 }}>
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            noWrap
+            sx={{ mb: 0.5 }}
+            color="textPrimary"
+          >
             {name}
           </Typography>
           <Typography
             variant="caption"
             sx={{
-              color: alpha(theme.palette.common.white, 0.8),
+              color: alpha(
+                theme.palette.common[
+                  theme.palette.mode === 'dark' ? 'white' : 'black'
+                ],
+                0.8
+              ),
               fontSize: '0.65rem',
             }}
           >
@@ -37,7 +48,12 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: alpha(theme.palette.common.white, 0.7),
+              color: alpha(
+                theme.palette.common[
+                  theme.palette.mode === 'dark' ? 'white' : 'black'
+                ],
+                0.7
+              ),
               fontSize: '0.65rem',
               mt: 0.5,
             }}
