@@ -69,14 +69,23 @@
 
 import { Box, useTheme } from '@mui/system';
 import {
-  DefaultBootMessage,
-  ThemedBootMessages,
+  // DefaultBootMessage,
+  // ThemedBootMessages,
   BootLayout,
-  MobileThemedBootMessages,
-  MobileDefaultBootMessage,
+  // MobileThemedBootMessages,
+  // MobileDefaultBootMessage,
+  // getScrambleCharacters,
 } from '@jc/boot-loader';
 import { useEnhancedTheme } from '@jc/themes';
 import { randomInt } from 'd3';
+import {
+  DefaultBootMessage,
+  MobileDefaultBootMessage,
+  MobileThemedBootMessages,
+  ThemedBootMessages,
+} from './data/themed-data/boot-messages';
+import { getScrambleCharacters } from './data/themed-data/themed-scramble-charsets';
+import { getThemedGifUrl } from './data/themed-data/themed-gif';
 
 export default function App() {
   const theme = useTheme();
@@ -107,5 +116,14 @@ export default function App() {
     bootMessagesThemed[bootMessagesThemed.length - 1],
   ];
 
-  return <BootLayout bootMessages={bootMessages} />;
+  const scrambleCharacterSet = getScrambleCharacters(currentThemeId);
+  const gifUrl = getThemedGifUrl(currentThemeId);
+
+  return (
+    <BootLayout
+      bootMessages={bootMessages}
+      scrambleCharacterSet={scrambleCharacterSet}
+      themedWidgetGifUrl={gifUrl}
+    />
+  );
 }

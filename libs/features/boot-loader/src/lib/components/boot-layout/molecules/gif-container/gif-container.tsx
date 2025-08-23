@@ -37,10 +37,24 @@ export const SliderGradient = styled(Box)<{ url: string }>(
     height: '100%',
     background: `${gradient(theme)}, ${url}`,
     backgroundSize: 'cover',
+    backgroundPositionY: 'center',
     opacity: 0.5,
     backgroundBlendMode: 'hard-light',
   })
 );
+
+export const FilterEffect = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'fill',
+  // filter: 'brightness(0.9) contrast(1) saturate(1) grayscale(1)',
+  // filter: 'brightness(0.8) contrast(1.1) saturate(5.2) grayscale(0.75);',
+  backdropFilter: 'brightness(0.85) contrast(1.1) saturate(5.2) grayscale(0.7)',
+  zIndex: 1,
+}));
 
 export const GifContainer = ({
   url = defaultGif,
@@ -53,6 +67,7 @@ export const GifContainer = ({
       <Inner elevation={0} data-augmented-ui="border br-clip">
         <ScanLinesOverlay />
         <SliderGradient url={url} />
+        <FilterEffect />
       </Inner>
     </Container>
   );

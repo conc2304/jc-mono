@@ -26,7 +26,7 @@ import {
 } from './atoms';
 import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
-import { easeSinInOut, randomInt } from 'd3';
+import { easeSinInOut } from 'd3';
 import { remap } from '../utils';
 import {
   DataPanel,
@@ -44,15 +44,31 @@ import {
   DiagonalLines,
   ScrambleText,
 } from '@jc/ui-components';
-import { DefaultBootMessage } from './boot-messages';
 
 interface SciFiLayoutProps {
   className?: string;
   bootMessages?: BootMessage[];
+  scrambleCharacterSet?: string;
+  themedWidgetGifUrl?: {
+    url?: string;
+    backgroundPositionY?: Property.BackgroundPositionY;
+  };
 }
 
-const scrambleCharacterSet =
+const defaultScrambleCharacterSet =
   '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+const defaultBootMessages: BootMessage[] = [
+  'Initializing system...',
+  ['Loading kernel modules...', 'Injecting backdoor...'],
+  'Starting network services...',
+  ['Mounting file systems...', 'Accessing classified data...'],
+  'Starting user services...',
+  ['System boot complete.', 'Welcome, Agent Smith.'],
+  '',
+  'Welcome to Terminal OS v2.1.0',
+  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
+];
 
 const sampleData: RadarData = [
   [
@@ -102,7 +118,12 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
   className = '',
-  bootMessages = DefaultBootMessage,
+  bootMessages = defaultBootMessages,
+  scrambleCharacterSet = defaultScrambleCharacterSet,
+  themedWidgetGifUrl = {
+    url: 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif',
+    backgroundPositionY: 'center',
+  },
 }) => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -151,7 +172,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     console.log('Boot sequence complete!');
   }, []);
 
-  const cloudGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
+  // const themedWidgetGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
 
   // Mobile Layout (1 column)
   if (isSm) {
@@ -241,8 +262,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             <ThemePickerPanel compactMenu />
 
             <GifContainer
-              url={cloudGif}
-              sx={{ minHeight: '15%', flexGrow: 0.5 }}
+              url={`url(${themedWidgetGifUrl.url})`}
+              sx={{
+                minHeight: '15%',
+                flexGrow: 0.5,
+                backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
+              }}
             />
 
             <EnterButton />
@@ -370,7 +395,14 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       }}
                     />
                   </TorusLoaderCardAug>
-                  <GifContainer url={cloudGif} sx={{ height: '20%' }} />
+                  <GifContainer
+                    url={`url(${themedWidgetGifUrl.url}`}
+                    sx={{
+                      height: '20%',
+                      backgroundPositionY:
+                        themedWidgetGifUrl.backgroundPositionY,
+                    }}
+                  />
                 </Box>
               </Grid>
             </Grid>
@@ -474,7 +506,15 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
                 {/* Ambient Panels */}
                 <Box flex={1} display="flex" flexDirection="column" gap={1}>
-                  <GifContainer url={cloudGif} sx={{ height: 128 }} />
+                  <GifContainer
+                    url={`url('${themedWidgetGifUrl.url}')`}
+                    sx={{
+                      height: 128,
+                      backgroundPositionY:
+                        themedWidgetGifUrl.backgroundPositionY,
+                    }}
+                  />
+
                   <WarningPanel />
                 </Box>
               </Box>

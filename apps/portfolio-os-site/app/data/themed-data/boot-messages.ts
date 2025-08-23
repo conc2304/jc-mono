@@ -1,4 +1,4 @@
-import { BootMessage } from '../../types';
+import { BootMessage } from '../../../../../libs/features/boot-loader/src/lib/types';
 
 // key is id of theme
 export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
