@@ -13,8 +13,6 @@ type InsertionSide =
 type InsertionType = 'horizontal' | 'vertical';
 
 interface TileConfig {
-  width: number;
-  height: number;
   gridWidth: number;
   gridHeight: number;
 }
@@ -23,6 +21,7 @@ interface ResponsiveBreakpointConfig {
   gridSize: number;
   tilePadding: number;
   containerPadding: number;
+  tileGap: number; // Visual gap between tiles
   sizes: Record<TileSize, TileConfig>;
 }
 
@@ -82,33 +81,36 @@ interface TilePlacementResult {
 // Configuration
 const RESPONSIVE_CONFIG: ResponsiveConfig = {
   mobile: {
-    gridSize: 16,
-    tilePadding: 4,
-    containerPadding: 8,
+    gridSize: 32,
+    tilePadding: 8,
+    containerPadding: 16,
+    tileGap: 8, // 8px visual gap between tiles
     sizes: {
-      small: { width: 140, height: 140, gridWidth: 9, gridHeight: 9 },
-      medium: { width: 140, height: 200, gridWidth: 9, gridHeight: 13 },
-      large: { width: 300, height: 160, gridWidth: 19, gridHeight: 10 },
+      small: { gridWidth: 999, gridHeight: 7 }, // Full width × 224px (7×32)
+      medium: { gridWidth: 999, gridHeight: 9 }, // Full width × 288px (9×32)
+      large: { gridWidth: 999, gridHeight: 12 }, // Full width × 384px (12×32)
     },
   },
   tablet: {
-    gridSize: 18,
-    tilePadding: 6,
-    containerPadding: 16,
+    gridSize: 36,
+    tilePadding: 12,
+    containerPadding: 32,
+    tileGap: 12, // 12px visual gap between tiles
     sizes: {
-      small: { width: 145, height: 145, gridWidth: 8, gridHeight: 8 },
-      medium: { width: 220, height: 145, gridWidth: 12, gridHeight: 8 },
-      large: { width: 300, height: 200, gridWidth: 17, gridHeight: 11 },
+      small: { gridWidth: 8, gridHeight: 8 }, // 288×288px (8×36)
+      medium: { gridWidth: 12, gridHeight: 8 }, // 432×288px (12×36, 8×36)
+      large: { gridWidth: 17, gridHeight: 11 }, // 612×396px (17×36, 11×36)
     },
   },
   desktop: {
-    gridSize: 20,
-    tilePadding: 8,
-    containerPadding: 24,
+    gridSize: 40,
+    tilePadding: 16,
+    containerPadding: 48,
+    tileGap: 16, // 16px visual gap between tiles
     sizes: {
-      small: { width: 150, height: 150, gridWidth: 8, gridHeight: 8 },
-      medium: { width: 240, height: 150, gridWidth: 12, gridHeight: 8 },
-      large: { width: 320, height: 240, gridWidth: 16, gridHeight: 12 },
+      small: { gridWidth: 8, gridHeight: 8 }, // 320×320px (8×40)
+      medium: { gridWidth: 12, gridHeight: 8 }, // 480×320px (12×40, 8×40)
+      large: { gridWidth: 16, gridHeight: 12 }, // 640×480px (16×40, 12×40)
     },
   },
 };
@@ -188,6 +190,27 @@ const useTilePlacement = (
       return { placedTiles: [], gridHeight: 0, insertionZones: [] };
     }
 
+    // Helper function to calculate visual dimensions from grid dimensions
+    const calculateTileSize = (
+      tileConfig: TileConfig,
+      config: ResponsiveBreakpointConfig,
+      containerWidth: number
+    ): { width: number; height: number } => {
+      // For full-width tiles (gridWidth 999), use full container width
+      if (tileConfig.gridWidth >= 999) {
+        return {
+          width: containerWidth - config.containerPadding * 2,
+          height: tileConfig.gridHeight * config.gridSize - config.tileGap,
+        };
+      }
+
+      // Regular tiles - calculate from grid dimensions
+      return {
+        width: tileConfig.gridWidth * config.gridSize - config.tileGap,
+        height: tileConfig.gridHeight * config.gridSize - config.tileGap,
+      };
+    };
+
     const gridColumns: number = Math.floor(
       (containerWidth - config.containerPadding * 2) / config.gridSize
     );
@@ -249,6 +272,23 @@ const useTilePlacement = (
     const findPlacement = (
       tileConfig: TileConfig
     ): { row: number; col: number } => {
+      // For full-width tiles (gridWidth 999), always place at column 0
+      if (tileConfig.gridWidth >= 999) {
+        for (let row = 0; row < grid.length + 10; row++) {
+          if (canPlaceTile(row, 0, { ...tileConfig, gridWidth: gridColumns })) {
+            return { row, col: 0 };
+          }
+        }
+
+        // If no placement found, add to the end
+        const row: number = grid.length;
+        while (grid.length < row + tileConfig.gridHeight) {
+          grid.push(new Array(gridColumns).fill(false));
+        }
+        return { row, col: 0 };
+      }
+
+      // Regular placement logic for non-full-width tiles
       for (let row = 0; row < grid.length + 10; row++) {
         for (let col = 0; col <= gridColumns - tileConfig.gridWidth; col++) {
           if (canPlaceTile(row, col, tileConfig)) {
@@ -269,14 +309,33 @@ const useTilePlacement = (
       const tileConfig: TileConfig = config.sizes[tile.size];
       const placement = findPlacement(tileConfig);
 
-      placeTile(placement.row, placement.col, tileConfig);
+      // Use modified config for placement marking (full-width tiles mark entire row)
+      const placementConfig =
+        tileConfig.gridWidth >= 999
+          ? { ...tileConfig, gridWidth: gridColumns }
+          : tileConfig;
+
+      placeTile(placement.row, placement.col, placementConfig);
+
+      // Calculate actual dimensions from grid dimensions
+      const { width: actualWidth, height: actualHeight } = calculateTileSize(
+        tileConfig,
+        config,
+        containerWidth
+      );
+
+      // For full-width tiles, always place at column 0
+      const actualX =
+        tileConfig.gridWidth >= 999
+          ? config.containerPadding
+          : placement.col * config.gridSize + config.containerPadding;
 
       const tileData: PlacedTile = {
         ...tile,
-        x: placement.col * config.gridSize + config.containerPadding,
+        x: actualX,
         y: placement.row * config.gridSize + config.containerPadding,
-        width: tileConfig.width,
-        height: tileConfig.height,
+        width: actualWidth,
+        height: actualHeight,
         orderIndex: index,
         gridRow: placement.row,
         gridCol: placement.col,
@@ -288,53 +347,81 @@ const useTilePlacement = (
       const zoneOffset: number = 8;
       const zoneThickness: number = 4;
 
-      // Top insertion zone
-      insertionZones.push({
-        id: `top-${tile.id}`,
-        x: tileData.x,
-        y: tileData.y - zoneOffset,
-        width: tileData.width,
-        height: zoneThickness,
-        insertIndex: index,
-        type: 'horizontal',
-        side: 'top',
-      });
+      // For full-width tiles, only show top and bottom insertion zones
+      if (tileConfig.gridWidth >= 999) {
+        // Top insertion zone
+        insertionZones.push({
+          id: `top-${tile.id}`,
+          x: tileData.x,
+          y: tileData.y - zoneOffset,
+          width: tileData.width,
+          height: zoneThickness,
+          insertIndex: index,
+          type: 'horizontal',
+          side: 'top',
+        });
 
-      // Bottom insertion zone
-      insertionZones.push({
-        id: `bottom-${tile.id}`,
-        x: tileData.x,
-        y: tileData.y + tileData.height + zoneOffset - zoneThickness,
-        width: tileData.width,
-        height: zoneThickness,
-        insertIndex: index + 1,
-        type: 'horizontal',
-        side: 'bottom',
-      });
+        // Bottom insertion zone
+        insertionZones.push({
+          id: `bottom-${tile.id}`,
+          x: tileData.x,
+          y: tileData.y + tileData.height + zoneOffset - zoneThickness,
+          width: tileData.width,
+          height: zoneThickness,
+          insertIndex: index + 1,
+          type: 'horizontal',
+          side: 'bottom',
+        });
+      } else {
+        // Regular tiles - all 4 sides
+        // Top insertion zone
+        insertionZones.push({
+          id: `top-${tile.id}`,
+          x: tileData.x,
+          y: tileData.y - zoneOffset,
+          width: tileData.width,
+          height: zoneThickness,
+          insertIndex: index,
+          type: 'horizontal',
+          side: 'top',
+        });
 
-      // Left insertion zone
-      insertionZones.push({
-        id: `left-${tile.id}`,
-        x: tileData.x - zoneOffset,
-        y: tileData.y,
-        width: zoneThickness,
-        height: tileData.height,
-        insertIndex: index,
-        type: 'vertical',
-        side: 'left',
-      });
+        // Bottom insertion zone
+        insertionZones.push({
+          id: `bottom-${tile.id}`,
+          x: tileData.x,
+          y: tileData.y + tileData.height + zoneOffset - zoneThickness,
+          width: tileData.width,
+          height: zoneThickness,
+          insertIndex: index + 1,
+          type: 'horizontal',
+          side: 'bottom',
+        });
 
-      // Right insertion zone
-      insertionZones.push({
-        id: `right-${tile.id}`,
-        x: tileData.x + tileData.width + zoneOffset - zoneThickness,
-        y: tileData.y,
-        width: zoneThickness,
-        height: tileData.height,
-        insertIndex: index + 1,
-        type: 'vertical',
-        side: 'right',
-      });
+        // Left insertion zone
+        insertionZones.push({
+          id: `left-${tile.id}`,
+          x: tileData.x - zoneOffset,
+          y: tileData.y,
+          width: zoneThickness,
+          height: tileData.height,
+          insertIndex: index,
+          type: 'vertical',
+          side: 'left',
+        });
+
+        // Right insertion zone
+        insertionZones.push({
+          id: `right-${tile.id}`,
+          x: tileData.x + tileData.width + zoneOffset - zoneThickness,
+          y: tileData.y,
+          width: zoneThickness,
+          height: tileData.height,
+          insertIndex: index + 1,
+          type: 'vertical',
+          side: 'right',
+        });
+      }
     });
 
     // Add insertion zone at the very beginning (before first tile)
@@ -687,7 +774,7 @@ const MetroTileGrid: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold text-white mb-4">
-            Metro UI Tile Grid with Reordering (TypeScript)
+            Metro UI Tile Grid - Grid-Based Sizing (TypeScript)
           </h1>
           <p className="text-gray-300 mb-4">
             Current breakpoint:{' '}
@@ -762,6 +849,10 @@ const MetroTileGrid: React.FC = () => {
           <div>
             🟢 Green (top) • 🔵 Blue (bottom) • 🟣 Purple (left) • 🟠 Orange
             (right)
+          </div>
+          <div>
+            On mobile: tiles span full width with fixed heights • On
+            tablet/desktop: mixed sizes
           </div>
           <div>Numbers show current order. Double-click to remove tiles.</div>
         </div>

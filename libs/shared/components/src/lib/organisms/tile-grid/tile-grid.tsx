@@ -4,12 +4,18 @@ import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { useEffect, useRef, useState } from 'react';
 import { DragState, InsertionSide, Tile, TileSize } from './types';
 import { useTilePlacement } from './use-tile-placement';
+import { BaseFileSystemItem } from '@jc/file-system';
+import { TileComponent } from './tile-component';
 
-export const TileGrid = ({ gridTiles = [] }: { gridTiles: Tile[] }) => {
+export const TileGrid = ({
+  gridTiles = [],
+}: {
+  gridTiles: BaseFileSystemItem[];
+}) => {
   const { config, breakpoint } = useResponsiveTileConfig();
   const [containerWidth, setContainerWidth] = useState<number>(0);
-  const [tiles, setTiles] = useState<Tile[]>(gridTiles);
-  const [tileOrder, setTileOrder] = useState<number[]>(
+  const [tiles, setTiles] = useState<BaseFileSystemItem[]>(gridTiles);
+  const [tileOrder, setTileOrder] = useState<string[]>(
     gridTiles.map((tile) => tile.id)
   );
 
@@ -41,8 +47,8 @@ export const TileGrid = ({ gridTiles = [] }: { gridTiles: Tile[] }) => {
 
   // Update tile order when tiles change (add/remove)
   useEffect(() => {
-    const currentIds: number[] = tiles.map((tile) => tile.id);
-    const newOrder: number[] = tileOrder.filter((id) =>
+    const currentIds: string[] = tiles.map((tile) => tile.id);
+    const newOrder: string[] = tileOrder.filter((id) =>
       currentIds.includes(id)
     );
 
@@ -101,12 +107,12 @@ export const TileGrid = ({ gridTiles = [] }: { gridTiles: Tile[] }) => {
   const handleInsertionDrop = (insertIndex: number): void => {
     if (!dragState.draggedTile) return;
 
-    const draggedId: number = dragState.draggedTile.id;
+    const draggedId: string = dragState.draggedTile.id;
     const currentIndex: number = tileOrder.indexOf(draggedId);
 
     if (currentIndex === -1) return;
 
-    const newOrder: number[] = [...tileOrder];
+    const newOrder: string[] = [...tileOrder];
 
     // Remove the dragged tile from its current position
     newOrder.splice(currentIndex, 1);
@@ -128,20 +134,26 @@ export const TileGrid = ({ gridTiles = [] }: { gridTiles: Tile[] }) => {
   };
 
   const shuffleTiles = (): void => {
-    const shuffled: number[] = [...tileOrder].sort(() => Math.random() - 0.5);
+    const shuffled: string[] = [...tileOrder].sort(() => Math.random() - 0.5);
     setTileOrder(shuffled);
   };
 
   return (
     <Box
+      className="TileGrid--root"
       sx={{
         width: '100%',
         minHeight: '100vh',
         backgroundColor: 'grey.900',
-        p: 2,
+        p: breakpoint === 'mobile' ? 0 : 2,
       }}
     >
-      <Container maxWidth="lg">
+      <Container
+        maxWidth="lg"
+        sx={{
+          px: breakpoint === 'mobile' ? 0 : undefined,
+        }}
+      >
         <Box sx={{ mb: 3, textAlign: 'center' }}>
           <Stack direction="row" spacing={2} justifyContent="center">
             <Button
@@ -202,7 +214,7 @@ export const TileGrid = ({ gridTiles = [] }: { gridTiles: Tile[] }) => {
             <Box key={tile.id} onDoubleClick={() => console.log(tile.id)}>
               <TileComponent
                 tile={tile}
-                config={config}
+                tileConfig={config}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
                 isDragging={
@@ -214,22 +226,6 @@ export const TileGrid = ({ gridTiles = [] }: { gridTiles: Tile[] }) => {
               />
             </Box>
           ))}
-        </Box>
-
-        <Box sx={{ mt: 3, textAlign: 'center' }}>
-          <Typography variant="body2" sx={{ color: 'grey.400', mb: 0.5 }}>
-            Drag tiles to the colored insertion zones around each tile to
-            reorder them.
-          </Typography>
-
-          <Typography variant="body2" sx={{ color: 'grey.400', mb: 0.5 }}>
-            🟢 Green (top) • 🔵 Blue (bottom) • 🟣 Purple (left) • 🟠 Orange
-            (right)
-          </Typography>
-
-          <Typography variant="body2" sx={{ color: 'grey.400' }}>
-            Numbers show current order. Double-click to remove tiles.
-          </Typography>
         </Box>
       </Container>
     </Box>

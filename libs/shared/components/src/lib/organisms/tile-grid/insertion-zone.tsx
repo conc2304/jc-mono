@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/material';
+import { alpha, Box, useTheme } from '@mui/material';
 import { InsertionSide, InsertionZone as InsertionZoneType } from './types';
 
 interface InsertionZoneProps {
@@ -14,8 +14,7 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
   onDrop,
   onHover,
 }) => {
-  const theme = useTheme();
-
+  const theme = useTheme;
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
@@ -31,52 +30,40 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
     onDrop(zone.insertIndex);
   };
 
-  const getZoneColor = (): string => {
-    // switch (zone.side) {
-    //   case 'top':
-    //   case 'before-all':
-    //     return isActive
-    //       ? 'bg-green-500 shadow-lg shadow-green-500/50'
-    //       : 'bg-green-300/50 hover:bg-green-400/70';
-    //   case 'bottom':
-    //   case 'after-all':
-    //     return isActive
-    //       ? 'bg-blue-500 shadow-lg shadow-blue-500/50'
-    //       : 'bg-blue-300/50 hover:bg-blue-400/70';
-    //   case 'left':
-    //     return isActive
-    //       ? 'bg-purple-500 shadow-lg shadow-purple-500/50'
-    //       : 'bg-purple-300/50 hover:bg-purple-400/70';
-    //   case 'right':
-    //     return isActive
-    //       ? 'bg-orange-500 shadow-lg shadow-orange-500/50'
-    //       : 'bg-orange-300/50 hover:bg-orange-400/70';
-    //   default:
-    //     return isActive
-    //       ? 'bg-blue-500 shadow-lg shadow-blue-500/50'
-    //       : 'bg-blue-300/50 hover:bg-blue-400/70';
-    // }
-
-    return isActive
-      ? theme.palette.action.selected
-      : theme.palette.action.active;
-  };
-
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         position: 'absolute',
-        transition: 'all 200 ease-in-out',
+        transition: 'all 0.2s ease-in-out',
         pointerEvents: 'auto',
-      }}
-      style={{
         left: zone.x,
         top: zone.y,
         width: zone.width,
         height: zone.height,
         zIndex: isActive ? 60 : 30,
-        color: getZoneColor(),
-      }}
+        borderRadius: Math.min(zone.width, zone.height) / 2,
+
+        ...(isActive
+          ? {
+              backgroundColor: 'success.main',
+              boxShadow: `0 10px 15px -3px ${alpha(
+                theme.palette.success.main,
+                0.5
+              )}, 0 4px 6px -2px ${alpha(
+                theme.palette.getInvertedMode('success'),
+                0.5
+              )}`,
+            }
+          : {
+              backgroundColor: theme.palette.getInvertedMode('secondary'),
+              '&:hover': {
+                backgroundColor: alpha(
+                  theme.palette.getInvertedMode('secondary', true),
+                  0.7
+                ),
+              },
+            }),
+      })}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDrop={handleDrop}

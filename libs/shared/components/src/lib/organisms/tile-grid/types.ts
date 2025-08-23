@@ -1,3 +1,4 @@
+import { BaseFileSystemItem } from '@jc/file-system';
 import { ReactNode } from 'react';
 
 export type InsertionSide =
@@ -21,8 +22,6 @@ export interface InsertionZone {
 }
 
 export interface TileConfig {
-  width: number;
-  height: number;
   gridWidth: number;
   gridHeight: number;
 }
@@ -34,6 +33,7 @@ export interface ResponsiveBreakpointConfig {
   gridSize: number;
   tilePadding: number;
   containerPadding: number;
+  tileGap: number;
   sizes: Record<TileSize, TileConfig>;
 }
 
@@ -44,11 +44,9 @@ export interface ResponsiveTileConfig {
 }
 
 export interface Tile {
-  id: number;
+  id: string;
   size: TileSize;
   color: string;
-  title: string;
-  content: ReactNode;
 }
 
 export interface PlacedTile extends Tile {
@@ -59,6 +57,7 @@ export interface PlacedTile extends Tile {
   orderIndex: number;
   gridRow: number;
   gridCol: number;
+  fileData: BaseFileSystemItem;
 }
 
 export interface DragState {

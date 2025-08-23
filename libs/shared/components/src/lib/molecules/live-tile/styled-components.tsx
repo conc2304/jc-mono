@@ -5,15 +5,14 @@ export const TileContainer = styled(Box, {
     !['effectiveIsDragging', 'tileSize', 'gradient'].includes(prop as string),
 })<{
   effectiveIsDragging: boolean;
-  tileSize: { width: string | number; height: string | number };
+  // tileSize: { width: string | number; height: string | number };
   gradient: { from: string; to: string };
-}>(({ theme, effectiveIsDragging, tileSize, gradient }) => ({
+}>(({ theme, effectiveIsDragging, gradient }) => ({
   position: 'absolute',
-  cursor: 'pointer',
+  cursor: 'grab',
   borderRadius: theme.spacing(3),
   overflow: 'hidden',
-  // {...tileSize}
-  ...tileSize,
+  // ...tileSize,
   background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
   transition: !effectiveIsDragging
     ? theme.transitions.create(['transform', 'box-shadow'], {

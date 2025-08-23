@@ -2,33 +2,36 @@ import { ResponsiveTileConfig } from './types';
 
 export const TILE_CONFIG: ResponsiveTileConfig = {
   mobile: {
-    gridSize: 16,
-    tilePadding: 4,
-    containerPadding: 8,
+    gridSize: 32,
+    tilePadding: 8,
+    containerPadding: 16,
+    tileGap: 8, // 8px visual gap between tiles
     sizes: {
-      small: { width: 140, height: 140, gridWidth: 9, gridHeight: 9 },
-      medium: { width: 140, height: 200, gridWidth: 9, gridHeight: 13 },
-      large: { width: 300, height: 160, gridWidth: 19, gridHeight: 10 },
+      small: { gridWidth: 999, gridHeight: 7 }, // Full width × 224px (7×32)
+      medium: { gridWidth: 999, gridHeight: 9 }, // Full width × 288px (9×32)
+      large: { gridWidth: 999, gridHeight: 12 }, // Full width × 384px (12×32)
     },
   },
   tablet: {
-    gridSize: 18,
-    tilePadding: 6,
-    containerPadding: 16,
+    gridSize: 36,
+    tilePadding: 12,
+    containerPadding: 32,
+    tileGap: 12, // 12px visual gap between tiles
     sizes: {
-      small: { width: 145, height: 145, gridWidth: 8, gridHeight: 8 },
-      medium: { width: 220, height: 145, gridWidth: 12, gridHeight: 8 },
-      large: { width: 300, height: 200, gridWidth: 17, gridHeight: 11 },
+      small: { gridWidth: 8, gridHeight: 8 }, // 288×288px (8×36)
+      medium: { gridWidth: 12, gridHeight: 8 }, // 432×288px (12×36, 8×36)
+      large: { gridWidth: 17, gridHeight: 11 }, // 612×396px (17×36, 11×36)
     },
   },
   desktop: {
-    gridSize: 20,
-    tilePadding: 8,
-    containerPadding: 24,
+    gridSize: 40,
+    tilePadding: 16,
+    containerPadding: 48,
+    tileGap: 16, // 16px visual gap between tiles
     sizes: {
-      small: { width: 150, height: 150, gridWidth: 8, gridHeight: 8 },
-      medium: { width: 240, height: 150, gridWidth: 12, gridHeight: 8 },
-      large: { width: 320, height: 240, gridWidth: 16, gridHeight: 12 },
+      small: { gridWidth: 8, gridHeight: 8 }, // 320×320px (8×40)
+      medium: { gridWidth: 12, gridHeight: 8 }, // 480×320px (12×40, 8×40)
+      large: { gridWidth: 16, gridHeight: 12 }, // 640×480px (16×40, 12×40)
     },
   },
 };

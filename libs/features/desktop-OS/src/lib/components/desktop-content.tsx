@@ -2,6 +2,7 @@ import {
   DesktopIcon,
   LiveTile,
   TaskBar,
+  TileGrid,
   useWindowManager,
   Window,
 } from '@jc/ui-components';
@@ -42,7 +43,7 @@ const DesktopContent = () => {
       })}
     >
       {/* Desktop Icons */}
-      {desktopItems.map((dItem) => {
+      {/* {desktopItems.map((dItem) => {
         const position = desktopItemPositions[dItem.id] || { x: 0, y: 0 };
 
         return (
@@ -62,7 +63,9 @@ const DesktopContent = () => {
             children={dItem.children}
           />
         );
-      })}
+      })} */}
+
+      <TileGrid gridTiles={desktopItems} />
 
       {/* Windows */}
       {windows.map((window) => (

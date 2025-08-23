@@ -1,1 +1,1 @@
-export * from './tile-config';
+export * from './tile-grid';

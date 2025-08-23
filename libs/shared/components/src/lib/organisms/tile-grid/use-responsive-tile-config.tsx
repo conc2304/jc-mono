@@ -10,6 +10,9 @@ export const useResponsiveTileConfig = () => {
     height: typeof window !== 'undefined' ? window.innerHeight : 800,
   });
 
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+
   useEffect(() => {
     const handleResize = (): void => {
       setWindowSize({
@@ -23,10 +26,10 @@ export const useResponsiveTileConfig = () => {
   }, []);
 
   const breakpoint: Breakpoint = useMemo(() => {
-    if (useMediaQuery(theme.breakpoints.down('sm'))) return 'mobile';
-    if (useMediaQuery(theme.breakpoints.down('lg'))) return 'tablet';
+    if (isMobile) return 'mobile';
+    if (isTablet) return 'tablet';
     return 'desktop';
-  }, [windowSize.width]);
+  }, [isMobile, isTablet]);
 
   return {
     config: TILE_CONFIG[breakpoint],
