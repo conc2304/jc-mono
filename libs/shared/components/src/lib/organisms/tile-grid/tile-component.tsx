@@ -19,6 +19,7 @@ import {
 import { ChevronRight, Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton, DiagonalLines } from '../../atoms';
+import { positions } from '@mui/system';
 interface TileComponentProps {
   tile: PlacedTile;
   tileConfig: ResponsiveBreakpointConfig;
@@ -284,6 +285,40 @@ export const TileComponent = ({
               )}
             </Box>
           </Box>
+        </Box>
+
+        <Box
+          className="TileComponent--drag-handle"
+          data-augmented-ui="border bl-clip br-clip"
+          sx={{
+            '--aug-border-top': '2px',
+            '--aug-border-bottom': '0px',
+
+            position: 'absolute',
+            bottom: 0,
+            left: '50%',
+            right: '50%',
+            transform: 'translateX(-50%)',
+            width: '20%',
+            height: '15px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <DiagonalLines
+            height="100%"
+            lineThickness={5}
+            spacing={20}
+            direction="diagonal"
+            color={theme.palette.text.primary}
+          />
+          <DiagonalLines
+            height="100%"
+            lineThickness={5}
+            spacing={20}
+            direction="diagonal-alt"
+            color={theme.palette.text.primary}
+          />
         </Box>
       </Box>
     </TileContainer>
