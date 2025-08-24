@@ -1,13 +1,14 @@
 import { FileSystemItem } from '@jc/file-system';
 import { ArtGalleryMedia_iOS_Made } from '@jc/portfolio';
 import { MediaGalleryPage, MediaGalleryProps } from '@jc/ui-components';
-import { Image } from '@mui/icons-material';
+import { Image } from 'lucide-react';
+// import { Image } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 
 export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
   id: uuidv4(),
   name: 'Pictures',
-  icon: <Image fontSize="large" />,
+  icon: <Image />,
   type: 'file',
   size: 206862749, // 206.9 MB from Storage
   mimeType: 'jpegs',
