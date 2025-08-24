@@ -1,5 +1,4 @@
 import { BaseFileSystemItem } from '@jc/file-system';
-import { ReactNode } from 'react';
 
 export type InsertionSide =
   | 'top'

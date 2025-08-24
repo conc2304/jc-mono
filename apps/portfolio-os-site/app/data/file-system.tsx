@@ -26,7 +26,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
       component: ProjectsTileContent,
       config: {
         size: 'large',
-        color: '#FF0000',
+        color: 'primary',
         showLiveContent: true,
         updateInterval: 5000,
       },

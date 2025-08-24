@@ -1,6 +1,7 @@
 import { ComponentType, ReactNode } from 'react';
 import { ImageMediaData, TileContentProps } from '@jc/ui-components';
 import { Property } from 'csstype';
+import { PaletteOptionName } from '@mui/material/styles';
 
 export interface BaseFileSystemItem {
   id: string;
@@ -65,14 +66,7 @@ export interface FileSystemItem<TData = {}, TProps = {}>
 // Generic Desktop Tile Item
 export interface TileConfig {
   size: 'small' | 'medium' | 'large'; // 1x1, 1x2, 2x2
-  color:
-    | 'primary'
-    | 'secondary'
-    | 'error'
-    | 'warning'
-    | 'info'
-    | 'success'
-    | Property.BackgroundColor;
+  color: PaletteOptionName | Property.BackgroundColor;
   showLiveContent?: boolean;
   updateInterval?: number; // ms for content rotation
 }

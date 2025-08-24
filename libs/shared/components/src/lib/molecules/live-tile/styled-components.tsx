@@ -2,18 +2,17 @@ import { styled, Box, alpha } from '@mui/material';
 
 export const TileContainer = styled(Box, {
   shouldForwardProp: (prop) =>
-    !['effectiveIsDragging', 'tileSize', 'gradient'].includes(prop as string),
+    !['effectiveIsDragging', 'gradient'].includes(prop as string),
 })<{
   effectiveIsDragging: boolean;
-  // tileSize: { width: string | number; height: string | number };
   gradient: { from: string; to: string };
 }>(({ theme, effectiveIsDragging, gradient }) => ({
   position: 'absolute',
   cursor: 'grab',
-  borderRadius: theme.spacing(3),
+  // borderRadius: theme.spacing(3),
   overflow: 'hidden',
-  // ...tileSize,
   background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
+
   transition: !effectiveIsDragging
     ? theme.transitions.create(['transform', 'box-shadow'], {
         duration: theme.transitions.duration.standard,
@@ -22,9 +21,9 @@ export const TileContainer = styled(Box, {
 
   transform: effectiveIsDragging ? 'scale(1.05) rotate(2deg)' : 'scale(1)',
 
-  boxShadow: effectiveIsDragging
-    ? `0 20px 40px ${alpha(theme.palette.common.black, 0.3)}`
-    : `0 8px 24px ${alpha(theme.palette.common.black, 0.15)}`,
+  // boxShadow: effectiveIsDragging
+  //   ? `0 20px 40px ${alpha(theme.palette.common.black, 0.3)}`
+  //   : `0 8px 24px ${alpha(theme.palette.common.black, 0.15)}`,
 
   '&:hover': !effectiveIsDragging
     ? {
@@ -83,10 +82,8 @@ export const IconContainer = styled(Box, {
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.common.white, 0.1),
-  // borderRadius: theme.spacing(2),
-  // padding: theme.spacing(2),
   flex: 1,
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  // alignItems: 'center',
+  // justifyContent: 'center',
 }));

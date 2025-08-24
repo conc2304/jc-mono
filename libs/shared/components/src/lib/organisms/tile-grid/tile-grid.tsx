@@ -68,13 +68,14 @@ export const TileGrid = ({
     }
   }, [tiles]); // Removed tileOrder from dependencies to prevent shuffle resets
 
-  const { placedTiles, gridHeight, insertionZones } = useTilePlacement(
+  const { placedTiles, insertionZones } = useTilePlacement(
     tiles,
     config,
     containerWidth,
     tileOrder
   );
 
+  // TODO - investigate why drag end gets called immediately when dragged from certain areas
   const handleDragStart = (tile: Tile): void => {
     setDragState({
       isDragging: true,
@@ -143,8 +144,6 @@ export const TileGrid = ({
       className="TileGrid--root"
       sx={{
         width: '100%',
-        // minHeight: '100vh',
-        // overflowY:
         height: '100%',
         backgroundColor: 'grey.900',
         p: breakpoint === 'mobile' ? 0 : 2,
@@ -160,39 +159,6 @@ export const TileGrid = ({
         }}
       >
         <Box
-          className="TileGrid--control-btns"
-          sx={{ mb: 3, textAlign: 'center' }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="center">
-            <Button
-              onClick={shuffleTiles}
-              variant="contained"
-              sx={{
-                backgroundColor: '#9c27b0',
-                '&:hover': {
-                  backgroundColor: '#7b1fa2',
-                },
-              }}
-            >
-              Shuffle
-            </Button>
-
-            <Button
-              onClick={resetTiles}
-              variant="contained"
-              sx={{
-                backgroundColor: 'grey.600',
-                '&:hover': {
-                  backgroundColor: 'grey.700',
-                },
-              }}
-            >
-              Reset
-            </Button>
-          </Stack>
-        </Box>
-
-        <Box
           className="TileGrid--tile-container"
           ref={containerRef}
           sx={{
@@ -200,9 +166,7 @@ export const TileGrid = ({
             width: '100%',
             backgroundColor: 'grey.800',
             borderRadius: 1,
-            // height: gridHeight,
             flexGrow: 1,
-            // height: '100%',
             overflowY: 'auto',
           }}
         >
@@ -253,6 +217,39 @@ export const TileGrid = ({
               height: config.containerPadding,
             }}
           />
+        </Box>
+
+        <Box
+          className="TileGrid--control-btns"
+          sx={{ my: 3, textAlign: 'center' }}
+        >
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <Button
+              onClick={shuffleTiles}
+              variant="contained"
+              sx={{
+                backgroundColor: '#9c27b0',
+                '&:hover': {
+                  backgroundColor: '#7b1fa2',
+                },
+              }}
+            >
+              Shuffle
+            </Button>
+
+            <Button
+              onClick={resetTiles}
+              variant="contained"
+              sx={{
+                backgroundColor: 'grey.600',
+                '&:hover': {
+                  backgroundColor: 'grey.700',
+                },
+              }}
+            >
+              Reset
+            </Button>
+          </Stack>
         </Box>
       </Container>
     </Box>

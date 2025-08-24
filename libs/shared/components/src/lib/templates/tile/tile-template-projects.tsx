@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, alpha, useTheme, styled } from '@mui/material';
+import { Box, Typography, alpha, useTheme, styled, Stack } from '@mui/material';
 import {
   ContentContainer,
   IconContainer,
 } from '../../molecules/live-tile/styled-components';
 import { TileContentProps } from '../../molecules';
 import { ProjectData } from '../project';
-import { ImageContainer } from '../../atoms';
+import { DiagonalLines, ImageContainer } from '../../atoms';
 import { Star } from '@mui/icons-material';
 
 export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
@@ -33,58 +33,152 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
       {currentProject && isLarge && (
         <ContentContainer>
           <Box
-            textAlign="center"
-            position={'relative'}
+            className="ProjectTile--content-left"
             sx={{
-              textAlign: 'center',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-              alignContent: 'center',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
+              alignContent: 'flex-start',
+              pl: 4,
+              justifyContent: 'space-evenly',
+              // flexWrap: 'wrap',
             }}
           >
-            <Box maxWidth="60%">
+            {/* Image Flex Item */}
+            <Box
+              maxWidth="60%"
+              data-augmented-ui="tl-clip br-clip border"
+              sx={{
+                '--aug-border-bg': theme.palette.action.focus,
+                '--aug-border-all': '2px',
+              }}
+            >
               <ImageContainer
                 className="ProjectImageContainer--root"
                 {...imageProps}
                 showSkeletonDuration={0}
                 lazy={false}
                 sx={{
-                  // height: '100px',
-                  // maxHeight: '50%',
-                  // pb: 1,
-                  // flexShrink: 1,
-                  '*': { objectFit: 'contain' },
+                  height: '100%',
+                  '*': { objectFit: 'fill' },
                 }}
               />
             </Box>
-            <Box>
-              <Typography
-                variant="body2"
-                color="white"
-                fontWeight="medium"
-                noWrap
+
+            {/* Text Flex Item */}
+            <Box display={'flex'} position={'relative'}>
+              <DiagonalLines
+                lineThickness={4}
+                height="4rem"
+                width="4rem"
+                direction="diagonal-alt"
+                color={theme.palette.text.primary}
+              />
+
+              <Stack
+                textAlign="left"
+                position="relative"
+                flexGrow={1}
+                pl={2}
+                justifyContent="space-between"
               >
-                {currentProject.projectName}
-                {currentProject.metadata?.featured && (
-                  <Star
-                    sx={{ pt: 0.25, ml: 1, color: '#fbbf24', fontSize: 12 }}
-                    fill="currentColor"
-                  />
-                )}
-              </Typography>
-              <Typography
-                variant="caption"
-                color="white"
-                fontWeight="medium"
-                noWrap
-              >
-                {currentProject.projectSubtitle}
-              </Typography>
+                <Typography
+                  variant="h3"
+                  color="white"
+                  fontWeight="medium"
+                  noWrap
+                  // sx={{verticalAlign: }}
+                >
+                  {currentProject.projectName}
+                  {currentProject.metadata?.featured && (
+                    <Star
+                      sx={{ pt: 0.25, ml: 1, color: '#fbbf24', fontSize: 12 }}
+                      fill="currentColor"
+                    />
+                  )}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="white"
+                  fontWeight="medium"
+                  noWrap
+                >
+                  {currentProject.projectSubtitle}
+                </Typography>
+              </Stack>
             </Box>
+          </Box>
+          <Box
+            className="ProjectTile--content-right"
+            flexGrow={1}
+            sx={{
+              // border: '1px solid',
+              // overflow: 'hidden',
+              maxHeight: '100%',
+              width: '100%',
+            }}
+          >
+            {/* <DiagonalLines
+              width="40px"
+              height="100%"
+              direction="diagonal"
+              sx={{
+                display: 'block',
+                border: '5px solid',
+                borderColor: alpha(theme.palette.action.active, 0.5),
+              }}
+            /> */}
+            <Typography
+              variant="display"
+              sx={{
+                writingMode: 'sideways-lr',
+                textOverflow: 'clip',
+                fontSize: '7rem !important',
+                textAlign: 'center',
+                maxHeight: '100%',
+                // overflow: 'hidden',
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                bottom: 0,
+                transform: 'translateX(0%)',
+                bgcolor: alpha(theme.palette.action.active, 0.5),
+                zIndex: 1,
+              }}
+            >
+              {(
+                currentProject.basics.category || currentProject.basics.type
+              ).slice(0, 4)}
+              <DiagonalLines
+                width="10px"
+                height="100%"
+                direction="diagonal"
+                sx={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              />
+
+              <DiagonalLines
+                width="20px"
+                height="100%"
+                lineThickness={1}
+                spacing={10}
+                direction="diagonal"
+                color={alpha(theme.palette.action.active, 0.5)}
+                sx={{
+                  position: 'absolute',
+                  left: '-20px',
+                  top: 0,
+                  bottom: 0,
+                  border: '3px solid',
+                  borderColor: alpha(theme.palette.action.active, 0.5),
+                }}
+              />
+            </Typography>
           </Box>
         </ContentContainer>
       )}

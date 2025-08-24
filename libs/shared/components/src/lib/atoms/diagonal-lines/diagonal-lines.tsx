@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Box } from '@mui/material';
+import { Box, BoxProps } from '@mui/material';
 
 // Type definitions
 type Direction =
@@ -9,7 +9,7 @@ type Direction =
   | 'diagonal-alt'
   | 'cross';
 
-interface DiagonalLinesProps {
+interface DiagonalLinesProps extends BoxProps {
   lineThickness?: number;
   spacing?: number;
   width?: string | number;
@@ -31,6 +31,7 @@ export const DiagonalLines = ({
   opacity = 1,
   className,
   style,
+  ...boxProps
 }: DiagonalLinesProps) => {
   // Convert CSS units to pixels for SVG calculations
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -194,6 +195,7 @@ export const DiagonalLines = ({
       height={height}
       className={className}
       style={style}
+      {...boxProps}
     >
       <svg
         width="100%"

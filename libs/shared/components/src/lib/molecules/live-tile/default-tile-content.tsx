@@ -14,6 +14,7 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
 
   return (
     <Box
+      className="TileComponentDefault--root"
       display="flex"
       flexDirection="column"
       justifyContent="center"
@@ -34,12 +35,7 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: alpha(
-                theme.palette.common[
-                  theme.palette.mode === 'dark' ? 'white' : 'black'
-                ],
-                0.8
-              ),
+              color: alpha(theme.palette.text.primary, 0.8),
               fontSize: '0.65rem',
             }}
           >
@@ -48,12 +44,7 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: alpha(
-                theme.palette.common[
-                  theme.palette.mode === 'dark' ? 'white' : 'black'
-                ],
-                0.7
-              ),
+              color: alpha(theme.palette.text.primary, 0.7),
               fontSize: '0.65rem',
               mt: 0.5,
             }}

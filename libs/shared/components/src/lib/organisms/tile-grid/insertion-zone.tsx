@@ -46,7 +46,9 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
 
         ...(isActive
           ? {
-              backgroundColor: 'success.main',
+              backgroundColor: 'green',
+              cursor: 'grabbing',
+              // backgroundColor: 'success.main',
               boxShadow: `0 10px 15px -3px ${alpha(
                 theme.palette.success.main,
                 0.5
@@ -56,12 +58,14 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
               )}`,
             }
           : {
-              backgroundColor: theme.palette.getInvertedMode('secondary'),
+              // backgroundColor: theme.palette.getInvertedMode('secondary'),
+              backgroundColor: 'blue',
               '&:hover': {
-                backgroundColor: alpha(
-                  theme.palette.getInvertedMode('secondary', true),
-                  0.7
-                ),
+                backgroundColor: 'orange',
+                // backgroundColor: alpha(
+                //   theme.palette.getInvertedMode('secondary', true),
+                //   0.7
+                // ),
               },
             }),
       })}

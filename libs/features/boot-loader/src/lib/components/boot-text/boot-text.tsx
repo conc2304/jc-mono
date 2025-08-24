@@ -338,10 +338,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         messageBlocks.push(messageBlock);
       });
 
-      const bottomSpacer = document.createElement('div');
-      bottomSpacer.style.flexGrow = '1';
-      container.appendChild(bottomSpacer);
-
       // Create cursor element
       const cursorElement = document.createElement('span');
       cursorElement.className = 'boot-cursor';
@@ -600,20 +596,15 @@ const BootTextInner: React.FC<BootTextProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          // background: 'red',
-          // background:
-          // 'radial-gradient(ellipse at center, rgba(0,255,65,0.03) 0%, transparent 70%)',
           pointerEvents: 'none',
         },
-
-        boxShadow: `inset 0 0 20px ${alpha(textColor, 0.1)}`,
 
         '& .boot-message': {
           display: 'block',
           margin: 0,
           padding: '2px 4px',
           borderRadius: '2px',
-          minHeight: '1.4em', // Consistent line height
+          minHeight: '1.4em',
           ...getTextWrapStyles(), // Apply text wrapping styles based on mode
         },
 
@@ -627,7 +618,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
       })}
     >
       {/* Content will be dynamically generated here */}
-      <Box flexGrow={1} />
     </Box>
   );
 };

@@ -1,12 +1,12 @@
 import { CSSProperties, PaletteMode } from '@mui/material/styles';
 
-export type PaletteOptionName =
-  | 'primary'
-  | 'secondary'
-  | 'error'
-  | 'warning'
-  | 'info'
-  | 'success';
+// export type PaletteOptionName =
+//   | 'primary'
+//   | 'secondary'
+//   | 'error'
+//   | 'warning'
+//   | 'info'
+//   | 'success';
 
 declare module '@mui/material/styles' {
   // Allow for custom mixins to be added
@@ -23,6 +23,13 @@ declare module '@mui/material/styles' {
     window: number;
   }
 
+  type PaletteOptionName =
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'warning'
+    | 'info'
+    | 'success';
   interface Palette {
     getInvertedMode(): 'light' | 'dark';
     getInvertedMode(paletteColor: PaletteOptionName): string;

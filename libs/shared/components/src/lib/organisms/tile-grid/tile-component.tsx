@@ -9,7 +9,7 @@ import {
   useTheme,
   Box,
   Typography,
-  Button,
+  PaletteOptionName,
 } from '@mui/material';
 import {
   BackgroundPattern,
@@ -18,7 +18,7 @@ import {
 } from '../../molecules/live-tile/styled-components';
 import { ChevronRight, Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
-import { AugmentedButton } from '../../atoms';
+import { AugmentedButton, DiagonalLines } from '../../atoms';
 interface TileComponentProps {
   tile: PlacedTile;
   tileConfig: ResponsiveBreakpointConfig;
@@ -36,7 +36,7 @@ export const TileComponent = ({
   isBeingReordered,
 }: TileComponentProps) => {
   const theme = useTheme();
-  const { openWindow } = useWindowActions();
+  // const { openWindow } = useWindowActions();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const DefaultTileRenderer: TileRenderer = {
@@ -44,7 +44,7 @@ export const TileComponent = ({
     config: {
       size: 'small' as const,
       showLiveContent: false,
-      color: theme.palette.primary.main,
+      color: 'primary',
     },
   };
   const isLarge = tile.size === 'large';
@@ -78,16 +78,17 @@ export const TileComponent = ({
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>): void => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX: number = e.clientX - rect.left;
-    const offsetY: number = e.clientY - rect.top;
+    const offsetX: number = e.clientX - rect.left / 2;
+    const offsetY: number = e.clientY - rect.top / 2;
 
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', tile.id.toString());
 
     // Create a custom drag image
     const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
-    dragImage.style.opacity = '0.8';
+    dragImage.style.opacity = '0.1';
     dragImage.style.transform = 'rotate(3deg)';
+    dragImage.style.border = `1px solid ${theme.palette.secondary.main}`;
     document.body.appendChild(dragImage);
     e.dataTransfer.setDragImage(dragImage, offsetX, offsetY);
 
@@ -97,6 +98,9 @@ export const TileComponent = ({
 
     onDragStart(tile);
   };
+
+  const tileColor =
+    theme.palette?.[config.color as PaletteOptionName]?.main || config.color;
 
   return (
     <TileContainer
@@ -108,18 +112,17 @@ export const TileComponent = ({
       gradient={{
         from: alpha(
           theme.palette.mode === 'dark'
-            ? lighten(config.color, 0.2)
-            : darken(config.color, 0.2),
+            ? lighten(tileColor, 0.2)
+            : darken(tileColor, 0.2),
           0.2
         ),
-        to: alpha(config.color, 0.4),
+        to: alpha(tileColor, 0.4),
       }}
       style={{
         left: tile.x,
         top: tile.y,
         width: tile.width,
         height: tile.height,
-        backgroundColor: tile.color,
         padding: tileConfig.tilePadding,
         borderRadius: '8px',
         boxShadow: isDragging
@@ -130,11 +133,43 @@ export const TileComponent = ({
     >
       <Box
         sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '100%',
+          backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
+          backgroundBlendMode: 'screen',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          mixBlendMode: 'screen',
+          opacity: 0.2,
+        }}
+      />
+      {/* <DiagonalLines
+        height="50%"
+        width="50%"
+        lineThickness={1}
+        spacing={10}
+        direction="diagonal-alt"
+        color={tileColor}
+        sx={{
+          position: 'absolute',
+          zIndex: 0,
+          opacity: 0.5,
+          mixBlendMode: 'difference',
+          top: 0,
+          left: 0,
+        }}
+      /> */}
+      <Box
+        sx={{
           width: '100%',
           height: '100%',
           p: 2,
           position: 'relative',
-          pointerEvents: 'none',
+
+          // pointerEvents: 'none',
         }}
       >
         <BackgroundPattern />

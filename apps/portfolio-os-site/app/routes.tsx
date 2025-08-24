@@ -4,5 +4,6 @@ export default [
   index('./app.tsx'),
   route('desktop', './routes/desktop.tsx'),
   route('about', './routes/about.tsx'),
+  route('tile-grid', './routes/tile-grid.tsx'),
   route('*', './routes/404.tsx'),
 ] satisfies RouteConfig;
