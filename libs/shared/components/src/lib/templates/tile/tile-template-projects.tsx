@@ -52,12 +52,10 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
               alignContent: 'flex-start',
               pl: 4,
               justifyContent: 'space-evenly',
-              // flexWrap: 'wrap',
             }}
           >
             {/* Image Flex Item */}
             <Box
-              // maxWidth="60%"
               data-augmented-ui="tl-clip br-clip border"
               sx={{
                 '--aug-border-bg': theme.palette.action.focus,
@@ -156,6 +154,8 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                   width="10px"
                   height="100%"
                   direction="diagonal"
+                  // color={'inherit'}
+                  opacity={0.5}
                   sx={{
                     position: 'absolute',
                     right: 0,

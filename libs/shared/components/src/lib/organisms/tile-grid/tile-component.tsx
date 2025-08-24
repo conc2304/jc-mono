@@ -118,13 +118,23 @@ export const TileComponent = ({
         ),
         to: alpha(tileColor, 0.4),
       }}
+      data-augmented-ui="t-clip border tl-clip tr-clip bl-clip br-clip"
+      sx={{
+        '--aug-border-all': '1px',
+        '--aug-border-bg': tileColor,
+        '--aug-t-extend1': config.size === 'large' ? '40%' : '30%',
+        '--aug-t': '1rem',
+        '--aug-tl': '0.75rem',
+        '--aug-tr': '0.75rem',
+        '--aug-bl': '0.75rem',
+        '--aug-br': '0.75rem',
+      }}
       style={{
         left: tile.x,
         top: tile.y,
         width: tile.width,
         height: tile.height,
         padding: tileConfig.tilePadding,
-        borderRadius: '8px',
         boxShadow: isDragging
           ? '0 8px 32px rgba(0,0,0,0.3)'
           : '0 2px 8px rgba(0,0,0,0.1)',
@@ -254,13 +264,6 @@ export const TileComponent = ({
             </Typography>
 
             <Box display="flex" alignItems="center" gap={1}>
-              {/* {metadata?.favorite && (
-                        <Star
-                          size={12}
-                          style={{ color: '#fbbf24' }}
-                          fill="currentColor"
-                        />
-                      )} */}
               {config.showLiveContent && children && children.length > 1 && (
                 <Box display="flex" gap={0.5}>
                   {children.slice(0, 4).map((_, index) => (
