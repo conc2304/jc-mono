@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, alpha, useTheme, styled, Stack } from '@mui/material';
+import {
+  Box,
+  Typography,
+  alpha,
+  useTheme,
+  styled,
+  Stack,
+  useMediaQuery,
+} from '@mui/material';
 import {
   ContentContainer,
   IconContainer,
@@ -17,6 +25,8 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
   tileData,
 }) => {
   const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.up('sm'));
+  const isLg = useMediaQuery(theme.breakpoints.up('md'));
   const projects: ProjectData[] = tileData || [];
   const currentProject = projects[currentIndex];
 
@@ -47,11 +57,14 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
           >
             {/* Image Flex Item */}
             <Box
-              maxWidth="60%"
+              // maxWidth="60%"
               data-augmented-ui="tl-clip br-clip border"
               sx={{
                 '--aug-border-bg': theme.palette.action.focus,
                 '--aug-border-all': '2px',
+                flexGrow: 1,
+                maxWidth: '60%',
+                maxHeight: '40%',
               }}
             >
               <ImageContainer
@@ -109,77 +122,67 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
               </Stack>
             </Box>
           </Box>
-          <Box
-            className="ProjectTile--content-right"
-            flexGrow={1}
-            sx={{
-              // border: '1px solid',
-              // overflow: 'hidden',
-              maxHeight: '100%',
-              width: '100%',
-            }}
-          >
-            {/* <DiagonalLines
-              width="40px"
-              height="100%"
-              direction="diagonal"
+
+          {isMd && (
+            <Box
+              className="ProjectTile--content-right"
+              flexGrow={1}
               sx={{
-                display: 'block',
-                border: '5px solid',
-                borderColor: alpha(theme.palette.action.active, 0.5),
-              }}
-            /> */}
-            <Typography
-              variant="display"
-              sx={{
-                writingMode: 'sideways-lr',
-                textOverflow: 'clip',
-                fontSize: '7rem !important',
-                textAlign: 'center',
                 maxHeight: '100%',
-                // overflow: 'hidden',
-                position: 'absolute',
-                right: 0,
-                top: 0,
-                bottom: 0,
-                transform: 'translateX(0%)',
-                bgcolor: alpha(theme.palette.action.active, 0.5),
-                zIndex: 1,
+                width: '100%',
               }}
             >
-              {(
-                currentProject.basics.category || currentProject.basics.type
-              ).slice(0, 4)}
-              <DiagonalLines
-                width="10px"
-                height="100%"
-                direction="diagonal"
+              <Typography
+                variant="display"
                 sx={{
+                  writingMode: 'sideways-lr',
+                  textOverflow: 'clip',
+                  fontSize: isLg ? '7rem !important' : '5rem !important',
+                  textAlign: 'center',
+                  maxHeight: '100%',
                   position: 'absolute',
                   right: 0,
                   top: 0,
                   bottom: 0,
+                  transform: 'translateX(0%)',
+                  bgcolor: alpha(theme.palette.action.active, 0.5),
+                  zIndex: 1,
                 }}
-              />
+              >
+                {(
+                  currentProject.basics.category || currentProject.basics.type
+                ).slice(0, 4)}
+                <DiagonalLines
+                  width="10px"
+                  height="100%"
+                  direction="diagonal"
+                  sx={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                  }}
+                />
 
-              <DiagonalLines
-                width="20px"
-                height="100%"
-                lineThickness={1}
-                spacing={10}
-                direction="diagonal"
-                color={alpha(theme.palette.action.active, 0.5)}
-                sx={{
-                  position: 'absolute',
-                  left: '-20px',
-                  top: 0,
-                  bottom: 0,
-                  border: '3px solid',
-                  borderColor: alpha(theme.palette.action.active, 0.5),
-                }}
-              />
-            </Typography>
-          </Box>
+                <DiagonalLines
+                  width="20px"
+                  height="100%"
+                  lineThickness={1}
+                  spacing={10}
+                  direction="diagonal"
+                  color={alpha(theme.palette.action.active, 0.5)}
+                  sx={{
+                    position: 'absolute',
+                    left: '-20px',
+                    top: 0,
+                    bottom: 0,
+                    border: '3px solid',
+                    borderColor: alpha(theme.palette.action.active, 0.5),
+                  }}
+                />
+              </Typography>
+            </Box>
+          )}
         </ContentContainer>
       )}
 

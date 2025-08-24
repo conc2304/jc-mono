@@ -146,29 +146,13 @@ export const TileComponent = ({
           opacity: 0.2,
         }}
       />
-      {/* <DiagonalLines
-        height="50%"
-        width="50%"
-        lineThickness={1}
-        spacing={10}
-        direction="diagonal-alt"
-        color={tileColor}
-        sx={{
-          position: 'absolute',
-          zIndex: 0,
-          opacity: 0.5,
-          mixBlendMode: 'difference',
-          top: 0,
-          left: 0,
-        }}
-      /> */}
+
       <Box
         sx={{
           width: '100%',
           height: '100%',
           p: 2,
           position: 'relative',
-
           // pointerEvents: 'none',
         }}
       >
