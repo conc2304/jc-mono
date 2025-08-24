@@ -23,8 +23,6 @@ const Inner = styled(Paper)(({ theme }) => ({
   },
 }));
 
-// cloud looping background
-const defaultGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
 const gradient = (theme: Theme) =>
   `linear-gradient(to bottom, ${alpha(
     theme.palette.primary.main,
@@ -35,7 +33,7 @@ export const SliderGradient = styled(Box)<{ url: string }>(
   ({ theme, url }) => ({
     width: '100%',
     height: '100%',
-    background: `${gradient(theme)}, ${url}`,
+    background: `${gradient(theme)}, url('${url}')`,
     backgroundSize: 'cover',
     backgroundPositionY: 'center',
     opacity: 0.5,
@@ -50,17 +48,15 @@ export const FilterEffect = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   objectFit: 'fill',
-  // filter: 'brightness(0.9) contrast(1) saturate(1) grayscale(1)',
-  // filter: 'brightness(0.8) contrast(1.1) saturate(5.2) grayscale(0.75);',
   backdropFilter: 'brightness(0.85) contrast(1.1) saturate(5.2) grayscale(0.7)',
   zIndex: 1,
 }));
 
 export const GifContainer = ({
-  url = defaultGif,
+  url,
   ...boxProps
 }: {
-  url?: string;
+  url: string;
 } & BoxProps) => {
   return (
     <Container data-augmented-ui="border br-clip" {...boxProps}>

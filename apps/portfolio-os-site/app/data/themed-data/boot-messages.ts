@@ -362,7 +362,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     ],
   ],
 
-  'redwood-forest': [
+  'tres-sendas': [
     // Forest Wisdom
     [
       'ancient growth protocols...',
@@ -859,7 +859,7 @@ export const MobileThemedBootMessages: Record<string, Array<BootMessage[]>> = {
     ],
   ],
 
-  'redwood-forest': [
+  'tres-sendas': [
     // Forest Wisdom
     [
       'ancient growth protocols...',

@@ -1,8 +1,8 @@
-import { Box, Container, Typography, Button, Stack } from '@mui/material';
+import { Box, Container, Button, Stack, alpha } from '@mui/material';
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { useEffect, useRef, useState } from 'react';
-import { DragState, InsertionSide, Tile, TileSize } from './types';
+import { DragState, InsertionSide, Tile } from './types';
 import { useTilePlacement } from './use-tile-placement';
 import { BaseFileSystemItem } from '@jc/file-system';
 import { TileComponent } from './tile-component';
@@ -145,7 +145,6 @@ export const TileGrid = ({
       sx={{
         width: '100%',
         height: '100%',
-        backgroundColor: 'grey.900',
         p: breakpoint === 'mobile' ? 0 : 2,
       }}
     >
@@ -159,16 +158,28 @@ export const TileGrid = ({
         }}
       >
         <Box
+          data-augmented-ui="border br-2-clip-x tr-2-clip-x bl-2-clip-x tl-2-clip-x b-clip"
           className="TileGrid--tile-container"
           ref={containerRef}
-          sx={{
+          sx={(theme) => ({
+            '--aug-border-bg': theme.palette.secondary.main,
+            '--aug-border-all': '1px',
+            '--aug-b': config.containerPadding / 2 + 'px',
+            '--aug-br': config.containerPadding / 2 + 'px',
+            '--aug-bl': config.containerPadding / 2 + 'px',
+            '--aug-tl': config.containerPadding / 2 + 'px',
+            '--aug-tl-extend2': '12.5%',
+            '--aug-tr-extend1': '12.5%',
+            '--aug-tr': config.containerPadding / 2 + 'px',
+            '--aug-b-extend1': '50%',
+
             position: 'relative',
             width: '100%',
-            backgroundColor: 'grey.800',
-            borderRadius: 1,
+            bgcolor: alpha(theme.palette.background.paper, 0.5),
+
             flexGrow: 1,
             overflowY: 'auto',
-          }}
+          })}
         >
           {/* Insertion zones */}
           {dragState.isDragging &&
@@ -187,10 +198,6 @@ export const TileGrid = ({
 
           {/* Tiles */}
           {placedTiles.map((tile) => (
-            // <Box
-            //   key={tile.id}
-            //   onDoubleClick={() => console.log(tile.id, tile.y)}
-            // >
             <TileComponent
               key={tile.id}
               tile={tile}
@@ -204,7 +211,6 @@ export const TileGrid = ({
                 dragState.isDragging && dragState.draggedTile?.id !== tile.id
               }
             />
-            // </Box>
           ))}
           <Box
             className="TileGrid--bottom-padding-spacer"

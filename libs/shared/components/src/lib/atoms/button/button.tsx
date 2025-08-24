@@ -41,7 +41,7 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
 
     // Border Styles
     const borderWidth = borderMap[variant ?? 'text'] ?? 0;
-    const url = `https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZGltMDB1YjNrZmdkM2FxZmM0Y3JwYTB1Nmk0Y2w3dW96ZnA2czg5dyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/NsDgwokd9edyc1IawD/giphy.webp`;
+    const url = '/gifs/rainbow-color-swipe.gif';
     const urlStyle = `url("${url}") 50% 50% / 200% 200%;`;
     const gradientStyle = `radial-gradient(${alpha(
       componentColor.main,

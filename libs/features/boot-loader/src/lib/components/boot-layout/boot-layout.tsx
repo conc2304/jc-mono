@@ -116,19 +116,21 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
   </AugmentedButton>
 );
 
+const defaultGif = {
+  url: '/textures/ambient-vintage-clouds.gif',
+  backgroundPositionY: 'center',
+};
+
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
   className = '',
   bootMessages = defaultBootMessages,
   scrambleCharacterSet = defaultScrambleCharacterSet,
-  themedWidgetGifUrl = {
-    url: 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif',
-    backgroundPositionY: 'center',
-  },
+  themedWidgetGifUrl: gifData,
 }) => {
   const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isXs = useMediaQuery(theme.breakpoints.down('xs'));
-  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const [progress, setProgress] = useState({
     current: 0,
@@ -136,14 +138,15 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     message: '',
   });
 
+  const themedWidgetGifUrl = { ...defaultGif, ...gifData };
+
   // BackgroundImage State
   const initialBgSize = 200;
   const [animateBackground, setAnimateBackground] = useState(false);
   const [backgroundSize, setBackgroundSize] = useState(initialBgSize);
   const [backgroundBlendMode, setBackgroundBlendMode] =
     useState<Property.BackgroundBlendMode>('color-burn');
-  const bgUrl =
-    'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTdtdTA3aTRzMWVsNnhvOTMycjdmZjNqNHNmZXEwaWQzajV1aHVnciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9PD6etrOTUxby/giphy.gif';
+  const bgUrl = '/gifs/circle-tile-background.gif';
 
   const handleBackgroundResize = (action: 'plus' | 'minus' | 'reset') => {
     if (action === 'reset') {
@@ -171,8 +174,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     setIsComplete(true);
     console.log('Boot sequence complete!');
   }, []);
-
-  // const themedWidgetGif = `url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODAwejhrMW0weGZ4dGV5YWp6N3c4YzV3ZXl4OWM1ZzE4eTM1dDY2cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgC2RzpbE7vBZ6M/giphy.gif')`;
 
   // Mobile Layout (1 column)
   if (isSm) {
@@ -262,7 +263,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             <ThemePickerPanel compactMenu />
 
             <GifContainer
-              url={`url(${themedWidgetGifUrl.url})`}
+              url={themedWidgetGifUrl.url}
               sx={{
                 minHeight: '15%',
                 flexGrow: 0.5,
@@ -396,7 +397,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     />
                   </TorusLoaderCardAug>
                   <GifContainer
-                    url={`url(${themedWidgetGifUrl.url}`}
+                    url={themedWidgetGifUrl.url}
                     sx={{
                       height: '20%',
                       backgroundPositionY:
@@ -507,7 +508,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 {/* Ambient Panels */}
                 <Box flex={1} display="flex" flexDirection="column" gap={1}>
                   <GifContainer
-                    url={`url('${themedWidgetGifUrl.url}')`}
+                    url={themedWidgetGifUrl.url}
                     sx={{
                       height: 128,
                       backgroundPositionY:

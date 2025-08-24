@@ -96,7 +96,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
               >
                 <Typography
                   variant="h3"
-                  color="white"
+                  color="textPrimary"
                   fontWeight="medium"
                   noWrap
                   // sx={{verticalAlign: }}
@@ -111,7 +111,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                 </Typography>
                 <Typography
                   variant="caption"
-                  color="white"
+                  color="textPrimary"
                   fontWeight="medium"
                   noWrap
                 >
@@ -134,8 +134,13 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                 variant="display"
                 sx={{
                   writingMode: 'sideways-lr',
+                  lineHeight: 1.2,
                   textOverflow: 'clip',
-                  fontSize: isLg ? '7rem !important' : '5rem !important',
+                  fontSize: isLg
+                    ? '6.5rem !important'
+                    : isMd
+                    ? '5rem !important'
+                    : '4rem !important',
                   textAlign: 'center',
                   maxHeight: '100%',
                   position: 'absolute',
@@ -144,25 +149,12 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                   bottom: 0,
                   transform: 'translateX(0%)',
                   bgcolor: alpha(theme.palette.action.active, 0.5),
-                  zIndex: 1,
+                  zIndex: 0,
                 }}
               >
                 {(
                   currentProject.basics.category || currentProject.basics.type
                 ).slice(0, 4)}
-                <DiagonalLines
-                  width="10px"
-                  height="100%"
-                  direction="diagonal"
-                  // color={'inherit'}
-                  opacity={0.5}
-                  sx={{
-                    position: 'absolute',
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                  }}
-                />
 
                 <DiagonalLines
                   width="20px"

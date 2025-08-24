@@ -155,7 +155,7 @@ export const NavigationButtons = ({
             width: '100%',
             height: '100%',
             position: 'absolute',
-            backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
+            backgroundImage: `url('/textures/scratched-glass-with-scuffs.png')`,
             backgroundBlendMode: 'screen',
             opacity: 0.25,
             top: 0,

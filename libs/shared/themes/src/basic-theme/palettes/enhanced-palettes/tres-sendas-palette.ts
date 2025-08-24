@@ -1,7 +1,7 @@
 import { EnhancedThemeOption } from '../../types';
 
 export const tresSendasTheme: EnhancedThemeOption = {
-  id: 'redwood-forest',
+  id: 'tres-sendas',
   name: 'Tres Sendas',
   description:
     'Muted nature-inspired theme with rich forest greens and warm earth tones',

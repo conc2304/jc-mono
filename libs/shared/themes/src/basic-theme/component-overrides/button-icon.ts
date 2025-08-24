@@ -19,8 +19,8 @@ export default function ButtonIcon(theme: Theme): Components {
             large: 26,
           };
 
-          const bgImage =
-            'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NmZ6bmU5eXExMDc4YmI5Y2xib2pvaDdqZGR3aDh5MWNrYzRta2puNyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/w13kLaPYchsxKrHcQ2/giphy.webp'; // hex tunnel
+          // const bgImage =
+          //   'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NmZ6bmU5eXExMDc4YmI5Y2xib2pvaDdqZGR3aDh5MWNrYzRta2puNyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/w13kLaPYchsxKrHcQ2/giphy.webp'; // hex tunnel
           return {
             '&&[data-augmented-ui]': {
               width: 'initial',
@@ -64,7 +64,7 @@ export default function ButtonIcon(theme: Theme): Components {
               backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center center',
-              backgroundImage: animateClick ? `url(${bgImage})` : undefined,
+              // backgroundImage: animateClick ? `url(${bgImage})` : undefined,
             },
           };
         },

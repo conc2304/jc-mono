@@ -130,9 +130,8 @@ export const DesktopPageNotFound404 = ({
         <Box
           // Upper Panel Background Texture
           sx={{
-            backgroundImage: `url('https://img.freepik.com/free-photo/stone-texture_1194-5425.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
-            backgroundPosition: '0 0%',
-            // backgroundSize: '100%',
+            backgroundImage: `url('/textures/stone-texture.avif')`,
+            backgroundPosition: '0 0',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -340,11 +339,7 @@ export const DesktopPageNotFound404 = ({
           sx={{
             position: 'absolute',
             ...bgOverlayProps,
-
-            // backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/057/274/270/non_2x/monochrome-abstract-with-textured-patterns-and-halftone-effects-creating-a-visually-complex-and-striking-graphic-design-backdrop-free-photo.jpg')`,
-            backgroundImage: `url('https://img.freepik.com/free-photo/old-black-fabric-material-with-copy-space_23-2148402339.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
-            // backgroundImage: `url('https://img.freepik.com/free-photo/stone-texture_1194-5425.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
-
+            backgroundImage: `url('/textures/old-black-fabric-material.avif')`,
             backgroundPosition: '0 0%',
             backgroundSize: '100%',
             opacity: 0.5,
@@ -379,9 +374,7 @@ export const DesktopPageNotFound404 = ({
             className="bottom-inner-left-bg--bg-overlay"
             sx={(theme) => ({
               ...bgOverlayProps,
-              // background: `url('https://static.vecteezy.com/system/resources/previews/057/274/270/non_2x/monochrome-abstract-with-textured-patterns-and-halftone-effects-creating-a-visually-complex-and-striking-graphic-design-backdrop-free-photo.jpg')`,
-              background: `url('https://img.freepik.com/premium-photo/grunge-dirty-concrete-texture-background_469558-7667.jpg?w=740')`,
-              // background: `url('https://img.freepik.com/free-photo/abstract-background-with-patterned-glass-texture_53876-139928.jpg?t=st=1755184836~exp=1755188436~hmac=533821b13ff03cdb6d1fbf037b9b268bf1acf87f51454e31bf8c78ea42898c22&w=1060')`,
+              background: `url('/textures/grunge-dirty-concrete-texture-background.avif')`,
               opacity: 0.5,
               backgroundSize: 'cover',
               mixBlendMode: 'overlay',
@@ -410,7 +403,7 @@ export const DesktopPageNotFound404 = ({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
+              backgroundImage: `url('/textures/scratched-glass-with-scuffs.png')`,
               backgroundBlendMode: 'screen',
               opacity: 0.25,
               top: 0,

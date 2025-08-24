@@ -40,7 +40,7 @@ export const MobilePageNotFound404 = ({
         width: '100%',
         padding: 2,
         bgcolor: theme.palette.background.paper,
-        backgroundImage: `url('https://img.freepik.com/free-photo/old-black-fabric-material-with-copy-space_23-2148402339.jpg?ga=GA1.1.547750373.1752437532&semt=ais_hybrid&w=740&q=80')`,
+        backgroundImage: `url('/textures/old-black-fabric-material.avif')`,
         backgroundPosition: '0% 0%',
         backgroundSize: '100%',
         justifyContent: 'space-between',

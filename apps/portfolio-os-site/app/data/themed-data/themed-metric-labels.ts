@@ -75,7 +75,7 @@ export const ThemedRadarMetrics: Record<
     'CHILDHOOD WONDER',
   ],
 
-  'redwood-forest': [
+  'tres-sendas': [
     'GROWTH VELOCITY',
     'ROOT NETWORK DEPTH',
     'CANOPY COVERAGE',

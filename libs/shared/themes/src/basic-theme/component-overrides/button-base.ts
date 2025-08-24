@@ -130,11 +130,6 @@ export default function ButtonBase(theme: Theme): Components {
               left: 0,
               width: '100%',
               height: '100%',
-              // filter: 'drop-shadow(19px 19px 4px #4444dd)',
-            },
-
-            '&:hover::after': {
-              // filter: 'drop-shadow(10px 10px 4px #4444dd)',
             },
 
             '.MuiTouchRipple-child': {
@@ -168,7 +163,6 @@ export default function ButtonBase(theme: Theme): Components {
                     : 'inherit',
 
                 '&:hover': {
-                  //   backgroundColor: 'red',
                   background: `linear-gradient(90deg, ${
                     shouldUseColorStyling && paletteColor
                       ? alpha(lighten(paletteColor.main, 0.2), 0.2)
@@ -203,7 +197,6 @@ export default function ButtonBase(theme: Theme): Components {
                     shouldUseColorStyling && paletteColor
                       ? alpha(paletteColor.main, 0.05)
                       : 'inherit',
-                  // filter: `blur(4px)`,
                 },
                 '.MuiTouchRipple-child': {
                   backgroundColor:

@@ -1,3 +1,4 @@
+export * from './background-overlay';
 export * from './button';
 export * from './button-icon';
 export * from './cursor-trails';

@@ -110,6 +110,17 @@ export const TileComponent = ({
   const tileColor =
     theme.palette?.[config.color as PaletteOptionName]?.main || config.color;
 
+  const images = [
+    'scratched-glass.png',
+    'scratched-glass-with-scuffs.png',
+    'scratched-glass-minimal.png',
+    'scratched-glass-intense-medium-bottom-distressed.png',
+    'scratched-glass-intense-medium.png',
+  ];
+
+  const tileBackgroundImg = images[Math.floor(Math.random() * images.length)];
+  const bgImgPath = `/textures/${tileBackgroundImg}`;
+
   return (
     <TileContainer
       className="TileComponent--root"
@@ -156,8 +167,7 @@ export const TileComponent = ({
           left: 0,
           height: '100%',
           width: '100%',
-          backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/048/504/413/small_2x/vintage-dark-grunge-background-with-scratches-and-dust-photo.jpg')`,
-          backgroundBlendMode: 'screen',
+          backgroundImage: `url('${bgImgPath}')`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           mixBlendMode: 'screen',
