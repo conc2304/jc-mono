@@ -86,7 +86,7 @@ const HeroText = () => (
       variant="h1"
       color="primary"
       defaultText="Jose Conchello"
-      hoverText="Powered by CLYZBY_OS"
+      hoverText="Via CLYZBY_OS"
     />
     <ScrambleText
       variant="h3"
