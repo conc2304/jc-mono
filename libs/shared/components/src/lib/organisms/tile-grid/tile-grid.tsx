@@ -187,23 +187,24 @@ export const TileGrid = ({
 
           {/* Tiles */}
           {placedTiles.map((tile) => (
-            <Box
+            // <Box
+            //   key={tile.id}
+            //   onDoubleClick={() => console.log(tile.id, tile.y)}
+            // >
+            <TileComponent
               key={tile.id}
-              onDoubleClick={() => console.log(tile.id, tile.y)}
-            >
-              <TileComponent
-                tile={tile}
-                tileConfig={config}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-                isDragging={
-                  dragState.isDragging && dragState.draggedTile?.id === tile.id
-                }
-                isBeingReordered={
-                  dragState.isDragging && dragState.draggedTile?.id !== tile.id
-                }
-              />
-            </Box>
+              tile={tile}
+              tileConfig={config}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              isDragging={
+                dragState.isDragging && dragState.draggedTile?.id === tile.id
+              }
+              isBeingReordered={
+                dragState.isDragging && dragState.draggedTile?.id !== tile.id
+              }
+            />
+            // </Box>
           ))}
           <Box
             className="TileGrid--bottom-padding-spacer"

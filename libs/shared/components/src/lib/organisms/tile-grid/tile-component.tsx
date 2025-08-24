@@ -1,4 +1,10 @@
-import { cloneElement, isValidElement, useEffect, useState } from 'react';
+import {
+  cloneElement,
+  CSSProperties,
+  isValidElement,
+  useEffect,
+  useState,
+} from 'react';
 import { useWindowActions } from '../../context';
 import { TileRenderer } from '@jc/file-system';
 import { DefaultTileContent } from '../../molecules/live-tile/default-tile-content';
@@ -19,7 +25,7 @@ import {
 import { ChevronRight, Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton, DiagonalLines } from '../../atoms';
-import { positions } from '@mui/system';
+
 interface TileComponentProps {
   tile: PlacedTile;
   tileConfig: ResponsiveBreakpointConfig;
@@ -37,7 +43,7 @@ export const TileComponent = ({
   isBeingReordered,
 }: TileComponentProps) => {
   const theme = useTheme();
-  // const { openWindow } = useWindowActions();
+  const { openWindow } = useWindowActions();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const DefaultTileRenderer: TileRenderer = {
@@ -59,6 +65,7 @@ export const TileComponent = ({
     dateModified,
     size,
     name,
+    id,
   } = tile.fileData;
   // Use provided renderer or fallback to default
   const renderer = tileRenderer || DefaultTileRenderer;
@@ -187,10 +194,16 @@ export const TileComponent = ({
             <Box display="flex" alignItems="center" gap={1}>
               <IconContainer isLarge={isLarge}>
                 {isValidElement(icon) ? (
-                  cloneElement(icon as React.ReactElement, {
-                    size: isLarge ? 24 : 20,
-                    style: { color: theme.palette.common.white },
-                  })
+                  cloneElement(
+                    icon as React.ReactElement<{
+                      size: number;
+                      style: CSSProperties;
+                    }>,
+                    {
+                      size: isLarge ? 24 : 20,
+                      style: { color: theme.palette.common.white },
+                    }
+                  )
                 ) : (
                   <Folder
                     size={isLarge ? 24 : 20}
@@ -220,6 +233,7 @@ export const TileComponent = ({
           {/* Dynamic Content Area */}
           <AugmentedButton
             className="TileComponent--content-area"
+            onClick={() => openWindow(id)}
             sx={{
               display: 'flex',
               flexDirection: 'column',
