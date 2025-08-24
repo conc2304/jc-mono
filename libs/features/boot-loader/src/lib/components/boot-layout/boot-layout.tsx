@@ -8,6 +8,7 @@ import {
   lighten,
   darken,
   Stack,
+  alpha,
 } from '@mui/material';
 import { TorusFieldProgressMemo } from '../torus-field-progress';
 import { BootText } from '../boot-text';
@@ -20,9 +21,6 @@ import {
   RadarChartBox,
   TorusLoaderCardAug,
   ScanLinesOverlay,
-  SystemsText,
-  WarningStripe,
-  WarningStripes,
 } from './atoms';
 import { RadarData } from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
@@ -97,14 +95,29 @@ const HeroText = () => (
   </>
 );
 
+const url =
+  'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHV5eWhoaHl5d3Nmam4xNGY4enJoamZ2anhnYm45d3M5M2w3emJoaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WWSPhALYIBk1wtIwGZ/giphy.gif';
+const urlStyle = `url("${url}") 50% 50% / 200% 200%;`;
+const gradientStyle = `radial-gradient(${alpha('#fff', 0.3)}, ${alpha(
+  '#000',
+  0.4
+)})`;
+const bgStyle = `${gradientStyle}, ${urlStyle}`;
+
 const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
   <AugmentedButton
     variant="contained"
     shape="buttonRight"
     fullWidth
     size="large"
-    sx={{ flexGrow: 1, height: '100%' }}
+    sx={{
+      flexGrow: 1,
+      height: '100%',
+      '&[data-augmented-ui]': { '--aug-border-bg': `${bgStyle} !important` },
+      // background: 'black !important',
+    }}
     href="/desktop"
+    style={{}}
   >
     <ScrambleText
       variant="displayOutline"
@@ -413,10 +426,11 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
           <BottomPanel>
             <Grid container columns={12} spacing={4}>
-              <Grid size={6}>
+              <Grid size={6} display="flex">
                 <Stack>
                   <HeroText />
                 </Stack>
+                <Box flexGrow={1} />
               </Grid>
 
               <BackgroundControls
@@ -625,10 +639,11 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         <BottomPanel flexShrink={0}>
           <Grid container columns={12} spacing={4}>
             {/* Large Text Display */}
-            <Grid size={7}>
+            <Grid size={7} display="flex">
               <Stack>
                 <HeroText />
               </Stack>
+              <Box flexGrow={1} />
             </Grid>
 
             {/* Control Icons */}
