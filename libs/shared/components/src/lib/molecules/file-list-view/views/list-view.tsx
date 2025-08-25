@@ -11,9 +11,9 @@ import {
 
 import { FileSystemContext } from '../../../context';
 import { OverflowChipContainer } from '../../overflow-chip-container';
-import { Star } from 'lucide-react';
 import { ensureContrast } from '@jc/utils';
 import { FileListViewProps } from './types';
+import { Star } from '@mui/icons-material';
 
 export const ListView = ({
   items,
@@ -105,10 +105,11 @@ export const ListView = ({
               />
             )}
             <Star
-              size={16}
-              color="gold"
               style={{
                 flexShrink: 0,
+                color: 'warning.main',
+                fill: 'currentcolor',
+                fontSize: 16,
                 visibility: item.metadata.favorite ? 'visible' : 'hidden',
               }}
             />

@@ -253,7 +253,7 @@ export const LiveTile = memo<LiveTileProps>(
                 {/* {metadata?.favorite && (
                   <Star
                     size={12}
-                    style={{ color: '#fbbf24' }}
+                    style={{ color: 'warning.main' }}
                     fill="currentColor"
                   />
                 )} */}

@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { Box, Grid } from '@mui/material';
-import { Star } from 'lucide-react';
 
 import { FileListViewProps } from './types';
 import { FileSystemContext } from '../../../context';
 import { FileSystemIcon } from '../../desktop-icon';
+import { Star } from '@mui/icons-material';
 
 export const IconsView = ({
   items,
@@ -32,9 +32,9 @@ export const IconsView = ({
                 tagContent={
                   item.metadata.favorite && (
                     <Star
-                      size={12}
-                      color="gold"
                       style={{
+                        fontSize: 12,
+                        color: 'warning.main',
                         display: 'inline',
                         lineHeight: 1.5,
                         paddingBottom: '2px',

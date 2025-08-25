@@ -55,8 +55,7 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
       )}
       {metadata?.favorite && (
         <Star
-          // size=''
-          style={{ marginTop: 8, color: '#fbbf24' }}
+          sx={{ marginTop: 1, color: 'warning.main' }}
           fill="currentColor"
         />
       )}

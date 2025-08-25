@@ -7,10 +7,10 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { Star } from 'lucide-react';
 
 import { FileListViewProps } from './types';
 import { FileSystemContext } from '../../../context';
+import { Star } from '@mui/icons-material';
 
 export const DetailsView = ({
   items,
@@ -47,7 +47,12 @@ export const DetailsView = ({
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   {item.icon}
                   {item.name}
-                  {item.metadata.favorite && <Star size={12} color="gold" />}
+                  {item.metadata.favorite && (
+                    <Star
+                      sx={{ color: 'warning.main', fontSize: 12 }}
+                      fill="currentColor"
+                    />
+                  )}
                 </Box>
               </TableCell>
               <TableCell>{item.dateModified.toLocaleDateString()}</TableCell>

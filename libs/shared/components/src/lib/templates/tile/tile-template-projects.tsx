@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Typography,
   alpha,
   useTheme,
-  styled,
   Stack,
   useMediaQuery,
 } from '@mui/material';
-import {
-  ContentContainer,
-  IconContainer,
-} from '../../molecules/live-tile/styled-components';
+import { ContentContainer } from '../../molecules/live-tile/styled-components';
 import { TileContentProps } from '../../molecules';
 import { ProjectData } from '../project';
 import { DiagonalLines, ImageContainer } from '../../atoms';
@@ -104,7 +100,12 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                   {currentProject.projectName}
                   {currentProject.metadata?.featured && (
                     <Star
-                      sx={{ pt: 0.25, ml: 1, color: '#fbbf24', fontSize: 12 }}
+                      sx={{
+                        pt: 0.25,
+                        ml: 1,
+                        color: 'warning.main',
+                        fontSize: 12,
+                      }}
                       fill="currentColor"
                     />
                   )}
