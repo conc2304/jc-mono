@@ -127,7 +127,7 @@ export const ProgressBar = ({
           position: 'relative',
           overflow: 'hidden',
           backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s ease-out',
+          transition: 'all 0.05s ease-out',
         }}
       >
         {/* Grid Pattern Background */}

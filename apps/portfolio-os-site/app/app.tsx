@@ -87,6 +87,7 @@ import {
 } from './data/themed-data/boot-messages';
 import { getScrambleCharacters } from './data/themed-data/themed-scramble-charsets';
 import { getThemedGifUrl } from './data/themed-data/themed-gif';
+import { getProgressMessages } from './data/themed-data/themed-progress-state';
 
 export default function App() {
   const theme = useTheme();
@@ -135,12 +136,14 @@ export default function App() {
 
   const scrambleCharacterSet = getScrambleCharacters(currentThemeId);
   const gifUrl = getThemedGifUrl(currentThemeId);
+  const progressMsg = getProgressMessages(currentThemeId);
 
   return (
     <BootLayout
       bootMessages={bootMessages}
       scrambleCharacterSet={scrambleCharacterSet}
       themedWidgetGifUrl={gifUrl}
+      progressMessages={progressMsg}
     />
   );
 }

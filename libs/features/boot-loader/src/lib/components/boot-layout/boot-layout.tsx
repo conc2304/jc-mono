@@ -52,6 +52,7 @@ interface SciFiLayoutProps {
     url?: string;
     backgroundPositionY?: Property.BackgroundPositionY;
   };
+  progressMessages?: { start: string; end: string };
 }
 
 const defaultScrambleCharacterSet =
@@ -68,6 +69,11 @@ const defaultBootMessages: BootMessage[] = [
   'Welcome to Terminal OS v2.1.0',
   ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
 ];
+
+const DefaultProgressMessages = {
+  start: 'initializing',
+  end: 'install completed',
+};
 
 const sampleData: RadarData = [
   [
@@ -144,6 +150,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   bootMessages = defaultBootMessages,
   scrambleCharacterSet = defaultScrambleCharacterSet,
   themedWidgetGifUrl: gifData,
+  progressMessages = DefaultProgressMessages,
 }) => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
@@ -593,7 +600,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       '--aug-br': '0.5rem',
                       '--aug-tl': '0.5rem',
                       '--aug-br1': '1rem',
-                      '--aug-br2': '2rem',
+                      '--aug-br2': '1.5rem',
                       '--aug-br-extend2': '25%',
                       '--aug-border-all': '1px',
                       '--aug-border-bg': theme.palette.primary.main,
@@ -630,8 +637,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       borderColor={theme.palette.action.focus}
                       label={
                         isComplete && progress.current === 100
-                          ? 'Install Completed'
-                          : 'Initializing'
+                          ? progressMessages.end
+                          : progressMessages.start
                       }
                       progressFillColor={`linear-gradient(90deg,
               ${alpha(theme.palette.getInvertedMode('primary'), 0)} 0%,
