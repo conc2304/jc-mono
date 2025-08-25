@@ -9,9 +9,16 @@ import { Property } from 'csstype';
 type WindowControlProps = {
   id: string;
   bgColor: Property.Color;
+  windowMaximized: boolean;
+  hasMinimize?: boolean;
 };
 
-export const WindowControls = ({ id, bgColor }: WindowControlProps) => {
+export const WindowControls = ({
+  id,
+  bgColor,
+  hasMinimize = false,
+  windowMaximized,
+}: WindowControlProps) => {
   const { minimizeWindow, maximizeWindow, closeWindow } = useWindowActions();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
@@ -35,16 +42,18 @@ export const WindowControls = ({ id, bgColor }: WindowControlProps) => {
     >
       {!isXs && (
         <Box color={ensureContrast(theme.palette.info.main, bgColor, 3).color}>
-          <AugmentedIconButton
-            {...buttonProps}
-            color="inherit"
-            onClick={(e) => {
-              e.stopPropagation();
-              minimizeWindow(id);
-            }}
-          >
-            <Minimize2 />
-          </AugmentedIconButton>
+          {hasMinimize && (
+            <AugmentedIconButton
+              {...buttonProps}
+              color="inherit"
+              onClick={(e) => {
+                e.stopPropagation();
+                minimizeWindow(id);
+              }}
+            >
+              <Minimize2 />
+            </AugmentedIconButton>
+          )}
           <AugmentedIconButton
             {...buttonProps}
             color="inherit"
@@ -53,7 +62,11 @@ export const WindowControls = ({ id, bgColor }: WindowControlProps) => {
               maximizeWindow(id);
             }}
           >
-            <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
+            {!hasMinimize && windowMaximized ? (
+              <Minimize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
+            ) : (
+              <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
+            )}
           </AugmentedIconButton>
         </Box>
       )}

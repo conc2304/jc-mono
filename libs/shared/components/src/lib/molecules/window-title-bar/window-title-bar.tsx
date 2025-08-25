@@ -11,6 +11,7 @@ type WindowTitleBarProps = {
   icon: ReactNode;
   title: string;
   onMouseDown: (e: React.MouseEvent<HTMLElement>, windowId: string) => void;
+  windowMaximized: boolean;
 };
 
 export const WindowTitleBar = ({
@@ -18,6 +19,7 @@ export const WindowTitleBar = ({
   id,
   icon,
   title,
+  windowMaximized,
 }: WindowTitleBarProps) => {
   const { handleWindowMouseDown } = useWindowManager();
   const theme = useTheme();
@@ -123,7 +125,11 @@ export const WindowTitleBar = ({
             },
           })}
         >
-          <WindowControls id={id} bgColor={background} />
+          <WindowControls
+            id={id}
+            bgColor={background}
+            windowMaximized={windowMaximized}
+          />
         </Box>
       </Box>
     </Box>

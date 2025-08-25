@@ -359,6 +359,7 @@ export const Window = React.memo(
             isActive={isActive}
             icon={icon}
             onMouseDown={handleWindowMouseDown}
+            windowMaximized={maximized}
           />
 
           <Fade

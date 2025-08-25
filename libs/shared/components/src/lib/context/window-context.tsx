@@ -607,17 +607,31 @@ export const WindowProvider: React.FC<{
       const current = windows.find(({ id }) => windowId === id);
       const isMaximizing = !current?.maximized;
 
+      // TODO Handle remembering the last non maximized state
+      const xMinimized = !isXs ? 200 + windows.length * 30 : 0;
+      const yMinimized = !isXs ? 100 + windows.length * 30 : 0;
+
+      const maxHeight = window.innerHeight - yMinimized;
+      const heightMinimized = !isXs
+        ? Math.min(window.innerHeight * 0.5, maxHeight)
+        : window.innerHeight;
+
+      const maxWidth = window.innerWidth - xMinimized;
+      const widthMinimized = !isXs
+        ? Math.min(window.innerWidth * 0.66, maxWidth)
+        : window.innerWidth;
+
       setWindows((prev) =>
         prev.map((w) =>
           w.id === windowId
             ? {
                 ...w,
                 maximized: !w.maximized,
-                x: w.maximized ? 200 : 0,
-                y: w.maximized ? 100 : 0,
+                x: w.maximized ? xMinimized : 0,
+                y: w.maximized ? yMinimized : 0,
                 zIndex: isMaximizing ? theme.zIndex.modal : windowZIndex + 1,
-                width: w.maximized ? 400 : window.innerWidth,
-                height: w.maximized ? 300 : window.innerHeight,
+                width: w.maximized ? widthMinimized : window.innerWidth,
+                height: w.maximized ? heightMinimized : window.innerHeight,
                 animationState: 'maximizing',
               }
             : w

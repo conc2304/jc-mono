@@ -1,4 +1,4 @@
-import { TaskBar, TileGrid, useWindowManager, Window } from '@jc/ui-components';
+import { TileGrid, useWindowManager, Window } from '@jc/ui-components';
 import { Box } from '@mui/system';
 import { useMemo } from 'react';
 
