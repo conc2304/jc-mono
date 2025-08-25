@@ -138,11 +138,11 @@ export const TileComponent = memo(
         gradient={{
           from: alpha(
             theme.palette.mode === 'dark'
-              ? lighten(tileColor, 0.2)
-              : darken(tileColor, 0.2),
-            0.2
+              ? lighten(tileColor, 0.25)
+              : darken(tileColor, 0.75),
+            0.4
           ),
-          to: alpha(tileColor, 0.4),
+          to: alpha(tileColor, 0.2),
         }}
         data-augmented-ui="t-clip border tl-clip tr-clip bl-clip br-clip"
         sx={{

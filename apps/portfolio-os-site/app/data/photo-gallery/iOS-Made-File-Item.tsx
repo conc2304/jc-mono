@@ -1,6 +1,10 @@
 import { FileSystemItem } from '@jc/file-system';
 import { ArtGalleryMedia_iOS_Made } from '@jc/portfolio';
-import { MediaGalleryPage, MediaGalleryProps } from '@jc/ui-components';
+import {
+  DefaultTileContent,
+  MediaGalleryPage,
+  MediaGalleryProps,
+} from '@jc/ui-components';
 import { Image } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,6 +26,13 @@ export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
     description: 'Photos and stuff I guess...',
   },
   fileData: undefined,
+  tileRenderer: {
+    component: DefaultTileContent,
+    config: {
+      size: 'small',
+      color: 'secondary',
+    },
+  },
   renderer: {
     component: MediaGalleryPage,
     props: {

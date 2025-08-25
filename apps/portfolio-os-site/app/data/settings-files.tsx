@@ -1,5 +1,6 @@
 import { FileSystemItem } from '@jc/file-system';
 import { ThemeCustomizerPage } from '@jc/themes';
+import { DefaultTileContent } from '@jc/ui-components';
 import { Settings } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -14,6 +15,13 @@ export const SettingsFileSystem: FileSystemItem<{}, {}> = {
   metadata: { tags: ['development'], favorite: true },
   children: [],
   fileData: {},
+  tileRenderer: {
+    component: DefaultTileContent,
+    config: {
+      size: 'small',
+      color: 'info',
+    },
+  },
   renderer: {
     component: ThemeCustomizerPage,
     props: {},

@@ -112,37 +112,21 @@ export const LiveTile = memo<LiveTileProps>(
       return;
     }, [children, tileData, config.showLiveContent, config.updateInterval]);
 
-    // Get tile dimensions based on size
-    const getTileSize = () => {
-      switch (config.size) {
-        case 'large':
-          return { width: isSm ? '100%' : 320, height: 300 };
-        case 'medium':
-          return { width: isSm ? '45%' : 240, height: 150 };
-        case 'small':
-          return { width: isSm ? '27%' : 150, height: 150 };
-        default:
-          return { width: 150, height: 150 };
-      }
-    };
-
-    const tileSize = getTileSize();
-    const isLarge = config.size === 'large';
+    const isLg = config.size === 'large';
 
     return (
       <TileContainer
         className="LiveTile--root"
         data-icon-id={id}
         effectiveIsDragging={effectiveIsDragging}
-        tileSize={tileSize}
         gradient={{
           from: alpha(
             theme.palette.mode === 'dark'
-              ? lighten(config.color, 0.2)
-              : darken(config.color, 0.2),
-            0.2
+              ? lighten(config.color, 1)
+              : darken(config.color, 1),
+            1
           ),
-          to: alpha(config.color, 0.4),
+          to: alpha(config.color, 0),
         }}
         sx={{
           left: isSm ? undefined : position.x,
@@ -183,20 +167,20 @@ export const LiveTile = memo<LiveTileProps>(
               sx={{ mb: 1.5 }}
             >
               <Box display="flex" alignItems="center" gap={1}>
-                <IconContainer isLarge={isLarge}>
+                <IconContainer isLarge={isLg}>
                   {isValidElement(icon) ? (
                     cloneElement(icon as React.ReactElement, {
-                      size: isLarge ? 24 : 20,
+                      size: isLg ? 24 : 20,
                       style: { color: theme.palette.common.white },
                     })
                   ) : (
                     <Folder
-                      size={isLarge ? 24 : 20}
+                      size={isLg ? 24 : 20}
                       style={{ color: theme.palette.common.white }}
                     />
                   )}
                 </IconContainer>
-                {isLarge && (
+                {isLg && (
                   <Box>
                     <Typography variant="h6" color="white" fontWeight="bold">
                       {name}
@@ -225,7 +209,7 @@ export const LiveTile = memo<LiveTileProps>(
                 metadata={metadata}
                 dateModified={dateModified}
                 size={size}
-                isLarge={isLarge}
+                isLarge={isLg}
                 currentIndex={currentIndex}
                 totalItems={children?.length || 0}
                 {...(renderer.props || {})}

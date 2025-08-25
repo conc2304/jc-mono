@@ -9,7 +9,6 @@ export const TileContainer = styled(Box, {
 }>(({ theme, effectiveIsDragging, gradient }) => ({
   position: 'absolute',
   cursor: 'grab',
-  // borderRadius: theme.spacing(3),
   overflow: 'hidden',
   background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
 
@@ -20,10 +19,6 @@ export const TileContainer = styled(Box, {
     : 'none',
 
   transform: effectiveIsDragging ? 'scale(1.05) rotate(2deg)' : 'scale(1)',
-
-  // boxShadow: effectiveIsDragging
-  //   ? `0 20px 40px ${alpha(theme.palette.common.black, 0.3)}`
-  //   : `0 8px 24px ${alpha(theme.palette.common.black, 0.15)}`,
 
   '&:hover': !effectiveIsDragging
     ? {
@@ -84,6 +79,4 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.common.white, 0.1),
   flex: 1,
   display: 'flex',
-  // alignItems: 'center',
-  // justifyContent: 'center',
 }));
