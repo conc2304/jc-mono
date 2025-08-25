@@ -186,7 +186,7 @@ export const WindowProvider: React.FC<{
           windowId &&
           replaceWindowContent
         ) {
-          // NEW: Use the memoized navigation manager instead of creating a new one
+          // Use memoized navigation manager instead of creating a new one
           return navigationManager.renderNavigableFile(
             fsItem,
             windowId,

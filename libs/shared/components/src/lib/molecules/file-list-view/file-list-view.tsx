@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { IconsView, ListView, DetailsView } from './views';
 import { FileSystemContext, useWindowActions } from '../../context';
 import { BaseFileSystemItem } from '@jc/file-system';
-import { useFileSystemItem } from '../../hooks/use-file-list-item';
+// import { useFileSystemItem } from '../../hooks/use-file-list-item';
 
 export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
@@ -81,8 +81,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     return (
       <DetailsView
         items={items}
-        handlers={handlers} // Pass handlers object instead of individual props
-        useFileSystemItem={useFileSystemItem} // Pass the hook
+        handlers={handlers}
         viewConfig={{ touchAction: 'pan-y', threshold: 12 }} // Table-specific config
       />
     );
@@ -93,7 +92,6 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
       <IconsView
         items={items}
         handlers={handlers}
-        useFileSystemItem={useFileSystemItem}
         viewConfig={{ touchAction: 'manipulation', threshold: 8 }} // Grid-specific config
       />
     );
@@ -103,7 +101,6 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
     <ListView
       items={items}
       handlers={handlers}
-      useFileSystemItem={useFileSystemItem}
       viewConfig={{ touchAction: 'pan-y', threshold: 10 }} // List-specific config
     />
   );

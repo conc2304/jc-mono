@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
-import { Image, Error } from '@mui/icons-material';
+import { Error } from '@mui/icons-material';
 
 interface ImageContainerProps
   extends Omit<BoxProps, 'component'>,

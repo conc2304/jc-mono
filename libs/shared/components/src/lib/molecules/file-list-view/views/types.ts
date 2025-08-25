@@ -1,19 +1,25 @@
 import { BaseFileSystemItem } from '@jc/file-system';
-import { useFileSystemItem } from '../../../hooks/use-file-list-item';
 import { ScrollAwareClickConfig } from '../../../hooks';
+
+interface FileListHandlers {
+  onItemClick: (item: BaseFileSystemItem, e: React.MouseEvent) => void;
+  onItemDoubleClick: (
+    item: BaseFileSystemItem,
+    e: React.MouseEvent | React.TouchEvent
+  ) => void;
+  onDragStart: (item: BaseFileSystemItem) => void;
+  onDragOver: (item: BaseFileSystemItem, e: React.DragEvent) => void;
+  onDrop: (item: BaseFileSystemItem, e: React.DragEvent) => void;
+}
 
 export interface FileListViewProps {
   items: BaseFileSystemItem[];
-  handlers: {
-    onItemClick: (item: BaseFileSystemItem, e: React.MouseEvent) => void;
-    onItemDoubleClick: (
-      item: BaseFileSystemItem,
-      e: React.MouseEvent | React.TouchEvent
-    ) => void;
-    onDragStart: (item: BaseFileSystemItem) => void;
-    onDragOver: (item: BaseFileSystemItem, e: React.DragEvent) => void;
-    onDrop: (item: BaseFileSystemItem, e: React.DragEvent) => void;
-  };
-  useFileSystemItem: typeof useFileSystemItem;
+  handlers: FileListHandlers;
+  viewConfig?: Partial<ScrollAwareClickConfig>;
+}
+
+export interface FileListItemProps {
+  item: BaseFileSystemItem;
+  handlers: FileListHandlers;
   viewConfig?: Partial<ScrollAwareClickConfig>;
 }

@@ -35,8 +35,8 @@ export const FileManager = ({
 }: FileManagerProps) => {
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up('md'));
+  const { getItemById } = useFileSystemManager(fileSystemItems);
 
-  console.log({ hasPreviewPanel });
   const [folderContents, setFolderContents] = useState(folderContentsProp);
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
   const [previewCollapsed, setPreviewCollapsed] = useState(!hasPreviewPanel);
@@ -191,9 +191,11 @@ export const FileManager = ({
     return items;
   };
 
+  const folderItems = getFolderItems();
+
   const contextValue = {
     fs: fileSystemItems,
-    items: getFolderItems(),
+    items: folderItems,
     currentPath,
     selectedItems,
     viewMode,
@@ -208,7 +210,6 @@ export const FileManager = ({
     setDraggedItems,
   };
 
-  const { getItemById } = useFileSystemManager(fileSystemItems);
   const selectedItem = getItemById(selectedItems[0]);
   return (
     <FileSystemContext.Provider value={contextValue}>
@@ -228,7 +229,7 @@ export const FileManager = ({
           )}
 
           <Box sx={{ flex: 2, overflow: 'auto' }}>
-            <FileListView items={getFolderItems()} />
+            <FileListView items={folderItems} />
           </Box>
 
           {hasPreviewPanel && isLg && (

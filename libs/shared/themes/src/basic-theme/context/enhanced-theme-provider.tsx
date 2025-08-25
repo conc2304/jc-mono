@@ -27,8 +27,6 @@ interface EnhancedThemeContextType {
     updatedTheme: Partial<EnhancedThemeOption>
   ) => void;
   resetToDefaultThemes: () => void;
-  exportThemes: () => string;
-  importThemes: (themesJson: string) => boolean;
   isHydrated: boolean;
 }
 
@@ -220,84 +218,6 @@ const EnhancedThemeProviderInner: React.FC<{
     }
   }, [initialThemes, defaultThemeId, themeStorageKey, themesStorageKey]);
 
-  const exportThemes = useCallback(() => {
-    const exportData = {
-      themes: themes,
-      currentThemeId: currentThemeId,
-      exportDate: new Date().toISOString(),
-      version: '1.0',
-    };
-    return JSON.stringify(exportData, null, 2);
-  }, [themes, currentThemeId]);
-
-  const importThemes = useCallback(
-    (themesJson: string) => {
-      try {
-        const importData = JSON.parse(themesJson);
-
-        // Validate the import data structure
-        if (!importData.themes || !Array.isArray(importData.themes)) {
-          console.error('Invalid themes data structure');
-          return false;
-        }
-
-        // Validate each theme has required properties
-        const validThemes = importData.themes.filter((theme: any) => {
-          return (
-            theme.id && theme.name && theme.lightPalette && theme.darkPalette
-          );
-        });
-
-        if (validThemes.length === 0) {
-          console.error('No valid themes found in import data');
-          return false;
-        }
-
-        // Merge with existing themes, replacing duplicates
-        setThemes((prevThemes) => {
-          const mergedThemes = [...initialThemes]; // Start with initial themes
-
-          // Add existing custom themes that aren't being replaced
-          prevThemes.forEach((theme) => {
-            if (
-              !initialThemes.some((initial) => initial.id === theme.id) &&
-              !validThemes.some(
-                (imported: EnhancedThemeOption) => imported.id === theme.id
-              )
-            ) {
-              mergedThemes.push(theme);
-            }
-          });
-
-          // Add imported themes
-          validThemes.forEach((theme: EnhancedThemeOption) => {
-            mergedThemes.push(theme);
-          });
-
-          saveThemesToStorage(mergedThemes);
-          return mergedThemes;
-        });
-
-        // If import data includes a current theme, try to set it
-        if (
-          importData.currentThemeId &&
-          validThemes.some(
-            (theme: EnhancedThemeOption) =>
-              theme.id === importData.currentThemeId
-          )
-        ) {
-          changeTheme(importData.currentThemeId);
-        }
-
-        return true;
-      } catch (error) {
-        console.error('Failed to import themes:', error);
-        return false;
-      }
-    },
-    [initialThemes, saveThemesToStorage, changeTheme]
-  );
-
   const currentTheme = themes.find((t) => t.id === currentThemeId) || themes[0];
 
   // Create MUI theme based on current theme and resolved mode
@@ -322,8 +242,6 @@ const EnhancedThemeProviderInner: React.FC<{
     removeTheme,
     updateTheme,
     resetToDefaultThemes,
-    exportThemes,
-    importThemes,
     isHydrated,
   };
 

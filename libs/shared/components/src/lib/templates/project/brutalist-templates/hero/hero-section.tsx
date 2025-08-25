@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  alpha,
-  styled,
-  useTheme,
-} from '@mui/material';
+import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
 import { ImageContainer } from '../../../../atoms';
 import { ImageMediaData } from '../../../../organisms';
 
@@ -25,7 +18,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const theme = useTheme();
 
-  const { relativePath, ...imgAttributes } = heroImage;
+  const { relativePath, detailedCaption, ...imgAttributes } = heroImage;
   return (
     <Box sx={{ position: 'relative' }}>
       <Box
