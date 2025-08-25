@@ -22,7 +22,7 @@ import {
   IconContainer,
   TileContainer,
 } from '../../molecules/live-tile/styled-components';
-import { ChevronRight, Folder } from 'lucide-react';
+import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton, DiagonalLines } from '../../atoms';
 
@@ -221,7 +221,7 @@ export const TileComponent = ({
                   />
                 )}
               </IconContainer>
-              {isLarge && (
+              {isLarge && children?.length && (
                 <Box>
                   <Typography variant="h6" color="white" fontWeight="bold">
                     {name}
@@ -235,10 +235,6 @@ export const TileComponent = ({
                 </Box>
               )}
             </Box>
-            <ChevronRight
-              size={16}
-              style={{ color: alpha(theme.palette.common.white, 0.6) }}
-            />
           </Box>
           {/* Dynamic Content Area */}
           <AugmentedButton

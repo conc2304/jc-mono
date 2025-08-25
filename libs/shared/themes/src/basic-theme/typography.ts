@@ -42,14 +42,14 @@ const TypographyTheme = (
       letterSpacing: '-0.02em',
     },
     h1: {
-      fontFamily: display,
-      fontWeight: 700, // Bold for primary headings
+      fontFamily: secondary,
+      fontWeight: 'bolder', // Bold for primary headings
       fontSize: '2.375rem',
       lineHeight: 1.21,
     },
     h2: {
-      fontFamily: display,
-      fontWeight: 700, // Bold for secondary headings
+      fontFamily: secondary,
+      fontWeight: 'bold', // Bold for secondary headings
       fontSize: '1.875rem',
       lineHeight: 1.27,
     },

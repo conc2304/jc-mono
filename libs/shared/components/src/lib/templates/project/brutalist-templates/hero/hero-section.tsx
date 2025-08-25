@@ -72,9 +72,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           padding: theme.spacing(4),
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ mt: 5 }}>
           <Typography
-            variant="h1"
+            variant="h2"
             className="hero-title"
             sx={{
               fontWeight: 'bold',

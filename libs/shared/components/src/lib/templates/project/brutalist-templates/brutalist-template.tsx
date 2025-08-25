@@ -16,6 +16,7 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   overflow: 'auto',
+  paddingBottom: '8rem',
   containerType: 'inline-size',
   '& .mobile-layout': {
     display: 'block',
