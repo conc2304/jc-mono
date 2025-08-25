@@ -12,7 +12,7 @@ export const SettingsFileSystem: FileSystemItem<{}, {}> = {
   dateModified: new Date('2024-01-25'),
   dateCreated: new Date('2024-01-01'),
   path: '/Settings',
-  metadata: { tags: ['development'], favorite: true },
+  metadata: { tags: ['development'], favorite: false },
   children: [],
   fileData: {},
   tileRenderer: {

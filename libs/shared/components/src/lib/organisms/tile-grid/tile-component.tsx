@@ -7,6 +7,8 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { randomInt } from 'd3';
+
 import { useWindowActions } from '../../context';
 import { TileRenderer } from '@jc/file-system';
 import { DefaultTileContent } from '../../molecules/live-tile/default-tile-content';
@@ -20,13 +22,22 @@ import {
   PaletteOptionName,
 } from '@mui/material';
 import {
-  BackgroundPattern,
   IconContainer,
   TileContainer,
 } from '../../molecules/live-tile/styled-components';
 import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton, DiagonalLines } from '../../atoms';
+
+const textureImages = [
+  'scratched-glass.png',
+  'scratched-glass-with-scuffs.png',
+  'scratched-glass-minimal.png',
+  'scratched-glass-intense-medium-bottom-distressed.png',
+  'scratched-glass-intense-medium.png',
+];
+
+const getRandomImgFn = randomInt(textureImages.length);
 
 interface TileComponentProps {
   tile: PlacedTile;
@@ -114,16 +125,8 @@ export const TileComponent = memo(
     const tileColor =
       theme.palette?.[config.color as PaletteOptionName]?.main || config.color;
 
-    const images = [
-      'scratched-glass.png',
-      'scratched-glass-with-scuffs.png',
-      'scratched-glass-minimal.png',
-      'scratched-glass-intense-medium-bottom-distressed.png',
-      'scratched-glass-intense-medium.png',
-    ];
-
     const tileBackgroundImg = useMemo(
-      () => images[Math.floor(Math.random() * images.length)],
+      () => textureImages[getRandomImgFn()],
       []
     );
     const bgImgPath = `/textures/${tileBackgroundImg}`;
@@ -135,26 +138,9 @@ export const TileComponent = memo(
         onDragStart={handleDragStart}
         onDragEnd={onDragEnd}
         effectiveIsDragging={isDragging}
-        gradient={{
-          from: alpha(
-            theme.palette.mode === 'dark'
-              ? lighten(tileColor, 0.25)
-              : darken(tileColor, 0.75),
-            0.4
-          ),
-          to: alpha(tileColor, 0.2),
-        }}
+        tileColor={tileColor}
+        size={config.size}
         data-augmented-ui="t-clip border tl-clip tr-clip bl-clip br-clip"
-        sx={{
-          '--aug-border-all': '1px',
-          '--aug-border-bg': tileColor,
-          '--aug-t-extend1': config.size === 'large' ? '40%' : '30%',
-          '--aug-t': '1rem',
-          '--aug-tl': '0.75rem',
-          '--aug-tr': '0.75rem',
-          '--aug-bl': '0.75rem',
-          '--aug-br': '0.75rem',
-        }}
         style={{
           left: tile.x,
           top: tile.y,
@@ -191,7 +177,6 @@ export const TileComponent = memo(
             // pointerEvents: 'none',
           }}
         >
-          <BackgroundPattern />
           <Box
             sx={{
               position: 'relative',

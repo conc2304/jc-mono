@@ -8,11 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useIconDrag, useWindowActions } from '../../context';
-import {
-  BackgroundPattern,
-  IconContainer,
-  TileContainer,
-} from './styled-components';
+import { IconContainer, TileContainer } from './styled-components';
 import { TileRenderer } from '@jc/file-system';
 import { DefaultTileContent } from './default-tile-content';
 import { ChevronRight, Folder } from 'lucide-react';
@@ -148,8 +144,6 @@ export const LiveTile = memo<LiveTileProps>(
         }}
       >
         <Box sx={{ width: '100%', height: '100%', p: 2, position: 'relative' }}>
-          <BackgroundPattern />
-
           <Box
             sx={{
               position: 'relative',
