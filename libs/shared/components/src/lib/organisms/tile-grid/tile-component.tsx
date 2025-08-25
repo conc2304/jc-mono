@@ -47,7 +47,7 @@ export const TileComponent = memo(
     isBeingReordered,
   }: TileComponentProps) => {
     const theme = useTheme();
-    const { openWindow } = useWindowActions();
+    // const { openWindow } = useWindowActions();
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const DefaultTileRenderer: TileRenderer = {
@@ -246,7 +246,7 @@ export const TileComponent = memo(
             {/* Dynamic Content Area */}
             <AugmentedButton
               className="TileComponent--content-area"
-              onClick={() => openWindow(id)}
+              // onClick={() => openWindow(id)}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',

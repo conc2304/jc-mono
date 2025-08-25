@@ -1,4 +1,11 @@
-import { Box, Container, Button, Stack, alpha } from '@mui/material';
+import {
+  Box,
+  Container,
+  Button,
+  Stack,
+  alpha,
+  IconButton,
+} from '@mui/material';
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { useEffect, useRef, useState } from 'react';
@@ -6,6 +13,8 @@ import { DragState, InsertionSide, Tile } from './types';
 import { useTilePlacement } from './use-tile-placement';
 import { BaseFileSystemItem } from '@jc/file-system';
 import { TileComponent } from './tile-component';
+import { RestartAlt, Shuffle } from '@mui/icons-material';
+import { AugmentedIconButton } from '../../atoms';
 
 export const TileGrid = ({
   gridTiles = [],
@@ -224,39 +233,21 @@ export const TileGrid = ({
               height: config.containerPadding,
             }}
           />
-        </Box>
-
-        <Box
-          className="TileGrid--control-btns"
-          sx={{ my: 3, textAlign: 'center' }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="center">
-            <Button
-              onClick={shuffleTiles}
-              variant="contained"
-              sx={{
-                backgroundColor: '#9c27b0',
-                '&:hover': {
-                  backgroundColor: '#7b1fa2',
-                },
-              }}
-            >
-              Shuffle
-            </Button>
-
-            <Button
-              onClick={resetTiles}
-              variant="contained"
-              sx={{
-                backgroundColor: 'grey.600',
-                '&:hover': {
-                  backgroundColor: 'grey.700',
-                },
-              }}
-            >
-              Reset
-            </Button>
-          </Stack>
+          <Box
+            className="TileGrid--control-btns"
+            sx={{
+              position: 'absolute',
+              bottom: '10px',
+              right: '12.5%',
+            }}
+          >
+            <AugmentedIconButton color="secondary" onClick={shuffleTiles}>
+              <Shuffle />
+            </AugmentedIconButton>
+            <AugmentedIconButton color="secondary" onClick={resetTiles}>
+              <RestartAlt />
+            </AugmentedIconButton>
+          </Box>
         </Box>
       </Container>
     </Box>

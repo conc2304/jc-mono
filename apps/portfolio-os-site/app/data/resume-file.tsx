@@ -2,6 +2,7 @@ import {
   Resume,
   ResumeTemplate,
   ResumeComponentProps,
+  DefaultTileContent,
 } from '@jc/ui-components';
 import { ResumeData } from '@jc/portfolio';
 import { FileTextIcon } from 'lucide-react'; // TODO replace with other icon library
@@ -24,6 +25,13 @@ export const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
     tags: ['work', 'important'],
     favorite: true,
     description: 'Professional resume',
+  },
+  tileRenderer: {
+    component: DefaultTileContent,
+    config: {
+      size: 'small',
+      color: 'secondary',
+    },
   },
   fileData: ResumeData,
   renderer: {
