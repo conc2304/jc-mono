@@ -68,7 +68,6 @@ export const Window = React.memo(
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down('md'));
-    const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
     const [resizeState, setResizeState] = useState<ResizeState>({
       isResizing: false,
@@ -94,7 +93,7 @@ export const Window = React.memo(
 
       const handleScreenResize = () => {
         const newWidth = window.innerWidth;
-        const newHeight = window.innerHeight - (isXs ? 0 : taskbarHeight);
+        const newHeight = window.innerHeight;
 
         updateWindow?.(id, {
           x: 0,
@@ -117,7 +116,7 @@ export const Window = React.memo(
         window.removeEventListener('resize', debouncedHandleScreenResize);
         clearTimeout(resizeTimeout);
       };
-    }, [maximized, id, updateWindow, isXs, theme.mixins.taskbar?.height]);
+    }, [maximized, id, updateWindow, isXs]);
 
     // Handle animation completion
     useEffect(() => {
@@ -340,11 +339,7 @@ export const Window = React.memo(
             // Performance optimizations
             willChange: isDragging ? 'transform' : 'auto',
             contain: 'layout style paint',
-            height: maximized
-              ? `calc(100% - ${
-                  isXs ? 0 : theme.mixins.taskbar.height
-                } - 0.25rem)`
-              : undefined,
+            height: maximized ? `calc(100% - 0.25rem)` : undefined,
 
             // Apply animation styles
             ...getAnimationStyles(),
@@ -378,7 +373,7 @@ export const Window = React.memo(
                 p: 0.5,
                 pt: 0,
                 m: 0,
-                backdropFilter: 'blur(4px)',
+                backdropFilter: 'blur(14px)',
 
                 background: alpha(
                   theme.palette.background.paper,

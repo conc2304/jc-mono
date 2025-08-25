@@ -30,14 +30,16 @@ export const FileManager = ({
   initialPath,
   folderContents: folderContentsProp,
   hasQuickAccessPanel = false,
-  hasPreviewPanel = false,
+  hasPreviewPanel = true,
   updateWindowName,
 }: FileManagerProps) => {
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up('md'));
+
+  console.log({ hasPreviewPanel });
   const [folderContents, setFolderContents] = useState(folderContentsProp);
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
-  const [previewCollapsed, setPreviewCollapsed] = useState(true);
+  const [previewCollapsed, setPreviewCollapsed] = useState(!hasPreviewPanel);
   const [currentPath, setCurrentPath] = useState(initialPath);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');

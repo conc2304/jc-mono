@@ -19,6 +19,7 @@ import {
   FileSystemNavigationManager,
   NavigationGroup,
 } from '@jc/file-system';
+import { maxHeight } from '@mui/system';
 
 interface DragRef {
   startX: number;
@@ -124,8 +125,6 @@ export const WindowProvider: React.FC<{
 }) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
-
-  const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
 
   const [windows, setWindows] = useState<AnimatedWindowMetaData[]>([]);
   const [draggedWindow, setDraggedWindow] = useState<string | null>(null);
@@ -338,7 +337,7 @@ export const WindowProvider: React.FC<{
         const newY = clamp(
           iconDragRef.current.elementY + deltaY,
           0,
-          window.innerHeight - taskbarHeight - iconHeight
+          window.innerHeight - iconHeight
         );
 
         // Direct DOM manipulation for smooth dragging
@@ -356,7 +355,6 @@ export const WindowProvider: React.FC<{
       draggedIcon,
       theme.mixins.desktopIcon.width,
       theme.mixins.desktopIcon.maxHeight,
-      theme.mixins.taskbar.height,
     ]
   );
 
@@ -474,16 +472,23 @@ export const WindowProvider: React.FC<{
       } else {
         // Create new window with content (potentially with navigation)
         const maximized = fsItem.type !== 'folder' && !isXs;
-        const width =
-          fsItem.type === 'folder' && !isXs ? 550 : window.innerWidth;
-        const height =
-          fsItem.type === 'folder' && !isXs
-            ? 400
-            : window.innerHeight - (isXs ? 0 : taskbarHeight);
+
         const x =
           fsItem.type === 'folder' && !isXs ? 200 + windows.length * 30 : 0;
         const y =
           fsItem.type === 'folder' && !isXs ? 100 + windows.length * 30 : 0;
+
+        const maxHeight = window.innerHeight - y;
+        const height =
+          fsItem.type === 'folder' && !isXs
+            ? Math.min(window.innerHeight * 0.5, maxHeight)
+            : window.innerHeight;
+
+        const maxWidth = window.innerWidth - x;
+        const width =
+          fsItem.type === 'folder' && !isXs
+            ? Math.min(window.innerWidth * 0.66, maxWidth)
+            : window.innerWidth;
 
         const newWindow: AnimatedWindowMetaData = {
           id,
@@ -612,9 +617,7 @@ export const WindowProvider: React.FC<{
                 y: w.maximized ? 100 : 0,
                 zIndex: isMaximizing ? theme.zIndex.modal : windowZIndex + 1,
                 width: w.maximized ? 400 : window.innerWidth,
-                height: w.maximized
-                  ? 300
-                  : window.innerHeight - (isXs ? 0 : taskbarHeight),
+                height: w.maximized ? 300 : window.innerHeight,
                 animationState: 'maximizing',
               }
             : w
@@ -747,7 +750,7 @@ export const WindowProvider: React.FC<{
         const newY = clamp(
           windowDragRef.current.elementY + deltaY,
           0,
-          window.innerHeight - taskbarHeight - titlebarHeight - overflowPadding
+          window.innerHeight - titlebarHeight - overflowPadding
         );
 
         // Direct DOM manipulation for smooth dragging
@@ -761,11 +764,7 @@ export const WindowProvider: React.FC<{
         }
       });
     },
-    [
-      draggedWindow,
-      theme.mixins.taskbar.height,
-      theme.mixins.window.titleBar.height,
-    ]
+    [draggedWindow, theme.mixins.window.titleBar.height]
   );
 
   const handleWindowMouseUp = useCallback(() => {
