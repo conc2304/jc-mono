@@ -5,8 +5,7 @@ export const SectionTitle = ({
   ...props
 }: { title: string } & TypographyProps) => (
   <Typography
-    variant="h5"
-    component="h3"
+    variant="h3"
     gutterBottom
     color="primary"
     fontWeight="bold"

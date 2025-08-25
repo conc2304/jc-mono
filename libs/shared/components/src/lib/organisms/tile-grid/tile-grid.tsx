@@ -1,11 +1,4 @@
-import {
-  Box,
-  Container,
-  Button,
-  Stack,
-  alpha,
-  IconButton,
-} from '@mui/material';
+import { Box, Container, alpha } from '@mui/material';
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { useEffect, useRef, useState } from 'react';

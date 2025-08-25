@@ -84,7 +84,7 @@ export const WindowTitleBar = ({
         >
           {icon}
           <Typography
-            variant="body2"
+            variant="h3"
             component="span"
             sx={{
               ml: 1,

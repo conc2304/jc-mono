@@ -23,7 +23,7 @@ export const TechnicalSkillsCard = ({
     <Grid {...gridProps}>
       <Card variant="outlined" sx={{ background: 'unset', height: '100%' }}>
         <CardContent>
-          <Typography variant="h6" mb={2} textAlign="center">
+          <Typography variant="h5" mb={2} textAlign="center">
             {title}
           </Typography>
           <Box display="flex" flexWrap="wrap" gap={0.5}>

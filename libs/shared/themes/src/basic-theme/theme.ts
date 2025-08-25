@@ -13,7 +13,6 @@ import getComponentOverrides from './component-overrides';
 import { basicPalette } from './palettes';
 import getTypography from './typography';
 
-// import '../fonts/index.css';  TODO later
 type CreateThemeOptionProps = {
   palette?: PaletteOptions;
   typography?: TypographyVariantsOptions;
@@ -29,7 +28,7 @@ type PaletteOptionNames =
 
 const paletteFallback = basicPalette();
 const typographyFallBack = getTypography({
-  primary: `'TimeBurner', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
+  primary: `'Exo 2', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
   secondary: `'Eightgon', Impact, 'Arial Black', 'Trebuchet MS', Arial, sans-serif`,
   display: `'Saiba', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
   displayOutline: `'Saiba Outline', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,

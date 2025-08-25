@@ -50,7 +50,9 @@ export const MobileNavigation: React.FC<
               onClick={onNext}
               disabled={!onNext}
             >
-              <Typography variant="caption">Next</Typography>
+              <Typography variant="caption" fontWeight="bolder">
+                Next
+              </Typography>
             </Button>
           </Box>
         )}

@@ -28,10 +28,10 @@ const linkProps: LinkProps = {
 export const ResumeHeader = ({ title, contactInfo }: ResumeHeaderProps) => {
   return (
     <Box textAlign="center" mb={4}>
-      <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
+      <Typography variant="h1" gutterBottom fontWeight="bold">
         {contactInfo.name}
       </Typography>
-      <Typography variant="h5" component="h2" color="primary" gutterBottom>
+      <Typography variant="h2" color="primary" gutterBottom>
         {title}
       </Typography>
 
