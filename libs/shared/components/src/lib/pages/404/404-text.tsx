@@ -54,15 +54,15 @@ export const Text404 = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
 
-                [theme.breakpoints.up('sm')]: {
-                  height: '10rem',
-                },
-                [theme.breakpoints.up('md')]: {
-                  height: '16rem',
-                },
-                [theme.breakpoints.up('lg')]: {
-                  height: '22rem',
-                },
+                // [theme.breakpoints.up('sm')]: {
+                //   height: '10rem',
+                // },
+                // [theme.breakpoints.up('md')]: {
+                //   height: '16rem',
+                // },
+                // [theme.breakpoints.up('lg')]: {
+                //   height: '22rem',
+                // },
               })}
             >
               <GlitchText
@@ -72,6 +72,16 @@ export const Text404 = () => {
                 sx={(theme) => ({
                   textAlign: 'center',
                   verticalAlign: 'top',
+
+                  [theme.breakpoints.up('sm')]: {
+                    fontSize: '10rem',
+                  },
+                  [theme.breakpoints.up('md')]: {
+                    fontSize: '16rem',
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    fontSize: '22rem',
+                  },
                 })}
               >
                 {char}

@@ -26,18 +26,19 @@ const TypographyTheme = (
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 500,
-    fontWeightBold: 700, // Updated to match TimeBurner bold weight
+    fontWeightBold: 700,
+
     display: {
       fontFamily: display,
       fontWeight: 700,
-      fontSize: '3.5rem',
+      fontSize: '2.375rem',
       lineHeight: 1.14,
       letterSpacing: '-0.02em',
     },
     displayOutline: {
       fontFamily: displayOutline,
       fontWeight: 700,
-      fontSize: '3.5rem',
+      fontSize: '2.375rem',
       lineHeight: 1.14,
       letterSpacing: '-0.02em',
     },

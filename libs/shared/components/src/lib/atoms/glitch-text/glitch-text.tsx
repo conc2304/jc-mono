@@ -428,54 +428,48 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
     autoGlitchInterval,
     scrambleOnLeave,
   ]);
-
+  console.log({ sx });
   return (
     <Typography
       component="span"
       ref={containerRef}
       className={`select-none ${className}`}
-      sx={(theme) => ({
-        fontFamily: 'inherit',
+      sx={{
+        ...(Array.isArray(sx) ? sx : [sx]),
         perspective: '1000px',
         transformStyle: 'preserve-3d',
         display: 'inline-block',
         position: 'relative',
         cursor: 'pointer',
-        ...sx,
-        ...(typographyProps.variant
-          ? theme.typography[typographyProps.variant]
-          : {}),
-      })}
+      }}
+      {...typographyProps}
     >
       <Typography
         component={typographyProps.component || 'span'}
         variant={typographyProps.variant}
         ref={textRef}
-        sx={(theme) => ({
-          position: 'relative',
-          zIndex: 10,
-          display: 'inline-block',
-          transition: theme.transitions.create(['all'], {
-            duration: theme.transitions.duration.short,
-            easing: theme.transitions.easing.easeOut,
+        sx={[
+          ...(Array.isArray(sx) ? sx : [sx]),
+          (theme) => ({
+            position: 'relative',
+            zIndex: 10,
+            display: 'inline-block',
+            transition: theme.transitions.create(['all'], {
+              duration: theme.transitions.duration.short,
+              easing: theme.transitions.easing.easeOut,
+            }),
+            fontFamily: 'inherit',
+            fontSize: 'inherit',
+            fontWeight: 'inherit',
+            lineHeight: 'inherit',
+            letterSpacing: 'inherit',
+            transform: 'scale(1)',
+            '&:hover': {
+              transform: 'scale(1.05)',
+            },
           }),
-          fontFamily: 'inherit',
-          fontSize: 'inherit',
-          fontWeight: 'inherit',
-          lineHeight: 'inherit',
-          letterSpacing: 'inherit',
-          transform: 'scale(1)',
-
-          '&:hover': {
-            transform: 'scale(1.05)',
-          },
-
-          ...() => {
-            return typeof typographyProps.sx == 'function'
-              ? {}
-              : typographyProps.sx;
-          },
-        })}
+        ]}
+        // {...typographyProps}
       >
         {children}
       </Typography>

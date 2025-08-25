@@ -32,7 +32,7 @@ const TextElem = styled(Typography)(({ theme }) => ({
     ).color,
     3
   ).color,
-  color: theme.ap, // fallback
+  color: theme.palette.secondary.main, // fallback
 }));
 
 export const HomeTextBox = () => {

@@ -84,13 +84,13 @@ export const createThemeFromOptions = ({
   fullTheme.typography.display = {
     ...fullTheme.typography.display,
     [theme.breakpoints.up('sm')]: {
-      fontSize: '10rem',
+      fontSize: '2.75rem',
     },
     [theme.breakpoints.up('md')]: {
-      fontSize: '16rem',
+      fontSize: '3rem',
     },
     [theme.breakpoints.up('lg')]: {
-      fontSize: '22rem',
+      fontSize: '3.5rem',
     },
   };
 

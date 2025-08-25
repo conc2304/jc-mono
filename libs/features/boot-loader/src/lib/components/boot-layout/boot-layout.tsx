@@ -81,10 +81,15 @@ const sampleData: RadarData = [
 const HeroText = () => (
   <>
     <ScrambleText
-      variant="h1"
+      variant="display"
       color="primary"
       defaultText="Jose Conchello"
       hoverText="Via CLYZBY_OS"
+      sx={(theme) => ({
+        fontSize: '3.5rem',
+
+        //   fontSize: theme.typography.h1.fontSize,
+      })}
     />
     <ScrambleText
       variant="h3"
@@ -258,7 +263,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   opacity: 0.5,
                 }}
               >
-                <ScanLinesOverlay />
+                <ScanLinesOverlay className="ScanlineOverlay--component" />
                 <TorusFieldProgressMemo
                   hideText
                   colors={{
@@ -397,7 +402,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   height="100%"
                 >
                   <TorusLoaderCardAug>
-                    <ScanLinesOverlay />
+                    <ScanLinesOverlay className="ScanlineOverlay--component" />
                     <TorusFieldProgressMemo
                       colors={{
                         backgroundColor: theme.palette.background.paper,
@@ -540,7 +545,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Main Scanner */}
                 <TorusLoaderCardAug>
-                  <ScanLinesOverlay />
+                  <ScanLinesOverlay className="ScanlineOverlay--component" />
                   <TorusFieldProgressMemo
                     // progress={(progress.current / progress.total) * 100}
                     // progressMessage={progress.message}
