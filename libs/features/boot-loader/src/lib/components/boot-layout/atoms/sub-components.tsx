@@ -70,7 +70,7 @@ export const WarningStripes = styled(Box)({
 export const WarningStripe = styled(Box)(({ theme }) => ({
   width: 6,
   height: 40,
-  backgroundColor: theme.palette.warning.main,
+  backgroundColor: theme.palette.getInvertedMode('primary'),
   transform: 'rotate(45deg) translateY(35%)',
 }));
 

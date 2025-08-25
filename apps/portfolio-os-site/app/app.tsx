@@ -72,6 +72,7 @@ import {
   // DefaultBootMessage,
   // ThemedBootMessages,
   BootLayout,
+  BootMessage,
   // MobileThemedBootMessages,
   // MobileDefaultBootMessage,
   // getScrambleCharacters,
@@ -102,6 +103,19 @@ export default function App() {
     messageBankByScreenSize[currentThemeId].length
   ); // set max to length
 
+  const contextMessages: BootMessage[] = [
+    [
+      'accessing creative technologist portfolio',
+      'intersecting art & engineering',
+    ],
+    'entering JOSE_CONCHELLO digital archive',
+    [
+      'portfolio systems online and operational',
+      'creative tech showcase installed',
+    ],
+  ];
+  const endMessage = 'digital portfolio access granted';
+
   const initialMessage = 'Reinitializing new identity ...';
   const newLine = '';
 
@@ -110,10 +124,13 @@ export default function App() {
     fallbackMessages;
 
   const bootMessages = [
+    ...contextMessages,
+    newLine,
     initialMessage,
     ...bootMessagesThemed.slice(0, -1),
-    newLine,
     bootMessagesThemed[bootMessagesThemed.length - 1],
+    newLine,
+    endMessage,
   ];
 
   const scrambleCharacterSet = getScrambleCharacters(currentThemeId);

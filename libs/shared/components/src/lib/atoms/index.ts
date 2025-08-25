@@ -7,3 +7,4 @@ export * from './gradient-shader';
 export * from './glitch-text';
 export * from './image-container';
 export * from './scramble-text';
+export * from './progress';

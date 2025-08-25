@@ -40,7 +40,12 @@ interface BootTextProps {
   textWrapMode?: 'ellipsis' | 'wrap' | 'nowrap'; // How to handle long text
 
   onComplete?: () => void;
-  onProgress?: (current: number, total: number, message: string) => void;
+  onProgress?: (
+    percentComplete: number,
+    currentMessage: string,
+    messageIndex: number,
+    charIndex: number
+  ) => void;
 }
 
 const BootTextInner: React.FC<BootTextProps> = ({
@@ -302,6 +307,16 @@ const BootTextInner: React.FC<BootTextProps> = ({
       container.innerHTML = '';
       currentLineRef.current = 0;
 
+      // Calculate total characters across all messages for progress tracking
+      const normalizedMessages = bootMessages.map(
+        (msg) => normalizeBootMessage(msg)[0]
+      );
+      const totalCharacters = normalizedMessages.reduce(
+        (sum, msg) => sum + Math.max(msg.length, 1),
+        0
+      ); // Minimum 1 for empty messages
+      let cumulativeCharacters = 0;
+
       // Create message blocks for each boot message
       const messageBlocks: HTMLDivElement[] = [];
       bootMessages.forEach((messageData, index) => {
@@ -412,10 +427,11 @@ const BootTextInner: React.FC<BootTextProps> = ({
         return tl;
       };
 
-      // Function to animate a complete message with staggered character scrambling
+      // Function to animate a complete message with staggered character scrambling and progress tracking
       const createMessageAnimation = (
         message: string,
         messageIndex: number,
+        messageStartCharIndex: number,
         onMessageComplete?: () => void
       ) => {
         const tl = gsap.timeline();
@@ -424,6 +440,16 @@ const BootTextInner: React.FC<BootTextProps> = ({
           tl.set(`.boot-text-${messageIndex}`, {
             text: { value: '', rtl: false },
           });
+
+          // Still update progress for empty message (counts as 1 character)
+          const progressPercent = Math.min(
+            100,
+            ((messageStartCharIndex + 1) / totalCharacters) * 100
+          );
+          tl.call(() => {
+            onProgressRef.current?.(progressPercent, message, messageIndex, 0);
+          });
+
           if (onMessageComplete) {
             tl.call(onMessageComplete);
           }
@@ -456,12 +482,31 @@ const BootTextInner: React.FC<BootTextProps> = ({
         message.split('').forEach((char, charIndex) => {
           const charSelector = `.char-${messageIndex}-${charIndex}`;
           const startTime = charIndex * charDelay;
+          const globalCharIndex = messageStartCharIndex + charIndex;
 
           const charAnimation = createScrambleAnimation(
             charSelector,
             char,
             charIndex,
             message.length
+          );
+
+          // Add progress callback at the start of each character animation
+          const progressPercent = Math.min(
+            100,
+            ((globalCharIndex + 1) / totalCharacters) * 100
+          );
+          tl.call(
+            () => {
+              onProgressRef.current?.(
+                progressPercent,
+                message,
+                messageIndex,
+                charIndex
+              );
+            },
+            [],
+            startTime
           );
 
           tl.add(charAnimation, startTime);
@@ -477,7 +522,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         return tl;
       };
 
-      // Animate each message sequentially
+      // Animate each message sequentially with character-level progress tracking
       bootMessages.forEach((messageData, index) => {
         const [defaultMessage] = normalizeBootMessage(messageData);
         const textSelector = `.boot-text-${index}`;
@@ -498,22 +543,21 @@ const BootTextInner: React.FC<BootTextProps> = ({
           }
         });
 
-        // Create the scrambling message animation
+        // Create the scrambling message animation with progress tracking
         const messageAnimation = createMessageAnimation(
           defaultMessage,
           index,
+          cumulativeCharacters,
           () => {
-            onProgressRef.current?.(
-              index + 1,
-              bootMessages.length,
-              defaultMessage
-            );
             // Auto-scroll after each message completes
             scrollToBottom();
           }
         );
 
         masterTimeline.add(messageAnimation);
+
+        // Update cumulative character count for next message
+        cumulativeCharacters += Math.max(defaultMessage.length, 1); // Minimum 1 for empty messages
 
         if (index < bootMessages.length - 1) {
           masterTimeline.set({}, {}, `+=${lineDelay}`);

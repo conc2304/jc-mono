@@ -40,6 +40,7 @@ import { BackgroundControls } from './molecules/background-controls/background-c
 import {
   AugmentedButton,
   DiagonalLines,
+  ProgressBar,
   ScrambleText,
 } from '@jc/ui-components';
 
@@ -119,7 +120,6 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
       flexGrow: 1,
       height: '100%',
       '&[data-augmented-ui]': { '--aug-border-bg': `${bgStyle} !important` },
-      // background: 'black !important',
     }}
     href="/desktop"
     style={{}}
@@ -182,8 +182,18 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   const [isComplete, setIsComplete] = useState(false);
 
   const handleProgress = useCallback(
-    (current: number, total: number, message: string) => {
-      // setProgress({ current, total, message });
+    (
+      percentComplete: number,
+      currentMessage: string,
+      messageIndex: number,
+      charIndex: number
+    ) => {
+      setProgress({
+        current: percentComplete,
+        total: 7,
+        message: currentMessage,
+      });
+      console.log(percentComplete, currentMessage, messageIndex, charIndex);
     },
     []
   );
@@ -263,7 +273,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   opacity: 0.5,
                 }}
               >
-                <ScanLinesOverlay className="ScanlineOverlay--component" />
                 <TorusFieldProgressMemo
                   hideText
                   colors={{
@@ -275,6 +284,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     themeMode: theme.palette.mode,
                   }}
                 />
+                <ScanLinesOverlay className="ScanLinesOverlay--component" />
               </Box>
             </Box>
 
@@ -402,7 +412,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   height="100%"
                 >
                   <TorusLoaderCardAug>
-                    <ScanLinesOverlay className="ScanlineOverlay--component" />
                     <TorusFieldProgressMemo
                       colors={{
                         backgroundColor: theme.palette.background.paper,
@@ -413,6 +422,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                         themeMode: theme.palette.mode,
                       }}
                     />
+                    <ScanLinesOverlay className="ScanLinesOverlay--component" />
                   </TorusLoaderCardAug>
                   <GifContainer
                     url={themedWidgetGifUrl.url}
@@ -545,10 +555,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 {/* Main Scanner */}
                 <TorusLoaderCardAug>
-                  <ScanLinesOverlay className="ScanlineOverlay--component" />
                   <TorusFieldProgressMemo
-                    // progress={(progress.current / progress.total) * 100}
-                    // progressMessage={progress.message}
+                    progress={progress.current}
+                    progressMessage={progress.message}
                     colors={{
                       backgroundColor: theme.palette.background.paper,
                       beamColor: theme.palette.getInvertedMode('info'),
@@ -558,6 +567,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       themeMode: theme.palette.mode,
                     }}
                   />
+                  <ScanLinesOverlay className="ScanLinesOverlay--component" />
                 </TorusLoaderCardAug>
 
                 <ThemePickerPanel />
@@ -586,7 +596,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       '--aug-br2': '2rem',
                       '--aug-br-extend2': '25%',
                       '--aug-border-all': '1px',
-                      '--aug-border-bg': theme.palette.secondary.main,
+                      '--aug-border-bg': theme.palette.primary.main,
                     },
                   })}
                 >
@@ -598,6 +608,38 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     direction="diagonal-alt"
                     color={theme.palette.action.focus}
                   />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      height: '101%',
+                      width: '101%',
+                      top: -1,
+                      left: -1,
+                      opacity: 0.75,
+                      zIndex: 0,
+                      mixBlendMode: 'darken',
+                    }}
+                  >
+                    <ProgressBar
+                      progress={progress.current}
+                      height="100%"
+                      width="100%"
+                      color={theme.palette.primary.main}
+                      glowColor={theme.palette.getInvertedMode('primary')}
+                      backgroundColor={theme.palette.background.paper}
+                      borderColor={theme.palette.action.focus}
+                      label={
+                        isComplete && progress.current === 100
+                          ? 'Install Completed'
+                          : 'Initializing'
+                      }
+                      progressFillColor={`linear-gradient(90deg,
+              ${alpha(theme.palette.getInvertedMode('primary'), 0)} 0%,
+              ${alpha(theme.palette.primary.main, 0.6)} 50%,
+              ${alpha(theme.palette.getInvertedMode('primary', true), 0.4)} 100%
+            )`}
+                    />
+                  </Box>
                 </Box>
 
                 {/* BootText Panel */}

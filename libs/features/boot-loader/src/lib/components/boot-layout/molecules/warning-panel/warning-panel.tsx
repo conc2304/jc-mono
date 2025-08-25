@@ -7,9 +7,10 @@ import {
   Typography,
 } from '@mui/material';
 import { WarningStripe, WarningStripes } from '../../atoms';
+import { InfoOutline } from '@mui/icons-material';
 
 const WarningPanelStyled = styled(Paper)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.warning.main, 0.1),
+  backgroundColor: alpha(theme.palette.primary.main, 0.1),
   padding: theme.spacing(1.5),
   paddingBottom: theme.spacing(0.5),
   borderRadius: 0,
@@ -23,7 +24,7 @@ const WarningPanelStyled = styled(Paper)(({ theme }) => ({
     // 7 stripes are each 8 pixels wide with gap of 12 + 1 for gap
     '--aug-br-extend2': 'calc(100% - ((6px + 12px) * (7 + 1) + 1rem) )', //
     '--aug-border-all': '1px',
-    '--aug-border-bg': theme.palette.warning.main,
+    '--aug-border-bg': theme.palette.primary.main,
   },
 }));
 
@@ -36,21 +37,19 @@ const WarningPanelAugmented = (props: PaperProps) => (
 
 export const WarningPanel = () => (
   <WarningPanelAugmented elevation={0}>
-    <Typography
-      variant="h6"
-      align="center"
-      sx={{ color: 'warning.main', fontWeight: 'bold' }}
-    >
-      !
-    </Typography>
-    <Typography
-      variant="caption"
-      align="center"
-      display="block"
-      sx={{ color: 'warning.main' }}
-    >
-      DANGER
-    </Typography>
+    <Box display="flex" justifyContent="center">
+      <InfoOutline fontSize="small" color="primary" />
+      <Typography
+        variant="caption"
+        align="center"
+        display="block"
+        color="primary"
+        ml={2}
+      >
+        INFO
+      </Typography>
+    </Box>
+
     <Typography
       variant="caption"
       sx={{
@@ -61,20 +60,20 @@ export const WarningPanel = () => (
         display: 'block',
       }}
     >
-      HAZARD ZONE AREA
+      FUN ZONE AREA
       <br />
-      AUTHORIZED ONLY
+      CURIOSITY REQUIRED
       <br />
       <br />
       DO NOT
       <br />
-      DISTURB OR
+      RESIST THE
       <br />
-      MOVE
+      EXPERIENCE
     </Typography>
     <Box
       sx={(theme) => ({
-        borderBottom: `1px solid ${theme.palette.warning.main}`,
+        borderBottom: `1px solid ${theme.palette.primary.main}`,
         my: 1,
       })}
     />

@@ -1,15 +1,16 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useRef, useEffect, useState } from 'react';
 
 export const ProgressBar = ({
   progress = 0,
   indeterminate = false,
-  width = 300,
-  height = 120,
+  width = '100%',
+  height = '100%',
   color = '#00ff88',
   glowColor = '#00ffff',
   backgroundColor = 'rgba(0, 0, 0, 0.8)',
   borderColor = '#00ff88',
+  progressFillColor = '#00ff8850',
   showPercentage = true,
   showLabel = true,
   label = 'PROCESSING',
@@ -110,15 +111,19 @@ export const ProgressBar = ({
   }, [progress, indeterminate, glowColor]);
 
   return (
-    <Box className={`flat-scifi-progress ${className}`} ref={containerRef}>
+    <Box
+      className={`flat-scifi-progress ${className}`}
+      sx={{ width: width, height: height }}
+      ref={containerRef}
+    >
       <Box
         className="main-container"
         sx={{
-          width: `${width}px`,
-          height: `${height}px`,
+          width: width,
+          height: height,
           background: backgroundColor,
           border: `2px solid ${borderColor}`,
-          borderRadius: '8px',
+          // borderRadius: '8px',
           position: 'relative',
           overflow: 'hidden',
           backdropFilter: 'blur(10px)',
@@ -127,9 +132,9 @@ export const ProgressBar = ({
       >
         {/* Grid Pattern Background */}
         {gridPattern && (
-          <div
+          <Box
             className="grid-pattern"
-            style={{
+            sx={{
               position: 'absolute',
               top: 0,
               left: 0,
@@ -149,15 +154,17 @@ export const ProgressBar = ({
         {energyLines && (
           <>
             {[...Array(3)].map((_, i) => (
-              <div
+              <Box
                 key={i}
                 className="energy-line"
                 style={{
+                  top: `${25 + i * 25}%`,
+                }}
+                sx={{
                   position: 'absolute',
                   width: '100%',
                   height: '1px',
                   background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
-                  top: `${25 + i * 25}%`,
                   left: 0,
                   opacity: 0.3,
                   transition: 'all 0.3s ease-out',
@@ -168,29 +175,26 @@ export const ProgressBar = ({
         )}
 
         {/* Progress Fill */}
-        <div
+        <Box
           className="progress-fill"
           style={{
+            width: `${indeterminate ? 50 : progress}%`,
+          }}
+          sx={{
             position: 'absolute',
             top: 0,
             left: 0,
             height: '100%',
-            width: `${indeterminate ? 50 : progress}%`,
-            background: `linear-gradient(90deg,
-              rgba(0, 255, 136, 0.8) 0%,
-              rgba(0, 255, 255, 0.6) 50%,
-              rgba(255, 255, 255, 0.4) 100%
-            )`,
+            background: progressFillColor,
             boxShadow: `0 0 20px ${glowColor}`,
             transition: indeterminate ? 'none' : 'width 0.3s ease-out',
-            borderRadius: '6px',
           }}
         />
 
         {/* Corner Decorations */}
-        <div
+        <Box
           className="corner-decoration top-left"
-          style={{
+          sx={{
             position: 'absolute',
             top: '8px',
             left: '8px',
@@ -202,9 +206,9 @@ export const ProgressBar = ({
             opacity: 0.6,
           }}
         />
-        <div
+        <Box
           className="corner-decoration top-right"
-          style={{
+          sx={{
             position: 'absolute',
             top: '8px',
             right: '8px',
@@ -216,9 +220,9 @@ export const ProgressBar = ({
             opacity: 0.6,
           }}
         />
-        <div
+        <Box
           className="corner-decoration bottom-left"
-          style={{
+          sx={{
             position: 'absolute',
             bottom: '8px',
             left: '8px',
@@ -230,9 +234,9 @@ export const ProgressBar = ({
             opacity: 0.6,
           }}
         />
-        <div
+        <Box
           className="corner-decoration bottom-right"
-          style={{
+          sx={{
             position: 'absolute',
             bottom: '8px',
             right: '8px',
@@ -247,15 +251,16 @@ export const ProgressBar = ({
 
         {/* Label */}
         {showLabel && (
-          <div
+          <Typography
+            variant="button"
             className="progress-label"
-            style={{
+            sx={{
               position: 'absolute',
               top: '50%',
               left: '16px',
               transform: 'translateY(-50%)',
               color: color,
-              fontSize: `${Math.max(12, height * 0.15)}px`,
+              // fontSize: `calc(${height} * 0.15 )`,
               fontWeight: 'bold',
               fontFamily: 'JetBrains Mono, monospace',
               textShadow: `0 0 8px ${color}`,
@@ -264,20 +269,21 @@ export const ProgressBar = ({
             }}
           >
             {indeterminate ? 'LOADING...' : label}
-          </div>
+          </Typography>
         )}
 
         {/* Percentage */}
         {showPercentage && (
-          <div
+          <Typography
+            variant="button"
             className="progress-percentage"
-            style={{
+            sx={{
               position: 'absolute',
               top: '50%',
-              right: '16px',
+              right: '32px',
               transform: 'translateY(-50%)',
               color: color,
-              fontSize: `${Math.max(14, height * 0.2)}px`,
+              // fontSize: `${Math.max(14, height * 0.2)}px`,
               fontWeight: 'bold',
               fontFamily: 'JetBrains Mono, monospace',
               textShadow: `0 0 8px ${color}`,
@@ -285,7 +291,7 @@ export const ProgressBar = ({
             }}
           >
             {indeterminate ? '...' : `${Math.round(progress)}%`}
-          </div>
+          </Typography>
         )}
       </Box>
     </Box>
