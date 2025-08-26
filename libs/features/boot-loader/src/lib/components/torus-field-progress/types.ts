@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export type SceneElements =
   | THREE.Mesh<
-      THREE.TorusGeometry,
+      THREE.TorusGeometry | THREE.TubeGeometry,
       THREE.MeshBasicMaterial,
       THREE.Object3DEventMap
     >
