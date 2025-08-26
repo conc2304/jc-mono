@@ -8,9 +8,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { Box } from '@mui/system';
-import { DataPanelMetric } from '../use-animated-data';
-import { RadarData, MetricGroup } from '../radar-chart-widget';
+import { RadarData } from '../radar-chart-widget';
 import { rollup } from 'd3';
 
 const DataPanelStyled = styled(Paper)(({ theme }) => ({
@@ -47,7 +45,6 @@ export const DataPanel: React.FC<DataPanelProps> = ({
   metrics,
   title = 'SYS STATUS',
   maxDisplayedMetrics = 6,
-  showGroupNames = false,
 }) => {
   // Format axis name for display (uppercase, truncate if needed)
   const formatAxisName = (axis: string): string => {
@@ -107,7 +104,7 @@ export const DataPanel: React.FC<DataPanelProps> = ({
           color: 'primary.main',
           mb: 1,
           display: 'block',
-          textAlign: 'right',
+          textAlign: 'center',
         }}
       >
         {title}

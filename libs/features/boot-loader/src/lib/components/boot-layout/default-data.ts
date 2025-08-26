@@ -63,11 +63,16 @@ export const radarWidgetProps = (
       );
     }),
   },
-  margin: { top: 0, right: 0, bottom: 0, left: 0 },
+  margin: { top: 20, right: 0, bottom: 0, left: 0 },
   animationConfig: radarAnimationConfig,
   transitionConfig: {
     duration: radarAnimationConfig.animationSpeed,
     ease: easeQuadInOut, // Linear easing
+  },
+  titleStyle: {
+    left: 0,
+    right: 0,
+    textAlign: 'center',
   },
 });
 

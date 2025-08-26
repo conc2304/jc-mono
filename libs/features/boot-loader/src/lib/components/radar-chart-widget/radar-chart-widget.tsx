@@ -1,5 +1,12 @@
 import * as d3 from 'd3';
-import { useEffect, useState, useRef, ReactNode, useMemo } from 'react';
+import {
+  useEffect,
+  useState,
+  useRef,
+  ReactNode,
+  useMemo,
+  CSSProperties,
+} from 'react';
 import set from 'lodash.set';
 import { useResizeObserver } from './use-resize-observer';
 import { Property } from 'csstype';
@@ -46,13 +53,17 @@ export type RadarChartProps = {
   areValuesNormalized?: boolean; // If true, all of the values for the different metrics are on the same scale, if false they each have a different scale on their axis
   selectedGroup?: string | 'ALL'; // Generic selected group instead of selectedState
   title?: string | ReactNode;
+  titleStyle?: CSSProperties;
   maxTopGroups?: number; // Maximum number of top groups to highlight (default: 3)
   colors?: {
     primary?: Property.Color;
     accent?: Property.Color;
     series?: Property.Color[];
   };
-  transitionConfig?: TransitionConfig; // NEW: Transition configuration
+  transitionConfig?: TransitionConfig;
+  onRadarHover?: () => void;
+  onRadarBlur?: () => void;
+  showTooltip?: boolean;
 };
 
 export const RadarChart = ({
@@ -72,9 +83,13 @@ export const RadarChart = ({
   areValuesNormalized = true,
   selectedGroup = 'ALL',
   title,
+  titleStyle = {},
   maxTopGroups = 3,
   colors = {},
   transitionConfig = {},
+  onRadarHover,
+  onRadarBlur,
+  showTooltip = false,
 }: RadarChartProps) => {
   const svgRef = useRef<SVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -85,7 +100,7 @@ export const RadarChart = ({
 
   const [innerDimension, setInnerDimensions] = useState({ w: 0, h: 0 });
   const defaultMargin = { top: 0, right: 0, bottom: 0, left: 0 };
-  const marg = { ...defaultMargin, margin };
+  const marg = { ...defaultMargin, ...margin };
 
   const defaultColors = {
     primary: 'red',
@@ -326,7 +341,8 @@ export const RadarChart = ({
       // @ts-ignore
       .merge(radarAreas) // Merge with existing elements
       .on('mouseover', function (event: MouseEvent, d) {
-        if (!tooltip) return;
+        onRadarHover && onRadarHover();
+        if (!tooltip || !showTooltip) return;
 
         //Dim all blobs
         d3.selectAll('.radar-area')
@@ -349,17 +365,23 @@ export const RadarChart = ({
 
         tooltip.style.left = `${tooltipXPos}px`;
         tooltip.style.top = `${0}px`;
-        tooltip.classList.add('active');
+        tooltip.style.display = 'block';
+        tooltip.style.opacity = '1';
+        // tooltip.classList.add('active');
       })
       .on('mouseout', function () {
+        onRadarBlur && onRadarBlur();
+
         //Bring back all blobs
-        if (!tooltip) return;
+        if (!tooltip || !showTooltip) return;
 
         d3.selectAll('.radar-area')
           .transition()
           .duration(transitionSettings.duration)
           .style('fill-opacity', opacityArea);
         tooltip.classList.remove('active');
+        tooltip.style.opacity = '0';
+        tooltip.style.display = 'none';
       })
       .call((selection) =>
         createTransition(selection)
@@ -497,13 +519,24 @@ export const RadarChart = ({
         width: '100%',
         height: '100%',
         position: 'relative',
+        // using margin causes the div to infinitely resize
+        paddingTop: marg.top,
+        paddingBottom: marg.bottom,
+        paddingLeft: marg.left,
+        paddingRight: marg.right,
       }}
       className={`RadarChart--root chart-id-${id}`}
     >
       {title && (
         <div
           className="radar-title"
-          style={{ position: 'relative', top: 0, left: 10, fontSize: '14px' }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 10,
+            fontSize: '14px',
+            ...titleStyle,
+          }}
         >
           {title}
         </div>
@@ -536,7 +569,23 @@ export const RadarChart = ({
             <g className="axis-grid" />
           </g>
         </svg>
-        {/* <div ref={tooltipRef} className="tooltip-ui"></div> */}
+        <div
+          ref={tooltipRef}
+          className="tooltip-ui"
+          style={{
+            position: 'absolute',
+            backgroundColor: '#000',
+            borderRadius: '8px',
+            border: `0.5px solid ${colors.primary}`,
+            zIndex: '1000',
+            boxShadow: '0px 0px 10px 2px rgb(66 168 162 / 65%)',
+            padding: '2px 8px',
+
+            display: 'none',
+            opacity: 0,
+            transition: 'opacity 300ms ease-in, display 0s 100ms',
+          }}
+        ></div>
       </div>
     </div>
   );

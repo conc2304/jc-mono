@@ -422,6 +422,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       id="animated-radar"
                       data={animatedData}
                       {...radarWidgetProps(theme)}
+                      showLabels={true}
+                      title={radarMetricsConfig.title}
                     />
                   </RadarChartBox>
                 </Box>
@@ -531,6 +533,11 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     id="animated-radar"
                     data={animatedData}
                     {...radarWidgetProps(theme)}
+                    showLabels={true}
+                    labelFactor={1.15}
+                    title={radarMetricsConfig.title}
+                    onRadarHover={() => stopAnimation()}
+                    onRadarBlur={() => startAnimation()}
                   />
                 </RadarChartBox>
 
