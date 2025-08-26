@@ -597,46 +597,10 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
 
         <SectionDivider />
 
-        {/* Status Chips */}
-        {selectedTheme && (
-          <Box sx={{ p: 2, position: 'relative', zIndex: 2 }}>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              <CyberChip
-                size="small"
-                label={resolvedMode}
-                color="primary"
-                variant="outlined"
-              />
-              <CyberChip
-                size="small"
-                label={selectedTheme.category}
-                variant="outlined"
-              />
-              {!selectedTheme.supportsLight && resolvedMode === 'light' && (
-                <CyberChip
-                  size="small"
-                  label="Dark only"
-                  color="warning"
-                  variant="outlined"
-                />
-              )}
-              {!selectedTheme.supportsDark && resolvedMode === 'dark' && (
-                <CyberChip
-                  size="small"
-                  label="Light only"
-                  color="warning"
-                  variant="outlined"
-                />
-              )}
-            </Stack>
-          </Box>
-        )}
-
         {/* Footer */}
         <Box
           sx={{
             p: 1.5,
-            // backgroundColor: alpha(theme.palette.background.default, 0.5),
             position: 'relative',
             zIndex: 2,
           }}

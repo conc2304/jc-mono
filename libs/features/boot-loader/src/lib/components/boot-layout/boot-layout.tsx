@@ -108,7 +108,7 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
       defaultText="ENTER"
       hoverText="???"
       scrambleDuration={0.1}
-      color="text.primary"
+      color="background.paper"
       fontSize={fontSize}
     />
   </AugmentedButton>
@@ -273,7 +273,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             flexDirection="column"
             gap={1}
             flexGrow={1}
-            // height="100vh"
             overflow="hidden" // Prevent the container from growing
           >
             {/* Boot Text Panel - Takes most of the space */}
@@ -282,10 +281,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
               sx={(theme) => ({
                 flex: 1,
-                minHeight: 0, // Critical: allow shrinking below content size
-                display: 'flex', // Make this a flex container
-                flexDirection: 'column', // Stack children vertically
+                minHeight: 0, // allow shrinking below content size
                 overflow: 'hidden', // Prevent this panel from growing
+                display: 'flex',
+                flexDirection: 'column',
 
                 '&[data-augmented-ui]': {
                   '--aug-bl': '0.5rem',
@@ -637,7 +636,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       width: '101%',
                       top: -1,
                       left: -1,
-                      opacity: 0.75,
+                      opacity: 0.8,
                       zIndex: 0,
                       mixBlendMode: 'darken',
                     }}
@@ -646,9 +645,13 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       progress={progress.current}
                       height="100%"
                       width="100%"
+                      textColor={theme.palette.background.paper}
                       color={theme.palette.primary.main}
                       glowColor={theme.palette.getInvertedMode('primary')}
-                      backgroundColor={theme.palette.background.paper}
+                      backgroundColor={alpha(
+                        theme.palette.background.paper,
+                        0.8
+                      )}
                       borderColor={theme.palette.action.focus}
                       label={
                         isComplete && progress.current === 100
@@ -656,7 +659,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                           : progressMessages.start
                       }
                       progressFillColor={`linear-gradient(90deg,
-              ${alpha(theme.palette.getInvertedMode('primary'), 0)} 0%,
+              ${alpha(theme.palette.getInvertedMode('primary'), 0.1)} 0%,
               ${alpha(theme.palette.primary.main, 0.6)} 50%,
               ${alpha(theme.palette.getInvertedMode('primary', true), 0.4)} 100%
             )`}

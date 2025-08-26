@@ -1,6 +1,7 @@
 import { Box, capitalize, Typography } from '@mui/material';
 import { useRef, useEffect, useMemo, memo, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import {
   convertToThreeColor,
   createColorVariations,
@@ -18,6 +19,7 @@ interface TorusFieldProgressProps {
   colors?: ColorScheme;
   progressMessage?: string;
   hideText?: boolean;
+  clickToBoost?: boolean;
 }
 
 interface EntryAnimationConfig {
@@ -40,6 +42,7 @@ export const TorusFieldProgress = ({
   progressMessage,
   colors = {},
   hideText = false,
+  clickToBoost = false,
 }: TorusFieldProgressProps) => {
   const [progress, setProgress] = useState(initialProgress);
   const [mouseDistance, setMouseDistance] = useState(0);
@@ -160,6 +163,8 @@ export const TorusFieldProgress = ({
   const clickBoostValue = 2;
 
   const handleMouseDown = useCallback((event: MouseEvent) => {
+    if (!clickToBoost || hideText) return;
+
     mouseRef.current.isDown = true;
     mouseRef.current.clickIntensity = 1.0;
 
@@ -311,18 +316,26 @@ export const TorusFieldProgress = ({
             );
           }
 
-          const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+          const curve = new THREE.CatmullRomCurve3(points);
+
+          const tubeGeometry = new THREE.TubeGeometry(
+            curve, // path curve
+            segmentCount, // tubularSegments (use your existing segmentCount)
+            0.1, // radius - adjust this to make thicker/thinner
+            8, // radiusSegments (8 is good for smooth circles)
+            false // closed (false since it's a straight vertical line)
+          );
 
           // Adjust line opacity based on theme
           const lineOpacity = isLight ? 0.2 : 0.3;
 
-          const lineMaterial = new THREE.LineBasicMaterial({
+          const tubeMaterial = new THREE.MeshBasicMaterial({
             color: processedColors.verticalLine.base.clone(),
             transparent: true,
             opacity: lineOpacity,
           });
 
-          const line = new THREE.Line(lineGeometry, lineMaterial);
+          const line = new THREE.Mesh(tubeGeometry, tubeMaterial);
           line.userData = {
             type: 'verticalLine',
             angle,
@@ -1113,8 +1126,12 @@ export const TorusFieldProgress = ({
             }}
           >
             Progress: {isNaN(Math.round(progress)) ? 0 : Math.round(progress)}%
-            <br />
-            Click to boost (+{clickBoostValue}%)
+            {clickToBoost && (
+              <>
+                <br />
+                Click to boost (+{clickBoostValue}%)
+              </>
+            )}
             <br />
             Theme: {capitalize(themeMode)}
           </Typography>

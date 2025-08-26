@@ -82,14 +82,18 @@ export const DataPanel: React.FC<DataPanelProps> = ({
             p: 0,
           }}
         >
-          {formatAxisName(axisTitle)}:
+          <Typography color="primary" variant="body2">
+            {formatAxisName(axisTitle)}:
+          </Typography>
         </TableCell>
         {metrics.map((m) => (
           <TableCell
             key={axisTitle + m.groupId}
             sx={{ p: 0, textAlign: 'right' }}
           >
-            <Typography fontSize="0.75rem">{m.value}</Typography>
+            <Typography fontSize="0.75rem" color="primary">
+              {m.value}
+            </Typography>
           </TableCell>
         ))}
       </TableRow>

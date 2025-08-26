@@ -2,11 +2,11 @@
 export const ThemedPasswordHoverMessages: Record<string, string> = {
   'euclid-ci': 'CLASSIFIED: NICE TRY AGENT',
 
-  marathon: 'KONAMI CODE NOT DETECTED',
+  marathon: 'GAME OVER SNOOPER',
 
   'neon-cyberpunk': 'CAUGHT YOU JACKING IN',
 
-  synthwave: 'PASSWORD IS SO 1985',
+  synthwave: 'PASSWORD1234 IS SO 1985',
 
   'blade-runner': 'SEARCHING FOR HUMANS',
 

@@ -10,7 +10,6 @@ import {
 import 'augmented-ui/augmented-ui.min.css';
 
 import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
-// import { InitColorSchemeScript } from '@mui/material';
 
 export const meta: MetaFunction = () => [
   {
@@ -25,10 +24,6 @@ export const links: LinksFunction = () => [
     href: 'https://fonts.gstatic.com',
     crossOrigin: 'anonymous',
   },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -41,14 +36,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {/* <InitColorSchemeScript defaultMode="system" /> */}
-
         <EnhancedThemeProvider
           themes={enhancedThemes}
           defaultThemeId="neon-cyberpunk"
           defaultColorMode="system"
-          themeStorageKey="my-app-theme"
-          colorModeStorageKey="my-app-color-mode"
+          themeStorageKey="clyzby-app-theme"
+          colorModeStorageKey="clyzby-app-color-mode"
         >
           {children}
         </EnhancedThemeProvider>

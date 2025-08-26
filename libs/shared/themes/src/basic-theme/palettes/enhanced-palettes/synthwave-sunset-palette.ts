@@ -3,7 +3,7 @@ import { EnhancedThemeOption } from '../../types';
 export const synthwaveSunsetTheme: EnhancedThemeOption = {
   id: 'synthwave',
   name: 'Synthwave Sunset',
-  description: 'Purple and orange retro 80s',
+  description: 'Retro 80s synthwave theme with purple and orange gradients',
   category: 'retro',
   supportsLight: true,
   supportsDark: true,

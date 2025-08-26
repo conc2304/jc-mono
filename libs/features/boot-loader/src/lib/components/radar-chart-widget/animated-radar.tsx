@@ -12,7 +12,7 @@ import { generateTrailingRadarData } from '../utils';
 
 import { easeLinear } from 'd3';
 
-// Configuration for trailing animation
+// Configuration for trailing animatio
 export interface AnimationConfig {
   animationSpeed?: number; // milliseconds between updates (default: 100)
   numTrails?: number; // number of trailing metric groups (default: 3)

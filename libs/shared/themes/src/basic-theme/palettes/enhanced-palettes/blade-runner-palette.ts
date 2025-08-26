@@ -3,7 +3,7 @@ import { EnhancedThemeOption } from '../../types';
 export const bladeRunnerTheme: EnhancedThemeOption = {
   id: 'blade-runner',
   name: 'Blade Runner',
-  description: 'Dark orange and teals',
+  description: 'Dystopian noir theme with dark orange and teal atmospherics',
   category: 'cyberpunk',
   supportsLight: true,
   supportsDark: true,

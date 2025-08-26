@@ -3,7 +3,7 @@ import { EnhancedThemeOption } from '../../types';
 export const neonCyberpunkTheme: EnhancedThemeOption = {
   id: 'neon-cyberpunk',
   name: 'Neon Cyberpunk',
-  description: 'Hot pink and electric cyan',
+  description: 'Street-level hacker theme with hot pink and electric cyan',
   category: 'cyberpunk',
   supportsLight: true,
   supportsDark: true,
