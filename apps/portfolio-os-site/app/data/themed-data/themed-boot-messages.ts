@@ -80,7 +80,7 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       'sound blaster: CREATIVE.WAV',
       ['memory: INFINITE.RAM', 'no limits detected'],
       'dos prompt: C:\\FUTURE>',
-      ['press any key', 'adventure awaits'],
+      ['press ENTER', 'adventure awaits'],
     ],
   ],
 
@@ -577,7 +577,7 @@ export const MobileThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       'sound blaster: CREATIVE.WAV',
       ['memory: INFINITE.RAM', 'no limits detected'],
       'dos prompt: C:\\FUTURE>',
-      ['press any key', 'adventure awaits'],
+      ['press ENTER', 'adventure awaits'],
     ],
   ],
 

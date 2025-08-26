@@ -51,7 +51,7 @@ export const DataPanel: React.FC<DataPanelProps> = ({
 }) => {
   // Format axis name for display (uppercase, truncate if needed)
   const formatAxisName = (axis: string): string => {
-    return axis.toUpperCase().substring(0, 8); // Truncate to fit panel width
+    return axis.toUpperCase().substring(0, 10); // Truncate to fit panel width
   };
 
   const displayMetrics = metrics.slice(0, maxDisplayedMetrics);
@@ -78,9 +78,20 @@ export const DataPanel: React.FC<DataPanelProps> = ({
   }) => {
     return (
       <TableRow>
-        <TableCell>{formatAxisName(axisTitle)}:</TableCell>
+        <TableCell
+          component="th"
+          sx={{
+            textWrap: 'nowrap',
+            p: 0,
+          }}
+        >
+          {formatAxisName(axisTitle)}:
+        </TableCell>
         {metrics.map((m) => (
-          <TableCell key={axisTitle + m.groupId}>
+          <TableCell
+            key={axisTitle + m.groupId}
+            sx={{ p: 0, textAlign: 'right' }}
+          >
             <Typography fontSize="0.75rem">{m.value}</Typography>
           </TableCell>
         ))}

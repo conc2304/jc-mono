@@ -54,6 +54,7 @@ import {
   radarAnimationConfig,
   radarWidgetProps,
 } from './default-data';
+import { FormatDataFn } from '../radar-chart-widget';
 
 interface SciFiLayoutProps {
   className?: string;
@@ -64,10 +65,10 @@ interface SciFiLayoutProps {
     backgroundPositionY?: Property.BackgroundPositionY;
   };
   progressMessages?: { start: string; end: string };
-  radarMetricsConfig?: Array<{
-    label: string;
-    formatFn: (n: number | { valueOf(): number }) => string;
-  }>;
+  radarMetricsConfig?: {
+    title: string;
+    metrics: Array<{ label: string; formatFn: FormatDataFn }>;
+  };
 }
 
 const url =
@@ -185,8 +186,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
       },
     ].map((unThemedMetric, i) => ({
       ...unThemedMetric,
-      axis: radarMetricsConfig[i].label,
-      formatFn: radarMetricsConfig[i].formatFn,
+      axis: radarMetricsConfig.metrics[i].label,
+      formatFn: radarMetricsConfig.metrics[i].formatFn,
     }));
 
     // Return as RadarData (array of MetricGroups)
@@ -365,10 +366,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           backgroundBlendMode: backgroundBlendMode,
         }}
       >
-        <BrowserFrame
-          elevation={0}
-          sx={{ display: 'flex', flexDirection: 'column' }}
-        >
+        <BrowserFrame sx={{ display: 'flex', flexDirection: 'column' }}>
           <Header />
 
           <Box p={2} className="MainContent--root">
@@ -514,7 +512,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         backgroundBlendMode: backgroundBlendMode,
       }}
     >
-      <BrowserFrame elevation={0}>
+      <BrowserFrame>
         <Header />
         {/* Main Content Area */}
         <Box p={2} flex={1}>
@@ -546,10 +544,13 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                         themedWidgetGifUrl.backgroundPositionY,
                     }}
                   />
-                  {/*
+
                   {animatedData && (
-                    <DataPanel metrics={animatedData} title="TEMPORARY TITLE" />
-                  )} */}
+                    <DataPanel
+                      metrics={animatedData}
+                      title={radarMetricsConfig.title}
+                    />
+                  )}
                 </Box>
               </Box>
             </Grid>

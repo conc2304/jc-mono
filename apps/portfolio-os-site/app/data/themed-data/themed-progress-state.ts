@@ -9,7 +9,7 @@ export const ThemedProgressMessages: Record<
 
   marathon: {
     start: 'loading game assets',
-    end: 'level complete - press start',
+    end: 'level complete - press ENTER',
   },
 
   'neon-cyberpunk': {

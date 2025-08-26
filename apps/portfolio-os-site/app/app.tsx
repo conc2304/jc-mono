@@ -84,7 +84,7 @@ import {
   MobileDefaultBootMessage,
   MobileThemedBootMessages,
   ThemedBootMessages,
-} from './data/themed-data/boot-messages';
+} from './data/themed-data/themed-boot-messages';
 import { getScrambleCharacters } from './data/themed-data/themed-scramble-charsets';
 import { getThemedGifUrl } from './data/themed-data/themed-gif';
 import { getProgressMessages } from './data/themed-data/themed-progress-state';
