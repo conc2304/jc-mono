@@ -34,6 +34,11 @@ export interface MediaGalleryProps extends ImageLoadingProps {
    * @default 768
    */
   mobileBreakpoint?: number;
+  /**
+   * Custom sort function to control the order of media items
+   * If not provided, videos will be shown first, followed by images
+   */
+  sortFunction?: (a: MediaItem, b: MediaItem) => number;
 }
 
 export const MediaGallery = ({
@@ -46,6 +51,7 @@ export const MediaGallery = ({
   onMediaClick,
   allowMobileScrolling = true,
   mobileBreakpoint = 768,
+  sortFunction,
 }: MediaGalleryProps) => {
   const theme = useTheme();
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -54,18 +60,33 @@ export const MediaGallery = ({
   const [currentModalIndex, setCurrentModalIndex] = useState(0);
 
   // Combine screenshots and videos into a single media array
-  const mediaItems: MediaItem[] = [
-    ...images.map((screenshot, index) => ({
-      type: 'image' as const,
-      data: screenshot,
+  const createMediaItems = (): MediaItem[] => {
+    const unsortedItems: MediaItem[] = [
+      ...videos.map((video, index) => ({
+        type: 'video' as const,
+        data: video,
+        index: images.length + index, // Temporary index
+      })),
+      ...images.map((screenshot, index) => ({
+        type: 'image' as const,
+        data: screenshot,
+        index, // Temporary index
+      })),
+    ];
+
+    // Apply custom sort function if provided
+    const sortedItems = sortFunction
+      ? unsortedItems.sort(sortFunction)
+      : unsortedItems;
+
+    // Reassign indices after sorting to ensure proper modal navigation
+    return sortedItems.map((item, index) => ({
+      ...item,
       index,
-    })),
-    ...videos.map((video, index) => ({
-      type: 'video' as const,
-      data: video,
-      index: images.length + index,
-    })),
-  ];
+    }));
+  };
+
+  const mediaItems: MediaItem[] = createMediaItems();
 
   // Update container width for responsive behavior
   useEffect(() => {

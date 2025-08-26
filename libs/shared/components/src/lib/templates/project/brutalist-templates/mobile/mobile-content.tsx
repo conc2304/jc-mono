@@ -6,6 +6,7 @@ import { MobileTabContent } from './mobile-tab-content';
 import { MobileProjectDetails } from './mobile-project-details';
 import { MobileTechnologies } from './mobile-technologies';
 import { MediaGallery } from '../../../../organisms';
+import { simplePriorityVideoSort } from '../../../../molecules';
 
 interface MobileContentProps {
   activeTab: string;
@@ -23,6 +24,7 @@ export const MobileContent: React.FC<MobileContentProps> = ({
       <MediaGallery
         images={data.media.screenshots}
         videos={data.media.videos}
+        sortFunction={simplePriorityVideoSort}
       />
 
       <MobileTabContent

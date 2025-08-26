@@ -6,6 +6,7 @@ import {
   ImageMediaData,
   VideoMediaData,
 } from '../../../../organisms';
+import { simplePriorityVideoSort } from '../../../../molecules';
 
 interface TabData {
   key: string;
@@ -87,6 +88,7 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
           images={screenshots}
           videos={videos}
           onMediaClick={onMediaClick}
+          sortFunction={simplePriorityVideoSort}
         />
       )}
     </Box>

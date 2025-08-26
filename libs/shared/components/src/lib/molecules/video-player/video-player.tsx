@@ -57,6 +57,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [showThumbnail, setShowThumbnail] = useState(!!video.thumbnail);
   const [shouldLoad, setShouldLoad] = useState(!lazy);
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const [showPlayOverlay, setShowPlayOverlay] = useState(true);
 
   // Intersection Observer for lazy loading
   useEffect(() => {
@@ -93,6 +94,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       videoRef.current.play();
       setIsPlaying(true);
       setShowThumbnail(false);
+      setShowPlayOverlay(false);
       onPlay?.();
     }
   };
@@ -101,6 +103,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (videoRef.current) {
       videoRef.current.pause();
       setIsPlaying(false);
+      setShowPlayOverlay(true);
       onPause?.();
     }
   };
@@ -144,6 +147,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!shouldLoad) {
       setShouldLoad(true);
       setIsLoading(true);
+    } else {
+      handlePlay();
+    }
+  };
+
+  const handleVideoClick = () => {
+    if (isPlaying) {
+      handlePause();
     } else {
       handlePlay();
     }
@@ -207,8 +218,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          cursor: 'pointer',
           ...sx,
         }}
+        onClick={handleThumbnailClick}
       >
         {/* Video Type Badge */}
         {video.type && (
@@ -233,40 +246,41 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
         {/* Thumbnail or Placeholder */}
         {video.thumbnail ? (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              cursor: 'pointer',
-            }}
-            onClick={handleThumbnailClick}
-          >
+          <>
             <ImageContainer
               src={video.thumbnail}
               alt={video.title || 'Video thumbnail'}
               sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
               }}
             />
+            {/* Large Play Button Overlay */}
             <Box
               sx={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                bgcolor: 'rgba(0, 0, 0, 0.7)',
+                bgcolor: 'rgba(0, 0, 0, 0.8)',
                 borderRadius: '50%',
-                p: 2,
+                p: 3,
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  bgcolor: 'rgba(0, 0, 0, 0.9)',
+                  transform: 'translate(-50%, -50%) scale(1.1)',
+                },
               }}
             >
-              <PlayArrow sx={{ color: 'white', fontSize: 48 }} />
+              <PlayArrow sx={{ color: 'white', fontSize: 72 }} />
             </Box>
-          </Box>
+          </>
         ) : (
           <Box
             sx={{
@@ -274,11 +288,23 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               flexDirection: 'column',
               alignItems: 'center',
               color: 'white',
-              cursor: 'pointer',
             }}
-            onClick={handleThumbnailClick}
           >
-            <PlayArrow sx={{ fontSize: 64, mb: 1 }} />
+            <Box
+              sx={{
+                bgcolor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '50%',
+                p: 3,
+                mb: 2,
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.2)',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <PlayArrow sx={{ fontSize: 72 }} />
+            </Box>
             <Typography variant="body2">Click to load video</Typography>
             {video.title && (
               <Typography variant="caption" sx={{ mt: 1, textAlign: 'center' }}>
@@ -300,10 +326,12 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         height: '100%',
         overflow: 'hidden',
         backgroundColor: 'black',
+        cursor: 'pointer',
         ...sx,
       }}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
+      onClick={handleVideoClick}
     >
       {/* Video Type Badge */}
       {video.type && (
@@ -336,34 +364,62 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             right: 0,
             bottom: 0,
             zIndex: 2,
-            cursor: 'pointer',
           }}
-          onClick={handlePlay}
         >
           <ImageContainer
             src={video.thumbnail}
             alt={video.title || 'Video thumbnail'}
-            // lazy={true}
             sx={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
             }}
           />
+          {/* Large Play Button Overlay */}
           <Box
             sx={{
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              bgcolor: 'rgba(0, 0, 0, 0.7)',
+              bgcolor: 'rgba(0, 0, 0, 0.8)',
               borderRadius: '50%',
-              p: 2,
+              p: 3,
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                bgcolor: 'rgba(0, 0, 0, 0.9)',
+                transform: 'translate(-50%, -50%) scale(1.1)',
+              },
             }}
           >
-            <PlayArrow sx={{ color: 'white', fontSize: 48 }} />
+            <PlayArrow sx={{ color: 'white', fontSize: 72 }} />
           </Box>
         </Box>
+      )}
+
+      {/* Large Play Button Overlay for Paused Video */}
+      {!showThumbnail && showPlayOverlay && !isPlaying && shouldLoad && (
+        <Fade in={showPlayOverlay}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 2,
+              bgcolor: 'rgba(0, 0, 0, 0.8)',
+              borderRadius: '50%',
+              p: 3,
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                bgcolor: 'rgba(0, 0, 0, 0.9)',
+                transform: 'translate(-50%, -50%) scale(1.1)',
+              },
+            }}
+          >
+            <PlayArrow sx={{ color: 'white', fontSize: 72 }} />
+          </Box>
+        </Fade>
       )}
 
       {/* Video Element - only render when shouldLoad is true */}
@@ -377,8 +433,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           loop={loop}
           onLoadedData={handleVideoLoad}
           onError={handleVideoError}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
+          onPlay={() => {
+            setIsPlaying(true);
+            setShowPlayOverlay(false);
+          }}
+          onPause={() => {
+            setIsPlaying(false);
+            setShowPlayOverlay(true);
+          }}
           sx={{
             width: '100%',
             height: '100%',
@@ -416,6 +478,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               p: 2,
               zIndex: 2,
             }}
+            onClick={(e) => e.stopPropagation()} // Prevent video click handler
           >
             <Box display="flex" alignItems="center" gap={1}>
               <IconButton

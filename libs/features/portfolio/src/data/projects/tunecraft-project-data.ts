@@ -168,7 +168,7 @@ export const tunecraftProject: ProjectData = {
           'projects/tunecraft/TUNECRAFT - An interactive Immersive  Art Experience via 6D Object Tracking Final Project Proposal.mp4'
         ),
         title: 'TuneCraft Project Proposal',
-        type: 'inspiration',
+        type: 'process',
         caption: 'Project proposal for 6D object tracking music control system',
         detailedCaption:
           "Comprehensive project proposal presentation introducing TuneCraft's innovative concept of using MediaPipe Objectron for 6D object pose detection to create real-time music control through physical object manipulation, featuring planned integration of computer vision, TouchDesigner visual programming, and Ableton Live audio production for immersive audio-visual performance experiences",
