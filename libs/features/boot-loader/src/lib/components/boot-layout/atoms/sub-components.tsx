@@ -11,19 +11,17 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.primary.main,
   fontFamily: 'monospace',
-  height: [
-    '100vh', // Fallback
-    '100dvh', // Preferred value
-  ],
+  height: '100%',
   padding: theme.spacing(2),
   transition: 'background-size 0.1s ease-in',
   pb: '100px',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
-export const BrowserFrame = styled(Paper)(({ theme }) => ({
+export const BrowserFrame = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   border: `2px solid ${theme.palette.primary.main}`,
-  borderRadius: 0,
   overflow: 'hidden',
   height: '100%',
 

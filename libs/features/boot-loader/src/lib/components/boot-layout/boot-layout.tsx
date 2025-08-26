@@ -27,8 +27,6 @@ import {
   RadarChart,
   RadarData,
 } from '../radar-chart-widget/radar-chart-widget';
-import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
-import { remap } from '../utils';
 import {
   DataPanel,
   Footer,
@@ -89,6 +87,7 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
     size="large"
     sx={{
       flexGrow: 1,
+      flexShrink: 0,
       height: '100%',
       '&[data-augmented-ui]': { '--aug-border-bg': `${bgStyle} !important` },
     }}
@@ -106,27 +105,27 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
   </AugmentedButton>
 );
 
-const HeroText = () => (
-  <>
-    <ScrambleText
-      variant="display"
-      color="primary"
-      defaultText="Jose Conchello"
-      hoverText="Via CLYZBY_OS"
-      sx={(theme) => ({
-        fontSize: '3.5rem',
-
-        //   fontSize: theme.typography.h1.fontSize,
-      })}
-    />
-    <ScrambleText
-      variant="h3"
-      color="primary"
-      defaultText="Engineer & Artist"
-      hoverText="Creative Technologist"
-    />
-  </>
-);
+const HeroText = () => {
+  const isSm = useMediaQuery(useTheme().breakpoints.down('sm'));
+  return (
+    <>
+      <ScrambleText
+        variant="display"
+        color="primary"
+        defaultText="Jose Conchello"
+        hoverText="Via CLYZBY_OS"
+        fontSize={isSm ? '1.9rem' : undefined}
+        sx={(theme) => ({})}
+      />
+      <ScrambleText
+        variant="h3"
+        color="primary"
+        defaultText="Engineer & Artist"
+        hoverText="Creative Technologist"
+      />
+    </>
+  );
+};
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
   className = '',
@@ -243,23 +242,43 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           backgroundRepeat: 'repeat',
           backgroundBlendMode: backgroundBlendMode,
         }}
-        sx={{
-          overflowY: 'auto',
-          height: '100%',
-        }}
+        // sx={{
+        //   overflowY: 'auto',
+        //   height: '100%',
+        // }}
       >
-        <BrowserFrame elevation={0}>
+        <BrowserFrame sx={{ border: '1px solid white' }}>
           {!isXs && <Header compact={true} />}
 
           {/* Mobile Content - Minimal Layout */}
-          <Stack sx={{ textAlign: 'center' }}>
+          <Stack sx={{ textAlign: 'center', flexShrink: 0 }}>
             <HeroText />
           </Stack>
-          <Box p={1} display="flex" flexDirection="column" gap={1} flex={1}>
+
+          <Box
+            className="MobileContent--flex-wrapper"
+            p={1}
+            display="flex"
+            flexDirection="column"
+            gap={1}
+            flexGrow={1}
+            border={'3px dashed yellow'}
+            //
+            height="100vh" // or whatever your desired height is
+            overflow="hidden" // Prevent the container from growing
+          >
             {/* Boot Text Panel - Takes most of the space */}
             <Box
+              className="BootText--aug-panel"
+              border="2px dotted cyan"
               data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
               sx={(theme) => ({
+                flex: 1, // Grow to fill available space
+                minHeight: 0, // Critical: allow shrinking below content size
+                display: 'flex', // Make this a flex container
+                flexDirection: 'column', // Stack children vertically
+                overflow: 'hidden', // Prevent this panel from growing
+
                 '&[data-augmented-ui]': {
                   '--aug-bl': '0.5rem',
                   '--aug-br': '0.5rem',
@@ -289,7 +308,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 onProgress={handleProgress}
                 onComplete={handleBootComplete}
                 textWrapMode="ellipsis"
-                flex={0}
+                flex={1}
               />
 
               <Box
@@ -320,6 +339,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             <ThemePickerPanel compactMenu />
 
             <GifContainer
+              flexGrow={1}
               url={themedWidgetGifUrl.url}
               sx={{
                 minHeight: '15%',
@@ -327,8 +347,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
               }}
             />
-
-            <EnterButton />
+            <Box flexGrow={0.25} flexShrink={0}>
+              <EnterButton />
+            </Box>
           </Box>
         </BrowserFrame>
       </BootContainer>
@@ -347,13 +368,19 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           backgroundBlendMode: backgroundBlendMode,
         }}
       >
-        <BrowserFrame elevation={0}>
+        <BrowserFrame
+          elevation={0}
+          sx={{ display: 'flex', flexDirection: 'column' }}
+        >
           <Header />
 
-          <Box p={2} flex={10}>
+          <Box p={2} className="MainContent--root">
             <Grid container spacing={2} height="100%">
               {/* Left Panel - Reduced */}
-              <Grid size={{ xs: 6.5 }}>
+              <Grid
+                size={{ xs: 6.5 }}
+                className="LeftContentPanel--grid-wrapper"
+              >
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -381,6 +408,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       lineDelay={1.2}
                       cursorChar="█"
                       scrambleChars={12}
+                      maxHeight={'10px'}
                       textColor={
                         theme.palette.primary[theme.palette.getInvertedMode()]
                       }
@@ -405,7 +433,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
               </Grid>
 
               {/* Right Panel */}
-              <Grid size={{ xs: 5.5 }}>
+              <Grid
+                size={{ xs: 5.5 }}
+                className="RightContentPanel--grid-wrapper"
+              >
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -438,9 +469,15 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             </Grid>
           </Box>
 
-          <ThemePickerPanel />
+          <Box flexShrink={0} className="ThemePickerPanel--wrapper">
+            <ThemePickerPanel />
+          </Box>
 
-          <BottomPanel>
+          <BottomPanel
+            flexShrink={0}
+            sx={{ border: '2px solid white' }}
+            className="BottomPanel--root"
+          >
             <Grid container columns={12} spacing={4}>
               <Grid size={6} display="flex">
                 <Stack>
@@ -516,10 +553,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                         themedWidgetGifUrl.backgroundPositionY,
                     }}
                   />
-
+                  {/*
                   {animatedData && (
                     <DataPanel metrics={animatedData} title="TEMPORARY TITLE" />
-                  )}
+                  )} */}
                 </Box>
               </Box>
             </Grid>
@@ -621,6 +658,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
                   sx={(theme) => ({
                     height: '100%',
+                    border: '2px solid white',
                     '&[data-augmented-ui]': {
                       '--aug-bl': '0.5rem',
                       '--aug-br': '0.5rem',

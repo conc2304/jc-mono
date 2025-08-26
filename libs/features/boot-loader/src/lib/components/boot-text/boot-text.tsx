@@ -1,5 +1,5 @@
 'use client';
-import React, { memo, useRef, useCallback } from 'react';
+import React, { memo, useRef, useCallback, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
@@ -31,13 +31,13 @@ interface BootTextProps {
   hoverScrambleDuration?: number;
 
   // Flex properties for flexibility
-  flex?: string | number; // Allow custom flex value
-  maxHeight?: string | number; // Maximum height for scrolling
-  minHeight?: string | number; // Minimum height
-  autoScroll?: boolean; // Enable terminal-style scrolling
+  flex?: string | number;
+  maxHeight?: string | number;
+  minHeight?: string | number;
+  autoScroll?: boolean;
 
   // Text wrapping behavior
-  textWrapMode?: 'ellipsis' | 'wrap' | 'nowrap'; // How to handle long text
+  textWrapMode?: 'ellipsis' | 'wrap' | 'nowrap';
 
   onComplete?: () => void;
   onProgress?: (
@@ -67,15 +67,17 @@ const BootTextInner: React.FC<BootTextProps> = ({
     top: '-2px',
   },
   // Flex defaults
-  flex = 1, // Default to flex: 1 for most use cases
-  maxHeight, // No default - let flex container decide
-  minHeight = 0, // Critical: allow shrinking below content size to prevent overflow
+  flex = 1,
+  maxHeight,
+  minHeight = 0,
   autoScroll = true,
-  textWrapMode = 'ellipsis', // Default to ellipsis behavior
+  textWrapMode = 'wrap',
   onComplete,
   onProgress,
 }) => {
   const theme = useTheme();
+
+  console.log('render');
 
   // Mobile breakpoint detection
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -89,34 +91,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
 
   const getMaxHeight = () => {
     if (maxHeight) return maxHeight;
-    // For flex containers, we need to ensure the component doesn't grow beyond available space
-    return '100%'; // Use available space from flex container
-  };
-
-  // Get text wrapping styles based on mode
-  const getTextWrapStyles = () => {
-    switch (textWrapMode) {
-      case 'wrap':
-        return {
-          whiteSpace: 'normal' as const,
-          overflow: 'visible' as const,
-          textOverflow: 'unset' as const,
-          wordBreak: 'break-word' as const,
-        };
-      case 'nowrap':
-        return {
-          whiteSpace: 'nowrap' as const,
-          overflow: 'hidden' as const,
-          textOverflow: 'unset' as const,
-        };
-      case 'ellipsis':
-      default:
-        return {
-          whiteSpace: 'nowrap' as const,
-          overflow: 'hidden' as const,
-          textOverflow: 'ellipsis' as const,
-        };
-    }
+    return '100%';
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -131,21 +106,50 @@ const BootTextInner: React.FC<BootTextProps> = ({
   onCompleteRef.current = onComplete;
   onProgressRef.current = onProgress;
 
-  // Auto-scroll function for terminal behavior
-  const scrollToBottom = useCallback(() => {
-    if (!autoScroll || !containerRef.current) return;
+  // Scroll to top whenever new messages are passed in
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-    const container = containerRef.current;
-    const scrollHeight = container.scrollHeight;
-    const clientHeight = container.clientHeight;
+    containerRef.current.scrollTo({
+      top: 0,
+      behavior: 'instant',
+    });
+  }, [bootMessages]);
 
-    if (scrollHeight > clientHeight) {
-      container.scrollTo({
-        top: scrollHeight - clientHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [autoScroll]);
+  // Smart scrolling function - only scrolls when needed for new lines
+  const checkAndScrollForNewLine = useCallback(
+    (messageIndex: number) => {
+      if (!autoScroll || !containerRef.current) return;
+
+      const container = containerRef.current;
+      const messageElement = container.querySelector(
+        `.boot-message-${messageIndex}`
+      ) as HTMLElement;
+
+      if (!messageElement) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const containerTop = containerRect.top;
+      const containerBottom = containerRect.bottom;
+      const containerHeight = containerRect.height;
+
+      const messageRect = messageElement.getBoundingClientRect();
+      const messageBottom = messageRect.bottom;
+
+      // Check if the message would be partially or fully outside the visible area
+      if (messageBottom > containerBottom) {
+        // Calculate how much we need to scroll to bring this line into view
+        const scrollAmount = messageBottom - containerBottom + 20; // 20px padding
+        const currentScrollTop = container.scrollTop;
+
+        container.scrollTo({
+          top: currentScrollTop + scrollAmount,
+          behavior: 'smooth',
+        });
+      }
+    },
+    [autoScroll]
+  );
 
   // Helper function to normalize boot messages
   const normalizeBootMessage = (message: BootMessage): [string, string?] => {
@@ -314,7 +318,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       const totalCharacters = normalizedMessages.reduce(
         (sum, msg) => sum + Math.max(msg.length, 1),
         0
-      ); // Minimum 1 for empty messages
+      );
       let cumulativeCharacters = 0;
 
       // Create message blocks for each boot message
@@ -379,7 +383,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         })
         .pause();
 
-      // Function to create scrambling animation for a single character
+      // Simple function to create scrambling animation WITHOUT scrolling
       const createScrambleAnimation = (
         textSelector: string,
         targetChar: string,
@@ -427,7 +431,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         return tl;
       };
 
-      // Function to animate a complete message with staggered character scrambling and progress tracking
+      // Function to animate a complete message WITHOUT scrolling during typing
       const createMessageAnimation = (
         message: string,
         messageIndex: number,
@@ -441,7 +445,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
             text: { value: '', rtl: false },
           });
 
-          // Still update progress for empty message (counts as 1 character)
           const progressPercent = Math.min(
             100,
             ((messageStartCharIndex + 1) / totalCharacters) * 100
@@ -522,14 +525,14 @@ const BootTextInner: React.FC<BootTextProps> = ({
         return tl;
       };
 
-      // Animate each message sequentially with character-level progress tracking
+      // Animate each message sequentially with smart scrolling
       bootMessages.forEach((messageData, index) => {
         const [defaultMessage] = normalizeBootMessage(messageData);
-        const textSelector = `.boot-text-${index}`;
         const messageBlock = messageBlocks[index];
 
-        // Add cursor to current line
+        // BEFORE starting each message, check if we need to scroll
         masterTimeline.call(() => {
+          // Add cursor to current line first
           const prevCursor = container.querySelector('.boot-cursor');
           if (prevCursor) {
             prevCursor.remove();
@@ -541,23 +544,25 @@ const BootTextInner: React.FC<BootTextProps> = ({
           if (cursor.paused()) {
             cursor.play();
           }
+
+          // Now check if this message line would be outside visible bounds
+          // We do this AFTER adding the cursor so the element has proper dimensions
+          setTimeout(() => {
+            checkAndScrollForNewLine(index);
+          }, 10); // Small delay to ensure DOM is updated
         });
 
-        // Create the scrambling message animation with progress tracking
+        // Create the message animation (no scrolling during typing)
         const messageAnimation = createMessageAnimation(
           defaultMessage,
           index,
-          cumulativeCharacters,
-          () => {
-            // Auto-scroll after each message completes
-            scrollToBottom();
-          }
+          cumulativeCharacters
         );
 
         masterTimeline.add(messageAnimation);
 
         // Update cumulative character count for next message
-        cumulativeCharacters += Math.max(defaultMessage.length, 1); // Minimum 1 for empty messages
+        cumulativeCharacters += Math.max(defaultMessage.length, 1);
 
         if (index < bootMessages.length - 1) {
           masterTimeline.set({}, {}, `+=${lineDelay}`);
@@ -610,7 +615,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         // Layout properties
         display: 'flex',
         flexDirection: 'column',
-        alignSelf: 'stretch', // Stretch to fill cross-axis
+        alignSelf: 'stretch',
 
         // Typography and visual
         fontFamily: '"JetBrains Mono", monospace',
@@ -619,18 +624,33 @@ const BootTextInner: React.FC<BootTextProps> = ({
         lineHeight: 1.4,
         padding: 2.5,
 
-        // CRITICAL: Overflow behavior to prevent container growth
-        overflow: 'hidden auto',
+        // CRITICAL: Overflow behavior to enable scrolling
+        overflow: 'hidden auto', // Hide horizontal, auto vertical
+        overflowWrap: 'break-word', // Ensure long words break
+        wordBreak: 'break-word', // Additional word breaking
+
         position: 'relative',
 
         // Ensure the component doesn't grow beyond its container
-        flexShrink: 1, // Allow shrinking
-        flexGrow: flex === 1 ? 1 : 0, // Only grow if explicitly set to flex: 1
+        flexShrink: 1,
+        flexGrow: flex === 1 ? 1 : 0,
 
-        // Hide scrollbar for clean terminal look
-        scrollbarWidth: 'none', // Firefox
+        // Custom scrollbar for better terminal appearance
+        scrollbarWidth: 'thin', // Firefox - make visible but thin
+        scrollbarColor: `${textColor}40 transparent`, // Semi-transparent scrollbar
+
         '&::-webkit-scrollbar': {
-          display: 'none', // Chrome, Safari, Edge
+          width: '8px', // Make scrollbar visible but thin
+        },
+        '&::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: `${textColor}40`, // Semi-transparent thumb
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          background: `${textColor}60`, // Slightly more visible on hover
         },
 
         '&::before': {
@@ -649,7 +669,10 @@ const BootTextInner: React.FC<BootTextProps> = ({
           padding: '2px 4px',
           borderRadius: '2px',
           minHeight: '1.4em',
-          ...getTextWrapStyles(), // Apply text wrapping styles based on mode
+          // Enhanced word wrapping for terminal behavior
+          wordWrap: 'break-word',
+          overflowWrap: 'break-word',
+          whiteSpace: 'pre-wrap', // Preserve formatting but allow wrapping
         },
 
         '& .boot-cursor': {
