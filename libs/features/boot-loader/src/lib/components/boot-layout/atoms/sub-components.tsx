@@ -71,7 +71,7 @@ export const WarningStripe = styled(Box)(({ theme }) => ({
   width: 6,
   height: 40,
   backgroundColor: theme.palette.getInvertedMode('primary'),
-  transform: 'rotate(45deg) translateY(35%)',
+  transform: 'rotate(-45deg) translateY(35%)',
 }));
 
 export const TorusLoaderBox = styled(Box)(({ theme }) => ({

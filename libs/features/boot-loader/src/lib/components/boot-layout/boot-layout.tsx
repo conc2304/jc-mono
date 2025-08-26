@@ -552,7 +552,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     }}
                   />
 
-                  <WarningPanel />
+                  <DataPanel />
                 </Box>
               </Box>
             </Grid>
@@ -584,9 +584,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             {/* Right Panel */}
             <Grid size={{ xs: 4 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
-                <DataPanel />
+                {/* <DataPanel /> */}
 
-                {/* Ambient Panel */}
+                {/* Progress Panel */}
                 <Box
                   display="flex"
                   flexDirection="column"
@@ -684,6 +684,8 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     onComplete={handleBootComplete}
                   />
                 </Box>
+
+                <WarningPanel />
               </Box>
             </Grid>
           </Grid>
