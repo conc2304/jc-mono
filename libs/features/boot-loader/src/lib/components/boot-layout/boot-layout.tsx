@@ -48,6 +48,7 @@ import { useSharedAnimatedData } from '../radar-chart-widget/use-animated-data';
 import {
   defaultBootMessages,
   defaultGif,
+  DefaultInfoPanelContent,
   DefaultProgressMessages,
   DefaultRadarMetrics,
   defaultScrambleCharacterSet,
@@ -68,6 +69,11 @@ interface SciFiLayoutProps {
   radarMetricsConfig?: {
     title: string;
     metrics: Array<{ label: string; formatFn: FormatDataFn }>;
+  };
+  infoPanelContent?: {
+    label: string;
+    middleSection: [string, string];
+    rightSection: [string, string, string];
   };
 }
 
@@ -135,6 +141,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   themedWidgetGifUrl: gifData,
   progressMessages = DefaultProgressMessages,
   radarMetricsConfig = DefaultRadarMetrics,
+  infoPanelContent = DefaultInfoPanelContent,
 }) => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
@@ -690,7 +697,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   />
                 </Box>
 
-                <WarningPanel />
+                <WarningPanel {...infoPanelContent} />
               </Box>
             </Grid>
           </Grid>

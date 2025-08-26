@@ -35,7 +35,15 @@ const WarningPanelStyled = styled(Paper)(({ theme }) => ({
   },
 }));
 
-export const WarningPanel = () => (
+export const WarningPanel = ({
+  label,
+  middleSection,
+  rightSection,
+}: {
+  label: string;
+  middleSection: [string, string];
+  rightSection: [string, string, string];
+}) => (
   <WarningPanelAugmented elevation={0}>
     <Typography
       variant="caption"
@@ -57,22 +65,20 @@ export const WarningPanel = () => (
             color="primary"
             ml={2}
           >
-            INFO
+            {label}
           </Typography>
         </Box>
 
         <Box>
-          FUN ZONE AREA
+          {middleSection[0]}
           <br />
-          CURIOSITY REQUIRED
+          {middleSection[1]}
         </Box>
 
         <Box>
-          DO NOT
-          <br />
-          RESIST THE
-          <br />
-          EXPERIENCE
+          {rightSection[0]} <br />
+          {rightSection[1]} <br />
+          {rightSection[2]}
         </Box>
       </Box>
     </Typography>

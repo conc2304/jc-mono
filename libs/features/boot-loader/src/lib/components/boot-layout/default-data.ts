@@ -67,7 +67,7 @@ export const radarWidgetProps = (
   animationConfig: radarAnimationConfig,
   transitionConfig: {
     duration: radarAnimationConfig.animationSpeed,
-    ease: easeQuadInOut, // Linear easing
+    ease: easeQuadInOut,
   },
   titleStyle: {
     left: 0,
@@ -75,6 +75,16 @@ export const radarWidgetProps = (
     textAlign: 'center',
   },
 });
+
+export const DefaultInfoPanelContent = {
+  label: 'INFO',
+  middleSection: ['FUN ZONE AREA', 'CURIOSITY REQUIRED'] as [string, string],
+  rightSection: ['DO NOT', 'RESIST THE', 'EXPERIENCE'] as [
+    string,
+    string,
+    string
+  ],
+};
 
 // Default fallback metrics
 export const DefaultRadarMetrics: {
