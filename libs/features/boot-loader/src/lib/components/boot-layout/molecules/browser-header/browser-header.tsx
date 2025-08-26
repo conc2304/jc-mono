@@ -1,3 +1,4 @@
+import { ScrambleText } from '@jc/ui-components';
 import { Typography } from '@mui/material';
 import { Box, styled } from '@mui/system';
 
@@ -16,13 +17,30 @@ export const AddressBar = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.primary.main}`,
   padding: theme.spacing(0.5, 1.5),
-  fontSize: '0.75rem',
-  color: theme.palette.primary.main,
+  // fontSize: '0.75rem',
+  // color: theme.palette.primary.main,
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
 }));
 
-export const Header = ({ compact = false }) => (
+export const Header = ({ compact = false, passwordMsg = '' }) => (
   <BrowserHeader>
-    <AddressBar>CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD: *******</AddressBar>
+    <AddressBar>
+      CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD:{' '}
+      <ScrambleText
+        defaultText={Array(passwordMsg.length).fill('*').join('')}
+        hoverText={passwordMsg}
+        sx={(theme) => ({
+          color: theme.palette.primary.main,
+          fontsize: '0.75rem',
+        })}
+        color="primary"
+        fontSize="0.75rem"
+        lineHeight={1.2}
+        style={{ verticalAlign: 'middle' }}
+      />
+    </AddressBar>
     {!compact && (
       <Typography variant="caption" sx={{ color: 'primary.main' }}>
         MAINFRAME-RESEARCH

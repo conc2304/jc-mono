@@ -86,6 +86,8 @@ export const DefaultInfoPanelContent = {
   ],
 };
 
+export const DefaultPasswordHoverMessage = 'CAUGHT YOU SNOOPING';
+
 // Default fallback metrics
 export const DefaultRadarMetrics: {
   title: string;

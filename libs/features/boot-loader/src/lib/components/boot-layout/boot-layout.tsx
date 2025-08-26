@@ -49,6 +49,7 @@ import {
   defaultBootMessages,
   defaultGif,
   DefaultInfoPanelContent,
+  DefaultPasswordHoverMessage,
   DefaultProgressMessages,
   DefaultRadarMetrics,
   defaultScrambleCharacterSet,
@@ -75,6 +76,7 @@ interface SciFiLayoutProps {
     middleSection: [string, string];
     rightSection: [string, string, string];
   };
+  passwordMessage?: string;
 }
 
 const url =
@@ -142,6 +144,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   progressMessages = DefaultProgressMessages,
   radarMetricsConfig = DefaultRadarMetrics,
   infoPanelContent = DefaultInfoPanelContent,
+  passwordMessage = DefaultPasswordHoverMessage,
 }) => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
@@ -256,7 +259,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         // }}
       >
         <BrowserFrame>
-          {!isXs && <Header compact={true} />}
+          {!isXs && <Header compact={true} passwordMsg={passwordMessage} />}
 
           {/* Mobile Content - Minimal Layout */}
           <Stack sx={{ textAlign: 'center', flexShrink: 0 }}>
@@ -374,7 +377,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         }}
       >
         <BrowserFrame sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Header />
+          <Header passwordMsg={passwordMessage} />
 
           <Box p={2} className="MainContent--root">
             <Grid container spacing={2} height="100%">
@@ -522,7 +525,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
       }}
     >
       <BrowserFrame>
-        <Header />
+        <Header passwordMsg={passwordMessage} />
         {/* Main Content Area */}
         <Box p={2} flex={1}>
           <Grid container spacing={2} height="100%">

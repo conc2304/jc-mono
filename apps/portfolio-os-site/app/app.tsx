@@ -90,6 +90,7 @@ import { getThemedGifUrl } from './data/themed-data/themed-gif';
 import { getProgressMessages } from './data/themed-data/themed-progress-state';
 import { getRadarMetrics } from './data/themed-data/themed-metric-labels';
 import { getInfoPanelContent } from './data/themed-data/themed-warning panel-text';
+import { getPasswordHoverMessage } from './data/themed-data/themed-password-message';
 
 export default function App() {
   const theme = useTheme();
@@ -141,6 +142,7 @@ export default function App() {
   const progressMsg = getProgressMessages(currentThemeId);
   const themedMetricConfigs = getRadarMetrics(currentThemeId);
   const themeInfoPanelContent = getInfoPanelContent(currentThemeId);
+  const themedPassordMessage = getPasswordHoverMessage(currentThemeId);
 
   return (
     <BootLayout
@@ -150,6 +152,7 @@ export default function App() {
       progressMessages={progressMsg}
       radarMetricsConfig={themedMetricConfigs}
       infoPanelContent={themeInfoPanelContent}
+      passwordMessage={themedPassordMessage}
     />
   );
 }
