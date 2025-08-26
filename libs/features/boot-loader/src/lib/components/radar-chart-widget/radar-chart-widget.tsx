@@ -28,7 +28,7 @@ export type TransitionConfig = {
   enabled?: boolean; // Whether transitions are enabled
 };
 
-type Props = {
+export type RadarChartProps = {
   data?: RadarData;
   id: string;
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
@@ -74,8 +74,8 @@ export const RadarChart = ({
   title,
   maxTopGroups = 3,
   colors = {},
-  transitionConfig = {}, // NEW: Default empty transition config
-}: Props) => {
+  transitionConfig = {},
+}: RadarChartProps) => {
   const svgRef = useRef<SVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null); // Parent of SVG

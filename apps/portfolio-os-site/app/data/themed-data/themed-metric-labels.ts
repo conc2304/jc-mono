@@ -1,117 +1,137 @@
 // Themed radar chart metrics for boot loader
+export type formatFn = (n: number | { valueOf(): number }) => string;
 export const ThemedRadarMetrics: Record<
   string,
-  [string, string, string, string, string]
+  Array<{ label: string; formatFn: formatFn }>
 > = {
   'euclid-ci': [
-    'ENCRYPTION DEPTH',
-    'INTEL SATURATION',
-    'SURVEILLANCE GRID',
-    'CLEARANCE LEVEL',
-    'OPERATIONAL STEALTH',
+    { label: 'CRYPTO', formatFn: (n) => `LVL ${n.valueOf().toFixed(0)}` },
+    { label: 'INTEL', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'SURV', formatFn: (n) => `GRID ${n.valueOf().toFixed(0)}` },
+    { label: 'ACCESS', formatFn: (n) => `CL-${n.valueOf().toFixed(0)}` },
+    { label: 'STEALTH', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'THREAT', formatFn: (n) => `DEF ${n.valueOf().toFixed(0)}` },
   ],
 
   marathon: [
-    'FRAME RATE',
-    'PLAYER SCORE',
-    'POWER LEVEL',
-    'COMBO MULTIPLIER',
-    'DIFFICULTY SPIKE',
+    { label: 'FPS', formatFn: (n) => `${n.valueOf().toFixed(0)}` },
+    { label: 'SCORE', formatFn: (n) => `${(n * 1000).valueOf().toFixed(0)}` },
+    { label: 'POWER', formatFn: (n) => `LVL ${n.valueOf().toFixed(0)}` },
+    { label: 'COMBO', formatFn: (n) => `x${n.valueOf().toFixed(1)}` },
+    { label: 'DIFF', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'HEALTH', formatFn: (n) => `${n.valueOf().toFixed(0)}HP` },
   ],
 
   'neon-cyberpunk': [
-    'ICE PENETRATION',
-    'DATA STREAM FLOW',
-    'NEURAL LINK SYNC',
-    'CHROME SATURATION',
-    'STREET CREDIBILITY',
+    { label: 'ICE', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'DATA', formatFn: (n) => `${n.valueOf().toFixed(0)}MB/s` },
+    { label: 'NEURAL', formatFn: (n) => `SYNC ${n.valueOf().toFixed(0)}` },
+    { label: 'CHROME', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'STREET', formatFn: (n) => `${n.valueOf().toFixed(0)}CR` },
+    { label: 'HACK', formatFn: (n) => `LVL ${n.valueOf().toFixed(0)}` },
   ],
 
   synthwave: [
-    'WAVEFORM PURITY',
-    'FREQUENCY RANGE',
-    'ANALOG WARMTH',
-    'RETRO SATURATION',
-    'NEON INTENSITY',
+    { label: 'WAVE', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    {
+      label: 'FREQ',
+      formatFn: (n) => `${(n.valueOf() * 10).valueOf().toFixed(0)}Hz`,
+    },
+    { label: 'ANALOG', formatFn: (n) => `${n.valueOf().toFixed(0)}dB` },
+    { label: 'RETRO', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'NEON', formatFn: (n) => `${n.valueOf().toFixed(0)}LUX` },
+    { label: 'VIBE', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
   ],
 
   'blade-runner': [
-    'EMPATHY RESPONSE',
-    'MEMORY IMPLANTS',
-    'REPLICANT SCAN',
-    'HUMANITY INDEX',
-    'TEARS IN RAIN',
+    { label: 'EMPATHY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'MEMORY', formatFn: (n) => `${n.valueOf().toFixed(0)}GB` },
+    { label: 'SCAN', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'HUMANITY', formatFn: (n) => `IDX ${n.valueOf().toFixed(0)}` },
+    { label: 'TEARS', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'NEXUS', formatFn: (n) => `GEN ${n.valueOf().toFixed(0)}` },
   ],
 
   'sunset-gradient': [
-    'CREATIVE FLOW STATE',
-    'WELLNESS INDEX',
-    'MINDFUL PRESENCE',
-    'INSPIRATION LEVELS',
-    'WORK-LIFE HARMONY',
+    { label: 'FLOW', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'WELLNESS', formatFn: (n) => `${n.valueOf().toFixed(0)}/100` },
+    { label: 'MINDFUL', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'INSPIRE', formatFn: (n) => `LVL ${n.valueOf().toFixed(0)}` },
+    { label: 'HARMONY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'CREATIVE', formatFn: (n) => `${n.valueOf().toFixed(0)}%` },
   ],
 
   'neon-synthwave': [
-    'VOLTAGE AMPLITUDE',
-    'GRID SYNCHRONIZATION',
-    'ELECTRIC PULSE',
-    'NEON SATURATION',
-    'CIRCUIT INTEGRITY',
+    { label: 'VOLTAGE', formatFn: (n) => `${n.valueOf().toFixed(1)}V` },
+    { label: 'GRID', formatFn: (n) => `${n.valueOf().toFixed(0)}%` },
+    { label: 'PULSE', formatFn: (n) => `${n.valueOf().toFixed(0)}BPM` },
+    { label: 'NEON', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'CIRCUIT', formatFn: (n) => `${n.valueOf().toFixed(0)}Ω` },
+    { label: 'ENERGY', formatFn: (n) => `${n.valueOf().toFixed(1)}kW` },
   ],
 
   'ocean-depth': [
-    'PRESSURE RESISTANCE',
-    'CURRENT VELOCITY',
-    'DEPTH PENETRATION',
-    'BIOLUMINESCENCE',
-    'TIDAL RESONANCE',
+    { label: 'PRESSURE', formatFn: (n) => `${n.valueOf().toFixed(0)}ATM` },
+    { label: 'CURRENT', formatFn: (n) => `${n.valueOf().toFixed(1)}m/s` },
+    { label: 'DEPTH', formatFn: (n) => `${(n * 10).valueOf().toFixed(0)}m` },
+    { label: 'BIOLUM', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'TIDAL', formatFn: (n) => `${n.valueOf().toFixed(0)}Hz` },
+    { label: 'SALINITY', formatFn: (n) => `${n.valueOf().toFixed(1)}‰` },
   ],
 
   'bubblegum-dream': [
-    'SWEETNESS FACTOR',
-    'NOSTALGIA INTENSITY',
-    'BUBBLE DENSITY',
-    'PASTEL SATURATION',
-    'CHILDHOOD WONDER',
+    { label: 'SWEET', formatFn: (n) => `${n.valueOf().toFixed(0)}°B` },
+    { label: 'NOSTALGIA', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'BUBBLES', formatFn: (n) => `${n.valueOf().toFixed(0)}/cm³` },
+    { label: 'PASTEL', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'WONDER', formatFn: (n) => `LVL ${n.valueOf().toFixed(0)}` },
+    { label: 'MAGIC', formatFn: (n) => `${n.valueOf().toFixed(0)}✨` },
   ],
 
   'tres-sendas': [
-    'GROWTH VELOCITY',
-    'ROOT NETWORK DEPTH',
-    'CANOPY COVERAGE',
-    'PHOTOSYNTHESIS RATE',
-    'ECOSYSTEM BALANCE',
+    { label: 'GROWTH', formatFn: (n) => `${n.valueOf().toFixed(1)}cm/yr` },
+    { label: 'ROOTS', formatFn: (n) => `${n.valueOf().toFixed(0)}m` },
+    { label: 'CANOPY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'PHOTO', formatFn: (n) => `${n.valueOf().toFixed(0)}μmol` },
+    { label: 'ECOSYSTEM', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'CARBON', formatFn: (n) => `${n.valueOf().toFixed(0)}kg` },
   ],
 
   arasaka: [
-    'PROFIT MARGINS',
-    'COMPLIANCE RATING',
-    'EFFICIENCY METRICS',
-    'MARKET DOMINANCE',
-    'EMPLOYEE LOYALTY',
+    { label: 'PROFIT', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'COMPLY', formatFn: (n) => `${n.valueOf().toFixed(0)}/100` },
+    { label: 'EFFICIENCY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'MARKET', formatFn: (n) => `${n.valueOf().toFixed(0)}%` },
+    { label: 'LOYALTY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'SYNERGY', formatFn: (n) => `${n.valueOf().toFixed(0)}X` },
   ],
 
   monochrome: [
-    'CONTRAST RATIO',
-    'SIGNAL CLARITY',
-    'TYPOGRAPHY PRECISION',
-    'NEGATIVE SPACE',
-    'GEOMETRIC BALANCE',
+    { label: 'CONTRAST', formatFn: (n) => `${n.valueOf().toFixed(1)}:1` },
+    { label: 'SIGNAL', formatFn: (n) => `${n.valueOf().toFixed(0)}dB` },
+    { label: 'TYPO', formatFn: (n) => `${n.valueOf().toFixed(1)}px` },
+    { label: 'SPACE', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+    { label: 'GEOMETRY', formatFn: (n) => `${n.valueOf().toFixed(0)}°` },
+    { label: 'MINIMAL', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
   ],
 };
 
 // Default fallback metrics
-export const DefaultRadarMetrics: [string, string, string, string, string] = [
-  'SYSTEM PERFORMANCE',
-  'DATA INTEGRITY',
-  'NETWORK STABILITY',
-  'PROCESSING SPEED',
-  'SECURITY LEVEL',
+export const DefaultRadarMetrics: Array<{
+  label: string;
+  formatFn: formatFn;
+}> = [
+  { label: 'SYSTEM', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+  { label: 'DATA', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+  { label: 'NETWORK', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+  { label: 'PROCESS', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+  { label: 'SECURITY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+  { label: 'MEMORY', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
 ];
 
 // Helper function to get themed metrics
 export const getRadarMetrics = (
   themeId: string
-): [string, string, string, string, string] => {
+): Array<{ label: string; formatFn: formatFn }> => {
   return ThemedRadarMetrics[themeId] || DefaultRadarMetrics;
 };

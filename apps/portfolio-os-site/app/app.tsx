@@ -88,6 +88,7 @@ import {
 import { getScrambleCharacters } from './data/themed-data/themed-scramble-charsets';
 import { getThemedGifUrl } from './data/themed-data/themed-gif';
 import { getProgressMessages } from './data/themed-data/themed-progress-state';
+import { getRadarMetrics } from './data/themed-data/themed-metric-labels';
 
 export default function App() {
   const theme = useTheme();
@@ -137,6 +138,7 @@ export default function App() {
   const scrambleCharacterSet = getScrambleCharacters(currentThemeId);
   const gifUrl = getThemedGifUrl(currentThemeId);
   const progressMsg = getProgressMessages(currentThemeId);
+  const themedMetricConfigs = getRadarMetrics(currentThemeId);
 
   return (
     <BootLayout
@@ -144,6 +146,7 @@ export default function App() {
       scrambleCharacterSet={scrambleCharacterSet}
       themedWidgetGifUrl={gifUrl}
       progressMessages={progressMsg}
+      radarMetricsConfig={themedMetricConfigs}
     />
   );
 }

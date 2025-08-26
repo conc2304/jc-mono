@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -22,9 +22,12 @@ import {
   TorusLoaderCardAug,
   ScanLinesOverlay,
 } from './atoms';
-import { RadarData } from '../radar-chart-widget/radar-chart-widget';
+import {
+  MetricGroup,
+  RadarChart,
+  RadarData,
+} from '../radar-chart-widget/radar-chart-widget';
 import { AnimatedRadarChart } from '../radar-chart-widget/animated-radar';
-import { easeSinInOut } from 'd3';
 import { remap } from '../utils';
 import {
   DataPanel,
@@ -43,6 +46,16 @@ import {
   ProgressBar,
   ScrambleText,
 } from '@jc/ui-components';
+import { useSharedAnimatedData } from '../radar-chart-widget/use-animated-data';
+import {
+  defaultBootMessages,
+  defaultGif,
+  DefaultProgressMessages,
+  DefaultRadarMetrics,
+  defaultScrambleCharacterSet,
+  radarAnimationConfig,
+  radarWidgetProps,
+} from './default-data';
 
 interface SciFiLayoutProps {
   className?: string;
@@ -53,59 +66,11 @@ interface SciFiLayoutProps {
     backgroundPositionY?: Property.BackgroundPositionY;
   };
   progressMessages?: { start: string; end: string };
+  radarMetricsConfig?: Array<{
+    label: string;
+    formatFn: (n: number | { valueOf(): number }) => string;
+  }>;
 }
-
-const defaultScrambleCharacterSet =
-  '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-const defaultBootMessages: BootMessage[] = [
-  'Initializing system...',
-  ['Loading kernel modules...', 'Injecting backdoor...'],
-  'Starting network services...',
-  ['Mounting file systems...', 'Accessing classified data...'],
-  'Starting user services...',
-  ['System boot complete.', 'Welcome, Agent Smith.'],
-  '',
-  'Welcome to Terminal OS v2.1.0',
-  ['Type "help" for available commands.', 'Type "hack" to begin infiltration.'],
-];
-
-const DefaultProgressMessages = {
-  start: 'initializing',
-  end: 'install completed',
-};
-
-const sampleData: RadarData = [
-  [
-    { axis: 'a', value: 80, metricGroupName: '1' },
-    { axis: 'b', value: 90, metricGroupName: '1' },
-    { axis: 'c', value: 70, metricGroupName: '1' },
-    { axis: 'd', value: 85, metricGroupName: '1' },
-    { axis: 'e', value: 75, metricGroupName: '1' },
-  ],
-];
-
-const HeroText = () => (
-  <>
-    <ScrambleText
-      variant="display"
-      color="primary"
-      defaultText="Jose Conchello"
-      hoverText="Via CLYZBY_OS"
-      sx={(theme) => ({
-        fontSize: '3.5rem',
-
-        //   fontSize: theme.typography.h1.fontSize,
-      })}
-    />
-    <ScrambleText
-      variant="h3"
-      color="primary"
-      defaultText="Engineer & Artist"
-      hoverText="Creative Technologist"
-    />
-  </>
-);
 
 const url =
   'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHV5eWhoaHl5d3Nmam4xNGY4enJoamZ2anhnYm45d3M5M2w3emJoaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WWSPhALYIBk1wtIwGZ/giphy.gif';
@@ -131,19 +96,37 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
     style={{}}
   >
     <ScrambleText
-      variant="displayOutline"
+      variant="display"
       defaultText="ENTER"
       hoverText="???"
       scrambleDuration={0.1}
+      color="text.primary"
       fontSize={fontSize}
     />
   </AugmentedButton>
 );
 
-const defaultGif = {
-  url: '/textures/ambient-vintage-clouds.gif',
-  backgroundPositionY: 'center',
-};
+const HeroText = () => (
+  <>
+    <ScrambleText
+      variant="display"
+      color="primary"
+      defaultText="Jose Conchello"
+      hoverText="Via CLYZBY_OS"
+      sx={(theme) => ({
+        fontSize: '3.5rem',
+
+        //   fontSize: theme.typography.h1.fontSize,
+      })}
+    />
+    <ScrambleText
+      variant="h3"
+      color="primary"
+      defaultText="Engineer & Artist"
+      hoverText="Creative Technologist"
+    />
+  </>
+);
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
   className = '',
@@ -151,6 +134,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   scrambleCharacterSet = defaultScrambleCharacterSet,
   themedWidgetGifUrl: gifData,
   progressMessages = DefaultProgressMessages,
+  radarMetricsConfig = DefaultRadarMetrics,
 }) => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
@@ -172,6 +156,46 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   const [backgroundBlendMode, setBackgroundBlendMode] =
     useState<Property.BackgroundBlendMode>('color-burn');
   const bgUrl = '/gifs/circle-tile-background.gif';
+
+  const baseRadarData: RadarData = useMemo(() => {
+    // Create a metric group with radar entries
+    const systemMetrics: MetricGroup = [
+      {
+        value: 87.5,
+        metricGroupName: 'Player 1',
+      },
+      {
+        value: 42.3,
+        metricGroupName: 'Player 1',
+      },
+      {
+        value: 68.7,
+        metricGroupName: 'Player 1',
+      },
+      {
+        value: 91.2,
+        metricGroupName: 'Player 1',
+      },
+      {
+        value: 45.8,
+        metricGroupName: 'Player 1',
+      },
+      {
+        value: 73.4,
+        metricGroupName: 'Player 1',
+      },
+    ].map((unThemedMetric, i) => ({
+      ...unThemedMetric,
+      axis: radarMetricsConfig[i].label,
+      formatFn: radarMetricsConfig[i].formatFn,
+    }));
+
+    // Return as RadarData (array of MetricGroups)
+    return [systemMetrics];
+  }, []);
+
+  const { animatedData, isAnimating, startAnimation, stopAnimation } =
+    useSharedAnimatedData(baseRadarData, radarAnimationConfig);
 
   const handleBackgroundResize = (action: 'plus' | 'minus' | 'reset') => {
     if (action === 'reset') {
@@ -200,14 +224,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         total: 7,
         message: currentMessage,
       });
-      console.log(percentComplete, currentMessage, messageIndex, charIndex);
     },
     []
   );
 
   const handleBootComplete = useCallback(() => {
     setIsComplete(true);
-    console.log('Boot sequence complete!');
   }, []);
 
   // Mobile Layout (1 column)
@@ -373,38 +395,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     />
                   </Box>
                   <RadarChartBox flex={1}>
-                    <AnimatedRadarChart
+                    <RadarChart
                       id="animated-radar"
-                      data={sampleData}
-                      animationConfig={{
-                        animationSpeed: 1500,
-                        numTrails: 4,
-                        trailOffset: 80.0,
-                        noiseScale: 1.5,
-                        trailIntensity: 1,
-                        enableAnimation: true,
-                        easing: easeSinInOut,
-                      }}
-                      levels={5}
-                      showLabels={false}
-                      labelFactor={1}
-                      opacityArea={0.1}
-                      strokeWidth={1}
-                      dotRadius={3}
-                      lineType="curved"
-                      colors={{
-                        primary: theme.palette.primary.main,
-                        accent: theme.palette.warning.main,
-                        series: new Array(3).fill('').map((_, i) => {
-                          const fn =
-                            theme.palette.mode === 'light' ? darken : lighten;
-                          return fn(
-                            theme.palette.primary[theme.palette.mode],
-                            remap(i, 0, 3, 0, 0.5)
-                          );
-                        }),
-                      }}
-                      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                      data={animatedData}
+                      {...radarWidgetProps(theme)}
                     />
                   </RadarChartBox>
                 </Box>
@@ -505,39 +499,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                 height="100%"
               >
                 <RadarChartBox flex={1}>
-                  <AnimatedRadarChart
+                  <RadarChart
                     id="animated-radar"
-                    data={sampleData}
-                    animationConfig={{
-                      animationSpeed: 1500,
-                      numTrails: 4,
-                      trailOffset: 80.0,
-                      noiseScale: 1.5,
-                      trailIntensity: 1,
-                      enableAnimation: true,
-                      easing: easeSinInOut,
-                    }}
-                    levels={5}
-                    showLabels={false}
-                    labelFactor={1}
-                    opacityArea={0.1}
-                    strokeWidth={1}
-                    dotRadius={3}
-                    lineType="curved"
-                    colors={{
-                      primary: theme.palette.primary.main,
-                      accent: theme.palette.warning.main,
-                      // series number should be at least number of trails
-                      series: new Array(3).fill('').map((_, i) => {
-                        const fn =
-                          theme.palette.mode === 'light' ? darken : lighten;
-                        return fn(
-                          theme.palette.primary[theme.palette.mode],
-                          remap(i, 0, 3, 0, 0.5)
-                        );
-                      }),
-                    }}
-                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    data={animatedData}
+                    {...radarWidgetProps(theme)}
                   />
                 </RadarChartBox>
 
@@ -552,7 +517,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                     }}
                   />
 
-                  <DataPanel />
+                  {animatedData && (
+                    <DataPanel metrics={animatedData} title="TEMPORARY TITLE" />
+                  )}
                 </Box>
               </Box>
             </Grid>
