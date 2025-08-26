@@ -247,7 +247,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
         //   height: '100%',
         // }}
       >
-        <BrowserFrame sx={{ border: '1px solid white' }}>
+        <BrowserFrame>
           {!isXs && <Header compact={true} />}
 
           {/* Mobile Content - Minimal Layout */}
@@ -262,18 +262,15 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             flexDirection="column"
             gap={1}
             flexGrow={1}
-            border={'3px dashed yellow'}
-            //
-            height="100vh" // or whatever your desired height is
+            // height="100vh"
             overflow="hidden" // Prevent the container from growing
           >
             {/* Boot Text Panel - Takes most of the space */}
             <Box
               className="BootText--aug-panel"
-              border="2px dotted cyan"
               data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
               sx={(theme) => ({
-                flex: 1, // Grow to fill available space
+                flex: 1,
                 minHeight: 0, // Critical: allow shrinking below content size
                 display: 'flex', // Make this a flex container
                 flexDirection: 'column', // Stack children vertically
@@ -473,11 +470,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             <ThemePickerPanel />
           </Box>
 
-          <BottomPanel
-            flexShrink={0}
-            sx={{ border: '2px solid white' }}
-            className="BottomPanel--root"
-          >
+          <BottomPanel flexShrink={0} className="BottomPanel--root">
             <Grid container columns={12} spacing={4}>
               <Grid size={6} display="flex">
                 <Stack>
@@ -658,7 +651,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
                   sx={(theme) => ({
                     height: '100%',
-                    border: '2px solid white',
                     '&[data-augmented-ui]': {
                       '--aug-bl': '0.5rem',
                       '--aug-br': '0.5rem',
