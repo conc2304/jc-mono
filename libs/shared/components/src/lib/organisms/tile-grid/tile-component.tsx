@@ -267,7 +267,7 @@ export const TileComponent = memo(
                 {dateModified?.toLocaleDateString() || 'Recent'}
               </Typography>
 
-              <Box display="flex" alignItems="center" gap={1}>
+              <Box display="flex" alignItems="center" gap={1.5}>
                 {config.showLiveContent && children && children.length > 1 && (
                   <Box display="flex" gap={0.5}>
                     {children.slice(0, maxPreviews).map((_, index) => (
