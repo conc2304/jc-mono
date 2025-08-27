@@ -99,26 +99,13 @@ export const TileComponent = memo(
     }, [children, tileData, config.showLiveContent, config.updateInterval]);
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>): void => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const offsetX: number = e.clientX - rect.left / 2;
-      const offsetY: number = e.clientY - rect.top / 2;
-
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', tile.id.toString());
-
-      // Create a custom drag image
-      const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
-      dragImage.style.opacity = '0.1';
-      dragImage.style.transform = 'rotate(3deg)';
-      dragImage.style.border = `1px solid ${theme.palette.secondary.main}`;
-      document.body.appendChild(dragImage);
-      e.dataTransfer.setDragImage(dragImage, offsetX, offsetY);
-
-      setTimeout(() => {
-        document.body.removeChild(dragImage);
-      }, 0);
-
       onDragStart(tile);
+    };
+
+    const handleDragEnd = (e: React.DragEvent<HTMLDivElement>): void => {
+      onDragEnd();
     };
 
     const tileColor =
@@ -135,7 +122,8 @@ export const TileComponent = memo(
         className="TileComponent--root"
         draggable
         onDragStart={handleDragStart}
-        onDragEnd={onDragEnd}
+        onDragEnd={handleDragEnd}
+        // onDragEnd={onDragEnd}
         effectiveIsDragging={isDragging}
         tileColor={tileColor}
         size={config.size}

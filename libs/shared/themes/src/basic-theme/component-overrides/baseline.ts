@@ -37,9 +37,6 @@ export default function BaselineCSS(theme: Theme): Components {
           '&::-webkit-scrollbar-thumb': {
             background: alpha(theme.palette.secondary.dark, 0.3),
             boxShadow: theme.shadows[10],
-            // theme.palette.mode === 'dark'
-            //   ? alpha(theme.palette.common.white, 0.3)
-            //   : alpha(theme.palette.common.black, 0.3),
             borderRadius: '0px',
             '&:hover': {
               background:
