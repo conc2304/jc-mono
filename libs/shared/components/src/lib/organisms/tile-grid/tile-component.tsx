@@ -226,7 +226,6 @@ export const TileComponent = memo(
                   stroke={alpha(theme.palette.text.primary, 1)}
                   strokeWidth="0.5px"
                   opacity={0.5}
-                  opacity={0.5}
                 />
               )}
             </Box>
