@@ -180,66 +180,75 @@ export const TileGrid = ({
             bgcolor: alpha(theme.palette.background.paper, 0.5),
 
             flexGrow: 1,
-            overflowY: 'auto',
+            // overflowY: 'hidden',
           })}
         >
-          {/* Insertion zones */}
-          {dragState.isDragging &&
-            insertionZones.map((zone) => (
-              <InsertionZone
-                key={zone.id}
-                zone={zone}
-                isActive={
-                  dragState.hoveredInsertionIndex === zone.insertIndex &&
-                  dragState.hoveredZoneSide === zone.side
-                }
-                onDrop={handleInsertionDrop}
-                onHover={handleInsertionZoneHover}
-              />
-            ))}
-
-          {/* Tiles */}
-          {placedTiles.map((tile) => (
-            <TileComponent
-              key={tile.id}
-              tile={tile}
-              tileConfig={config}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              isDragging={
-                dragState.isDragging && dragState.draggedTile?.id === tile.id
-              }
-              isBeingReordered={
-                dragState.isDragging && dragState.draggedTile?.id !== tile.id
-              }
-            />
-          ))}
           <Box
-            className="TileGrid--bottom-padding-spacer"
             sx={{
-              position: 'absolute',
-              top: placedTiles.reduce(
-                (prev, curr) => Math.max(prev, curr.y + curr.height),
-                0
-              ),
-              width: '100%',
-              height: config.containerPadding,
-            }}
-          />
-          <Box
-            className="TileGrid--control-btns"
-            sx={{
-              position: 'absolute',
-              bottom: '10px',
-              right: '12.5%',
+              position: 'relative',
+              height: '100%',
+              overflowY: 'scroll',
+              mr: 0.25,
             }}
           >
-            <AugmentedIconButton color="secondary" onClick={shuffleTiles}>
-              <Shuffle />
-            </AugmentedIconButton>
-            <AugmentedIconButton color="secondary" onClick={resetTiles}>
-              <RestartAlt />
-            </AugmentedIconButton>
+            {/* Insertion zones */}
+            {dragState.isDragging &&
+              insertionZones.map((zone) => (
+                <InsertionZone
+                  key={zone.id}
+                  zone={zone}
+                  isActive={
+                    dragState.hoveredInsertionIndex === zone.insertIndex &&
+                    dragState.hoveredZoneSide === zone.side
+                  }
+                  onDrop={handleInsertionDrop}
+                  onHover={handleInsertionZoneHover}
+                />
+              ))}
+
+            {/* Tiles */}
+            {placedTiles.map((tile) => (
+              <TileComponent
+                key={tile.id}
+                tile={tile}
+                tileConfig={config}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                isDragging={
+                  dragState.isDragging && dragState.draggedTile?.id === tile.id
+                }
+                isBeingReordered={
+                  dragState.isDragging && dragState.draggedTile?.id !== tile.id
+                }
+              />
+            ))}
+            <Box
+              className="TileGrid--bottom-padding-spacer"
+              sx={{
+                position: 'absolute',
+                top: placedTiles.reduce(
+                  (prev, curr) => Math.max(prev, curr.y + curr.height),
+                  0
+                ),
+                width: '100%',
+                height: config.containerPadding,
+              }}
+            />
+            <Box
+              className="TileGrid--control-btns"
+              sx={{
+                position: 'absolute',
+                bottom: '10px',
+                right: '12.5%',
+              }}
+            >
+              <AugmentedIconButton color="secondary" onClick={shuffleTiles}>
+                <Shuffle />
+              </AugmentedIconButton>
+              <AugmentedIconButton color="secondary" onClick={resetTiles}>
+                <RestartAlt />
+              </AugmentedIconButton>
+            </Box>
           </Box>
         </Box>
       </Container>

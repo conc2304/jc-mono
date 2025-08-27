@@ -14,8 +14,6 @@ import { TileRenderer } from '@jc/file-system';
 import { DefaultTileContent } from '../../molecules/live-tile/default-tile-content';
 import {
   alpha,
-  darken,
-  lighten,
   useTheme,
   Box,
   Typography,
@@ -59,6 +57,7 @@ export const TileComponent = memo(
   }: TileComponentProps) => {
     const theme = useTheme();
     const { openWindow } = useWindowActions();
+
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const DefaultTileRenderer: TileRenderer = {
