@@ -1,4 +1,5 @@
 import { EnhancedThemeOption } from '../types';
+import { developerTerminalTheme } from './basic-themes/developer-terminal-palette';
 import {
   desertSunsetTheme,
   electricSynthwaveTheme,
@@ -15,6 +16,7 @@ import {
 import { bladeRunnerTheme } from './enhanced-palettes/blade-runner-palette';
 
 export const enhancedThemes: EnhancedThemeOption[] = [
+  developerTerminalTheme,
   euclidThemes,
   marathonThemes,
   neonCyberpunkTheme,

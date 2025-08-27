@@ -2,6 +2,10 @@ export const ThemedProgressMessages: Record<
   string,
   { start: string; end: string }
 > = {
+  'developer-terminal': {
+    start: 'compiling creative algorithms',
+    end: 'build successful - ready to ship',
+  },
   'euclid-ci': {
     start: 'decrypting classified files',
     end: 'access granted - clearance verified',
@@ -87,6 +91,8 @@ export const ThemedStepMessages: Record<
   string,
   (step: number, totalSteps: number) => string
 > = {
+  'developer-terminal': (step, total) =>
+    `processing module ${step} of ${total}`,
   'euclid-ci': (step, total) => `declassifying file ${step} of ${total}`,
   marathon: (step, total) => `loading stage ${step} of ${total}`,
   'neon-cyberpunk': (step, total) => `bypassing ice layer ${step} of ${total}`,

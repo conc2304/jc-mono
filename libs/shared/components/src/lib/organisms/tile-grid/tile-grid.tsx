@@ -1,4 +1,4 @@
-import { Box, Container, alpha } from '@mui/material';
+import { Box, Container, IconButton, alpha } from '@mui/material';
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { useEffect, useRef, useState } from 'react';
@@ -7,7 +7,7 @@ import { useTilePlacement } from './use-tile-placement';
 import { BaseFileSystemItem } from '@jc/file-system';
 import { TileComponent } from './tile-component';
 import { RestartAlt, Shuffle } from '@mui/icons-material';
-import { AugmentedIconButton } from '../../atoms';
+import { ColorModeSwitcher } from '@jc/themes';
 
 export const TileGrid = ({
   gridTiles = [],
@@ -178,11 +178,10 @@ export const TileGrid = ({
             position: 'relative',
             width: '100%',
             bgcolor: alpha(theme.palette.background.paper, 0.5),
-
             flexGrow: 1,
-            // overflowY: 'hidden',
           })}
         >
+          {/* Scroll Container */}
           <Box
             sx={{
               position: 'relative',
@@ -223,32 +222,63 @@ export const TileGrid = ({
               />
             ))}
             <Box
+              // Add empty padding after the last tile's end to increase natural container size
               className="TileGrid--bottom-padding-spacer"
               sx={{
                 position: 'absolute',
+                height: config.containerPadding,
+                width: '100%',
                 top: placedTiles.reduce(
                   (prev, curr) => Math.max(prev, curr.y + curr.height),
                   0
                 ),
-                width: '100%',
-                height: config.containerPadding,
               }}
             />
-            <Box
-              className="TileGrid--control-btns"
+          </Box>
+
+          {/* Color Mode Switcher */}
+          <Box
+            className="TileGrid--color-mode-switcher-wrapper"
+            sx={{
+              position: 'absolute',
+              bottom: '5px',
+              left: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
+              transform: 'translateX(-50%)',
+            }}
+          >
+            <ColorModeSwitcher />
+          </Box>
+
+          {/* Tile Placement Controls */}
+          <Box
+            className="TileGrid--control-btns"
+            sx={{
+              position: 'absolute',
+              bottom: '5px',
+              right: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
+              transform: 'translateX(75%)',
+            }}
+          >
+            <IconButton
+              color="secondary"
+              onClick={shuffleTiles}
+              data-augmented-ui="tr-clip"
               sx={{
-                position: 'absolute',
-                bottom: '10px',
-                right: '12.5%',
+                '--aug-tr': '0.75rem',
               }}
             >
-              <AugmentedIconButton color="secondary" onClick={shuffleTiles}>
-                <Shuffle />
-              </AugmentedIconButton>
-              <AugmentedIconButton color="secondary" onClick={resetTiles}>
-                <RestartAlt />
-              </AugmentedIconButton>
-            </Box>
+              <Shuffle />
+            </IconButton>
+            <IconButton
+              color="secondary"
+              onClick={resetTiles}
+              data-augmented-ui="tr-clip"
+              sx={{
+                '--aug-tr': '0.75rem',
+              }}
+            >
+              <RestartAlt />
+            </IconButton>
           </Box>
         </Box>
       </Container>

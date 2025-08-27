@@ -5,6 +5,33 @@ export const ThemedGifUrl: Record<
   string,
   { url: string; backgroundPositionY: Property.BackgroundPositionY }
 > = {
+  'developer-terminal': {
+    url: (() => {
+      const gifMap = {
+        // Couldn't decide on one
+        default: path('developer-terminal--default-programer.gif'),
+        it: path('developer-terminal--it-crowd-fire.gif'),
+        jc: path('developer-terminal--jim-carey-typing.gif'),
+      };
+
+      const probMap = {
+        default: 0.7,
+        jc: 0.15,
+        it: 0.15,
+      };
+
+      const r = Math.random();
+
+      if (r < probMap.default) {
+        return gifMap.default;
+      } else if (r < probMap.default + probMap.jc) {
+        return gifMap.jc;
+      } else {
+        return gifMap.it;
+      }
+    })(),
+    backgroundPositionY: 'center',
+  },
   'euclid-ci': {
     url: path('euclid-ci-ui-target-tracking.gif'),
     backgroundPositionY: 'center',

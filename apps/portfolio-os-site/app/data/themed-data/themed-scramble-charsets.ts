@@ -1,5 +1,7 @@
 // Themed character sets for text scrambling effects
 export const ThemedScrambleCharacters: Record<string, string> = {
+  'developer-terminal':
+    '█▓▒░■□▪▫○●0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz(){}[]<>/\\|+-*=.,:;"\'^$%@#!?_',
   'euclid-ci': '█▓▒░■□▪▫●○ЖДФЦЯЩЭЮ¤§†‡•‰‱₪₫₹01XVILCDM[]{}|\\/-_~',
 
   marathon: '█▄▀▌▐░▒▓■□◆◇◈◉◎●◐◑◒◓▲▼◄►♠♣♥♦♪♫0123456789ABCDEF+-*=/\\|^v<>',
@@ -32,7 +34,7 @@ export const ThemedScrambleCharacters: Record<string, string> = {
     '█▓▒░■□▪▫●○0123456789ABCDEFXYZ!@#$%^&*(){}[]|\\/<>?+-*/=%^&|~¤§†‡•‰‱₪₫₹ЖДФЦЯЩЭЮ≡≠≤≥∞∆∇∑∏',
 
   monochrome:
-    '█▓▒░■□▪▫○●◯◎◐◑◒◓0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,:;-_()[]{}|\\/<>?!@',
+    '█▓▒░■□▪▫○●◯◎◐◑◒◓01010101010101010101010101010101010101010101010101010101010101010101.,:;-_()[]{}|\\/<>?!@', // increase probability of 0 and 1
 };
 
 // Default fallback character set

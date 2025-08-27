@@ -129,7 +129,7 @@ const HeroText = () => {
       <ScrambleText
         variant="h3"
         color="primary"
-        defaultText="Engineer & Artist"
+        defaultText="UI Engineer & Artist"
         hoverText="Creative Technologist"
       />
     </>

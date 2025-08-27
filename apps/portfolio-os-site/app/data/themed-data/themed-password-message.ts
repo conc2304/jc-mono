@@ -1,5 +1,6 @@
 // Themed password hover messages
 export const ThemedPasswordHoverMessages: Record<string, string> = {
+  'developer-terminal': 'ACCESS DENIED: TRY SUDO',
   'euclid-ci': 'CLASSIFIED: NICE TRY AGENT',
 
   marathon: 'GAME OVER SNOOPER',

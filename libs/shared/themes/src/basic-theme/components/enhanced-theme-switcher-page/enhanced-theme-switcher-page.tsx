@@ -194,8 +194,6 @@ export const ThemeCustomizerPage: React.FC = () => {
     addTheme,
     removeTheme,
     resetToDefaultThemes,
-    exportThemes,
-    importThemes,
     isHydrated,
   } = useEnhancedTheme();
 

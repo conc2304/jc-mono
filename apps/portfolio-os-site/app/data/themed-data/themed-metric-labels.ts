@@ -6,6 +6,17 @@ export const ThemedRadarMetrics: Record<
   string,
   { title: string; metrics: Array<{ label: string; formatFn: FormatDataFn }> }
 > = {
+  'developer-terminal': {
+    title: 'CODE QUALITY METRICS',
+    metrics: [
+      { label: 'PERF', formatFn: (n) => `${n.valueOf().toFixed(1)}ms` },
+      { label: 'COVERAGE', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+      { label: 'BUGS', formatFn: (n) => `${(100 - n.valueOf()).toFixed(0)}` },
+      { label: 'UPTIME', formatFn: (n) => `${n.valueOf().toFixed(2)}%` },
+      { label: 'COMMITS', formatFn: (n) => `${n.valueOf().toFixed(0)}/wk` },
+      { label: 'CAFFEINE', formatFn: (n) => `${n.valueOf().toFixed(0)}mg` },
+    ],
+  },
   'euclid-ci': {
     title: 'CLASSIFIED INTEL ANALYSIS',
     metrics: [

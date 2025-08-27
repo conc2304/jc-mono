@@ -333,6 +333,7 @@ export const WindowProvider: React.FC<{
         elementY: desktopItemPositions[iconId]?.y || 0,
         isDragging: true,
         lastUpdateTime: 0,
+        // currentX: undefined
       };
 
       // Immediate visual feedback
@@ -652,21 +653,21 @@ export const WindowProvider: React.FC<{
       const isMaximizing = !current.maximized;
 
       setWindows((prev) =>
-        prev.map((window) => {
-          if (window.id !== windowId) return window;
+        prev.map((windowItem) => {
+          if (windowItem.id !== windowId) return windowItem;
 
           if (isMaximizing) {
             // Store current state before maximizing (including docked state)
             const previousState: WindowPreviousState = {
-              x: window.x,
-              y: window.y,
-              width: window.width,
-              height: window.height,
-              docked: window.docked, // Store docked state
+              x: windowItem.x,
+              y: windowItem.y,
+              width: windowItem.width,
+              height: windowItem.height,
+              docked: windowItem.docked, // Store docked state
             };
 
             return {
-              ...window,
+              ...windowItem,
               maximized: true,
               x: 0,
               y: 0,
@@ -679,7 +680,7 @@ export const WindowProvider: React.FC<{
             };
           } else {
             // Restore to previous state
-            const restoreState = window.previousState || {
+            const restoreState = windowItem.previousState || {
               x: !isXs ? 200 + windows.length * 30 : 0,
               y: !isXs ? 100 + windows.length * 30 : 0,
               width: !isXs ? window.innerWidth * 0.66 : window.innerWidth,
@@ -688,7 +689,7 @@ export const WindowProvider: React.FC<{
             };
 
             return {
-              ...window,
+              ...windowItem,
               maximized: false,
               x: restoreState.x,
               y: restoreState.y,

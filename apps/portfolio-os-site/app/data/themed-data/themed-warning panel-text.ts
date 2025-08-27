@@ -7,6 +7,19 @@ export const ThemedInfoPanelContent: Record<
     rightSection: [string, string, string];
   }
 > = {
+  'developer-terminal':
+    Math.random() < 0.6
+      ? {
+          label: 'DEBUG',
+          middleSection: ['CURIOSITY ZONE', 'EXPLORATION REWARDED'],
+          rightSection: ['DO NOT', 'FORGET TO', 'HOVER'],
+        }
+      : {
+          label: 'BUILD',
+          middleSection: ['DEV ZONE', 'CODE QUALITY HIGH'],
+          rightSection: ['DO NOT', 'PUSH TO', 'PRODUCTION'],
+        },
+
   'euclid-ci': {
     label: 'CLASSIFIED',
     middleSection: ['RESTRICTED AREA', 'CLEARANCE REQUIRED'],

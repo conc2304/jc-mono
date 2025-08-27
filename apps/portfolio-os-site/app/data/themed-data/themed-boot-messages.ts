@@ -2,6 +2,47 @@ import { BootMessage } from '../../../../../libs/features/boot-loader/src/lib/ty
 
 // key is id of theme
 export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
+  // Clean Professional with Discovery Hints
+  'developer-terminal': [
+    [
+      '> initializing development environment...',
+      ['> package dependencies: RESOLVED', 'easter eggs included'],
+      '> TypeScript compiler: ACTIVE',
+      ['> build process: OPTIMIZED', '12 themes discovered so far'],
+      '> three.js renderer: COMPILED',
+      ['> creative technologist mode: ENABLED', 'hover for hidden messages'],
+      '> development server: RUNNING',
+    ],
+    // Git Workflow with Exploration
+    [
+      '> git status: CLEAN WORKING TREE',
+      ['> branch: main AHEAD BY 47 COMMITS', 'secret branches detected'],
+      '> TouchDesigner modules: COMMITTED',
+      ['> p5.js sketches: PUSHED TO ORIGIN', 'interactive surprises deployed'],
+      '> unity assets: STAGED',
+      ['> merge conflicts: RESOLVED', 'curiosity rewarded'],
+      '> welcome to the repository',
+    ],
+    // Debug Mode with Hidden Features
+    [
+      '> debugging creative algorithms...',
+      ['> breakpoints set: STRATEGICALLY', 'click everything twice'],
+      '> console.log statements: EXCESSIVE',
+      ['> stack trace: FOLLOWING THE FLOW', 'themes unlock more themes'],
+      '> performance profiler: RUNNING',
+      ['> code coverage: 94.7%', '5.3% reserved for surprises'],
+      '> bug hunt: COMPLETE',
+    ],
+    // IDE Experience with Discovery
+    [
+      '> VS Code workspace: LOADED',
+      ['> extensions enabled: PRODUCTIVITY++', 'curiosity extension installed'],
+      '> syntax highlighting: ACTIVE',
+      ['> intellisense suggestions: HELPFUL', 'try the password field'],
+      '> integrated terminal: READY',
+      ['> welcome to the coding zone', 'where exploration pays off'],
+    ],
+  ],
   'euclid-ci': [
     // UNHINGED Counter Intelligence Corporate
     [
@@ -499,6 +540,26 @@ export const DefaultBootMessage: BootMessage[] = [
 // First 3 messages: 32 chars max
 // Rest: 36 chars max
 export const MobileThemedBootMessages: Record<string, Array<BootMessage[]>> = {
+  'developer-terminal': [
+    [
+      '> init dev environment...',
+      ['> dependencies: RESOLVED', 'node_modules ready'],
+      '> TypeScript compiler: ACTIVE',
+      ['> build process: OPTIMIZED', 'webpack bundled'],
+      '> three.js renderer: COMPILED',
+      ['> creative tech mode: ENABLED', 'ready for production'],
+      '> dev server: RUNNING',
+    ],
+    [
+      '> git status: CLEAN TREE',
+      ['> branch: main +47 COMMITS', 'productive session'],
+      '> TouchDesigner modules: COMMIT',
+      ['> p5.js sketches: PUSHED', 'creative code deployed'],
+      '> unity assets: STAGED',
+      ['> merge conflicts: RESOLVED', 'collaboration success'],
+      '> welcome to repo',
+    ],
+  ],
   'euclid-ci': [
     // UNHINGED Counter Intelligence
     [
