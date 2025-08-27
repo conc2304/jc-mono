@@ -1,5 +1,7 @@
-import { Components, Theme, alpha } from '@mui/material/styles';
+import { Components, alpha } from '@mui/material/styles';
 import { fontFaces } from './baseline-font';
+
+import { Theme } from '@mui/material';
 
 export default function BaselineCSS(theme: Theme): Components {
   return {
@@ -13,7 +15,7 @@ export default function BaselineCSS(theme: Theme): Components {
         },
         '*': {
           '&::-webkit-scrollbar': {
-            width: '8px',
+            width: '12px',
             height: '8px',
           },
           '&::-webkit-scrollbar-corner': {
@@ -25,18 +27,25 @@ export default function BaselineCSS(theme: Theme): Components {
                 ? alpha(theme.palette.common.white, 0.1)
                 : alpha(theme.palette.common.black, 0.1),
             borderRadius: '0px',
+            border: theme.palette.background.paper,
+            boxShadow: `inset 0px 0px 4px ${
+              theme.palette.mode === 'dark'
+                ? alpha(theme.palette.secondary.dark, 0.3)
+                : alpha(theme.palette.secondary.light, 0.3)
+            }`,
           },
           '&::-webkit-scrollbar-thumb': {
-            background:
-              theme.palette.mode === 'dark'
-                ? alpha(theme.palette.common.white, 0.3)
-                : alpha(theme.palette.common.black, 0.3),
+            background: alpha(theme.palette.secondary.dark, 0.3),
+            boxShadow: theme.shadows[10],
+            // theme.palette.mode === 'dark'
+            //   ? alpha(theme.palette.common.white, 0.3)
+            //   : alpha(theme.palette.common.black, 0.3),
             borderRadius: '0px',
             '&:hover': {
               background:
                 theme.palette.mode === 'dark'
-                  ? alpha(theme.palette.common.white, 0.5)
-                  : alpha(theme.palette.common.black, 0.5),
+                  ? alpha(theme.palette.secondary.dark, 0.4)
+                  : alpha(theme.palette.secondary.light, 0.4),
             },
           },
         },
