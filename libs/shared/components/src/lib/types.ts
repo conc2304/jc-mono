@@ -33,7 +33,8 @@ export interface WindowMetaData {
     | 'opening'
     | 'closing'
     | 'minimizing'
-    | 'maximizing';
+    | 'maximizing'
+    | 'docking';
 }
 
 export interface QuickAccessItem {

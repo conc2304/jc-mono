@@ -40,7 +40,7 @@ export const ResizeHandle = ({
 
 export const ResizeHandlers = ({
   onResizeStart,
-  handleSize = 4,
+  handleSize = 6,
 }: {
   handleSize?: number;
   onResizeStart: (e: React.MouseEvent, direction: ResizeDirection) => void;
@@ -96,8 +96,8 @@ export const ResizeHandlers = ({
         style={{
           top: 0,
           left: 0,
-          width: handleSize * 2,
-          height: handleSize * 2,
+          width: handleSize * cornerScale * 1.5, //extra for the clipped Augmented UI corner
+          height: handleSize * cornerScale * 1.5, //extra for the clipped Augmented UI corner
         }}
         onResizeStart={onResizeStart}
       />

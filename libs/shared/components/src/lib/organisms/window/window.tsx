@@ -20,7 +20,7 @@ import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
 import { remToPixels } from '@jc/themes';
 
-// Extended interface with animation properties
+// Extended interface with animation properties and docking
 interface WindowProps extends WindowMetaData {
   isActive: boolean;
   minWidth?: number;
@@ -33,7 +33,9 @@ interface WindowProps extends WindowMetaData {
     | 'opening'
     | 'closing'
     | 'minimizing'
-    | 'maximizing';
+    | 'maximizing'
+    | 'docking';
+  docked?: 'left' | 'right' | null;
 }
 
 export const Window = React.memo(
@@ -56,6 +58,7 @@ export const Window = React.memo(
     maxHeight = window.innerHeight,
     resizable = true,
     animationState = 'normal',
+    docked = null,
   }: WindowProps) => {
     const {
       updateWindow,
@@ -118,6 +121,37 @@ export const Window = React.memo(
       };
     }, [maximized, id, updateWindow, isXs]);
 
+    // Handle screen resize for docked windows
+    useEffect(() => {
+      if (!docked) return;
+
+      const handleScreenResize = () => {
+        const halfWidth = window.innerWidth / 2;
+        const fullHeight = window.innerHeight;
+
+        updateWindow?.(id, {
+          x: docked === 'left' ? 0 : halfWidth,
+          y: 0,
+          width: halfWidth,
+          height: fullHeight,
+        });
+      };
+
+      // Debounce the resize handler to avoid too many updates
+      let resizeTimeout: NodeJS.Timeout;
+      const debouncedHandleScreenResize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleScreenResize, 100);
+      };
+
+      window.addEventListener('resize', debouncedHandleScreenResize);
+
+      return () => {
+        window.removeEventListener('resize', debouncedHandleScreenResize);
+        clearTimeout(resizeTimeout);
+      };
+    }, [docked, id, updateWindow]);
+
     // Handle animation completion
     useEffect(() => {
       if (animationState === 'opening') {
@@ -142,6 +176,13 @@ export const Window = React.memo(
       }
 
       if (animationState === 'maximizing') {
+        const timer = setTimeout(() => {
+          onWindowAnimationComplete?.(id);
+        }, 300);
+        return () => clearTimeout(timer);
+      }
+
+      if (animationState === 'docking') {
         const timer = setTimeout(() => {
           onWindowAnimationComplete?.(id);
         }, 300);
@@ -182,6 +223,10 @@ export const Window = React.memo(
           return {
             transition: baseTransition,
           };
+        case 'docking':
+          return {
+            transition: baseTransition,
+          };
         default:
           return {
             transform: 'scale(1)',
@@ -191,11 +236,11 @@ export const Window = React.memo(
       }
     };
 
-    // Handle resize start - disabled during animations
+    // Handle resize start - disabled during animations and when docked/maximized
     const handleResizeStart = useCallback(
       (e: React.MouseEvent, direction: ResizeDirection) => {
         if (e.button === 2) return; // ignore right click
-        if (!resizable || maximized || isAnimating) return;
+        if (!resizable || maximized || docked || isAnimating) return;
 
         e.preventDefault();
         e.stopPropagation();
@@ -213,7 +258,18 @@ export const Window = React.memo(
           startTop: y,
         });
       },
-      [resizable, maximized, isAnimating, bringToFront, id, width, height, x, y]
+      [
+        resizable,
+        maximized,
+        docked,
+        isAnimating,
+        bringToFront,
+        id,
+        width,
+        height,
+        x,
+        y,
+      ]
     );
 
     // Handle resize move
@@ -307,6 +363,10 @@ export const Window = React.memo(
       return 'visible';
     };
 
+    // Determine if window should show resize handles
+    const shouldShowResizeHandles =
+      resizable && !maximized && !docked && !isAnimating;
+
     return (
       <>
         {/* Keyframes CSS */}
@@ -360,6 +420,7 @@ export const Window = React.memo(
             icon={icon}
             onMouseDown={handleWindowMouseDown}
             windowMaximized={maximized}
+            windowDocked={docked}
           />
 
           <Fade
@@ -408,12 +469,12 @@ export const Window = React.memo(
                   windowContent}
               </Box>
 
-              {/* Only show resize handles when not animating and resizable */}
-              {resizable && !maximized && !isAnimating && (
+              {/* Only show resize handles when conditions are met */}
+              {shouldShowResizeHandles && (
                 <>
                   <ResizeHandlers
                     onResizeStart={handleResizeStart}
-                    handleSize={3}
+                    handleSize={6}
                   />
                   <ResizeHandle
                     direction="s"

@@ -44,6 +44,7 @@ interface TileComponentProps {
   onDragEnd: () => void;
   isDragging: boolean;
   isBeingReordered: boolean;
+  maxPreviews?: number;
 }
 
 export const TileComponent = memo(
@@ -54,6 +55,7 @@ export const TileComponent = memo(
     onDragEnd,
     isDragging,
     isBeingReordered,
+    maxPreviews = 4,
   }: TileComponentProps) => {
     const theme = useTheme();
     const { openWindow } = useWindowActions();
@@ -90,7 +92,11 @@ export const TileComponent = memo(
     useEffect(() => {
       if (config.showLiveContent && ((children?.length || 0) > 1 || tileData)) {
         const interval = setInterval(() => {
-          const maxIndex = Math.min(children?.length || 4, 4); // only cycle through the first 4 projects (is this a good idea)
+          // Only cycle through the first X projects
+          const maxIndex = Math.min(
+            children?.length || maxPreviews,
+            maxPreviews
+          );
           setCurrentIndex((prev) => (prev + 1) % maxIndex);
         }, config.updateInterval || 3000);
         return () => clearInterval(interval);
@@ -264,12 +270,14 @@ export const TileComponent = memo(
               <Box display="flex" alignItems="center" gap={1}>
                 {config.showLiveContent && children && children.length > 1 && (
                   <Box display="flex" gap={0.5}>
-                    {children.slice(0, 4).map((_, index) => (
+                    {children.slice(0, maxPreviews).map((_, index) => (
                       <Box
                         key={index}
+                        onClick={() => setCurrentIndex(index)}
                         sx={{
-                          width: 6,
-                          height: 6,
+                          width: 8,
+                          height: 8,
+                          cursor: 'pointer',
                           borderRadius: '50%',
                           backgroundColor:
                             index === currentIndex

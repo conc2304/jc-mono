@@ -10,6 +10,7 @@ type WindowControlProps = {
   id: string;
   bgColor: Property.Color;
   windowMaximized: boolean;
+  windowDocked?: 'left' | 'right' | null;
   hasMinimize?: boolean;
 };
 
@@ -18,6 +19,7 @@ export const WindowControls = ({
   bgColor,
   hasMinimize = false,
   windowMaximized,
+  windowDocked = null,
 }: WindowControlProps) => {
   const { minimizeWindow, maximizeWindow, closeWindow } = useWindowActions();
   const theme = useTheme();
@@ -30,6 +32,28 @@ export const WindowControls = ({
     sx: {
       '& svg': { strokeWidth: '2px !important' },
     },
+  };
+
+  // Determine what the maximize button should show based on window state
+  const getMaximizeIcon = () => {
+    if (windowMaximized) {
+      // If maximized, show restore icon
+      return <Minimize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />;
+    } else {
+      // If windowed or docked, show maximize icon
+      return <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />;
+    }
+  };
+
+  // Get tooltip/aria-label for maximize button based on state
+  const getMaximizeLabel = () => {
+    if (windowMaximized) {
+      return 'Restore window';
+    } else if (windowDocked) {
+      return 'Maximize window';
+    } else {
+      return 'Maximize window';
+    }
   };
 
   return (
@@ -50,6 +74,7 @@ export const WindowControls = ({
                 e.stopPropagation();
                 minimizeWindow(id);
               }}
+              aria-label="Minimize window"
             >
               <Minimize2 />
             </AugmentedIconButton>
@@ -61,11 +86,13 @@ export const WindowControls = ({
               e.stopPropagation();
               maximizeWindow(id);
             }}
+            aria-label={getMaximizeLabel()}
+            title={getMaximizeLabel()}
           >
             {!hasMinimize && windowMaximized ? (
               <Minimize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
             ) : (
-              <Maximize2 fontWeight={800} fontSize={'2rem'} strokeWidth={4} />
+              getMaximizeIcon()
             )}
           </AugmentedIconButton>
         </Box>
@@ -78,6 +105,7 @@ export const WindowControls = ({
             e.stopPropagation();
             closeWindow(id);
           }}
+          aria-label="Close window"
         >
           <X />
         </AugmentedIconButton>

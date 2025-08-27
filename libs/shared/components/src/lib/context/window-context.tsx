@@ -19,7 +19,6 @@ import {
   FileSystemNavigationManager,
   NavigationGroup,
 } from '@jc/file-system';
-import { maxHeight } from '@mui/system';
 
 interface DragRef {
   startX: number;
@@ -28,9 +27,20 @@ interface DragRef {
   elementY: number;
   isDragging: boolean;
   lastUpdateTime: number;
+  currentX: number; // Track current mouse position
+  currentY: number; // Track current mouse position
 }
 
-// Extended WindowMetaData to include animation states
+// Window state to store previous dimensions before maximize/dock
+interface WindowPreviousState {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  docked?: 'left' | 'right' | null; // Also store docked state
+}
+
+// Extended WindowMetaData to include animation states and previous state
 interface AnimatedWindowMetaData extends WindowMetaData {
   isOpening?: boolean;
   isClosing?: boolean;
@@ -39,7 +49,10 @@ interface AnimatedWindowMetaData extends WindowMetaData {
     | 'opening'
     | 'closing'
     | 'minimizing'
-    | 'maximizing';
+    | 'maximizing'
+    | 'docking';
+  previousState?: WindowPreviousState;
+  docked?: 'left' | 'right' | null;
 }
 
 interface WindowState {
@@ -212,6 +225,8 @@ export const WindowProvider: React.FC<{
     elementY: 0,
     isDragging: false,
     lastUpdateTime: 0,
+    currentX: 0,
+    currentY: 0,
   });
 
   const iconDragRef = useRef<DragRef>({
@@ -221,6 +236,8 @@ export const WindowProvider: React.FC<{
     elementY: 0,
     isDragging: false,
     lastUpdateTime: 0,
+    currentX: 0,
+    currentY: 0,
   });
 
   // Animation timeouts ref to cleanup if needed
@@ -229,6 +246,7 @@ export const WindowProvider: React.FC<{
   // Performance constants
   const THROTTLE_MS = 16; // ~60fps
   const ICON_THROTTLE_MS = 12; // Slightly faster for icons
+  const DOCK_THRESHOLD = 50; // Distance from edge to trigger docking
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -245,6 +263,29 @@ export const WindowProvider: React.FC<{
       y: Math.round(y / gridSize) * gridSize,
     };
   }, []);
+
+  // Helper function to get docked position
+  const getDockPosition = useCallback((side: 'left' | 'right') => {
+    const halfWidth = window.innerWidth / 2;
+    const fullHeight = window.innerHeight;
+
+    return {
+      x: side === 'left' ? 0 : halfWidth,
+      y: 0,
+      width: halfWidth,
+      height: fullHeight,
+    };
+  }, []);
+
+  // Helper function to detect docking zone
+  const getDockZone = useCallback(
+    (x: number, y: number): 'left' | 'right' | null => {
+      if (x <= DOCK_THRESHOLD) return 'left';
+      if (x >= window.innerWidth - DOCK_THRESHOLD) return 'right';
+      return null;
+    },
+    []
+  );
 
   // Animation callback handlers
   const onWindowAnimationComplete = useCallback((windowId: string) => {
@@ -391,7 +432,6 @@ export const WindowProvider: React.FC<{
 
       // Reset styles
       iconElement.style.willChange = '';
-      // iconElement.style.pointerEvents = '';
       iconElement.style.transform = '';
       iconElement.style.zIndex = '';
     }
@@ -465,6 +505,7 @@ export const WindowProvider: React.FC<{
                   zIndex: windowZIndex + 1,
                   isActive: true,
                   animationState: window.minimized ? 'opening' : 'normal',
+                  // Preserve current dimensions - they may have been updated while minimized
                 }
               : { ...window, isActive: false }
           )
@@ -512,6 +553,7 @@ export const WindowProvider: React.FC<{
           isActive: true,
           isOpening: true,
           animationState: 'opening',
+          docked: null,
         };
 
         setWindows((prev) => [
@@ -605,37 +647,60 @@ export const WindowProvider: React.FC<{
   const maximizeWindow = useCallback(
     (windowId: string) => {
       const current = windows.find(({ id }) => windowId === id);
-      const isMaximizing = !current?.maximized;
+      if (!current) return;
 
-      // TODO Handle remembering the last non maximized state
-      const xMinimized = !isXs ? 200 + windows.length * 30 : 0;
-      const yMinimized = !isXs ? 100 + windows.length * 30 : 0;
-
-      const maxHeight = window.innerHeight - yMinimized;
-      const heightMinimized = !isXs
-        ? Math.min(window.innerHeight * 0.5, maxHeight)
-        : window.innerHeight;
-
-      const maxWidth = window.innerWidth - xMinimized;
-      const widthMinimized = !isXs
-        ? Math.min(window.innerWidth * 0.66, maxWidth)
-        : window.innerWidth;
+      const isMaximizing = !current.maximized;
 
       setWindows((prev) =>
-        prev.map((w) =>
-          w.id === windowId
-            ? {
-                ...w,
-                maximized: !w.maximized,
-                x: w.maximized ? xMinimized : 0,
-                y: w.maximized ? yMinimized : 0,
-                zIndex: isMaximizing ? theme.zIndex.modal : windowZIndex + 1,
-                width: w.maximized ? widthMinimized : window.innerWidth,
-                height: w.maximized ? heightMinimized : window.innerHeight,
-                animationState: 'maximizing',
-              }
-            : w
-        )
+        prev.map((window) => {
+          if (window.id !== windowId) return window;
+
+          if (isMaximizing) {
+            // Store current state before maximizing (including docked state)
+            const previousState: WindowPreviousState = {
+              x: window.x,
+              y: window.y,
+              width: window.width,
+              height: window.height,
+              docked: window.docked, // Store docked state
+            };
+
+            return {
+              ...window,
+              maximized: true,
+              x: 0,
+              y: 0,
+              width: window.innerWidth,
+              height: window.innerHeight,
+              zIndex: theme.zIndex.modal,
+              animationState: 'maximizing',
+              previousState,
+              docked: null, // Clear docked state when maximizing
+            };
+          } else {
+            // Restore to previous state
+            const restoreState = window.previousState || {
+              x: !isXs ? 200 + windows.length * 30 : 0,
+              y: !isXs ? 100 + windows.length * 30 : 0,
+              width: !isXs ? window.innerWidth * 0.66 : window.innerWidth,
+              height: !isXs ? window.innerHeight * 0.5 : window.innerHeight,
+              docked: null,
+            };
+
+            return {
+              ...window,
+              maximized: false,
+              x: restoreState.x,
+              y: restoreState.y,
+              width: restoreState.width,
+              height: restoreState.height,
+              zIndex: windowZIndex + 1,
+              animationState: 'maximizing',
+              previousState: undefined, // Clear previous state
+              docked: restoreState.docked, // Restore docked state
+            };
+          }
+        })
       );
 
       if (!isMaximizing) setWindowZIndex(windowZIndex + 1);
@@ -653,7 +718,7 @@ export const WindowProvider: React.FC<{
 
       animationTimeouts.current.set(`${windowId}-maximize`, timeout);
     },
-    [windows]
+    [windows, windowZIndex, theme.zIndex.modal, isXs]
   );
 
   const updateWindow = useCallback(
@@ -662,14 +727,26 @@ export const WindowProvider: React.FC<{
       dimensions: { x: number; y: number; width: number; height: number }
     ) => {
       setWindows((prev) =>
-        prev.map((window) =>
-          window.id === id
-            ? {
-                ...window,
-                ...dimensions,
-              }
-            : window
-        )
+        prev.map((window) => {
+          if (window.id !== id) return window;
+
+          // If window is maximized or docked, don't update dimensions directly
+          // but clear previousState since the underlying window has changed
+          if (window.maximized || window.docked) {
+            return {
+              ...window,
+              previousState: undefined, // Clear previous state since window changed
+            };
+          }
+
+          // Normal window update - clear previousState if it exists since the window
+          // has been moved/resized and future maximize should capture these new dimensions
+          return {
+            ...window,
+            ...dimensions,
+            previousState: undefined, // Clear any existing previous state
+          };
+        })
       );
       return '';
     },
@@ -694,7 +771,7 @@ export const WindowProvider: React.FC<{
     []
   );
 
-  // Optimized window drag handlers
+  // Optimized window drag handlers with docking support
   const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, windowId: string) => {
       e.preventDefault();
@@ -715,6 +792,8 @@ export const WindowProvider: React.FC<{
         elementY: rect.top,
         isDragging: true,
         lastUpdateTime: 0,
+        currentX: e.clientX,
+        currentY: e.clientY,
       };
 
       // Immediate visual feedback
@@ -723,7 +802,6 @@ export const WindowProvider: React.FC<{
       ) as HTMLElement;
       if (windowContainer) {
         windowContainer.style.willChange = 'transform';
-        // windowContainer.style.pointerEvents = 'none';
         windowContainer.style.zIndex = '9999';
       }
 
@@ -737,6 +815,10 @@ export const WindowProvider: React.FC<{
     (e: MouseEvent) => {
       if (e.button === 2) return;
       if (!windowDragRef.current.isDragging || !draggedWindow) return;
+
+      // Update current mouse position for dock detection
+      windowDragRef.current.currentX = e.clientX;
+      windowDragRef.current.currentY = e.clientY;
 
       const now = performance.now();
       if (now - windowDragRef.current.lastUpdateTime < THROTTLE_MS) {
@@ -767,18 +849,38 @@ export const WindowProvider: React.FC<{
           window.innerHeight - titlebarHeight - overflowPadding
         );
 
-        // Direct DOM manipulation for smooth dragging
+        // Check for dock zones using current mouse position
+        const dockZone = getDockZone(e.clientX, e.clientY);
+
+        // Visual feedback for docking
         const windowElement = document.querySelector(
           `[data-window-id="${draggedWindow}"]`
         ) as HTMLElement;
+
         if (windowElement) {
-          const offsetX = newX - windowDragRef.current.elementX;
-          const offsetY = newY - windowDragRef.current.elementY;
-          windowElement.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+          if (dockZone) {
+            // Show dock preview
+            const dockPos = getDockPosition(dockZone);
+            windowElement.style.transform = `translate(${
+              dockPos.x - windowDragRef.current.elementX
+            }px, ${dockPos.y - windowDragRef.current.elementY}px)`;
+            windowElement.style.opacity = '0.7';
+          } else {
+            // Normal drag
+            const offsetX = newX - windowDragRef.current.elementX;
+            const offsetY = newY - windowDragRef.current.elementY;
+            windowElement.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            windowElement.style.opacity = '1';
+          }
         }
       });
     },
-    [draggedWindow, theme.mixins.window.titleBar.height]
+    [
+      draggedWindow,
+      theme.mixins.window.titleBar.height,
+      getDockZone,
+      getDockPosition,
+    ]
   );
 
   const handleWindowMouseUp = useCallback(() => {
@@ -790,37 +892,91 @@ export const WindowProvider: React.FC<{
     const windowElement = document.querySelector(
       `[data-window-id="${draggedWindow}"]`
     ) as HTMLElement;
+
     if (windowElement) {
-      const transform = windowElement.style.transform;
-      const matches = transform.match(
-        /translate\((-?\d+(?:\.\d+)?)px,\s*(-?\d+(?:\.\d+)?)px\)/
+      // Check if we should dock using the final mouse position
+      const dockZone = getDockZone(
+        windowDragRef.current.currentX,
+        windowDragRef.current.currentY
       );
 
-      if (matches) {
-        const deltaX = parseFloat(matches[1]);
-        const deltaY = parseFloat(matches[2]);
-        const newX = windowDragRef.current.elementX + deltaX;
-        const newY = windowDragRef.current.elementY + deltaY;
+      if (dockZone) {
+        // Dock the window
+        const dockPos = getDockPosition(dockZone);
+        const currentWindow = windows.find((w) => w.id === draggedWindow);
 
-        // Single state update with final position
+        // Store previous state before docking (if not already maximized/docked)
+        const previousState =
+          currentWindow && !currentWindow.maximized && !currentWindow.docked
+            ? {
+                x: currentWindow.x,
+                y: currentWindow.y,
+                width: currentWindow.width,
+                height: currentWindow.height,
+                docked: null,
+              }
+            : currentWindow?.previousState;
+
         setWindows((prev) =>
           prev.map((window) =>
             window.id === draggedWindow
-              ? { ...window, x: newX, y: newY }
+              ? {
+                  ...window,
+                  ...dockPos,
+                  maximized: false,
+                  docked: dockZone,
+                  animationState: 'docking',
+                  previousState,
+                }
               : window
           )
         );
+
+        // Reset animation state after docking animation
+        const timeout = setTimeout(() => {
+          setWindows((prev) =>
+            prev.map((window) =>
+              window.id === draggedWindow
+                ? { ...window, animationState: 'normal' }
+                : window
+            )
+          );
+        }, 300);
+
+        animationTimeouts.current.set(`${draggedWindow}-dock`, timeout);
+      } else {
+        // Normal position update
+        const transform = windowElement.style.transform;
+        const matches = transform.match(
+          /translate\((-?\d+(?:\.\d+)?)px,\s*(-?\d+(?:\.\d+)?)px\)/
+        );
+
+        if (matches) {
+          const deltaX = parseFloat(matches[1]);
+          const deltaY = parseFloat(matches[2]);
+          const newX = windowDragRef.current.elementX + deltaX;
+          const newY = windowDragRef.current.elementY + deltaY;
+
+          // Single state update with final position
+          setWindows((prev) =>
+            prev.map((window) =>
+              window.id === draggedWindow
+                ? { ...window, x: newX, y: newY, docked: null }
+                : window
+            )
+          );
+        }
       }
 
       // Reset styles
       windowElement.style.willChange = '';
-      // windowElement.style.pointerEvents = '';
       windowElement.style.transform = '';
       windowElement.style.zIndex = '';
+      windowElement.style.opacity = '';
     }
 
     setDraggedWindow(null);
-  }, [draggedWindow]);
+  }, [draggedWindow, getDockZone, getDockPosition, windows]);
 
   // Mouse event listeners with optimized handlers
   useEffect(() => {
