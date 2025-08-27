@@ -1,5 +1,5 @@
-import { Star } from '@mui/icons-material';
 import { alpha, Box, Typography, useTheme } from '@mui/material';
+
 import { TileContentProps } from './live-tile';
 
 export const DefaultTileContent: React.FC<TileContentProps> = ({
@@ -52,12 +52,6 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
             {dateModified?.toLocaleDateString() || 'Recent'}
           </Typography>
         </>
-      )}
-      {metadata?.favorite && (
-        <Star
-          sx={{ marginTop: 1, color: 'warning.main' }}
-          fill="currentColor"
-        />
       )}
     </Box>
   );

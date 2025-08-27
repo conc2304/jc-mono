@@ -75,19 +75,21 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
 
             {/* Text Flex Item */}
             <Box display={'flex'} position={'relative'}>
-              <DiagonalLines
-                lineThickness={4}
-                height="4rem"
-                width="4rem"
-                direction="diagonal-alt"
-                color={theme.palette.text.primary}
-              />
+              {isMd && (
+                <DiagonalLines
+                  lineThickness={4}
+                  height="4rem"
+                  width="4rem"
+                  direction="diagonal-alt"
+                  color={theme.palette.text.primary}
+                  mr={2}
+                />
+              )}
 
               <Stack
                 textAlign="left"
                 position="relative"
                 flexGrow={1}
-                pl={2}
                 justifyContent="space-between"
               >
                 <Typography

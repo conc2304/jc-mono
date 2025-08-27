@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import { randomInt } from 'd3';
+import { Star } from '@mui/icons-material';
 
 import { useWindowActions } from '../../context';
 import { TileRenderer } from '@jc/file-system';
@@ -218,6 +219,16 @@ export const TileComponent = memo(
                   </Box>
                 )}
               </Box>
+              {metadata?.favorite && (
+                <Star
+                  sx={{ marginTop: 1, color: 'warning.main' }}
+                  fill="currentColor"
+                  stroke={alpha(theme.palette.text.primary, 1)}
+                  strokeWidth="0.5px"
+                  opacity={0.5}
+                  opacity={0.5}
+                />
+              )}
             </Box>
             {/* Dynamic Content Area */}
             <AugmentedButton
