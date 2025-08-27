@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <EnhancedThemeProvider
           themes={enhancedThemes}
-          defaultThemeId="neon-cyberpunk"
+          defaultThemeId="developer-terminal"
           defaultColorMode="system"
           themeStorageKey="clyzby-app-theme"
           colorModeStorageKey="clyzby-app-color-mode"

@@ -11,22 +11,22 @@ import {
   synthwaveSunsetTheme,
   bubblegumDreamTheme,
   tresSendasTheme,
-  violenceTheme,
+  arasakaTheme,
 } from './enhanced-palettes';
 import { bladeRunnerTheme } from './enhanced-palettes/blade-runner-palette';
 
 export const enhancedThemes: EnhancedThemeOption[] = [
   developerTerminalTheme,
-  euclidThemes,
+  monochromeThemes,
+  oceanDepthTheme,
+  desertSunsetTheme,
+  tresSendasTheme,
+  synthwaveSunsetTheme,
+  electricSynthwaveTheme,
   marathonThemes,
   neonCyberpunkTheme,
-  synthwaveSunsetTheme,
   bladeRunnerTheme,
-  desertSunsetTheme,
-  electricSynthwaveTheme,
-  oceanDepthTheme,
   bubblegumDreamTheme,
-  tresSendasTheme,
-  violenceTheme,
-  monochromeThemes,
+  euclidThemes,
+  arasakaTheme,
 ];

@@ -1,7 +1,7 @@
 import { EnhancedThemeOption } from '../../types';
 
 // Black & Red Monochromatic Theme
-export const violenceTheme: EnhancedThemeOption = {
+export const arasakaTheme: EnhancedThemeOption = {
   id: 'arasaka',
   name: 'Arasaka',
   description:
