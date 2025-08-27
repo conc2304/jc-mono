@@ -46,12 +46,12 @@ export const radarWidgetProps = (
   theme: Theme
 ): Partial<AnimatedRadarChartProps> => ({
   levels: 5,
-  showLabels: false,
-  labelFactor: 1,
   opacityArea: 0.1,
   strokeWidth: 1,
   dotRadius: 3,
   lineType: 'curved',
+  showLabels: true,
+  labelFactor: 1.15,
   colors: {
     primary: theme.palette.primary.main,
     accent: theme.palette.warning.main,

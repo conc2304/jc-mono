@@ -30,7 +30,6 @@ export const BrowserFrame = styled(Box)(({ theme }) => ({
 }));
 
 const RadarChartBoxStyled = styled(Box)(({ theme }) => ({
-  // minHeight: 192,
   backgroundColor: theme.palette.background.paper,
   position: 'relative',
   display: 'flex',

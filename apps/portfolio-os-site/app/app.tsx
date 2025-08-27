@@ -68,15 +68,7 @@
 // export default App;
 
 import { Box, useTheme } from '@mui/system';
-import {
-  // DefaultBootMessage,
-  // ThemedBootMessages,
-  BootLayout,
-  BootMessage,
-  // MobileThemedBootMessages,
-  // MobileDefaultBootMessage,
-  // getScrambleCharacters,
-} from '@jc/boot-loader';
+import { BootLayout, BootMessage } from '@jc/boot-loader';
 import { useEnhancedTheme } from '@jc/themes';
 import { randomInt } from 'd3';
 import {

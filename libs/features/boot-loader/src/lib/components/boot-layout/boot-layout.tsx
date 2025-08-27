@@ -106,7 +106,7 @@ const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
     <ScrambleText
       variant="display"
       defaultText="ENTER"
-      hoverText="???"
+      hoverText=" ??? "
       scrambleDuration={0.1}
       color="background.paper"
       fontSize={fontSize}
@@ -253,10 +253,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           backgroundRepeat: 'repeat',
           backgroundBlendMode: backgroundBlendMode,
         }}
-        // sx={{
-        //   overflowY: 'auto',
-        //   height: '100%',
-        // }}
       >
         <BrowserFrame>
           {!isXs && <Header compact={true} passwordMsg={passwordMessage} />}
@@ -375,25 +371,38 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
           backgroundBlendMode: backgroundBlendMode,
         }}
       >
-        <BrowserFrame sx={{ display: 'flex', flexDirection: 'column' }}>
+        <BrowserFrame>
           <Header passwordMsg={passwordMessage} />
 
-          <Box p={2} className="MainContent--root">
+          <Box p={2} flex={1} className="MainContent--root">
             <Grid container spacing={2} height="100%">
               {/* Left Panel - Reduced */}
               <Grid
                 size={{ xs: 6.5 }}
                 className="LeftContentPanel--grid-wrapper"
+                display="flex"
               >
                 <Box
+                  className="MobileContent--flex-wrapper"
+                  p={1}
                   display="flex"
                   flexDirection="column"
                   gap={2}
-                  height="100%"
+                  flexGrow={1}
+                  overflow="hidden" // Prevent the container from growing
                 >
+                  {/* Boot Text Panel - Takes most of the space */}
                   <Box
+                    className="BootText--aug-panel"
                     data-augmented-ui="border bl-clip br-clip tl-clip tr-2-clip-y"
                     sx={(theme) => ({
+                      flex: 1,
+                      // height: '100%',
+                      minHeight: 0, // allow shrinking below content size
+                      overflow: 'hidden', // Prevent this panel from growing
+                      display: 'flex',
+                      flexDirection: 'column',
+
                       '&[data-augmented-ui]': {
                         '--aug-bl': '0.5rem',
                         '--aug-br': '0.5rem',
@@ -406,33 +415,30 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                       },
                     })}
                   >
-                    <BootText
-                      bootMessages={bootMessages}
-                      typeSpeed={1.8}
-                      lineDelay={1.2}
-                      cursorChar="█"
-                      scrambleChars={12}
-                      maxHeight={'10px'}
-                      textColor={
-                        theme.palette.primary[theme.palette.getInvertedMode()]
-                      }
-                      scrambleDuration={0.6}
-                      charDelay={0.05}
-                      scrambleCharSet={scrambleCharacterSet}
-                      hoverScrambleChars={8}
-                      hoverScrambleDuration={0.5}
-                      onProgress={handleProgress}
-                      onComplete={handleBootComplete}
-                      textWrapMode="wrap"
+                    {/* <TorusLoaderCardAug> */}
+                    <TorusFieldProgressMemo
+                      colors={{
+                        backgroundColor: theme.palette.background.paper,
+                        beamColor: theme.palette.getInvertedMode('info'),
+                        torusColor: theme.palette.primary.main,
+                        particleColor: theme.palette.getInvertedMode('info'),
+                        verticalLineColor: theme.palette.warning.main,
+                        themeMode: theme.palette.mode,
+                      }}
                     />
+                    <ScanLinesOverlay className="ScanLinesOverlay--component" />
+                    {/* </TorusLoaderCardAug> */}
                   </Box>
+
+                  {/* Radar Chart */}
                   <RadarChartBox flex={1}>
                     <RadarChart
                       id="animated-radar"
                       data={animatedData}
-                      {...radarWidgetProps(theme)}
-                      showLabels={true}
                       title={radarMetricsConfig.title}
+                      onRadarHover={() => stopAnimation()}
+                      onRadarBlur={() => startAnimation()}
+                      {...radarWidgetProps(theme)}
                     />
                   </RadarChartBox>
                 </Box>
@@ -448,20 +454,30 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   flexDirection="column"
                   gap={2}
                   height="100%"
+                  p={1}
                 >
                   <TorusLoaderCardAug>
-                    <TorusFieldProgressMemo
-                      colors={{
-                        backgroundColor: theme.palette.background.paper,
-                        beamColor: theme.palette.getInvertedMode('info'),
-                        torusColor: theme.palette.primary.main,
-                        particleColor: theme.palette.getInvertedMode('info'),
-                        verticalLineColor: theme.palette.warning.main,
-                        themeMode: theme.palette.mode,
-                      }}
+                    <BootText
+                      bootMessages={bootMessages}
+                      typeSpeed={1.8}
+                      lineDelay={1.2}
+                      cursorChar="█"
+                      scrambleChars={12}
+                      textColor={
+                        theme.palette.primary[theme.palette.getInvertedMode()]
+                      }
+                      scrambleDuration={0.6}
+                      charDelay={0.05}
+                      scrambleCharSet={scrambleCharacterSet}
+                      hoverScrambleChars={8}
+                      hoverScrambleDuration={0.5}
+                      onProgress={handleProgress}
+                      onComplete={handleBootComplete}
+                      textWrapMode="ellipsis"
+                      flex={1}
                     />
-                    <ScanLinesOverlay className="ScanLinesOverlay--component" />
                   </TorusLoaderCardAug>
+
                   <GifContainer
                     url={themedWidgetGifUrl.url}
                     sx={{
@@ -475,7 +491,12 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             </Grid>
           </Box>
 
-          <Box flexShrink={0} className="ThemePickerPanel--wrapper">
+          <Box
+            flexShrink={0}
+            className="ThemePickerPanel--wrapper"
+            mx={2}
+            my={0.5}
+          >
             <ThemePickerPanel />
           </Box>
 
@@ -525,6 +546,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     >
       <BrowserFrame>
         <Header passwordMsg={passwordMessage} />
+
         {/* Main Content Area */}
         <Box p={2} flex={1}>
           <Grid container spacing={2} height="100%">
@@ -541,12 +563,10 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
                   <RadarChart
                     id="animated-radar"
                     data={animatedData}
-                    {...radarWidgetProps(theme)}
-                    showLabels={true}
-                    labelFactor={1.15}
                     title={radarMetricsConfig.title}
                     onRadarHover={() => stopAnimation()}
                     onRadarBlur={() => startAnimation()}
+                    {...radarWidgetProps(theme)}
                   />
                 </RadarChartBox>
 
@@ -598,8 +618,6 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
             {/* Right Panel */}
             <Grid size={{ xs: 4 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
-                {/* <DataPanel /> */}
-
                 {/* Progress Panel */}
                 <Box
                   display="flex"
