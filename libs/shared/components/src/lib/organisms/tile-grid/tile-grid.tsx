@@ -79,7 +79,6 @@ export const TileGrid = ({
 
   // TODO - investigate why drag end gets called immediately when dragged from certain areas
   const handleDragStart = (tile: Tile): void => {
-    console.log('DRAG START');
     setDragState({
       isDragging: true,
       draggedTile: tile,
@@ -89,7 +88,6 @@ export const TileGrid = ({
   };
 
   const handleDragEnd = (): void => {
-    console.log('DRAG END');
     setDragState({
       isDragging: false,
       draggedTile: null,

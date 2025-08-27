@@ -123,7 +123,6 @@ export const TileComponent = memo(
         draggable
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        // onDragEnd={onDragEnd}
         effectiveIsDragging={isDragging}
         tileColor={tileColor}
         size={config.size}
@@ -161,7 +160,6 @@ export const TileComponent = memo(
             height: '100%',
             p: 2,
             position: 'relative',
-            // pointerEvents: 'none',
           }}
         >
           <Box
