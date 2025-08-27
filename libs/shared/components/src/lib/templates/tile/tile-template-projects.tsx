@@ -37,7 +37,12 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
       width="100%"
     >
       {currentProject && isLarge && (
-        <ContentContainer>
+        <ContentContainer
+          sx={{
+            justifyContent: isMd ? 'flex-start' : 'center',
+            border: '2px solid red',
+          }}
+        >
           <Box
             className="ProjectTile--content-left"
             sx={{
@@ -45,9 +50,10 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-              alignContent: 'flex-start',
-              pl: 4,
+              alignContent: isMd ? 'flex-start' : 'center',
+              pl: isMd ? 4 : undefined,
               justifyContent: 'space-evenly',
+              flexWrap: 'wrap',
             }}
           >
             {/* Image Flex Item */}
@@ -59,6 +65,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                 flexGrow: 1,
                 maxWidth: '60%',
                 maxHeight: '40%',
+                mx: isMd ? 'initial' : 'auto',
               }}
             >
               <ImageContainer
@@ -74,7 +81,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
             </Box>
 
             {/* Text Flex Item */}
-            <Box display={'flex'} position={'relative'}>
+            <Box display={'flex'} position={'relative'} sx={{}}>
               {isMd && (
                 <DiagonalLines
                   lineThickness={4}
@@ -87,7 +94,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
               )}
 
               <Stack
-                textAlign="left"
+                textAlign={isMd ? 'left' : 'center'}
                 position="relative"
                 flexGrow={1}
                 justifyContent="space-between"
@@ -97,7 +104,6 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                   color="textPrimary"
                   fontWeight="medium"
                   noWrap
-                  // sx={{verticalAlign: }}
                 >
                   {currentProject.projectName}
                   {currentProject.metadata?.featured && (
