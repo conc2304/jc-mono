@@ -77,8 +77,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
 }) => {
   const theme = useTheme();
 
-  console.log('render');
-
   // Mobile breakpoint detection
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -129,9 +127,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       if (!messageElement) return;
 
       const containerRect = container.getBoundingClientRect();
-      const containerTop = containerRect.top;
       const containerBottom = containerRect.bottom;
-      const containerHeight = containerRect.height;
 
       const messageRect = messageElement.getBoundingClientRect();
       const messageBottom = messageRect.bottom;
@@ -172,6 +168,31 @@ const BootTextInner: React.FC<BootTextProps> = ({
     return scrambleCharSet[Math.floor(Math.random() * scrambleCharSet.length)];
   };
 
+  // Helper function to split text into words and spaces
+  const splitTextIntoTokens = (text: string) => {
+    const tokens: Array<{ content: string; isSpace: boolean }> = [];
+    let currentWord = '';
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === ' ') {
+        if (currentWord) {
+          tokens.push({ content: currentWord, isSpace: false });
+          currentWord = '';
+        }
+        tokens.push({ content: ' ', isSpace: true });
+      } else {
+        currentWord += char;
+      }
+    }
+
+    if (currentWord) {
+      tokens.push({ content: currentWord, isSpace: false });
+    }
+
+    return tokens;
+  };
+
   // Function to create hover scrambling animation
   const createHoverScrambleAnimation = (
     messageIndex: number,
@@ -188,79 +209,64 @@ const BootTextInner: React.FC<BootTextProps> = ({
 
     const tl = gsap.timeline();
 
-    // Get all character spans
-    const charElements = textElement.querySelectorAll(
-      `[class*="char-${messageIndex}-"]`
-    ) as NodeListOf<HTMLElement>;
+    // Split both texts into tokens
+    const fromTokens = splitTextIntoTokens(fromText);
+    const toTokens = splitTextIntoTokens(toText);
+    const maxTokens = Math.max(fromTokens.length, toTokens.length);
 
-    // Calculate the maximum length to handle different text lengths
-    const maxLength = Math.max(fromText.length, toText.length);
+    // Process each token
+    for (let tokenIndex = 0; tokenIndex < maxTokens; tokenIndex++) {
+      const fromToken = fromTokens[tokenIndex];
+      const toToken = toTokens[tokenIndex];
 
-    // Ensure we have enough character elements
-    const currentLength = charElements.length;
-    if (currentLength < maxLength) {
-      // Add more character spans if needed
-      for (let i = currentLength; i < maxLength; i++) {
-        const charSpan = document.createElement('span');
-        charSpan.className = `char-${messageIndex}-${i}`;
-        charSpan.style.display = 'inline-block';
-        charSpan.style.width = 'auto';
-        charSpan.style.overflow = 'hidden';
-        charSpan.style.whiteSpace = 'pre';
-        charSpan.style.verticalAlign = 'text-top';
-        charSpan.textContent = ' ';
-        textElement.appendChild(charSpan);
-      }
-    }
+      if (!fromToken || !toToken) continue;
 
-    // Update charElements to include new spans
-    const allCharElements = textElement.querySelectorAll(
-      `[class*="char-${messageIndex}-"]`
-    ) as NodeListOf<HTMLElement>;
-
-    // Animate each character position
-    for (let i = 0; i < maxLength; i++) {
-      const charElement = allCharElements[i];
-      if (!charElement) continue;
-
-      const fromChar = i < fromText.length ? fromText[i] : '';
-      const toChar = i < toText.length ? toText[i] : '';
-
-      // If characters are the same, skip scrambling
-      if (fromChar === toChar) {
+      if (fromToken.isSpace || toToken.isSpace) {
+        // Handle spaces - just update content directly
+        const tokenSelector = `.token-${messageIndex}-${tokenIndex}`;
+        tl.set(
+          tokenSelector,
+          {
+            text: { value: toToken?.content || '', rtl: false },
+          },
+          0
+        );
         continue;
       }
 
-      const charSelector = `.char-${messageIndex}-${i}`;
-      const startTime = i * 0.02; // Slight stagger for effect
+      // Handle words - scramble each character
+      const fromWord = fromToken.content;
+      const toWord = toToken.content;
+      const maxLength = Math.max(fromWord.length, toWord.length);
 
-      // Create scrambling sequence
-      const scrambleInterval = duration / scrambleCount;
+      for (let charIndex = 0; charIndex < maxLength; charIndex++) {
+        const fromChar = charIndex < fromWord.length ? fromWord[charIndex] : '';
+        const toChar = charIndex < toWord.length ? toWord[charIndex] : '';
 
-      for (let j = 0; j < scrambleCount; j++) {
-        const scrambledChar =
-          j === scrambleCount - 1 ? toChar : getRandomChar();
+        if (fromChar === toChar) continue;
 
-        tl.to(
-          charSelector,
-          {
-            duration: scrambleInterval,
-            text: {
-              value: scrambledChar,
-              rtl: false,
+        const charSelector = `.char-${messageIndex}-${tokenIndex}-${charIndex}`;
+        const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+
+        const scrambleInterval = duration / scrambleCount;
+
+        for (let j = 0; j < scrambleCount; j++) {
+          const scrambledChar =
+            j === scrambleCount - 1 ? toChar : getRandomChar();
+
+          tl.to(
+            charSelector,
+            {
+              duration: scrambleInterval,
+              text: {
+                value: scrambledChar,
+                rtl: false,
+              },
+              ease: 'none',
             },
-            ease: 'none',
-          },
-          startTime + j * scrambleInterval
-        );
-      }
-    }
-
-    // Hide extra characters if target text is shorter
-    if (toText.length < fromText.length) {
-      for (let i = toText.length; i < fromText.length; i++) {
-        const charSelector = `.char-${messageIndex}-${i}`;
-        tl.set(charSelector, { text: { value: '', rtl: false } }, 0);
+            startTime + j * scrambleInterval
+          );
+        }
       }
     }
 
@@ -383,28 +389,21 @@ const BootTextInner: React.FC<BootTextProps> = ({
         })
         .pause();
 
-      // Simple function to create scrambling animation WITHOUT scrolling
-      const createScrambleAnimation = (
+      // Function to create scrambling animation for individual characters
+      const createCharScrambleAnimation = (
         textSelector: string,
-        targetChar: string,
-        charIndex: number,
-        messageLength: number
+        targetChar: string
       ) => {
         const tl = gsap.timeline();
 
         if (targetChar === ' ') {
           tl.set(textSelector, {
             width: 'auto',
-          }).set(
-            textSelector,
-            {
-              text: {
-                value: targetChar,
-                rtl: false,
-              },
+            text: {
+              value: targetChar,
+              rtl: false,
             },
-            0
-          );
+          });
           return tl;
         }
 
@@ -431,7 +430,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
         return tl;
       };
 
-      // Function to animate a complete message WITHOUT scrolling during typing
+      // Function to animate a complete message with word-aware wrapping
       const createMessageAnimation = (
         message: string,
         messageIndex: number,
@@ -465,54 +464,113 @@ const BootTextInner: React.FC<BootTextProps> = ({
         ) as HTMLElement;
 
         textElement.innerHTML = '';
-        const charElements: HTMLSpanElement[] = [];
 
-        for (let i = 0; i < message.length; i++) {
-          const charSpan = document.createElement('span');
-          charSpan.className = `char-${messageIndex}-${i}`;
-          charSpan.textContent = ' ';
+        // Split message into tokens (words and spaces)
+        const tokens = splitTextIntoTokens(message);
+        let globalCharIndex = 0;
 
-          charSpan.style.display = 'inline-block';
-          charSpan.style.width = '0';
-          charSpan.style.overflow = 'hidden';
-          charSpan.style.whiteSpace = 'pre';
-          charSpan.style.verticalAlign = 'text-top';
+        // Create DOM structure for tokens
+        tokens.forEach((token, tokenIndex) => {
+          const tokenSpan = document.createElement('span');
+          tokenSpan.className = `token-${messageIndex}-${tokenIndex}`;
 
-          textElement.appendChild(charSpan);
-          charElements.push(charSpan);
-        }
+          if (token.isSpace) {
+            // Space token - simple span
+            tokenSpan.style.whiteSpace = 'pre';
+            tokenSpan.textContent = ' '; // Start with space, will be revealed
+          } else {
+            // Word token - prevent breaking within the word
+            tokenSpan.style.display = 'inline-block';
+            tokenSpan.style.whiteSpace = 'nowrap';
 
-        message.split('').forEach((char, charIndex) => {
-          const charSelector = `.char-${messageIndex}-${charIndex}`;
-          const startTime = charIndex * charDelay;
-          const globalCharIndex = messageStartCharIndex + charIndex;
+            // Create character spans within the word
+            token.content.split('').forEach((char, charIndex) => {
+              const charSpan = document.createElement('span');
+              charSpan.className = `char-${messageIndex}-${tokenIndex}-${charIndex}`;
+              charSpan.textContent = ' '; // Start invisible
+              charSpan.style.display = 'inline-block';
+              charSpan.style.width = '0';
+              charSpan.style.overflow = 'hidden';
+              charSpan.style.whiteSpace = 'pre';
+              charSpan.style.verticalAlign = 'text-top';
+              tokenSpan.appendChild(charSpan);
+            });
+          }
 
-          const charAnimation = createScrambleAnimation(
-            charSelector,
-            char,
-            charIndex,
-            message.length
-          );
+          textElement.appendChild(tokenSpan);
+        });
 
-          // Add progress callback at the start of each character animation
-          const progressPercent = Math.min(
-            100,
-            ((globalCharIndex + 1) / totalCharacters) * 100
-          );
-          tl.call(
-            () => {
-              onProgressRef.current?.(
-                progressPercent,
-                message,
-                messageIndex,
-                charIndex
+        // Animate each character with proper timing
+        tokens.forEach((token, tokenIndex) => {
+          if (token.isSpace) {
+            // Simple space reveal
+            const startTime = globalCharIndex * charDelay;
+            const tokenSelector = `.token-${messageIndex}-${tokenIndex}`;
+
+            tl.set(
+              tokenSelector,
+              {
+                text: { value: ' ', rtl: false },
+              },
+              startTime
+            );
+
+            // Progress callback
+            const progressPercent = Math.min(
+              100,
+              ((messageStartCharIndex + globalCharIndex + 1) /
+                totalCharacters) *
+                100
+            );
+            tl.call(
+              () => {
+                onProgressRef.current?.(
+                  progressPercent,
+                  message,
+                  messageIndex,
+                  globalCharIndex
+                );
+              },
+              [],
+              startTime
+            );
+
+            globalCharIndex++;
+          } else {
+            // Animate each character in the word
+            token.content.split('').forEach((char, charIndex) => {
+              const charSelector = `.char-${messageIndex}-${tokenIndex}-${charIndex}`;
+              const startTime = globalCharIndex * charDelay;
+
+              const charAnimation = createCharScrambleAnimation(
+                charSelector,
+                char
               );
-            },
-            [],
-            startTime
-          );
+              tl.add(charAnimation, startTime);
 
-          tl.add(charAnimation, startTime);
+              // Progress callback
+              const progressPercent = Math.min(
+                100,
+                ((messageStartCharIndex + globalCharIndex + 1) /
+                  totalCharacters) *
+                  100
+              );
+              tl.call(
+                () => {
+                  onProgressRef.current?.(
+                    progressPercent,
+                    message,
+                    messageIndex,
+                    globalCharIndex
+                  );
+                },
+                [],
+                startTime
+              );
+
+              globalCharIndex++;
+            });
+          }
         });
 
         const totalDuration =
@@ -546,13 +604,12 @@ const BootTextInner: React.FC<BootTextProps> = ({
           }
 
           // Now check if this message line would be outside visible bounds
-          // We do this AFTER adding the cursor so the element has proper dimensions
           setTimeout(() => {
             checkAndScrollForNewLine(index);
-          }, 10); // Small delay to ensure DOM is updated
+          }, 10);
         });
 
-        // Create the message animation (no scrolling during typing)
+        // Create the message animation
         const messageAnimation = createMessageAnimation(
           defaultMessage,
           index,

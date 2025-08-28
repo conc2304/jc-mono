@@ -93,7 +93,7 @@ export const ThemedGifUrl: Record<
   },
 
   'liberty-city': {
-    url: 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2pteTZpanJuazBrenh0MmMzc2Fpcjhxa255d3QzZ3AyajZ6ZHk1dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/V51e4FFL6r2DYB2DHZ/giphy.gif',
+    url: path('gta-palms-trax.gif'),
     backgroundPositionY: 'center',
   },
 };
