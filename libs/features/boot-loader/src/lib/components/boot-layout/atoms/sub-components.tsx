@@ -2,13 +2,16 @@ import {
   Box,
   Paper,
   Typography,
-  styled,
+  // styled,
   keyframes,
   BoxProps,
+  alpha,
 } from '@mui/material';
 
+import { styled } from '@mui/material/styles';
+
 export const BootContainer = styled(Box)<{}>(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: alpha(theme.palette.background.paper, 0.7),
   color: theme.palette.primary.main,
   fontFamily: 'monospace',
   height: '100%',
@@ -20,7 +23,7 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
 }));
 
 export const BrowserFrame = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: alpha(theme.palette.background.paper, 0.7),
   border: `2px solid ${theme.palette.primary.main}`,
   overflow: 'hidden',
   height: '100%',
@@ -30,7 +33,7 @@ export const BrowserFrame = styled(Box)(({ theme }) => ({
 }));
 
 const RadarChartBoxStyled = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: alpha(theme.palette.background.paper, 0.7),
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
@@ -92,13 +95,6 @@ export const TorusLoaderBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-// export const TorusLoaderCardAug = (props: BoxProps) => (
-//   <TorusLoaderBox
-//     data-augmented-ui="border bl-clip b-clip-x br-clip tl-clip tr-2-clip-x "
-//     {...props}
-//   />
-// );
-
 export const pulse = keyframes`
   0%, 100% {
     opacity: 1;
@@ -108,56 +104,10 @@ export const pulse = keyframes`
   }
 `;
 
-export const RadarTarget = styled(Box)<{
-  top: string;
-  left: string;
-  color: string;
-}>(({ top, left, color }) => ({
-  position: 'absolute',
-  top,
-  left,
-  width: 4,
-  height: 4,
-  backgroundColor: color,
-  borderRadius: '50%',
-  animation: `${pulse} 1.5s infinite`,
-}));
-
-export const StatusButton = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  backgroundColor: theme.palette.background.paper,
-  height: 32,
-  display: 'flex',
-  alignItems: 'center',
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(1),
-}));
-
 export const BottomPanel = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.primary.main}`,
   backgroundColor: theme.palette.background.paper,
   padding: theme.spacing(2),
-}));
-
-export const SystemsText = styled(Typography)(({ theme }) => ({
-  letterSpacing: '0.1em',
-  marginTop: 4,
-}));
-
-export const spinAnimation = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-export const RightDisplay = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  height: 64,
-  backgroundColor: theme.palette.background.paper,
-  position: 'relative',
 }));
 
 const scanLines = keyframes`

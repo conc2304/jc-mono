@@ -1,13 +1,5 @@
 import { CSSProperties, PaletteMode } from '@mui/material/styles';
 
-// export type PaletteOptionName =
-//   | 'primary'
-//   | 'secondary'
-//   | 'error'
-//   | 'warning'
-//   | 'info'
-//   | 'success';
-
 declare module '@mui/material/styles' {
   // Allow for custom mixins to be added
   interface Mixins {

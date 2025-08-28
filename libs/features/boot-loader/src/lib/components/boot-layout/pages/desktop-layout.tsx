@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Box, Grid, Stack, useTheme } from '@mui/material';
 import {
   BrowserFrame,
@@ -22,6 +22,7 @@ import {
   RadarPanel,
   TorusProgressPanel,
 } from '../panels';
+import { BackgroundOverlay } from '@jc/ui-components';
 
 interface FullDesktopLayoutProps {
   bootMessages: any[];
@@ -36,6 +37,10 @@ interface FullDesktopLayoutProps {
   backgroundState: any;
   radarData: any;
   handlers: any;
+  bgTexture: {
+    url: string;
+    style: CSSProperties;
+  };
 }
 
 export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
@@ -51,14 +56,19 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
   backgroundState,
   radarData,
   handlers,
+  bgTexture,
 }) => {
   const theme = useTheme();
 
   return (
     <BrowserFrame>
       <Header passwordMsg={passwordMessage} />
-
-      <Box p={2} flex={1}>
+      <BackgroundOverlay
+        url={bgTexture.url}
+        style={{ ...bgTexture.style, backgroundPosition: 'center center' }}
+        className="ThemedBackground--overlay"
+      />
+      <Box p={2} flex={1} position={'relative'} zIndex={1}>
         <Grid container spacing={2} height="100%">
           {/* Left Panel */}
           <Grid size={{ xs: 3 }} height="100%">
@@ -135,6 +145,7 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                   scrambleCharacterSet={scrambleCharacterSet}
                   onProgress={handlers.handleProgress}
                   onComplete={handlers.handleBootComplete}
+                  flex={0}
                 />
               </Box>
               <WarningPanel {...infoPanelContent} />

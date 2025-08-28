@@ -14,6 +14,7 @@ import { BootContainer } from './atoms';
 import { MobileLayout } from './pages/mobile-layout';
 import { TabletLayout } from './pages/tablet-layout';
 import { FullDesktopLayout } from './pages/desktop-layout';
+import { CSSProperties } from '@mui/material';
 
 interface SciFiLayoutProps {
   className?: string;
@@ -24,6 +25,7 @@ interface SciFiLayoutProps {
   radarMetricsConfig?: any;
   infoPanelContent?: any;
   passwordMessage?: string;
+  bgTexture: { url: string; style: CSSProperties };
 }
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
@@ -35,6 +37,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   radarMetricsConfig = DefaultRadarMetrics,
   infoPanelContent = DefaultInfoPanelContent,
   passwordMessage = DefaultPasswordHoverMessage,
+  bgTexture = '',
 }) => {
   const {
     breakpoints,
@@ -65,6 +68,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     scrambleCharacterSet,
     passwordMessage,
     themedWidgetGifUrl,
+    bgTexture,
     progressMessages,
     radarMetricsConfig,
     infoPanelContent,

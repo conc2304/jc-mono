@@ -69,7 +69,7 @@
 
 import { Box, useTheme } from '@mui/system';
 import { BootLayout, BootMessage } from '@jc/boot-loader';
-import { useEnhancedTheme } from '@jc/themes';
+import { useColorMode, useEnhancedTheme } from '@jc/themes';
 import { randomInt } from 'd3';
 import {
   DefaultBootMessage,
@@ -83,12 +83,14 @@ import { getProgressMessages } from './data/themed-data/themed-progress-state';
 import { getRadarMetrics } from './data/themed-data/themed-metric-labels';
 import { getInfoPanelContent } from './data/themed-data/themed-warning panel-text';
 import { getPasswordHoverMessage } from './data/themed-data/themed-password-message';
+import { getThemedBgTexture } from './data/themed-data/themed-background-texture';
 
 export default function App() {
   const theme = useTheme();
   const isSm = theme.breakpoints.down('sm');
 
   const { currentThemeId } = useEnhancedTheme();
+  const { resolvedMode } = useColorMode();
 
   const messageBankByScreenSize = isSm
     ? MobileThemedBootMessages
@@ -134,7 +136,8 @@ export default function App() {
   const progressMsg = getProgressMessages(currentThemeId);
   const themedMetricConfigs = getRadarMetrics(currentThemeId);
   const themeInfoPanelContent = getInfoPanelContent(currentThemeId);
-  const themedPassordMessage = getPasswordHoverMessage(currentThemeId);
+  const themedPasswordMessage = getPasswordHoverMessage(currentThemeId);
+  const themedBgTexture = getThemedBgTexture(currentThemeId, resolvedMode);
 
   return (
     <BootLayout
@@ -144,7 +147,8 @@ export default function App() {
       progressMessages={progressMsg}
       radarMetricsConfig={themedMetricConfigs}
       infoPanelContent={themeInfoPanelContent}
-      passwordMessage={themedPassordMessage}
+      passwordMessage={themedPasswordMessage}
+      bgTexture={themedBgTexture}
     />
   );
 }

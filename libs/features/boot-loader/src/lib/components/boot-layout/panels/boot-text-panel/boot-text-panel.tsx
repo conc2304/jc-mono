@@ -24,7 +24,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
   scrambleCharacterSet,
   onProgress,
   onComplete,
-  textWrapMode,
+  textWrapMode = 'wrap',
   flex,
 }) => {
   const theme = useTheme();
