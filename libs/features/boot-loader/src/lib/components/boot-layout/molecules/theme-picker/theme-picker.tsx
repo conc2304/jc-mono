@@ -1,13 +1,14 @@
 import {
+  alpha,
   Box,
   darken,
   Dialog,
-  PaletteOptionNames,
   styled,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { PaletteOptionName } from '@mui/material/styles';
 import { useState } from 'react';
 import { PickerPanel } from './picker-panel';
 import { useEnhancedTheme } from '@jc/themes';
@@ -15,7 +16,7 @@ import { SunIcon as LightMode, MoonStarIcon as DarkMode } from 'lucide-react';
 
 const StatusBar = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
   padding: theme.spacing(1),
   display: 'flex',
   alignItems: 'center',
@@ -59,7 +60,7 @@ export const ThemePickerPanel = ({
 
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  const themeColors: PaletteOptionNames[] = [
+  const themeColors: PaletteOptionName[] = [
     'primary',
     'secondary',
     'error',

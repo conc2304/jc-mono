@@ -1,4 +1,9 @@
-import { TileGrid, useWindowManager, Window } from '@jc/ui-components';
+import {
+  BackgroundOverlay,
+  TileGrid,
+  useWindowManager,
+  Window,
+} from '@jc/ui-components';
 import { Box } from '@mui/system';
 import { useMemo } from 'react';
 
@@ -26,6 +31,15 @@ const DesktopContent = () => {
         contain: 'layout style paint',
       })}
     >
+      {/* <BackgroundOverlay
+        url={bgTexture.url}
+        style={{
+          ...bgTexture.style,
+          backgroundPosition: 'center center',
+          zIndex: 0,
+        }}
+        className="ThemedBackground--overlay"
+      /> */}
       <TileGrid gridTiles={desktopItems} />
 
       {/* Windows */}

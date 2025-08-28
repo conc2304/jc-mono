@@ -1,6 +1,7 @@
-import { darken, rgbToHex, useTheme } from '@mui/material';
+import { Box, darken, rgbToHex, useTheme } from '@mui/material';
 import { DesktopOS } from '@jc/desktop-OS';
 import {
+  BackgroundOverlay,
   // CursorTrail,
   // CursorTrailConfig,
   GradientShader,
@@ -9,6 +10,8 @@ import { FileSystem } from '../data/file-system';
 
 import { useMediaQuery } from '@mui/system';
 import { PROJECT_NAVIGATION_GROUP } from '../data/project-files';
+import { getThemedBgTexture } from '../data/themed-data/themed-background-texture';
+import { useColorMode, useEnhancedTheme } from '@jc/themes';
 // import { remToPixels } from '@jc/themes';
 // import { FileSystem } from './data/file-system';
 
@@ -38,15 +41,30 @@ export function App() {
   //   cursorColor: theme.palette.primary.main,
   //   returnTintColor: theme.palette.primary[theme.palette.getInvertedMode()],
   // };
+  const { currentThemeId } = useEnhancedTheme();
+  const { resolvedMode } = useColorMode();
+  const themedBgTexture = getThemedBgTexture(currentThemeId, resolvedMode);
+
   return (
     <>
       {/* TODO make cursor something that you turn on */}
       {/* <CursorTrail {...cursorConfig} /> */}
-      <DesktopOS
-        fileSystem={FileSystem}
-        navigationGroups={[PROJECT_NAVIGATION_GROUP]}
-        iconArrangement={isXs ? 'grid' : 'linear'}
-      />
+      <Box position={'relative'}>
+        <BackgroundOverlay
+          url={themedBgTexture.url}
+          style={{
+            ...themedBgTexture.style,
+            backgroundPosition: 'center center',
+            zIndex: 0,
+          }}
+          className="ThemedBackground--overlay"
+        />
+        <DesktopOS
+          fileSystem={FileSystem}
+          navigationGroups={[PROJECT_NAVIGATION_GROUP]}
+          iconArrangement={isXs ? 'grid' : 'linear'}
+        />
+      </Box>
       {/* <GradientShader
         className={key}
         key={key}

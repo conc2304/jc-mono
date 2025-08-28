@@ -165,7 +165,7 @@ export const TileGrid = ({
           ref={containerRef}
           sx={(theme) => ({
             '--aug-border-bg': theme.palette.secondary.main,
-            '--aug-border-all': '1px',
+            '--aug-border-all': '1.5px',
             '--aug-b': config.containerPadding / 2 + 'px',
             '--aug-br': config.containerPadding / 2 + 'px',
             '--aug-bl': config.containerPadding / 2 + 'px',
@@ -186,8 +186,16 @@ export const TileGrid = ({
             sx={{
               position: 'relative',
               height: '100%',
+              width: '99%',
               overflowY: 'auto',
+
+              p: config.containerPadding / 2 + 'px',
               mr: 0.25,
+
+              // For some reason the Augmented Border flashes when there is overflow
+              '&::-webkit-scrollbar:horizontal': {
+                display: 'none',
+              },
             }}
           >
             {/* Insertion zones */}

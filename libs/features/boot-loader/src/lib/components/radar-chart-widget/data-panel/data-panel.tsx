@@ -13,7 +13,7 @@ import { RadarData } from '../radar-chart-widget';
 import { rollup } from 'd3';
 
 const DataPanelStyled = styled(Paper)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.background.paper, 0.7),
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
   padding: theme.spacing(1.5),
   minHeight: 128,
   borderRadius: 0,

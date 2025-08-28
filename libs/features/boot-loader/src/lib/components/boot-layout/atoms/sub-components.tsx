@@ -11,7 +11,7 @@ import {
 import { styled } from '@mui/material/styles';
 
 export const BootContainer = styled(Box)<{}>(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.background.paper, 0.7),
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
   color: theme.palette.primary.main,
   fontFamily: 'monospace',
   height: '100%',
@@ -23,7 +23,7 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
 }));
 
 export const BrowserFrame = styled(Box)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.background.paper, 0.7),
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
   border: `2px solid ${theme.palette.primary.main}`,
   overflow: 'hidden',
   height: '100%',
@@ -33,7 +33,7 @@ export const BrowserFrame = styled(Box)(({ theme }) => ({
 }));
 
 const RadarChartBoxStyled = styled(Box)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.background.paper, 0.7),
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
   position: 'relative',
   display: 'flex',
   alignItems: 'center',

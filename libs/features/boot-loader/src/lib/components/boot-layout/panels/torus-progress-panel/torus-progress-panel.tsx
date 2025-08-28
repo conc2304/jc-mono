@@ -1,6 +1,6 @@
 // components/TorusProgressPanel.tsx
 import React from 'react';
-import { Box, useTheme } from '@mui/material';
+import { alpha, Box, useTheme } from '@mui/material';
 import { TorusFieldProgressMemo } from '../../../torus-field-progress';
 import { ScanLinesOverlay } from '../../atoms';
 
@@ -20,7 +20,7 @@ export const TorusProgressPanel: React.FC<TorusProgressPanelProps> = ({
   const theme = useTheme();
 
   const colors = {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: alpha(theme.palette.background.paper, 0.2),
     beamColor: theme.palette.getInvertedMode('info'),
     torusColor: theme.palette.primary.main,
     particleColor: theme.palette.getInvertedMode('info'),

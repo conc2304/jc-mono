@@ -65,7 +65,11 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
       <Header passwordMsg={passwordMessage} />
       <BackgroundOverlay
         url={bgTexture.url}
-        style={{ ...bgTexture.style, backgroundPosition: 'center center' }}
+        style={{
+          ...bgTexture.style,
+          backgroundPosition: 'center center',
+          zIndex: 0,
+        }}
         className="ThemedBackground--overlay"
       />
       <Box p={2} flex={1} position={'relative'} zIndex={1}>

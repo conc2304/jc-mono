@@ -1,6 +1,6 @@
 // components/BootTextPanel.tsx
 import React from 'react';
-import { useTheme } from '@mui/material';
+import { useTheme, alpha } from '@mui/material';
 import { AugmentedPanel } from '../../atoms/augmented-panel';
 import { BootText } from '../../../boot-text';
 import { BootMessage } from '../../../../types';
@@ -38,6 +38,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        background: alpha(theme.palette.background.paper, 0.6),
       }}
     >
       <BootText

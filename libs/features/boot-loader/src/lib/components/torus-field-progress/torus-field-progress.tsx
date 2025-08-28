@@ -1,7 +1,6 @@
 import { Box, capitalize, Typography } from '@mui/material';
 import { useRef, useEffect, useMemo, memo, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import {
   convertToThreeColor,
   createColorVariations,
@@ -209,7 +208,7 @@ export const TorusFieldProgress = ({
         mountRef.current.clientWidth,
         mountRef.current.clientHeight
       );
-      renderer.setClearColor(processedColors.background);
+      renderer.setClearColor(processedColors.background, 0.5);
       rendererRef.current = renderer;
       mountRef.current.appendChild(renderer.domElement);
 
@@ -527,12 +526,12 @@ export const TorusFieldProgress = ({
   useEffect(() => {
     // Update existing elements when colors change
     if (sceneRef.current) {
-      sceneRef.current.background = processedColors.background.clone();
+      sceneRef.current.background = null; // Remove solid background to allow translucency
       sceneRef.current.fog = new THREE.Fog(processedColors.background, 10, 50);
     }
 
     if (rendererRef.current) {
-      rendererRef.current.setClearColor(processedColors.background);
+      rendererRef.current.setClearColor(processedColors.background, 0.7);
     }
 
     // Update all torus elements
