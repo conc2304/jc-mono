@@ -92,12 +92,12 @@ export const TorusLoaderBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const TorusLoaderCardAug = (props: BoxProps) => (
-  <TorusLoaderBox
-    data-augmented-ui="border bl-clip b-clip-x br-clip tl-clip tr-2-clip-x "
-    {...props}
-  />
-);
+// export const TorusLoaderCardAug = (props: BoxProps) => (
+//   <TorusLoaderBox
+//     data-augmented-ui="border bl-clip b-clip-x br-clip tl-clip tr-2-clip-x "
+//     {...props}
+//   />
+// );
 
 export const pulse = keyframes`
   0%, 100% {

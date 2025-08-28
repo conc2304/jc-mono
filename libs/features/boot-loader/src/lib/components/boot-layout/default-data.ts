@@ -42,40 +42,6 @@ export const radarAnimationConfig = {
   easing: easeSinInOut,
 };
 
-export const radarWidgetProps = (
-  theme: Theme
-): Partial<AnimatedRadarChartProps> => ({
-  levels: 5,
-  opacityArea: 0.1,
-  strokeWidth: 1,
-  dotRadius: 3,
-  lineType: 'curved',
-  showLabels: true,
-  labelFactor: 1.15,
-  colors: {
-    primary: theme.palette.primary.main,
-    accent: theme.palette.warning.main,
-    series: new Array(3).fill('').map((_, i) => {
-      const fn = theme.palette.mode === 'light' ? darken : lighten;
-      return fn(
-        theme.palette.primary[theme.palette.mode],
-        remap(i, 0, 3, 0, 0.5)
-      );
-    }),
-  },
-  margin: { top: 20, right: 0, bottom: 0, left: 0 },
-  animationConfig: radarAnimationConfig,
-  transitionConfig: {
-    duration: radarAnimationConfig.animationSpeed,
-    ease: easeQuadInOut,
-  },
-  titleStyle: {
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-  },
-});
-
 export const DefaultInfoPanelContent = {
   label: 'INFO',
   middleSection: ['FUN ZONE AREA', 'CURIOSITY REQUIRED'] as [string, string],
