@@ -35,6 +35,8 @@ export const ThemedScrambleCharacters: Record<string, string> = {
 
   monochrome:
     '█▓▒░■□▪▫○●◯◎◐◑◒◓01010101010101010101010101010101010101010101010101010101010101010101.,:;-_()[]{}|\\/<>?!@', // increase probability of 0 and 1
+  'liberty-city':
+    '█▓▒░■□▪▫●○★☆♦♣♥♠0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-={}[]|\\:";\'<>?,./$€£¥',
 };
 
 // Default fallback character set

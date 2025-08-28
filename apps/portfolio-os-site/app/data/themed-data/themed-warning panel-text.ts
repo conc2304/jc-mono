@@ -91,6 +91,12 @@ export const ThemedInfoPanelContent: Record<
     middleSection: ['MINIMAL ZONE', 'CLARITY MODE'],
     rightSection: ['DO NOT', 'ADD', 'COMPLEXITY'],
   },
+
+  'liberty-city': {
+    label: 'MISSION',
+    middleSection: ['ACTIVE ZONE', 'HIGH REWARDS AHEAD'],
+    rightSection: ['DO NOT', 'MISS THE', 'EASTER EGGS'],
+  },
 };
 
 // Default fallback content

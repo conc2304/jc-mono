@@ -169,6 +169,20 @@ export const ThemedRadarMetrics: Record<
       { label: 'MINIMAL', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
     ],
   },
+  'liberty-city': {
+    title: 'LIBERTY CITY STATUS',
+    metrics: [
+      { label: 'RESPECT', formatFn: (n) => `${n.valueOf().toFixed(1)}%` },
+      {
+        label: 'WANTED',
+        formatFn: (n) => `${Math.floor(n.valueOf() / 20)} STARS`,
+      },
+      { label: 'CASH', formatFn: (n) => `$${(n.valueOf() * 1000).toFixed(0)}` },
+      { label: 'HEALTH', formatFn: (n) => `${n.valueOf().toFixed(0)}HP` },
+      { label: 'SKILLS', formatFn: (n) => `LVL ${n.valueOf().toFixed(0)}` },
+      { label: 'TERRITORY', formatFn: (n) => `${n.valueOf().toFixed(0)}%` },
+    ],
+  },
 };
 
 // Default fallback metrics

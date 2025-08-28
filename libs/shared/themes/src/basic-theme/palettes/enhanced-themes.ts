@@ -14,6 +14,7 @@ import {
   arasakaTheme,
 } from './enhanced-palettes';
 import { bladeRunnerTheme } from './enhanced-palettes/blade-runner-palette';
+import { libertyCityTheme } from './enhanced-palettes/liberty-city-palette';
 
 export const enhancedThemes: EnhancedThemeOption[] = [
   developerTerminalTheme,
@@ -29,4 +30,5 @@ export const enhancedThemes: EnhancedThemeOption[] = [
   bubblegumDreamTheme,
   euclidThemes,
   arasakaTheme,
+  libertyCityTheme,
 ];

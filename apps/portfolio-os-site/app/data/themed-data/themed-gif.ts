@@ -91,6 +91,11 @@ export const ThemedGifUrl: Record<
     url: path('monochrome-8-bit-factory.gif'),
     backgroundPositionY: 'center',
   },
+
+  'liberty-city': {
+    url: 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2pteTZpanJuazBrenh0MmMzc2Fpcjhxa255d3QzZ3AyajZ6ZHk1dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/V51e4FFL6r2DYB2DHZ/giphy.gif',
+    backgroundPositionY: 'center',
+  },
 };
 
 // Default fallback character set

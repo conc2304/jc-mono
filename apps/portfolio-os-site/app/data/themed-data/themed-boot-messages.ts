@@ -1,4 +1,4 @@
-import { BootMessage } from '../../../../../libs/features/boot-loader/src/lib/types';
+import { BootMessage } from '@jc/boot-loader';
 
 // key is id of theme
 export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
@@ -524,6 +524,49 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       'welcome to optimized clarity exp',
     ],
   ],
+
+  'liberty-city': [
+    // Police Scanner Style
+    [
+      '> liberty city police scanner: ACTIVE',
+      ['> all units: CREATIVE DEVELOPER SPOTTED', 'suspect armed with talent'],
+      '> three.js vehicle physics: LOADED',
+      ['> TouchDesigner heist plans: UPLOADED', 'mission parameters set'],
+      '> p5.js street art: RENDERING',
+      ['> wanted level: ZERO', 'staying under the radar'],
+      '> welcome to liberty city',
+    ],
+    // Radio Station Vibes
+    [
+      '> tuning into portfolio FM...',
+      ['> now playing: MY GREATEST HITS', 'volume: maximum talent'],
+      '> unity game engine: ON THE AIRWAVES',
+      ['> creative code mixtape: STREAMING', 'zero skips detected'],
+      '> maya models: CHART TOPPERS',
+      ['> commercial break: ZERO ADS', 'pure content only'],
+      '> stay tuned for more hits',
+    ],
+    // Heist Planning
+    [
+      '> planning the perfect portfolio heist...',
+      ['> crew assembled: SOLO DEVELOPER', 'one person army'],
+      '> target: RECRUITER ATTENTION',
+      ['> security bypass: CREATIVE SKILLS', 'stealth mode activated'],
+      '> getaway vehicle: REACT.JS',
+      ['> vault contents: JOB OFFERS', 'mission success probable'],
+      '> the heist is on',
+    ],
+    // Street Cred
+    [
+      '> liberty city rep system: ONLINE',
+      ['> street cred: CREATIVE TECHNOLOGIST', 'respect earned'],
+      '> territory controlled: FRONTEND DEV',
+      ['> rival gangs: IMPRESSED', 'no hostiles detected'],
+      '> safe houses: MULTIPLE PROJECTS',
+      ['> reputation: LEGENDARY', 'citywide recognition'],
+      '> you run these streets now',
+    ],
+  ],
 };
 
 export const DefaultBootMessage: BootMessage[] = [
@@ -1039,6 +1082,26 @@ export const MobileThemedBootMessages: Record<string, Array<BootMessage[]>> = {
       'black white truth: SIMPLIFIED',
       ['grayscale wisdom: ABSOLUTE REL', 'contextually absolute'],
       'welcome optimized clarity exp',
+    ],
+  ],
+  'liberty-city': [
+    [
+      '> liberty city scanner: ACTIVE',
+      ['> all units: DEV SPOTTED', 'armed with talent'],
+      '> three.js physics: LOADED',
+      ['> TouchDesigner heist: UPLOADED', 'mission parameters set'],
+      '> p5.js street art: RENDERING',
+      ['> wanted level: ZERO', 'under the radar'],
+      '> welcome to liberty city',
+    ],
+    [
+      '> tuning portfolio FM...',
+      ['> now playing: GREATEST HITS', 'maximum talent volume'],
+      '> unity engine: ON AIR',
+      ['> creative mixtape: STREAMING', 'zero skips detected'],
+      '> maya models: CHART TOPPERS',
+      ['> commercial break: NO ADS', 'pure content only'],
+      '> stay tuned for hits',
     ],
   ],
 };

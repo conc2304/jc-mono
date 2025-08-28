@@ -65,6 +65,10 @@ export const ThemedProgressMessages: Record<
     start: 'adjusting contrast ratios',
     end: 'clarity achieved - minimal perfection',
   },
+  'liberty-city': {
+    start: 'loading liberty city assets',
+    end: 'mission passed - respect earned',
+  },
 };
 
 export const DefaultProgressMessages = {
@@ -106,4 +110,5 @@ export const ThemedStepMessages: Record<
     `nurturing growth ring ${step} of ${total}`,
   arasaka: (step, total) => `optimizing metric ${step} of ${total}`,
   monochrome: (step, total) => `refining element ${step} of ${total}`,
+  'liberty-city': (step, total) => `completing objective ${step} of ${total}`,
 };

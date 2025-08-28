@@ -24,6 +24,8 @@ export const ThemedPasswordHoverMessages: Record<string, string> = {
   arasaka: 'PRODUCTIVITY -47% TODAY',
 
   monochrome: 'LESS IS MORE SNOOPING',
+
+  'liberty-city': 'BUSTED: NICE TRY PLAYER',
 };
 
 // Default fallback message
