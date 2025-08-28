@@ -56,34 +56,6 @@ const AUGMENT_CONFIGS: Record<
   },
 };
 
-// export const TorusLoaderBox = styled(Box)(({ theme }) => ({
-//   height: '100%',
-//   width: '100%',
-//   backgroundColor: 'transparent',
-//   position: 'relative',
-//   overflow: 'hidden',
-//   padding: theme.spacing(0),
-//   border: 'unset',
-
-//   '&[data-augmented-ui]': {
-//     '--aug-bl': '8px',
-//     '--aug-br': '8px',
-//     '--aug-tl': '8px',
-//     '--aug-b': '8px',
-//     '--aug-b-extend1': '50%',
-//     '--aug-tr-extend1': '50%',
-//     '--aug-border-all': '1px',
-//     '--aug-border-bg': theme.palette.primary.main,
-//   },
-// }));
-
-// export const TorusLoaderCardAug = (props: BoxProps) => (
-//   <TorusLoaderBox
-//     data-augmented-ui="border bl-clip b-clip-x br-clip tl-clip tr-2-clip-x "
-//     {...props}
-//   />
-// );
-
 export const AugmentedPanel: React.FC<AugmentedPanelProps> = ({
   augmentType = 'bootText',
   children,
