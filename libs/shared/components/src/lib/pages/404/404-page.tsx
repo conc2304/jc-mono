@@ -10,8 +10,7 @@ export const PageNotFound404 = () => {
   const navigate = useNavigate(); // Call hook here, not in the handler
 
   const handleHomeClick = () => {
-    console.log('GO HOME');
-    navigate('/desktop');
+    navigate('/home');
   };
   if (isMobile) return <MobilePageNotFound404 onHomeClick={handleHomeClick} />;
 

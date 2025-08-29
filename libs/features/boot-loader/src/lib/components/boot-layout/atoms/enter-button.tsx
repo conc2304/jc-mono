@@ -24,7 +24,7 @@ export const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
       height: '100%',
       '&[data-augmented-ui]': { '--aug-border-bg': `${bgStyle} !important` },
     }}
-    href="/desktop"
+    href="/home"
     style={{}}
   >
     <ScrambleText
