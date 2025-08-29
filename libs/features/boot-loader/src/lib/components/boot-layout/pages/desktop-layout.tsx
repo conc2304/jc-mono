@@ -107,7 +107,6 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       position: 'relative',
                       overflow: 'hidden',
                       padding: theme.spacing(0),
-                      overflow: 'hidden',
                     }}
                   >
                     <TorusProgressPanel
