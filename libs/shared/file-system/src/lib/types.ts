@@ -6,7 +6,7 @@ import { PaletteOptionName } from '@mui/material/styles';
 export interface BaseFileSystemItem {
   id: string;
   name: string;
-  type: 'file' | 'folder';
+  type: 'file' | 'folder' | string;
   icon: ReactNode;
   size?: number;
   dateModified: Date;
