@@ -130,7 +130,7 @@ export const DesktopPageNotFound404 = ({
         <Box
           // Upper Panel Background Texture
           sx={{
-            backgroundImage: `url('/textures/stone-texture.avif')`,
+            backgroundImage: `url('/textures/ui/stone-texture.jpg')`,
             backgroundPosition: '0 0',
             position: 'absolute',
             top: 0,
@@ -339,7 +339,7 @@ export const DesktopPageNotFound404 = ({
           sx={{
             position: 'absolute',
             ...bgOverlayProps,
-            backgroundImage: `url('/textures/old-black-fabric-material.avif')`,
+            backgroundImage: `url('/textures/ui/old-black-fabric-material.jpg')`,
             backgroundPosition: '0 0%',
             backgroundSize: '100%',
             opacity: 0.5,
@@ -374,7 +374,7 @@ export const DesktopPageNotFound404 = ({
             className="bottom-inner-left-bg--bg-overlay"
             sx={(theme) => ({
               ...bgOverlayProps,
-              background: `url('/textures/grunge-dirty-concrete-texture-background.avif')`,
+              background: `url('/textures/ui/grunge-dirty-concrete-texture-background.jpg')`,
               opacity: 0.5,
               backgroundSize: 'cover',
               mixBlendMode: 'overlay',
@@ -403,7 +403,7 @@ export const DesktopPageNotFound404 = ({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url('/textures/scratched-glass-with-scuffs.png')`,
+              backgroundImage: `url('/textures/ui/scratched-glass-with-scuffs.jpg')`,
               backgroundBlendMode: 'screen',
               opacity: 0.25,
               top: 0,

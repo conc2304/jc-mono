@@ -40,7 +40,7 @@ export const MobilePageNotFound404 = ({
         width: '100%',
         padding: 2,
         bgcolor: theme.palette.background.paper,
-        backgroundImage: `url('/textures/old-black-fabric-material.avif')`,
+        backgroundImage: `url('/textures/ui/old-black-fabric-material.jpg')`,
         backgroundPosition: '0% 0%',
         backgroundSize: '100%',
         justifyContent: 'space-between',

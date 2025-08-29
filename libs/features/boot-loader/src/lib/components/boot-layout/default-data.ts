@@ -27,7 +27,7 @@ export const DefaultProgressMessages = {
 };
 
 export const defaultGif = {
-  url: '/textures/ambient-vintage-clouds.gif',
+  url: '/textures/ui/ambient-vintage-clouds.gif',
   backgroundPositionY: 'center',
 };
 

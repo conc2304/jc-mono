@@ -19,15 +19,15 @@ export function App() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
-  const bgColors = [
-    theme.palette.background.default,
-    rgbToHex(darken(theme.palette.primary[theme.palette.mode], 0.3)),
-    rgbToHex(darken(theme.palette.secondary.dark, 0.3)),
-    theme.palette.background.default,
-    rgbToHex(darken(theme.palette.getInvertedMode('primary'), 0.6)),
-  ];
+  // const bgColors = [
+  //   theme.palette.background.default,
+  //   rgbToHex(darken(theme.palette.primary[theme.palette.mode], 0.3)),
+  //   rgbToHex(darken(theme.palette.secondary.dark, 0.3)),
+  //   theme.palette.background.default,
+  //   rgbToHex(darken(theme.palette.getInvertedMode('primary'), 0.6)),
+  // ];
 
-  const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
+  // const key = bgColors.reduce((prev, curr) => `${prev}-${curr}`, '');
 
   // const taskbarHeight = remToPixels(theme.mixins.taskbar.height as string);
   // const cursorConfig: CursorTrailConfig = {
