@@ -128,16 +128,13 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
 
             {/* Center Panel */}
             <Grid size={{ xs: 5 }} display={'flex'} position={'relative'}>
+              {/* Accent Diags */}
               <Box
                 data-augmented-ui="bl-2-clip-x tr-clip"
                 sx={{
                   '--aug-bl': '3.5rem',
-                  // '--aug-border-all': '1px',
                   '--aug-bl-extend1': 'calc(100% - 7rem)',
-
                   position: 'absolute',
-                  // border: '1px solid black',
-                  // p: 1,
                   top: 0,
                   right: 0,
                   width: `calc(25% + 7rem - 8px)`,
@@ -154,88 +151,85 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                 />
               </Box>
 
-              <Stack
-                flex={1}
-                gap={5}
-                data-augmented-ui="both tr-2-clip-x tl-2-clip-y"
-                sx={{
-                  '--aug-border-all': '1px',
-                  '--aug-tl2': '0.5rem',
-                  '--aug-tl1': '0.5rem',
-                  '--aug-tr1': '3.5rem',
-                  '--aug-tr-extend1': '25%',
-                  '--aug-tl-extend1': '20%',
-                  '--aug-inlay-bg': theme.palette.background.paper,
-                  '--aug-inlay-opacity': 0.6,
-                  '--aug-inlay-x': '1rem',
-                  '--aug-inlay-y': '0.5rem',
-                }}
-              >
-                {/* Hero Text */}
+              {/* Main */}
+              <Stack flex={1} gap={1}>
                 <Stack
                   flex={1}
-                  alignItems="center"
-                  justifyContent="space-between"
-                  data-augmented-ui=""
-                  pl={8}
+                  data-augmented-ui="both tr-2-clip-x tl-2-clip-y"
+                  sx={{
+                    '--aug-border-all': '1px',
+                    '--aug-tl2': '0.5rem',
+                    '--aug-tl1': '0.5rem',
+                    '--aug-tr1': '3.5rem',
+                    '--aug-tr-extend1': '25%',
+                    '--aug-tl-extend1': '20%',
+                    '--aug-inlay-bg': theme.palette.background.paper,
+                    '--aug-inlay-opacity': 0.6,
+                    '--aug-inlay-x': '1rem',
+                    '--aug-inlay-y': '1rem',
+                  }}
                 >
+                  {/* Hero Text */}
                   <Stack
-                    width={'100%'}
-                    display={'flex'}
-                    justifyContent={'left'}
-                    mt="2rem"
-                    gap={0.5}
+                    flex={1}
+                    alignItems="center"
+                    justifyContent="space-between"
+                    data-augmented-ui=""
+                    pl={8}
                   >
-                    <Typography
-                      variant="h4"
-                      color="primary"
-                      mr="calc(7rem + 25%)"
+                    <Stack
+                      width={'100%'}
+                      display={'flex'}
+                      justifyContent={'left'}
+                      mt="2.5rem"
+                      gap={0.5}
                     >
-                      A Portfolio Site Experience by
-                    </Typography>
-                    <ScrambleText
-                      variant="display"
-                      color="primary"
-                      defaultText="Jose Conchello"
-                      hoverText="Via CLYZBY_OS"
-                      mr="calc(3.5rem * 0.5 )"
-                    />
-                    <ScrambleText
-                      variant="h1"
-                      color="primary"
-                      defaultText="UI Engineer & Artist"
-                      hoverText="Creative Technologist"
-                      mr="calc(3.5rem * 0.5)"
-                    />
-                  </Stack>
-
-                  {/* Enter Button */}
-                  <Stack
-                    justifyContent={'space-around'}
-                    width={'100%'}
-                    flexGrow={1}
-                    pr={8}
-                    mt={2}
-                  >
-                    <Stack width={'100%'} height="33%">
-                      <EnterButton />
+                      <Typography
+                        variant="h4"
+                        color="primary"
+                        mr="calc(7rem + 25%)"
+                        mb={2}
+                      >
+                        A Portfolio Site Experience by
+                      </Typography>
+                      <ScrambleText
+                        variant="display"
+                        color="primary"
+                        defaultText="Jose Conchello"
+                        hoverText="Via CLYZBY_OS"
+                        mr="calc(3.5rem * 0.5 )"
+                      />
+                      <ScrambleText
+                        variant="h1"
+                        color="primary"
+                        defaultText="UI Engineer & Artist"
+                        hoverText="Creative Technologist"
+                        mr="calc(3.5rem * 0.5)"
+                      />
                     </Stack>
 
-                    <Stack width="100%" px={6}>
-                      <WarningPanel
-                        {...infoPanelContent}
-                        sx={{ width: '100%' }}
-                      />
+                    {/* Enter Button */}
+                    <Stack
+                      justifyContent={'space-around'}
+                      width={'100%'}
+                      flexGrow={1}
+                      pr={8}
+                      mt={2}
+                    >
+                      <Stack width={'100%'} height="33%">
+                        <EnterButton />
+                      </Stack>
+
+                      <Stack width="100%" px={6}>
+                        <WarningPanel
+                          {...infoPanelContent}
+                          sx={{ width: '100%' }}
+                        />
+                      </Stack>
                     </Stack>
                   </Stack>
                 </Stack>
-
-                <Box
-                  // border="1px solid red"
-                  m={1}
-                >
-                  <ThemePickerPanel />
-                </Box>
+                <ThemePickerPanel />
               </Stack>
             </Grid>
 
@@ -268,8 +262,17 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                 <Box
                   width={'100%'}
                   p={3}
-                  pt={3.5}
+                  // pt={3.5}
                   flexShrink={0} // prevent shrinking
+                  data-augmented-ui="both br-clip bl-clip tr-clip tl-clip"
+                  sx={{
+                    '--aug-all-width': '25px',
+                    '--aug-all-height': '25px',
+                    '--aug-border-bg': theme.palette.primary.main,
+                    '--aug-border-all': '1px',
+                    '--aug-inlay-bg': theme.palette.background.paper,
+                    '--aug-inlay-opacity': 0.6,
+                  }}
                 >
                   <BackgroundControls
                     backgroundAnimated={backgroundState.animateBackground}
