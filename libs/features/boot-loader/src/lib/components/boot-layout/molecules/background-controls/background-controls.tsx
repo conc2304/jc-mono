@@ -10,7 +10,14 @@ import {
   Tonality,
   QuestionMark,
 } from '@mui/icons-material';
-import { Box, ButtonProps, Grid, IconProps, styled } from '@mui/material';
+import {
+  Box,
+  ButtonProps,
+  Grid,
+  IconProps,
+  Stack,
+  styled,
+} from '@mui/material';
 import { Property } from 'csstype';
 
 const ControlIcon = styled(Box)(({ theme }) => ({
@@ -88,13 +95,13 @@ export const BackgroundControls = ({
   };
 
   return (
-    <Grid size={{ xs: 2 }}>
+    <Stack>
       <ControlIcon>
         <AugmentedButton
           {...buttonProps}
           fullWidth
           onClick={() => handleToggleBackground()}
-          shape="buttonLeft"
+          shape="topClipped"
         >
           <Warning sx={{ ...iconProps.sx }} />
         </AugmentedButton>
@@ -165,6 +172,6 @@ export const BackgroundControls = ({
           );
         })}
       </ControlIcon>
-    </Grid>
+    </Stack>
   );
 };

@@ -39,12 +39,13 @@ export const WarningPanel = ({
   label,
   middleSection,
   rightSection,
+  ...paperProps
 }: {
   label: string;
   middleSection: [string, string];
   rightSection: [string, string, string];
-}) => (
-  <WarningPanelAugmented elevation={0}>
+} & PaperProps) => (
+  <WarningPanelAugmented elevation={0} {...paperProps}>
     <Typography
       variant="caption"
       sx={{

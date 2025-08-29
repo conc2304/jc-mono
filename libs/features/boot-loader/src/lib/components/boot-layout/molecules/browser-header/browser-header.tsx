@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { Box, styled } from '@mui/system';
 
 export const BrowserHeader = styled(Box)(({ theme }) => ({
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -36,14 +37,15 @@ export const Header = ({ compact = false, passwordMsg = '' }) => (
           fontsize: '0.75rem',
         })}
         color="primary"
-        fontSize="0.75rem"
+        fontSize="inherit"
+        fontFamily={'inherit'}
         lineHeight={1.2}
         style={{ verticalAlign: 'middle' }}
       />
     </AddressBar>
     {!compact && (
       <Typography variant="caption" sx={{ color: 'primary.main' }}>
-        MAINFRAME-RESEARCH
+        USER-MAINFRAME-RESEARCH
       </Typography>
     )}
   </BrowserHeader>

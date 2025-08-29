@@ -30,7 +30,7 @@ export const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
     <ScrambleText
       variant="display"
       defaultText="ENTER"
-      hoverText=" ??? "
+      hoverText="EXPLORE"
       scrambleDuration={0.1}
       color="background.paper"
       fontSize={fontSize}

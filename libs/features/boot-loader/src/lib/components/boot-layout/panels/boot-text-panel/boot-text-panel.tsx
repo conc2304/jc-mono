@@ -25,7 +25,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
   onProgress,
   onComplete,
   textWrapMode = 'wrap',
-  flex,
+  flex = 1,
 }) => {
   const theme = useTheme();
 
@@ -33,8 +33,10 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
     <AugmentedPanel
       augmentType="envelope"
       sx={{
-        flex: flex || 1,
-        minHeight: 0,
+        // Key changes: use proper flex shorthand and ensure container constraints
+        flex: `${flex} 1 0`, // flex-grow: flex, flex-shrink: 1, flex-basis: 0
+        minHeight: 0, // Critical: allows flex item to shrink
+        height: '100%', // Fill the parent container
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -56,7 +58,9 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
         onProgress={onProgress}
         onComplete={onComplete}
         textWrapMode={textWrapMode}
-        flex={1}
+        flex={1} // Fill available space within the panel
+        minHeight={0} // Allow shrinking
+        autoScroll={true} // Enable internal scrolling
       />
     </AugmentedPanel>
   );

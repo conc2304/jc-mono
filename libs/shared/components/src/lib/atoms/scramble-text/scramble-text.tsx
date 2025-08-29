@@ -43,6 +43,28 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
     return scrambleCharSet[Math.floor(Math.random() * scrambleCharSet.length)];
   };
 
+  // Function to split text into words and characters for proper wrapping
+  const parseTextStructure = (text: string) => {
+    const words = text.split(' ');
+    const structure: Array<{
+      type: 'word' | 'space';
+      content: string;
+      wordIndex?: number;
+    }> = [];
+
+    words.forEach((word, wordIndex) => {
+      if (word.length > 0) {
+        structure.push({ type: 'word', content: word, wordIndex });
+      }
+      // Add space after each word except the last one
+      if (wordIndex < words.length - 1) {
+        structure.push({ type: 'space', content: ' ' });
+      }
+    });
+
+    return structure;
+  };
+
   // Function to create hover scrambling animation
   const createHoverScrambleAnimation = (
     fromText: string,
@@ -58,124 +80,129 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
 
     const tl = gsap.timeline();
 
-    // Get all character spans with the unique ID
-    const charElements = textElement.querySelectorAll(
-      `[class*="scramble-char-${uniqueId}-"]`
-    ) as NodeListOf<HTMLElement>;
+    // Parse both texts into word structures
+    const fromStructure = parseTextStructure(fromText);
+    const toStructure = parseTextStructure(toText);
 
-    // Calculate the maximum length to handle different text lengths
-    const maxLength = Math.max(fromText.length, toText.length);
+    // Get the maximum number of elements needed
+    const maxElements = Math.max(fromStructure.length, toStructure.length);
 
-    // Ensure we have enough character elements
-    const currentLength = charElements.length;
-    if (currentLength < maxLength) {
-      // Add more character spans if needed
-      for (let i = currentLength; i < maxLength; i++) {
+    // Ensure we have enough word/space containers
+    const existingContainers = textElement.querySelectorAll(
+      `[class*="scramble-element-${uniqueId}-"]`
+    );
+
+    if (existingContainers.length < maxElements) {
+      // Add more containers if needed
+      for (let i = existingContainers.length; i < maxElements; i++) {
+        const elementContainer = document.createElement('span');
+        elementContainer.className = `scramble-element-${uniqueId}-${i}`;
+        elementContainer.style.display = 'inline-block';
+        textElement.appendChild(elementContainer);
+      }
+    }
+
+    // Process each element (word or space)
+    for (let elementIndex = 0; elementIndex < maxElements; elementIndex++) {
+      const fromElement =
+        elementIndex < fromStructure.length
+          ? fromStructure[elementIndex]
+          : null;
+      const toElement =
+        elementIndex < toStructure.length ? toStructure[elementIndex] : null;
+
+      const container = textElement.querySelector(
+        `.scramble-element-${uniqueId}-${elementIndex}`
+      ) as HTMLElement;
+
+      if (!container) continue;
+
+      // Handle case where we're removing an element
+      if (!toElement) {
+        tl.set(container, { display: 'none' }, 0);
+        continue;
+      }
+
+      // Show container if it was hidden
+      tl.set(container, { display: 'inline-block' }, 0);
+
+      // Handle spaces
+      if (toElement.type === 'space') {
+        container.innerHTML = ' ';
+        container.style.whiteSpace = 'pre';
+        continue;
+      }
+
+      // Handle words - create character spans within the word container
+      const fromWord = fromElement?.type === 'word' ? fromElement.content : '';
+      const toWord = toElement.content;
+      const maxCharLength = Math.max(fromWord.length, toWord.length);
+
+      // Clear and rebuild character structure for this word
+      container.innerHTML = '';
+      for (let charIndex = 0; charIndex < maxCharLength; charIndex++) {
         const charSpan = document.createElement('span');
-        charSpan.className = `scramble-char-${uniqueId}-${i}`;
+        charSpan.className = `scramble-char-${uniqueId}-${elementIndex}-${charIndex}`;
         charSpan.style.display = 'inline-block';
-        charSpan.style.width = 'auto';
-        charSpan.style.overflow = 'hidden';
-        charSpan.style.whiteSpace = 'pre'; // Preserve spaces
-        charSpan.style.verticalAlign = 'text-top';
-        charSpan.textContent = ' ';
-        textElement.appendChild(charSpan);
-      }
-    }
+        charSpan.style.minWidth = '0';
+        charSpan.textContent =
+          charIndex < fromWord.length ? fromWord[charIndex] : '';
 
-    // Update charElements to include new spans
-    const allCharElements = textElement.querySelectorAll(
-      `[class*="scramble-char-${uniqueId}-"]`
-    ) as NodeListOf<HTMLElement>;
+        if (charIndex >= fromWord.length) {
+          charSpan.style.display = 'none';
+        }
 
-    // Animate each character position
-    for (let i = 0; i < maxLength; i++) {
-      const charElement = allCharElements[i];
-      if (!charElement) continue;
-
-      const fromChar = i < fromText.length ? fromText[i] : '';
-      const toChar = i < toText.length ? toText[i] : '';
-
-      const charSelector = `.scramble-char-${uniqueId}-${i}`;
-      const startTime = i * 0.02; // Slight stagger for effect
-
-      // If characters are the same, just set directly without scrambling
-      if (fromChar === toChar) {
-        tl.set(
-          charSelector,
-          {
-            text: { value: toChar, rtl: false },
-          },
-          startTime
-        );
-        continue;
+        container.appendChild(charSpan);
       }
 
-      // Handle spaces - don't scramble them, just transition directly
-      if (toChar === ' ') {
-        tl.to(
-          charSelector,
-          {
-            duration: duration / scrambleCount,
-            text: {
-              value: ' ',
-              rtl: false,
+      // Animate each character in the word
+      for (let charIndex = 0; charIndex < maxCharLength; charIndex++) {
+        const fromChar = charIndex < fromWord.length ? fromWord[charIndex] : '';
+        const toChar = charIndex < toWord.length ? toWord[charIndex] : '';
+
+        const charSelector = `.scramble-char-${uniqueId}-${elementIndex}-${charIndex}`;
+        const startTime = elementIndex * 0.05 + charIndex * 0.02;
+
+        // Show/hide character spans based on target word length
+        if (charIndex >= toWord.length) {
+          tl.set(charSelector, { display: 'none' }, startTime);
+          continue;
+        } else if (charIndex >= fromWord.length) {
+          tl.set(charSelector, { display: 'inline-block' }, startTime);
+        }
+
+        // If characters are the same, just set directly without scrambling
+        if (fromChar === toChar && fromChar !== '') {
+          tl.set(
+            charSelector,
+            {
+              text: { value: toChar, rtl: false },
             },
-            ease: 'none',
-          },
-          startTime
-        );
-        continue;
-      }
+            startTime
+          );
+          continue;
+        }
 
-      // Create scrambling sequence for non-space characters
-      const scrambleInterval = duration / scrambleCount;
+        // Create scrambling sequence for different characters
+        const scrambleInterval = duration / scrambleCount;
 
-      for (let j = 0; j < scrambleCount; j++) {
-        const scrambledChar =
-          j === scrambleCount - 1 ? toChar : getRandomChar();
+        for (let j = 0; j < scrambleCount; j++) {
+          const scrambledChar =
+            j === scrambleCount - 1 ? toChar : getRandomChar();
 
-        tl.to(
-          charSelector,
-          {
-            duration: scrambleInterval,
-            text: {
-              value: scrambledChar,
-              rtl: false,
+          tl.to(
+            charSelector,
+            {
+              duration: scrambleInterval,
+              text: {
+                value: scrambledChar,
+                rtl: false,
+              },
+              ease: 'none',
             },
-            ease: 'none',
-          },
-          startTime + j * scrambleInterval
-        );
-      }
-    }
-
-    // Hide extra characters if target text is shorter
-    if (toText.length < fromText.length) {
-      for (let i = toText.length; i < fromText.length; i++) {
-        const charSelector = `.scramble-char-${uniqueId}-${i}`;
-        tl.set(
-          charSelector,
-          {
-            text: { value: '', rtl: false },
-            display: 'none',
-          },
-          0
-        );
-      }
-    }
-
-    // Show characters if target text is longer
-    if (toText.length > fromText.length) {
-      for (let i = fromText.length; i < toText.length; i++) {
-        const charSelector = `.scramble-char-${uniqueId}-${i}`;
-        tl.set(
-          charSelector,
-          {
-            display: 'inline-block',
-          },
-          0
-        );
+            startTime + j * scrambleInterval
+          );
+        }
       }
     }
 
@@ -203,7 +230,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
     [defaultText, hoverText, scrambleChars, scrambleDuration, uniqueId]
   );
 
-  // Initialize the component with character spans
+  // Initialize the component with word and character structure
   useGSAP(
     () => {
       if (!containerRef.current) return;
@@ -215,28 +242,47 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
 
       if (!textElement) return;
 
-      // Clear and setup initial text
+      // Clear and setup initial text structure
       textElement.innerHTML = '';
 
-      // Create character spans for the default text
-      const maxLength = Math.max(defaultText.length, hoverText.length);
+      // Parse the default text into word/space structure
+      const defaultStructure = parseTextStructure(defaultText);
+      const hoverStructure = parseTextStructure(hoverText);
+      const maxElements = Math.max(
+        defaultStructure.length,
+        hoverStructure.length
+      );
 
-      for (let i = 0; i < maxLength; i++) {
-        const charSpan = document.createElement('span');
-        charSpan.className = `scramble-char-${uniqueId}-${i}`;
-        charSpan.textContent = i < defaultText.length ? defaultText[i] : '';
-        charSpan.style.display = 'inline-block';
-        charSpan.style.width = 'auto';
-        charSpan.style.overflow = 'hidden';
-        charSpan.style.whiteSpace = 'pre'; // Preserve spaces
-        charSpan.style.verticalAlign = 'text-top';
+      // Create containers for each word/space element
+      for (let elementIndex = 0; elementIndex < maxElements; elementIndex++) {
+        const elementContainer = document.createElement('span');
+        elementContainer.className = `scramble-element-${uniqueId}-${elementIndex}`;
+        elementContainer.style.display = 'inline-block';
 
-        // Hide extra characters initially if default text is shorter
-        if (i >= defaultText.length) {
-          charSpan.style.display = 'none';
+        const defaultElement =
+          elementIndex < defaultStructure.length
+            ? defaultStructure[elementIndex]
+            : null;
+
+        if (!defaultElement) {
+          elementContainer.style.display = 'none';
+        } else if (defaultElement.type === 'space') {
+          elementContainer.innerHTML = ' ';
+          elementContainer.style.whiteSpace = 'pre';
+        } else {
+          // Create character spans for the word
+          const word = defaultElement.content;
+          for (let charIndex = 0; charIndex < word.length; charIndex++) {
+            const charSpan = document.createElement('span');
+            charSpan.className = `scramble-char-${uniqueId}-${elementIndex}-${charIndex}`;
+            charSpan.textContent = word[charIndex];
+            charSpan.style.display = 'inline-block';
+            charSpan.style.minWidth = '0';
+            elementContainer.appendChild(charSpan);
+          }
         }
 
-        textElement.appendChild(charSpan);
+        textElement.appendChild(elementContainer);
       }
     },
     {
@@ -250,10 +296,8 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
       ref={containerRef}
       className={`scramble-text-container ${className}`}
       sx={{
-        // display: 'inline-block',
         cursor: 'pointer',
         transition: 'background-color 0.2s ease',
-        padding: '2px 4px',
         color: textColor,
         ...style,
       }}
@@ -265,9 +309,9 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
         style={{ display: 'inline' }}
         component="span"
         {...typographyProps}
-        sx={{ ...typographyProps.sx, '*': { minWidth: '0.5rem' } }}
+        sx={{ ...typographyProps.sx }}
       >
-        {/* Character spans will be dynamically generated here */}
+        {/* Word and character spans will be dynamically generated here */}
       </Typography>
     </Box>
   );
