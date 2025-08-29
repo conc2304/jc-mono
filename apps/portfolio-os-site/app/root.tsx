@@ -143,7 +143,7 @@ export const meta: MetaFunction = () => [
   },
 ];
 
-// JSON-LD Structured Data (add this to your head separately)
+// JSON-LD Structured Data
 export const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -170,7 +170,7 @@ export const structuredData = {
       image: {
         '@type': 'ImageObject',
         '@id': 'https://www.clyzby.com/#personlogo',
-        url: 'https://www.clyzby.com/logo.png', // Your logo
+        url: 'https://www.clyzby.com/logo.png',
         width: 512,
         height: 512,
         caption: 'Jose Conchello Logo',
