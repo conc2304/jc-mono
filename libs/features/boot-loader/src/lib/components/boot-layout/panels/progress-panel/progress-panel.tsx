@@ -32,7 +32,7 @@ export const ProgressPanel: React.FC<ProgressPanelProps> = ({
         lineThickness={25}
         spacing={65}
         width="100%"
-        height="80px"
+        height="100%"
         direction="diagonal-alt"
         color={theme.palette.action.focus}
       />

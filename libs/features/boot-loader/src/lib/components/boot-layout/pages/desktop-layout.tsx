@@ -1,5 +1,13 @@
 import React, { CSSProperties } from 'react';
-import { Box, Divider, Grid, Stack, Typography, useTheme } from '@mui/material';
+import {
+  alpha,
+  Box,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import {
   BrowserFrame,
   BottomPanel,
@@ -22,7 +30,11 @@ import {
   RadarPanel,
   TorusProgressPanel,
 } from '../panels';
-import { BackgroundOverlay, ScrambleText } from '@jc/ui-components';
+import {
+  BackgroundOverlay,
+  DiagonalLines,
+  ScrambleText,
+} from '@jc/ui-components';
 
 interface FullDesktopLayoutProps {
   bootMessages: any[];
@@ -89,12 +101,13 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                   <AugmentedPanel
                     augmentType="bootText"
                     sx={{
-                      height: '100%',
+                      flexGrow: 1,
                       width: '100%',
                       backgroundColor: 'transparent',
                       position: 'relative',
                       overflow: 'hidden',
                       padding: theme.spacing(0),
+                      overflow: 'hidden',
                     }}
                   >
                     <TorusProgressPanel
@@ -115,11 +128,33 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
             </Grid>
 
             {/* Center Panel */}
-            <Grid
-              size={{ xs: 5 }}
-              display={'flex'}
-              // border="3px dashed green"
-            >
+            <Grid size={{ xs: 5 }} display={'flex'} position={'relative'}>
+              <Box
+                data-augmented-ui="bl-2-clip-x tr-clip"
+                sx={{
+                  '--aug-bl': '3.5rem',
+                  // '--aug-border-all': '1px',
+                  '--aug-bl-extend1': 'calc(100% - 7rem)',
+
+                  position: 'absolute',
+                  // border: '1px solid black',
+                  // p: 1,
+                  top: 0,
+                  right: 0,
+                  width: `calc(25% + 7rem - 8px)`,
+                  height: 'calc(7rem - 8px)',
+                }}
+              >
+                <DiagonalLines
+                  height="100%"
+                  width="100%"
+                  lineThickness={1}
+                  spacing={10}
+                  color={alpha(theme.palette.primary.main, 0.5)}
+                  direction="diagonal-alt"
+                />
+              </Box>
+
               <Stack
                 flex={1}
                 gap={5}
@@ -164,14 +199,14 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       color="primary"
                       defaultText="Jose Conchello"
                       hoverText="Via CLYZBY_OS"
-                      mr="calc(3.5rem )"
+                      mr="calc(3.5rem * 0.5 )"
                     />
                     <ScrambleText
                       variant="h1"
                       color="primary"
                       defaultText="UI Engineer & Artist"
                       hoverText="Creative Technologist"
-                      mr="calc(3.5rem)"
+                      mr="calc(3.5rem * 0.5)"
                     />
                   </Stack>
 
@@ -206,27 +241,18 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
             </Grid>
 
             {/* Right Panel */}
-            <Grid
-              size={{ xs: 4 }}
-              // border="1px solid black"
-            >
-              <Stack
-                gap={2}
-                //  border="1px dashed green"
-                height="100%"
-              >
-                <Box height={'100px'}>
+            <Grid size={{ xs: 4 }}>
+              <Stack gap={2} height="100%">
+                <Stack height={'100px'}>
                   <ProgressPanel
                     progress={progress}
                     isComplete={isComplete}
                     progressMessages={progressMessages}
                   />
-                </Box>
+                </Stack>
 
-                {/* Key changes: minHeight: 0 and flex: "1 1 0" to allow proper shrinking */}
                 <Box
-                  // border="1px solid red"
-                  flex="1 1 0" // flex-grow: 1, flex-shrink: 1, flex-basis: 0
+                  flex="1 1 0"
                   minHeight={0} // Critical: allows flex item to shrink below content size
                   overflow="hidden" // Prevent this container from growing
                 >
@@ -236,7 +262,7 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                     onProgress={handlers.handleProgress}
                     onComplete={handlers.handleBootComplete}
                     textWrapMode="wrap"
-                    flex={1} // Changed from 0 to 1 - let it fill the available space
+                    flex={1} // let it fill the available space
                   />
                 </Box>
 
@@ -244,7 +270,7 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                   width={'100%'}
                   p={3}
                   pt={3.5}
-                  flexShrink={0} // Keep this as-is to prevent shrinking
+                  flexShrink={0} // prevent shrinking
                 >
                   <BackgroundControls
                     backgroundAnimated={backgroundState.animateBackground}

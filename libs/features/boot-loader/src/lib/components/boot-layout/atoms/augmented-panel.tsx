@@ -4,7 +4,7 @@ import { Box, BoxProps, SxProps } from '@mui/material';
 
 interface AugmentedPanelProps extends BoxProps {
   augmentType?: 'bootText' | 'progress' | 'radar' | 'envelope';
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const AUGMENT_CONFIGS: Record<
