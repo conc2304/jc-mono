@@ -37,7 +37,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   radarMetricsConfig = DefaultRadarMetrics,
   infoPanelContent = DefaultInfoPanelContent,
   passwordMessage = DefaultPasswordHoverMessage,
-  bgTexture = '',
+  bgTexture = { url: '', style: {} },
 }) => {
   const {
     breakpoints,

@@ -122,7 +122,7 @@ export const TileComponent = memo(
       () => textureImages[getRandomImgFn()],
       []
     );
-    const bgImgPath = `/textures/${tileBackgroundImg}`;
+    const bgImgPath = `/textures/ui/${tileBackgroundImg}`;
 
     return (
       <TileContainer
