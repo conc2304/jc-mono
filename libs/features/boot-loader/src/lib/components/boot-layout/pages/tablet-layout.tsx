@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react';
-import { Box, Grid, Stack, useTheme } from '@mui/material';
+import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import {
   BrowserFrame,
   BottomPanel,
@@ -158,20 +158,13 @@ export const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
           </Stack>
         </Stack>
 
-        {/* <Box
-          flexShrink={0}
-          // flexGrow={}
-          className="ThemePickerPanel--wrapper"
-          mx={2}
-          my={0.5}
-        >
-          <ThemePickerPanel />
-        </Box> */}
-
         <BottomPanel flexShrink={0} className="BottomPanel--root">
           <Grid container columns={12} spacing={4}>
             <Grid size={6} display="flex">
               <Stack>
+                <Typography variant="h5" color="primary" mb={0}>
+                  A Portfolio Site Experience by
+                </Typography>
                 <HeroText />
               </Stack>
               <Box flexGrow={1} />
