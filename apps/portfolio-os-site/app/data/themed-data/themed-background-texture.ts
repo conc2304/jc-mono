@@ -19,14 +19,14 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     light: {
       url: path('developer-terminal-bg.jpg'),
       style: {
-        opacity: 0.18,
+        opacity: 0.3,
         mixBlendMode: 'difference',
       },
     },
     dark: {
       url: path('developer-terminal-bg.jpg'),
       style: {
-        opacity: 0.15,
+        opacity: 0.35,
         mixBlendMode: 'screen',
       },
     },
@@ -34,10 +34,11 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
 
   'euclid-ci': {
     light: {
-      url: path('euclid-bg-2.jpg'),
+      url: path('euclid-bg-light.jpg'),
       style: {
         opacity: 0.25,
         mixBlendMode: 'multiply',
+        backgroundSize: '100% 100%',
       },
     },
     dark: {
@@ -45,6 +46,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
       style: {
         opacity: 0.08,
         mixBlendMode: 'screen',
+        backgroundSize: 'contain',
       },
     },
   },
@@ -53,7 +55,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     light: {
       url: path('marathon-bg.jpg'),
       style: {
-        opacity: 0.15,
+        opacity: 0.28,
         filter: 'grayscale(1)',
         mixBlendMode: 'difference',
       },
@@ -69,11 +71,11 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
 
   'neon-cyberpunk': {
     light: {
-      url: path('neon-cyberpunk-bg.jpg'),
+      url: path('neon-cyberpunk-bg-bw.jpg'),
       style: {
-        opacity: 0.3,
-        mixBlendMode: 'luminosity',
-        filter: 'grayscale(1) invert(1)',
+        opacity: 0.2,
+        mixBlendMode: 'darken',
+        filter: 'contrast(0.75) brightness(0.75)',
       },
     },
     dark: {
@@ -87,18 +89,17 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
 
   synthwave: {
     light: {
-      url: path('synthwave-sunset-bg-1.jpg'), // todo
+      url: path('synthwave-sunset-bg-dithered.jpg'), // todo
       style: {
-        opacity: 0.5,
-        mixBlendMode: 'overlay',
+        opacity: 0.25,
+        mixBlendMode: 'hard-light',
       },
     },
     dark: {
-      url: path('synthwave-sunset-bg-3.jpg'),
+      url: path('synthwave-sunset-bg-dithered.jpg'),
       style: {
-        opacity: 0.1,
-        mixBlendMode: 'hard-light',
-        backgroundSize: 'cover',
+        opacity: 0.15,
+        mixBlendMode: 'lighten',
       },
     },
   },
@@ -107,7 +108,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     light: {
       url: path('blade-runner-bg-2.jpg'),
       style: {
-        opacity: 0.12,
+        opacity: 0.16,
         filter: 'grayscale(1) invert(1)',
         mixBlendMode: 'hard-light',
       },
@@ -115,7 +116,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     dark: {
       url: path('blade-runner-bg.jpg'),
       style: {
-        opacity: 0.1,
+        opacity: 0.17,
         mixBlendMode: 'screen',
       },
     },
@@ -125,15 +126,15 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     light: {
       url: path('sunset-gradient-bg.jpg'),
       style: {
-        opacity: 0.06,
-        mixBlendMode: 'soft-light',
+        opacity: 0.5,
+        mixBlendMode: 'hard-light',
       },
     },
     dark: {
       url: path('sunset-gradient-bg.jpg'),
       style: {
         opacity: 0.25,
-        mixBlendMode: 'color-burn',
+        mixBlendMode: 'color-dodge',
       },
     },
   },
@@ -142,7 +143,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     light: {
       url: path('neon-synthwave-bg.jpg'),
       style: {
-        opacity: 0.45,
+        opacity: 0.25,
         mixBlendMode: 'overlay',
       },
     },
@@ -178,7 +179,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
       url: path('bubblegum-dream-bg.jpg'),
       style: {
         opacity: 0.48,
-        mixBlendMode: 'soft-light',
+        mixBlendMode: 'darken',
       },
     },
     dark: {
@@ -192,7 +193,7 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
 
   'tres-sendas': {
     light: {
-      url: path('tres-sendas-bg-2.jpg'),
+      url: path('tres-sendas-bg.jpg'),
       style: {
         opacity: 0.25,
         mixBlendMode: 'soft-light',
@@ -209,16 +210,16 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
 
   arasaka: {
     light: {
-      url: path('arasaka-bg.jpg'),
+      url: path('arasaka-bg-tech.jpg'),
       style: {
-        opacity: 0.38,
-        mixBlendMode: 'color-dodge',
+        opacity: 0.3,
+        mixBlendMode: 'color-burn',
       },
     },
     dark: {
-      url: path('arasaka-bg.jpg'),
+      url: path('arasaka-bg-tech.jpg'),
       style: {
-        opacity: 0.38,
+        opacity: 0.27,
         mixBlendMode: 'luminosity',
       },
     },
@@ -284,24 +285,4 @@ export const getThemedBgTexture = (
 ): { url: string; style: CSSProperties } => {
   const themeConfig = ThemedBgTexture[themeId] || DefaultBgTexture;
   return themeConfig[mode];
-};
-
-// Helper function to get random marathon variant (if you want to keep the randomization)
-export const getMarathonTexture = (
-  mode: 'light' | 'dark'
-): { url: string; style: CSSProperties } => {
-  const useVariant = Math.random() > 0.5;
-  const baseConfig = ThemedBgTexture.marathon[mode];
-
-  if (mode === 'dark') {
-    return {
-      url: path(useVariant ? 'marathon-bg-2.jpg' : 'marathon-bg.jpg'),
-      style: {
-        opacity: useVariant ? 0.05 : 0.2,
-        mixBlendMode: 'difference',
-      },
-    };
-  }
-
-  return baseConfig; // For light mode, use standard config
 };

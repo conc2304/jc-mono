@@ -1,6 +1,5 @@
 import { ScrambleText } from '@jc/ui-components';
-import { Typography } from '@mui/material';
-import { Box, styled } from '@mui/system';
+import { Typography, Box, styled, alpha } from '@mui/material';
 
 export const BrowserHeader = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -15,7 +14,7 @@ export const BrowserHeader = styled(Box)(({ theme }) => ({
 export const AddressBar = styled(Box)(({ theme }) => ({
   flex: 1,
   margin: `0 ${theme.spacing(2)}`,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
   border: `1px solid ${theme.palette.primary.main}`,
   padding: theme.spacing(0.5, 1.5),
   // fontSize: '0.75rem',

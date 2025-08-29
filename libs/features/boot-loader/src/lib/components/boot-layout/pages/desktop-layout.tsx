@@ -61,12 +61,10 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
   passwordMessage,
   themedWidgetGifUrl,
   progressMessages,
-  radarMetricsConfig,
   infoPanelContent,
   progress,
   isComplete,
   backgroundState,
-  radarData,
   handlers,
   bgTexture,
 }) => {
@@ -75,13 +73,14 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
   return (
     <>
       <BackgroundOverlay
+        className="ThemedBackgroundTexture--overlay"
         url={bgTexture.url}
         style={{
-          ...bgTexture.style,
           backgroundPosition: 'center center',
+          backgroundSize: 'cover',
           zIndex: 0,
+          ...bgTexture.style,
         }}
-        className="ThemedBackground--overlay"
       />
       <BrowserFrame>
         <Header passwordMsg={passwordMessage} />
@@ -272,6 +271,8 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                     '--aug-border-all': '1px',
                     '--aug-inlay-bg': theme.palette.background.paper,
                     '--aug-inlay-opacity': 0.6,
+                    '--aug-inlay-x': '1rem',
+                    '--aug-inlay-y': '1rem',
                   }}
                 >
                   <BackgroundControls

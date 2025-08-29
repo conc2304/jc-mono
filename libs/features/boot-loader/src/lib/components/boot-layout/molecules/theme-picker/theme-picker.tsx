@@ -13,10 +13,9 @@ import { useState } from 'react';
 import { PickerPanel } from './picker-panel';
 import { useEnhancedTheme } from '@jc/themes';
 import { SunIcon as LightMode, MoonStarIcon as DarkMode } from 'lucide-react';
+import { AugmentedButton } from '@jc/ui-components';
 
-const StatusBar = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+const StatusBar = styled(AugmentedButton)(({ theme }) => ({
   padding: theme.spacing(1),
   display: 'flex',
   alignItems: 'center',
@@ -73,14 +72,8 @@ export const ThemePickerPanel = ({
     <>
       <StatusBar
         onClick={() => setPickerOpen((prev) => !prev)}
-        sx={(theme) => ({
-          background: theme.palette.background.paper,
-          transition: 'all 0.2s ease-in',
-          cursor: 'pointer',
-          '&:hover': {
-            background: darken(theme.palette.background.paper, 0.3),
-          },
-        })}
+        variant="outlined"
+        shape="bottomClipped"
       >
         <Box display="flex" alignItems="center" gap={2}>
           <StatusIndicator />

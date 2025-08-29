@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Box, Grid, Stack, useTheme } from '@mui/material';
 import {
   BrowserFrame,
@@ -11,6 +11,7 @@ import { Header, GifContainer, Footer } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
 import { BackgroundControls } from '../molecules/background-controls/background-controls';
 import { BootTextPanel, RadarPanel, TorusProgressPanel } from '../panels';
+import { BackgroundOverlay } from '@jc/ui-components';
 
 interface SmallDesktopLayoutProps {
   bootMessages: any[];
@@ -22,6 +23,10 @@ interface SmallDesktopLayoutProps {
   radarData: any;
   handlers: any;
   progress: any;
+  bgTexture: {
+    url: string;
+    style: CSSProperties;
+  };
 }
 
 export const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
@@ -34,127 +39,162 @@ export const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
   radarData,
   handlers,
   progress,
+  bgTexture,
 }) => {
   const theme = useTheme();
 
   return (
-    <BrowserFrame>
-      <Header passwordMsg={passwordMessage} />
+    <>
+      <BackgroundOverlay
+        className="ThemedBackgroundTexture--overlay"
+        url={bgTexture.url}
+        style={{
+          backgroundPosition: 'center center',
+          backgroundSize: 'cover',
+          zIndex: 0,
+          ...bgTexture.style,
+        }}
+      />
 
-      <Box p={2} flex={1} className="MainContent--root">
-        <Grid container spacing={2} height="100%">
-          <Grid
-            size={{ xs: 6.5 }}
-            className="LeftContentPanel--grid-wrapper"
-            display="flex"
-          >
-            <Box
-              className="MobileContent--flex-wrapper"
-              p={1}
+      {/* Content */}
+      <BrowserFrame>
+        <Header passwordMsg={passwordMessage} />
+
+        <Stack p={2} flex={1} className="MainContent--root">
+          <Grid container spacing={2} height="100%">
+            {/* Left Panel */}
+            <Grid
+              size={{ xs: 6.5 }}
+              className="LeftContentPanel--grid-wrapper"
               display="flex"
-              flexDirection="column"
-              gap={2}
-              flexGrow={1}
-              overflow="hidden"
             >
               <Box
-                sx={{
-                  position: 'relative',
-                  flex: 1,
-                  minHeight: 0,
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
+                className="MobileContent--flex-wrapper"
+                p={1}
+                display="flex"
+                flexDirection="column"
+                gap={2}
+                flexGrow={1}
+                overflow="hidden"
               >
-                <AugmentedPanel
-                  augmentType="bootText"
+                <Box
                   sx={{
-                    height: '100%',
-                    width: '100%',
-                    backgroundColor: 'transparent',
                     position: 'relative',
+                    flex: 1,
+                    minHeight: 0,
                     overflow: 'hidden',
-                    padding: theme.spacing(0),
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                 >
-                  <TorusProgressPanel
-                    progress={progress.current}
-                    progressMessage={progress.message}
-                  />
-                </AugmentedPanel>
+                  <AugmentedPanel
+                    augmentType="bootText"
+                    sx={{
+                      height: '100%',
+                      width: '100%',
+                      backgroundColor: 'transparent',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      padding: theme.spacing(0),
+                    }}
+                  >
+                    <TorusProgressPanel
+                      progress={progress.current}
+                      progressMessage={progress.message}
+                    />
+                  </AugmentedPanel>
+                </Box>
+                {/*
+                <RadarPanel
+                  animatedData={radarData.animatedData}
+                  title={radarMetricsConfig.title}
+                  onRadarHover={radarData.stopAnimation}
+                  onRadarBlur={radarData.startAnimation}
+                  theme={theme}
+                  flex={1}
+                /> */}
               </Box>
+            </Grid>
 
-              <RadarPanel
-                animatedData={radarData.animatedData}
-                title={radarMetricsConfig.title}
-                onRadarHover={radarData.stopAnimation}
-                onRadarBlur={radarData.startAnimation}
-                theme={theme}
-                flex={1}
-              />
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 5.5 }} className="RightContentPanel--grid-wrapper">
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap={2}
-              height="100%"
-              p={1}
+            {/* Right Panel */}
+            <Grid
+              size={{ xs: 5.5 }}
+              className="RightContentPanel--grid-wrapper"
             >
-              <BootTextPanel
-                bootMessages={bootMessages}
-                scrambleCharacterSet={scrambleCharacterSet}
-                onProgress={handlers.handleProgress}
-                onComplete={handlers.handleBootComplete}
-                textWrapMode="ellipsis"
-                flex={1}
-              />
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap={2}
+                height="100%"
+                p={1}
+              >
+                <BootTextPanel
+                  bootMessages={bootMessages}
+                  scrambleCharacterSet={scrambleCharacterSet}
+                  onProgress={handlers.handleProgress}
+                  onComplete={handlers.handleBootComplete}
+                  textWrapMode="ellipsis"
+                  flex={1}
+                />
 
-              <GifContainer
-                url={themedWidgetGifUrl.url}
-                sx={{
-                  height: '20%',
-                  backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
-                }}
-              />
-            </Box>
+                <GifContainer
+                  url={themedWidgetGifUrl.url}
+                  sx={{
+                    height: '20%',
+                    backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
+                  }}
+                />
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+          <Stack
+            flexShrink={0}
+            flexGrow={1}
+            className="ThemePickerPanel--wrapper"
+            mx={2}
+            my={0.5}
+          >
+            <ThemePickerPanel />
+          </Stack>
+        </Stack>
 
-      <Box flexShrink={0} className="ThemePickerPanel--wrapper" mx={2} my={0.5}>
-        <ThemePickerPanel />
-      </Box>
+        {/* <Box
+          flexShrink={0}
+          // flexGrow={}
+          className="ThemePickerPanel--wrapper"
+          mx={2}
+          my={0.5}
+        >
+          <ThemePickerPanel />
+        </Box> */}
 
-      <BottomPanel flexShrink={0} className="BottomPanel--root">
-        <Grid container columns={12} spacing={4}>
-          <Grid size={6} display="flex">
-            <Stack>
-              <HeroText />
-            </Stack>
-            <Box flexGrow={1} />
+        <BottomPanel flexShrink={0} className="BottomPanel--root">
+          <Grid container columns={12} spacing={4}>
+            <Grid size={6} display="flex">
+              <Stack>
+                <HeroText />
+              </Stack>
+              <Box flexGrow={1} />
+            </Grid>
+
+            <BackgroundControls
+              backgroundAnimated={backgroundState.animateBackground}
+              onBackgroundSizeChange={backgroundState.handleBackgroundResize}
+              onBlendModeChange={backgroundState.setBackgroundBlendMode}
+              onToggleBackground={() =>
+                backgroundState.setAnimateBackground((prev: boolean) => !prev)
+              }
+              blendModeActive={backgroundState.backgroundBlendMode}
+            />
+
+            <Grid size={{ xs: 4 }} sx={{ flex: 1 }}>
+              <EnterButton fontSize={'2.25rem'} />
+            </Grid>
           </Grid>
+        </BottomPanel>
 
-          <BackgroundControls
-            backgroundAnimated={backgroundState.animateBackground}
-            onBackgroundSizeChange={backgroundState.handleBackgroundResize}
-            onBlendModeChange={backgroundState.setBackgroundBlendMode}
-            onToggleBackground={() =>
-              backgroundState.setAnimateBackground((prev: boolean) => !prev)
-            }
-            blendModeActive={backgroundState.backgroundBlendMode}
-          />
-
-          <Grid size={{ xs: 4 }} sx={{ flex: 1 }}>
-            <EnterButton fontSize={'2.25rem'} />
-          </Grid>
-        </Grid>
-      </BottomPanel>
-
-      <Footer />
-    </BrowserFrame>
+        <Footer />
+      </BrowserFrame>
+    </>
   );
 };

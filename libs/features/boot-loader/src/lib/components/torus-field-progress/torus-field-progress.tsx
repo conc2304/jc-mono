@@ -531,7 +531,7 @@ export const TorusFieldProgress = ({
     }
 
     if (rendererRef.current) {
-      rendererRef.current.setClearColor(processedColors.background, 0.7);
+      rendererRef.current.setClearColor(processedColors.background, 0.5);
     }
 
     // Update all torus elements

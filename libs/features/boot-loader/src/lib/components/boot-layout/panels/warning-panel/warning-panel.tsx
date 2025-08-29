@@ -17,7 +17,7 @@ const WarningPanelAugmented = (props: PaperProps) => (
 );
 
 const WarningPanelStyled = styled(Paper)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  backgroundColor: alpha(theme.palette.primary.main, 0.03),
   padding: theme.spacing(1.5),
   paddingBottom: theme.spacing(0.5),
   borderRadius: 0,
