@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 
 import {
   defaultBootMessages,
@@ -11,10 +11,12 @@ import {
 } from './default-data';
 import { useBootLayout } from './hooks/use-boot-layout';
 import { BootContainer } from './atoms';
-import { MobileLayout } from './pages/mobile-layout';
-import { TabletLayout } from './pages/tablet-layout';
-import { FullDesktopLayout } from './pages/desktop-layout';
 import { CSSProperties } from '@mui/material';
+import { LoadingFallback } from '@jc/ui-components';
+
+const MobileLayout = lazy(() => import('./pages/mobile-layout'));
+const TabletLayout = lazy(() => import('./pages/tablet-layout'));
+const FullDesktopLayout = lazy(() => import('./pages/desktop-layout'));
 
 interface SciFiLayoutProps {
   className?: string;
@@ -79,15 +81,17 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     handlers,
   };
 
+  const getLayoutComponent = () => {
+    if (breakpoints.isSm) return <MobileLayout {...commonProps} />;
+    if (breakpoints.isMd) return <TabletLayout {...commonProps} />;
+    return <FullDesktopLayout {...commonProps} />;
+  };
+
   return (
     <BootContainer {...containerProps}>
-      {breakpoints.isSm ? (
-        <MobileLayout {...commonProps} isXs={breakpoints.isXs} />
-      ) : breakpoints.isMd ? (
-        <TabletLayout {...commonProps} />
-      ) : (
-        <FullDesktopLayout {...commonProps} />
-      )}
+      <Suspense fallback={<LoadingFallback message="Loading portfolio..." />}>
+        {getLayoutComponent()}
+      </Suspense>
     </BootContainer>
   );
 };

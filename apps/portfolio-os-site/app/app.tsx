@@ -67,7 +67,7 @@
 
 // export default App;
 
-import { Box, useTheme } from '@mui/system';
+import { useTheme } from '@mui/system';
 import { BootLayout, BootMessage } from '@jc/boot-loader';
 import { useColorMode, useEnhancedTheme } from '@jc/themes';
 import { randomInt } from 'd3';

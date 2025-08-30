@@ -10,7 +10,7 @@ import {
 import { Header, GifContainer, Footer } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
 import { BackgroundControls } from '../molecules/background-controls/background-controls';
-import { BootTextPanel, RadarPanel, TorusProgressPanel } from '../panels';
+import { BootTextPanel, TorusProgressPanel } from '../panels';
 import { BackgroundOverlay } from '@jc/ui-components';
 
 interface SmallDesktopLayoutProps {
@@ -29,7 +29,7 @@ interface SmallDesktopLayoutProps {
   };
 }
 
-export const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
+const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
   bootMessages,
   scrambleCharacterSet,
   passwordMessage,
@@ -191,3 +191,5 @@ export const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
     </>
   );
 };
+
+export default TabletLayout;

@@ -1,35 +1,10 @@
 import React, { CSSProperties } from 'react';
-import {
-  alpha,
-  Box,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import {
-  BrowserFrame,
-  BottomPanel,
-  HeroText,
-  EnterButton,
-  AugmentedPanel,
-} from '../atoms';
-import {
-  Header,
-  GifContainer,
-  Footer,
-  DataPanel,
-  WarningPanel,
-} from '../molecules';
+import { alpha, Box, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { BrowserFrame, EnterButton, AugmentedPanel } from '../atoms';
+import { Header, GifContainer, Footer, WarningPanel } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
 import { BackgroundControls } from '../molecules/background-controls/background-controls';
-import {
-  BootTextPanel,
-  ProgressPanel,
-  RadarPanel,
-  TorusProgressPanel,
-} from '../panels';
+import { BootTextPanel, ProgressPanel, TorusProgressPanel } from '../panels';
 import {
   BackgroundOverlay,
   DiagonalLines,
@@ -55,7 +30,7 @@ interface FullDesktopLayoutProps {
   };
 }
 
-export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
+const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
   bootMessages,
   scrambleCharacterSet,
   passwordMessage,
@@ -298,3 +273,5 @@ export const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
     </>
   );
 };
+
+export default FullDesktopLayout;

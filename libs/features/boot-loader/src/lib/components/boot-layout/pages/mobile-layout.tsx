@@ -12,16 +12,16 @@ interface MobileLayoutProps {
   passwordMessage: string;
   themedWidgetGifUrl: any;
   handlers: any;
-  isXs: boolean;
+  isXs?: boolean;
 }
 
-export const MobileLayout: React.FC<MobileLayoutProps> = ({
+const MobileLayout: React.FC<MobileLayoutProps> = ({
   bootMessages,
   scrambleCharacterSet,
   passwordMessage,
   themedWidgetGifUrl,
   handlers,
-  isXs,
+  isXs = true,
 }) => (
   <BrowserFrame>
     {!isXs && <Header compact={true} passwordMsg={passwordMessage} />}
@@ -71,3 +71,5 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
     </Box>
   </BrowserFrame>
 );
+
+export default MobileLayout;
