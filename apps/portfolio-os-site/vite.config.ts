@@ -37,6 +37,55 @@ export default defineConfig(() => ({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Skip externalized modules (React, React-DOM, etc.)
+          if (id.includes('node_modules')) {
+            // Only chunk non-externalized vendor libraries
+            if (id.includes('three') || id.includes('THREE')) {
+              return 'vendor-three';
+            }
+
+            if (id.includes('gsap')) {
+              return 'vendor-gsap';
+            }
+
+            if (id.includes('@mui')) {
+              return 'vendor-mui';
+            }
+
+            if (id.includes('d3')) {
+              return 'vendor-d3';
+            }
+
+            // Return undefined for other node_modules to let Vite handle them
+            return undefined;
+          }
+
+          // Split your application code
+          if (id.includes('boot-loader') || id.includes('BootLayout')) {
+            return 'chunk-boot-system';
+          }
+
+          if (id.includes('themes/src') || id.includes('enhanced-theme')) {
+            return 'chunk-theme-system';
+          }
+
+          if (id.includes('/window') || id.includes('tile-grid')) {
+            return 'chunk-window-system';
+          }
+
+          if (id.includes('/shared/components/src/lib/organisms')) {
+            return 'chunk-organisms';
+          }
+
+          if (id.includes('/shared/components/src/lib/molecules')) {
+            return 'chunk-molecules';
+          }
+        },
+      },
+    },
   },
   define: {
     'import.meta.vitest': undefined,
