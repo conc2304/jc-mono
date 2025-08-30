@@ -7,7 +7,7 @@ import {
   MobileThemedBootMessages,
   ThemedBootMessages,
 } from './data/themed-data/themed-boot-messages';
-import { getScrambleCharacters } from './data/themed-data/themed-scramble-charsets';
+import { getScrambleCharacters } from './data/themed-data/themed-scramble-characters';
 import { getThemedGifUrl } from './data/themed-data/themed-gif';
 import { getProgressMessages } from './data/themed-data/themed-progress-state';
 import { getRadarMetrics } from './data/themed-data/themed-metric-labels';
