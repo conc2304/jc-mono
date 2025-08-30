@@ -43,9 +43,6 @@
       "path": "../../libs/features/desktop-OS/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/shared/themes/tsconfig.lib.json"
-    },
-    {
       "path": "../../libs/shared/file-system/tsconfig.lib.json"
     },
     {
@@ -53,6 +50,12 @@
     },
     {
       "path": "../../libs/shared/components/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/themes/tsconfig.lib.json"
     },
     {
       "path": "../../libs/features/boot-loader/tsconfig.lib.json"
