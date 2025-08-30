@@ -70,7 +70,6 @@
 import { useTheme } from '@mui/system';
 import { BootLayout, BootMessage } from '@jc/boot-loader';
 import { useColorMode, useEnhancedTheme } from '@jc/themes';
-import { randomInt } from 'd3';
 import {
   DefaultBootMessage,
   MobileDefaultBootMessage,
@@ -84,6 +83,7 @@ import { getRadarMetrics } from './data/themed-data/themed-metric-labels';
 import { getInfoPanelContent } from './data/themed-data/themed-warning panel-text';
 import { getPasswordHoverMessage } from './data/themed-data/themed-password-message';
 import { getThemedBgTexture } from './data/themed-data/themed-background-texture';
+import { randomInt } from '@jc/utils';
 
 export default function App() {
   const theme = useTheme();
@@ -96,10 +96,6 @@ export default function App() {
     ? MobileThemedBootMessages
     : ThemedBootMessages;
   const fallbackMessages = isSm ? MobileDefaultBootMessage : DefaultBootMessage;
-
-  const getRandomMessageIndexFn = randomInt(
-    messageBankByScreenSize[currentThemeId].length
-  ); // set max to length
 
   const contextMessages: BootMessage[] = [
     [
@@ -118,8 +114,9 @@ export default function App() {
   const newLine = '';
 
   const bootMessagesThemed =
-    messageBankByScreenSize[currentThemeId][getRandomMessageIndexFn()] ||
-    fallbackMessages;
+    messageBankByScreenSize[currentThemeId][
+      randomInt(messageBankByScreenSize[currentThemeId].length)
+    ] || fallbackMessages;
 
   const bootMessages = [
     ...contextMessages,

@@ -45,3 +45,5 @@ export const findClosestNumber = (
 export const clamp = (num: number, min: number, max: number) => {
   return Math.min(Math.max(num, min), max);
 };
+
+export const randomInt = (max: number) => Math.floor(Math.random() * max);

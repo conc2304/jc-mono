@@ -7,7 +7,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { randomInt } from 'd3';
 import { Star } from '@mui/icons-material';
 
 import { useWindowActions } from '../../context';
@@ -27,6 +26,7 @@ import {
 import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton, DiagonalLines } from '../../atoms';
+import { randomInt } from '@jc/utils';
 
 const textureImages = [
   'scratched-glass.png',
@@ -35,8 +35,6 @@ const textureImages = [
   'scratched-glass-intense-medium-bottom-distressed.png',
   'scratched-glass-intense-medium.png',
 ];
-
-const getRandomImgFn = randomInt(textureImages.length);
 
 interface TileComponentProps {
   tile: PlacedTile;
@@ -119,7 +117,7 @@ export const TileComponent = memo(
       theme.palette?.[config.color as PaletteOptionName]?.main || config.color;
 
     const tileBackgroundImg = useMemo(
-      () => textureImages[getRandomImgFn()],
+      () => textureImages[randomInt(textureImages.length)],
       []
     );
     const bgImgPath = `/textures/ui/${tileBackgroundImg}`;
