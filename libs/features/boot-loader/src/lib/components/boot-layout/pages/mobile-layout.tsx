@@ -13,6 +13,7 @@ interface MobileLayoutProps {
   themedWidgetGifUrl: any;
   handlers: any;
   isXs?: boolean;
+  triggerPreload?: () => void;
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({
@@ -22,6 +23,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   themedWidgetGifUrl,
   handlers,
   isXs = true,
+  triggerPreload,
 }) => (
   <BrowserFrame>
     {!isXs && <Header compact={true} passwordMsg={passwordMessage} />}
@@ -66,7 +68,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
 
       <Box flexGrow={0.25} flexShrink={0}>
-        <EnterButton />
+        <EnterButton onMouseEnter={triggerPreload} />
       </Box>
     </Box>
   </BrowserFrame>

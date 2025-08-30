@@ -1,6 +1,7 @@
 import { AugmentedButton, ScrambleText } from '@jc/ui-components';
 import { alpha } from '@mui/system';
 import { Property } from 'csstype';
+import { ButtonProps } from '@mui/material';
 
 // TODO download and get locally
 const url =
@@ -12,7 +13,11 @@ const gradientStyle = `radial-gradient(${alpha('#fff', 0.3)}, ${alpha(
 )})`;
 const bgStyle = `${gradientStyle}, ${urlStyle}`;
 
-export const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
+interface EnterButtonProps extends ButtonProps {
+  fontSize?: Property.FontSize;
+}
+
+export const EnterButton = ({ fontSize, ...buttonProps }: EnterButtonProps) => (
   <AugmentedButton
     variant="contained"
     shape="buttonRight"
@@ -25,7 +30,7 @@ export const EnterButton = ({ fontSize }: { fontSize?: Property.FontSize }) => (
       '&[data-augmented-ui]': { '--aug-border-bg': `${bgStyle} !important` },
     }}
     href="/home"
-    style={{}}
+    {...buttonProps}
   >
     <ScrambleText
       variant="display"

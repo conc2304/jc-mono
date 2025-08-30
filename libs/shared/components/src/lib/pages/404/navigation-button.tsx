@@ -1,5 +1,5 @@
-import { Box, Stack, Typography, useTheme, keyframes } from '@mui/material';
-import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
+import { Box, Stack, useTheme, keyframes } from '@mui/material';
+import { DiagonalLines } from '../../atoms';
 import { HomeFilled } from '@mui/icons-material';
 import { ensureContrast } from '@jc/utils';
 import { useState } from 'react';
@@ -65,12 +65,6 @@ export const NavigationButtons = ({
     if (isMobile) return '4rem';
     if (isTablet) return '7rem';
     return '10.5rem';
-  };
-
-  const getFontSize = () => {
-    if (isMobile) return '3rem';
-    if (isTablet) return '4rem';
-    return '5rem';
   };
 
   return (
@@ -191,7 +185,6 @@ export const NavigationButtons = ({
             className="home-icon"
             color="secondary"
             sx={{
-              // fontSize: '10.5rem',
               fontSize: getIconSize(),
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))',

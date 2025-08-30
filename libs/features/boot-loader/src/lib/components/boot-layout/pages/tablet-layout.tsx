@@ -27,6 +27,7 @@ interface SmallDesktopLayoutProps {
     url: string;
     style: CSSProperties;
   };
+  triggerPreload?: () => void;
 }
 
 const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
@@ -34,12 +35,11 @@ const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
   scrambleCharacterSet,
   passwordMessage,
   themedWidgetGifUrl,
-  radarMetricsConfig,
   backgroundState,
-  radarData,
   handlers,
   progress,
   bgTexture,
+  triggerPreload,
 }) => {
   const theme = useTheme();
 
@@ -104,15 +104,6 @@ const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
                     />
                   </AugmentedPanel>
                 </Box>
-                {/*
-                <RadarPanel
-                  animatedData={radarData.animatedData}
-                  title={radarMetricsConfig.title}
-                  onRadarHover={radarData.stopAnimation}
-                  onRadarBlur={radarData.startAnimation}
-                  theme={theme}
-                  flex={1}
-                /> */}
               </Box>
             </Grid>
 
@@ -181,7 +172,7 @@ const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
             />
 
             <Grid size={{ xs: 4 }} sx={{ flex: 1 }}>
-              <EnterButton fontSize={'2.25rem'} />
+              <EnterButton fontSize={'2.25rem'} onMouseEnter={triggerPreload} />
             </Grid>
           </Grid>
         </BottomPanel>

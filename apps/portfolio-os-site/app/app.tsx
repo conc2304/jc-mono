@@ -136,6 +136,10 @@ export default function App() {
   const themedPasswordMessage = getPasswordHoverMessage(currentThemeId);
   const themedBgTexture = getThemedBgTexture(currentThemeId, resolvedMode);
 
+  const preloadHome = () => {
+    import('./routes/home');
+  };
+
   return (
     <BootLayout
       bootMessages={bootMessages}
@@ -146,6 +150,7 @@ export default function App() {
       infoPanelContent={themeInfoPanelContent}
       passwordMessage={themedPasswordMessage}
       bgTexture={themedBgTexture}
+      triggerPreload={preloadHome}
     />
   );
 }

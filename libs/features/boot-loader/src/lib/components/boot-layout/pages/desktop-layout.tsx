@@ -28,6 +28,7 @@ interface FullDesktopLayoutProps {
     url: string;
     style: CSSProperties;
   };
+  triggerPreload?: () => void;
 }
 
 const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
@@ -42,6 +43,7 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
   backgroundState,
   handlers,
   bgTexture,
+  triggerPreload,
 }) => {
   const theme = useTheme();
 
@@ -191,7 +193,7 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       mt={2}
                     >
                       <Stack width={'100%'} height="33%">
-                        <EnterButton />
+                        <EnterButton onMouseEnter={triggerPreload} />
                       </Stack>
 
                       <Stack width="100%" px={6}>

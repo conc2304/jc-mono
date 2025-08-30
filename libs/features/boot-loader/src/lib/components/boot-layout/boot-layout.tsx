@@ -28,6 +28,7 @@ interface SciFiLayoutProps {
   infoPanelContent?: any;
   passwordMessage?: string;
   bgTexture: { url: string; style: CSSProperties };
+  triggerPreload?: () => void;
 }
 
 export const BootLayout: React.FC<SciFiLayoutProps> = ({
@@ -40,6 +41,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
   infoPanelContent = DefaultInfoPanelContent,
   passwordMessage = DefaultPasswordHoverMessage,
   bgTexture = { url: '', style: {} },
+  triggerPreload,
 }) => {
   const {
     breakpoints,
@@ -79,6 +81,7 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
     backgroundState,
     radarData,
     handlers,
+    triggerPreload,
   };
 
   const getLayoutComponent = () => {

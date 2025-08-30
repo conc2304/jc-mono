@@ -12,6 +12,7 @@ export const PageNotFound404 = () => {
   const handleHomeClick = () => {
     navigate('/home');
   };
+
   if (isMobile) return <MobilePageNotFound404 onHomeClick={handleHomeClick} />;
 
   if (isTablet) return <MobilePageNotFound404 onHomeClick={handleHomeClick} />;
