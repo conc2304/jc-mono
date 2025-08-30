@@ -13,8 +13,6 @@
     "@emotion/styled": "^11.14.1",
     "@fastify/autoload": "~6.0.3",
     "@fastify/sensible": "~6.0.2",
-    "@fontsource/jetbrains-mono": "^5.2.6",
-    "@fontsource/orbitron": "^5.2.6",
     "@gsap/react": "^2.1.2",
     "@mui/icons-material": "^7.2.0",
     "@mui/lab": "^7.0.0-beta.14",

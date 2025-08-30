@@ -32,6 +32,7 @@ const typographyFallBack = getTypography({
   secondary: `'Eightgon', Impact, 'Arial Black', 'Trebuchet MS', Arial, sans-serif`,
   display: `'Saiba', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
   displayOutline: `'Saiba Outline', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
+  monospace: `'JetBrains Mono', monospace`,
 });
 
 export const createThemeFromOptions = ({

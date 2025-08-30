@@ -18,15 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body>
         {/* Prevent SSR color scheme flicker */}
-        <InitColorSchemeScript defaultMode="system" />
+        {/* <InitColorSchemeScript defaultMode="system" /> */}
         <EnhancedThemeProvider
           themes={enhancedThemes}
           defaultThemeId="neon-cyberpunk"

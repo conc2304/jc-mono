@@ -3,8 +3,6 @@ import React, { memo, useRef, useCallback, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/700.css';
 import { Box, useMediaQuery, useTheme } from '@mui/system';
 import { BootMessage } from '../../types';
 import { Property } from 'csstype';
@@ -675,7 +673,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         alignSelf: 'stretch',
 
         // Typography and visual
-        fontFamily: '"JetBrains Mono", monospace',
         color: textColor,
         fontSize: getFontSize(),
         lineHeight: 1.4,

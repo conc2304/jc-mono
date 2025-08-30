@@ -254,20 +254,18 @@ export const ProgressBar = ({
         {/* Label */}
         {showLabel && (
           <Typography
-            variant="button"
             className="progress-label"
+            variant="monospace"
             sx={{
               position: 'absolute',
               top: '50%',
               left: '16px',
               transform: 'translateY(-50%)',
               color: color,
-              fontWeight: 'bold',
-              fontFamily: 'JetBrains Mono, monospace',
               textShadow: `0 0 300px ${textColor}`,
               opacity: 0.9,
-              // mixBlendMode: 'difference',
               zIndex: 10,
+              textTransform: 'uppercase',
             }}
           >
             {indeterminate ? 'LOADING...' : label}
@@ -277,7 +275,7 @@ export const ProgressBar = ({
         {/* Percentage */}
         {showPercentage && (
           <Typography
-            variant="button"
+            variant="monospace"
             className="progress-percentage"
             sx={{
               position: 'absolute',
@@ -285,11 +283,9 @@ export const ProgressBar = ({
               right: '32px',
               transform: 'translateY(-50%)',
               color: color,
-              // fontSize: `${Math.max(14, height * 0.2)}px`,
-              fontWeight: 'bold',
-              fontFamily: 'JetBrains Mono, monospace',
               textShadow: `0 0 8px ${color}`,
               zIndex: 10,
+              textTransform: 'uppercase',
             }}
           >
             {indeterminate ? '...' : `${Math.round(progress)}%`}

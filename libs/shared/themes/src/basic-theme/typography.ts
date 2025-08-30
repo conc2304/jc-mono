@@ -5,6 +5,7 @@ interface FontOptions {
   secondary?: string;
   display?: string;
   displayOutline?: string;
+  monospace?: string;
 }
 
 const TypographyTheme = (
@@ -18,6 +19,7 @@ const TypographyTheme = (
     secondary = primary, // Fallback to primary if not provided
     display = primary, // Fallback to primary if not provided
     displayOutline = display, // Fallback to primary if not provided
+    monospace = primary,
   } = fontConfig;
 
   return {
@@ -99,7 +101,6 @@ const TypographyTheme = (
     },
     subtitle1: {
       fontFamily: primary,
-      // fontWeight: 400,
       fontWeight: 500,
       fontSize: '1rem',
       lineHeight: 1.75,
@@ -108,15 +109,11 @@ const TypographyTheme = (
     subtitle2: {
       fontFamily: primary,
       fontWeight: 500,
-      // fontFamily: secondary,
-      // fontWeight: 400,
       fontSize: '0.875rem',
       lineHeight: 1.57,
       letterSpacing: '0.00714em',
     },
     caption: {
-      // fontFamily: primary,
-      // fontWeight: 700,
       fontFamily: primary,
       fontWeight: 600,
       fontSize: '0.75rem',
@@ -138,6 +135,13 @@ const TypographyTheme = (
       lineHeight: 1.75,
       letterSpacing: '0.02857em',
       textTransform: 'uppercase',
+    },
+    monospace: {
+      fontFamily: monospace,
+      fontWeight: 'bold',
+      lineHeight: 1.4,
+      letterSpacing: '0.02857em',
+      fontSize: '0.875rem',
     },
   };
 };

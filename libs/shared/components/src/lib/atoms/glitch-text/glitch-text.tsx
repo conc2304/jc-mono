@@ -1,7 +1,5 @@
 import React, { useRef, useEffect, ReactNode } from 'react';
 import { gsap } from 'gsap';
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/700.css';
 import { Typography, TypographyProps } from '@mui/material';
 
 interface GlitchTextProps extends TypographyProps {

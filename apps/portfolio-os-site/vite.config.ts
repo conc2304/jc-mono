@@ -19,12 +19,13 @@ export default defineConfig(() => ({
   },
   plugins: [
     !process.env.VITEST && reactRouter(),
-    visualizer({
-      filename: 'dist/stats.html',
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-    }),
+    process.env.ANALYZE == 'true' &&
+      visualizer({
+        filename: 'dist/stats.html',
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
+      }),
     process.env.ANALYZE == 'true' &&
       analyzer({
         analyzerMode: 'server',

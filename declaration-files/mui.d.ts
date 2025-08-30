@@ -31,11 +31,13 @@ declare module '@mui/material/styles' {
   interface TypographyVariants {
     display: React.CSSProperties;
     displayOutline?: React.CSSProperties;
+    monospace: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     display?: React.CSSProperties;
     displayOutline?: React.CSSProperties;
+    monospace?: React.CSSProperties;
   }
 }
 
@@ -43,5 +45,6 @@ declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     display: true;
     displayOutline: true;
+    monospace: true;
   }
 }
