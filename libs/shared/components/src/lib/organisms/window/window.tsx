@@ -18,7 +18,6 @@ import { getCursorForDirection, getResizeDimensions } from './utils';
 import { useWindowManager } from '../../context';
 import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
-import { remToPixels } from '@jc/themes';
 
 // Extended interface with animation properties and docking
 interface WindowProps extends WindowMetaData {

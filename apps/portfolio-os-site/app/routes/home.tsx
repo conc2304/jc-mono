@@ -18,7 +18,7 @@ export function App() {
 
   return (
     <>
-      <Box position={'relative'}>
+      <Box position={'relative'} height={'100%'}>
         <BackgroundOverlay
           url={themedBgTexture.url}
           style={{

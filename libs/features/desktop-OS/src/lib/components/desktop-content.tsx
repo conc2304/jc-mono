@@ -1,9 +1,4 @@
-import {
-  BackgroundOverlay,
-  TileGrid,
-  useWindowManager,
-  Window,
-} from '@jc/ui-components';
+import { TileGrid, useWindowManager, Window } from '@jc/ui-components';
 import { Box } from '@mui/system';
 import { useMemo } from 'react';
 
@@ -20,26 +15,14 @@ const DesktopContent = () => {
     <Box
       className="DesktopOS--root"
       sx={(theme) => ({
-        width: '100vw',
-        height: [
-          '100vh', // Fallback
-          '100dvh', // Preferred value
-        ],
+        width: '100%',
+        height: '100%',
         background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         position: 'relative',
         overflow: 'hidden',
         contain: 'layout style paint',
       })}
     >
-      {/* <BackgroundOverlay
-        url={bgTexture.url}
-        style={{
-          ...bgTexture.style,
-          backgroundPosition: 'center center',
-          zIndex: 0,
-        }}
-        className="ThemedBackground--overlay"
-      /> */}
       <TileGrid gridTiles={desktopItems} />
 
       {/* Windows */}
