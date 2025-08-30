@@ -51,10 +51,6 @@ export default defineConfig(() => ({
               return 'vendor-gsap';
             }
 
-            if (id.includes('@mui')) {
-              return 'vendor-mui';
-            }
-
             if (id.includes('d3')) {
               return 'vendor-d3';
             }
