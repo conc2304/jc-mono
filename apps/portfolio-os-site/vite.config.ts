@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { analyzer } from 'vite-bundle-analyzer';
 
 export default defineConfig(() => ({
   root: __dirname,
@@ -24,6 +25,11 @@ export default defineConfig(() => ({
       gzipSize: true,
       brotliSize: true,
     }),
+    process.env.ANALYZE == 'true' &&
+      analyzer({
+        analyzerMode: 'server',
+        openAnalyzer: true,
+      }),
   ],
   // Uncomment this if you are using workers.
   // worker: {
@@ -58,27 +64,6 @@ export default defineConfig(() => ({
             // Return undefined for other node_modules to let Vite handle them
             return undefined;
           }
-
-          // // Split your application code
-          // if (id.includes('boot-loader') || id.includes('BootLayout')) {
-          //   return 'chunk-boot-system';
-          // }
-
-          // if (id.includes('themes/src') || id.includes('enhanced-theme')) {
-          //   return 'chunk-theme-system';
-          // }
-
-          // if (id.includes('/window') || id.includes('tile-grid')) {
-          //   return 'chunk-window-system';
-          // }
-
-          // if (id.includes('/shared/components/src/lib/organisms')) {
-          //   return 'chunk-organisms';
-          // }
-
-          // if (id.includes('/shared/components/src/lib/molecules')) {
-          //   return 'chunk-molecules';
-          // }
         },
       },
     },

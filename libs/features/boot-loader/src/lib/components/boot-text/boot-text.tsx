@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
-import { alpha, Box, useMediaQuery, useTheme } from '@mui/system';
+import { Box, useMediaQuery, useTheme } from '@mui/system';
 import { BootMessage } from '../../types';
 import { Property } from 'csstype';
 
