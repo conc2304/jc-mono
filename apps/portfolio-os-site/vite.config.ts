@@ -59,26 +59,26 @@ export default defineConfig(() => ({
             return undefined;
           }
 
-          // Split your application code
-          if (id.includes('boot-loader') || id.includes('BootLayout')) {
-            return 'chunk-boot-system';
-          }
+          // // Split your application code
+          // if (id.includes('boot-loader') || id.includes('BootLayout')) {
+          //   return 'chunk-boot-system';
+          // }
 
-          if (id.includes('themes/src') || id.includes('enhanced-theme')) {
-            return 'chunk-theme-system';
-          }
+          // if (id.includes('themes/src') || id.includes('enhanced-theme')) {
+          //   return 'chunk-theme-system';
+          // }
 
-          if (id.includes('/window') || id.includes('tile-grid')) {
-            return 'chunk-window-system';
-          }
+          // if (id.includes('/window') || id.includes('tile-grid')) {
+          //   return 'chunk-window-system';
+          // }
 
-          if (id.includes('/shared/components/src/lib/organisms')) {
-            return 'chunk-organisms';
-          }
+          // if (id.includes('/shared/components/src/lib/organisms')) {
+          //   return 'chunk-organisms';
+          // }
 
-          if (id.includes('/shared/components/src/lib/molecules')) {
-            return 'chunk-molecules';
-          }
+          // if (id.includes('/shared/components/src/lib/molecules')) {
+          //   return 'chunk-molecules';
+          // }
         },
       },
     },
