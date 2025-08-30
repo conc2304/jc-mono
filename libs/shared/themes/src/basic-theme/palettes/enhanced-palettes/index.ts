@@ -9,4 +9,7 @@ export * from './electric-synth-palette';
 export * from './ocean-depth-palette';
 export * from './bubblegum-dream-palette';
 export * from './tres-sendas-palette';
-export * from './violence-palette';
+export * from './arasaka-palette';
+export * from './developer-terminal-palette';
+export * from './blade-runner-palette';
+export * from './liberty-city-palette';

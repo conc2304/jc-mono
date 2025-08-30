@@ -1,5 +1,4 @@
 import { EnhancedThemeOption } from '../types';
-import { developerTerminalTheme } from './basic-themes/developer-terminal-palette';
 import {
   desertSunsetTheme,
   electricSynthwaveTheme,
@@ -12,9 +11,10 @@ import {
   bubblegumDreamTheme,
   tresSendasTheme,
   arasakaTheme,
+  bladeRunnerTheme,
+  libertyCityTheme,
+  developerTerminalTheme,
 } from './enhanced-palettes';
-import { bladeRunnerTheme } from './enhanced-palettes/blade-runner-palette';
-import { libertyCityTheme } from './enhanced-palettes/liberty-city-palette';
 
 export const enhancedThemes: EnhancedThemeOption[] = [
   developerTerminalTheme,
