@@ -16,12 +16,6 @@
       "path": "./libs/features/games-lib"
     },
     {
-      "path": "./apps/portfolio-site-e2e"
-    },
-    {
-      "path": "./apps/portfolio-site"
-    },
-    {
       "path": "./libs/shared/themes"
     },
     {
