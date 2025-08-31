@@ -1,7 +1,7 @@
 import { AugmentedButton, ScrambleText } from '@jc/ui-components';
 import { alpha } from '@mui/system';
 import { Property } from 'csstype';
-import { ButtonProps } from '@mui/material';
+import { ButtonProps, Typography } from '@mui/material';
 
 // TODO download and get locally
 const url =
@@ -32,13 +32,8 @@ export const EnterButton = ({ fontSize, ...buttonProps }: EnterButtonProps) => (
     href="/home"
     {...buttonProps}
   >
-    <ScrambleText
-      variant="display"
-      defaultText="ENTER"
-      hoverText="EXPLORE"
-      scrambleDuration={0.1}
-      color="background.paper"
-      fontSize={fontSize}
-    />
+    <Typography variant="display" color="background.paper" fontSize={fontSize}>
+      ENTER
+    </Typography>
   </AugmentedButton>
 );

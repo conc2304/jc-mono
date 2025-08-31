@@ -168,20 +168,24 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       >
                         A Portfolio Site Experience by
                       </Typography>
-                      <ScrambleText
+
+                      <Typography
                         variant="display"
                         color="primary"
-                        defaultText="Jose Conchello"
-                        hoverText="Via CLYZBY_OS"
                         mr="calc(3.5rem * 0.5 )"
-                      />
-                      <ScrambleText
-                        variant="h1"
+                      >
+                        Jose Conchello
+                      </Typography>
+                      <Typography
+                        variant="h2"
                         color="primary"
-                        defaultText="UI Engineer & Artist"
-                        hoverText="Creative Technologist"
                         mr="calc(3.5rem * 0.5)"
-                      />
+                      >
+                        UI Engineer & Artist
+                      </Typography>
+                      <Typography variant="h2" color="primary">
+                        Creative Technologist
+                      </Typography>
                     </Stack>
 
                     {/* Enter Button */}

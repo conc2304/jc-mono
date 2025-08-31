@@ -1,24 +1,22 @@
-import { ScrambleText } from '@jc/ui-components';
-import { useTheme, useMediaQuery } from '@mui/material';
+import { useTheme, useMediaQuery, Typography } from '@mui/material';
 
 export const HeroText = () => {
   const isSm = useMediaQuery(useTheme().breakpoints.down('sm'));
   return (
     <>
-      <ScrambleText
+      <Typography
         variant="display"
         color="primary"
-        defaultText="Jose Conchello"
-        hoverText="Via CLYZBY_OS"
         fontSize={isSm ? '1.9rem' : undefined}
-        sx={(theme) => ({})}
-      />
-      <ScrambleText
-        variant="h3"
-        color="primary"
-        defaultText="UI Engineer & Artist"
-        hoverText="Creative Technologist"
-      />
+      >
+        Jose Conchello
+      </Typography>
+      <Typography variant="h3" color="primary">
+        UI Engineer & Artist
+      </Typography>
+      <Typography variant="h3" color="primary">
+        Creative Technologist"
+      </Typography>
     </>
   );
 };

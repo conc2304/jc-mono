@@ -27,20 +27,7 @@ export const AddressBar = styled(Box)(({ theme }) => ({
 export const Header = ({ compact = false, passwordMsg = '' }) => (
   <BrowserHeader>
     <AddressBar>
-      CT14 | USERNAME: JOSE-CONCHELLO | PASSWORD:{' '}
-      <ScrambleText
-        defaultText={Array(passwordMsg.length).fill('*').join('')}
-        hoverText={passwordMsg}
-        sx={(theme) => ({
-          color: theme.palette.primary.main,
-          fontsize: '0.75rem',
-        })}
-        color="primary"
-        fontSize="inherit"
-        fontFamily={'inherit'}
-        lineHeight={1.2}
-        style={{ verticalAlign: 'middle' }}
-      />
+      Welcome to a Video Game UI inspired Portfolio Website
     </AddressBar>
     {!compact && (
       <Typography variant="caption" sx={{ color: 'primary.main' }}>
