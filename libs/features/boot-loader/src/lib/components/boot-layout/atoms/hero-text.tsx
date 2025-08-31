@@ -15,7 +15,7 @@ export const HeroText = () => {
         UI Engineer & Artist
       </Typography>
       <Typography variant="h3" color="primary">
-        Creative Technologist"
+        Creative Technologist
       </Typography>
     </>
   );

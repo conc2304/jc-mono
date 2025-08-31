@@ -51,6 +51,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
           onComplete={handlers.handleBootComplete}
           textWrapMode="ellipsis"
           flex={1}
+          bgOpacity={0}
         />
         <TorusProgressPanel showAsBackground hideText />
       </Box>

@@ -17,6 +17,7 @@ interface BootTextPanelProps {
   onComplete: () => void;
   textWrapMode?: 'ellipsis' | 'wrap';
   flex?: number;
+  bgOpacity?: number;
 }
 
 export const BootTextPanel: React.FC<BootTextPanelProps> = ({
@@ -26,6 +27,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
   onComplete,
   textWrapMode = 'wrap',
   flex = 1,
+  bgOpacity = 0.6,
 }) => {
   const theme = useTheme();
 
@@ -40,7 +42,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        background: alpha(theme.palette.background.paper, 0.6),
+        background: alpha(theme.palette.background.paper, bgOpacity),
       }}
     >
       <BootText
