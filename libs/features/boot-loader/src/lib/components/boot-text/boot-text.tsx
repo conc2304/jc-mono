@@ -191,6 +191,50 @@ const BootTextInner: React.FC<BootTextProps> = ({
     return tokens;
   };
 
+  // Helper function to rebuild DOM structure for hover animation
+  const rebuildDOMForText = (messageIndex: number, targetText: string) => {
+    const textElement = containerRef.current?.querySelector(
+      `.boot-text-${messageIndex}`
+    ) as HTMLElement;
+
+    if (!textElement) return;
+
+    // Clear existing content
+    textElement.innerHTML = '';
+
+    // Split target text into tokens
+    const tokens = splitTextIntoTokens(targetText);
+
+    // Create DOM structure for tokens
+    tokens.forEach((token, tokenIndex) => {
+      const tokenSpan = document.createElement('span');
+      tokenSpan.className = `token-${messageIndex}-${tokenIndex}`;
+
+      if (token.isSpace) {
+        // Space token - simple span
+        tokenSpan.style.whiteSpace = 'pre';
+        tokenSpan.textContent = ' ';
+      } else {
+        // Word token - prevent breaking within the word
+        tokenSpan.style.display = 'inline-block';
+        tokenSpan.style.whiteSpace = 'nowrap';
+
+        // Create character spans within the word
+        token.content.split('').forEach((char, charIndex) => {
+          const charSpan = document.createElement('span');
+          charSpan.className = `char-${messageIndex}-${tokenIndex}-${charIndex}`;
+          charSpan.textContent = char;
+          charSpan.style.display = 'inline-block';
+          charSpan.style.whiteSpace = 'pre';
+          charSpan.style.verticalAlign = 'text-top';
+          tokenSpan.appendChild(charSpan);
+        });
+      }
+
+      textElement.appendChild(tokenSpan);
+    });
+  };
+
   // Function to create hover scrambling animation
   const createHoverScrambleAnimation = (
     messageIndex: number,
@@ -205,30 +249,127 @@ const BootTextInner: React.FC<BootTextProps> = ({
 
     if (!textElement) return gsap.timeline();
 
-    const tl = gsap.timeline();
+    // Rebuild DOM structure to match the target text
+    rebuildDOMForText(messageIndex, toText);
 
-    // Split both texts into tokens
+    // Set initial text content to fromText
     const fromTokens = splitTextIntoTokens(fromText);
     const toTokens = splitTextIntoTokens(toText);
+
+    // Set initial state to fromText
+    fromTokens.forEach((fromToken, tokenIndex) => {
+      if (fromToken.isSpace) {
+        const tokenElement = textElement.querySelector(
+          `.token-${messageIndex}-${tokenIndex}`
+        );
+        if (tokenElement) {
+          tokenElement.textContent = ' ';
+        }
+      } else {
+        fromToken.content.split('').forEach((char, charIndex) => {
+          const charElement = textElement.querySelector(
+            `.char-${messageIndex}-${tokenIndex}-${charIndex}`
+          );
+          if (charElement) {
+            charElement.textContent = char;
+          }
+        });
+      }
+    });
+
+    const tl = gsap.timeline();
+
+    // Process each token for animation
     const maxTokens = Math.max(fromTokens.length, toTokens.length);
 
-    // Process each token
     for (let tokenIndex = 0; tokenIndex < maxTokens; tokenIndex++) {
       const fromToken = fromTokens[tokenIndex];
       const toToken = toTokens[tokenIndex];
 
+      // Handle missing tokens
+      if (!fromToken && toToken) {
+        // New token being added
+        if (toToken.isSpace) {
+          const tokenSelector = `.token-${messageIndex}-${tokenIndex}`;
+          tl.set(
+            tokenSelector,
+            {
+              text: { value: ' ', rtl: false },
+            },
+            0
+          );
+        } else {
+          toToken.content.split('').forEach((char, charIndex) => {
+            const charSelector = `.char-${messageIndex}-${tokenIndex}-${charIndex}`;
+            const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+
+            // Set initial to random char, then scramble to target
+            tl.set(
+              charSelector,
+              {
+                text: { value: getRandomChar(), rtl: false },
+              },
+              startTime
+            );
+
+            const scrambleInterval = duration / scrambleCount;
+            for (let j = 0; j < scrambleCount; j++) {
+              const scrambledChar =
+                j === scrambleCount - 1 ? char : getRandomChar();
+              tl.to(
+                charSelector,
+                {
+                  duration: scrambleInterval,
+                  text: { value: scrambledChar, rtl: false },
+                  ease: 'none',
+                },
+                startTime + j * scrambleInterval
+              );
+            }
+          });
+        }
+        continue;
+      }
+
+      if (fromToken && !toToken) {
+        // Token being removed - fade out or scramble away
+        if (!fromToken.isSpace) {
+          fromToken.content.split('').forEach((char, charIndex) => {
+            const charSelector = `.char-${messageIndex}-${tokenIndex}-${charIndex}`;
+            // Check if element exists before animating
+            const element = textElement.querySelector(charSelector);
+            if (element) {
+              const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+              tl.to(
+                charSelector,
+                {
+                  duration: duration,
+                  text: { value: '', rtl: false },
+                  ease: 'power2.inOut',
+                },
+                startTime
+              );
+            }
+          });
+        }
+        continue;
+      }
+
       if (!fromToken || !toToken) continue;
 
       if (fromToken.isSpace || toToken.isSpace) {
-        // Handle spaces - just update content directly
+        // Handle spaces
         const tokenSelector = `.token-${messageIndex}-${tokenIndex}`;
-        tl.set(
-          tokenSelector,
-          {
-            text: { value: toToken?.content || '', rtl: false },
-          },
-          0
-        );
+        const element = textElement.querySelector(tokenSelector);
+        if (element) {
+          tl.set(
+            tokenSelector,
+            {
+              text: { value: toToken?.content || '', rtl: false },
+            },
+            0
+          );
+        }
         continue;
       }
 
@@ -241,29 +382,28 @@ const BootTextInner: React.FC<BootTextProps> = ({
         const fromChar = charIndex < fromWord.length ? fromWord[charIndex] : '';
         const toChar = charIndex < toWord.length ? toWord[charIndex] : '';
 
-        if (fromChar === toChar) continue;
-
         const charSelector = `.char-${messageIndex}-${tokenIndex}-${charIndex}`;
-        const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+        const element = textElement.querySelector(charSelector);
 
-        const scrambleInterval = duration / scrambleCount;
+        // Only animate if element exists and chars are different
+        if (element && fromChar !== toChar) {
+          const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+          const scrambleInterval = duration / scrambleCount;
 
-        for (let j = 0; j < scrambleCount; j++) {
-          const scrambledChar =
-            j === scrambleCount - 1 ? toChar : getRandomChar();
+          for (let j = 0; j < scrambleCount; j++) {
+            const scrambledChar =
+              j === scrambleCount - 1 ? toChar : getRandomChar();
 
-          tl.to(
-            charSelector,
-            {
-              duration: scrambleInterval,
-              text: {
-                value: scrambledChar,
-                rtl: false,
+            tl.to(
+              charSelector,
+              {
+                duration: scrambleInterval,
+                text: { value: scrambledChar, rtl: false },
+                ease: 'none',
               },
-              ease: 'none',
-            },
-            startTime + j * scrambleInterval
-          );
+              startTime + j * scrambleInterval
+            );
+          }
         }
       }
     }
@@ -701,7 +841,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
         },
         '&::-webkit-scrollbar-thumb': {
           background: `${textColor}40`, // Semi-transparent thumb
-          borderRadius: '4px',
         },
         '&::-webkit-scrollbar-thumb:hover': {
           background: `${textColor}60`, // Slightly more visible on hover

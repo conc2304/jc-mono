@@ -1124,7 +1124,8 @@ export const TorusFieldProgress = ({
               color: 'primary.main',
             }}
           >
-            Progress: {isNaN(Math.round(progress)) ? 0 : Math.round(progress)}%
+            Boot Progress:{' '}
+            {isNaN(Math.round(progress)) ? 0 : Math.round(progress)}%
             {clickToBoost && (
               <>
                 <br />

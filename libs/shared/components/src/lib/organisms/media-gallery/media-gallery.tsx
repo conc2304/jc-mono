@@ -476,17 +476,6 @@ export const MediaGallery = ({
               '&::-webkit-scrollbar': {
                 height: 4,
               },
-              '&::-webkit-scrollbar-track': {
-                bgcolor: theme.palette.grey[200],
-                borderRadius: 2,
-              },
-              '&::-webkit-scrollbar-thumb': {
-                bgcolor: theme.palette.grey[400],
-                borderRadius: 2,
-                '&:hover': {
-                  bgcolor: theme.palette.grey[600],
-                },
-              },
             }}
           >
             {mediaItems.map((mediaItem, index) =>
