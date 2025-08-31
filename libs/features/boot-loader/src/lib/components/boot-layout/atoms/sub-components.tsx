@@ -20,6 +20,8 @@ export const BootContainer = styled(Box)<{}>(({ theme }) => ({
   pb: '100px',
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
+  zIndex: 0,
 }));
 
 export const BrowserFrame = styled(Box)(({ theme }) => ({
@@ -30,6 +32,8 @@ export const BrowserFrame = styled(Box)(({ theme }) => ({
 
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
+  zIndex: 0,
 }));
 
 const RadarChartBoxStyled = styled(Box)(({ theme }) => ({

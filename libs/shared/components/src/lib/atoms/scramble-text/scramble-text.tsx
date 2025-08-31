@@ -1,11 +1,10 @@
 'use client';
-import React, { memo, useRef, useCallback, useMemo } from 'react';
+import React, { memo, useRef, useCallback, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { TextPlugin } from 'gsap/TextPlugin';
-import { Box } from '@mui/system';
-import { Property } from 'csstype';
 import { Typography, TypographyProps } from '@mui/material';
+import { Property } from 'csstype';
 
 // Register plugins
 gsap.registerPlugin(useGSAP, TextPlugin);
@@ -32,186 +31,277 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
   style = {},
   ...typographyProps
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const textElementRef = useRef<HTMLSpanElement>(null);
   const hoverAnimationRef = useRef<gsap.core.Timeline | null>(null);
-
-  // Generate a unique ID for this component instance
-  const uniqueId = useMemo(() => Math.random().toString(36).substr(2, 9), []);
+  const isHoveringRef = useRef(false);
 
   // Function to get random character from scramble set
-  const getRandomChar = () => {
+  const getRandomChar = useCallback(() => {
     return scrambleCharSet[Math.floor(Math.random() * scrambleCharSet.length)];
-  };
+  }, [scrambleCharSet]);
 
-  // Function to split text into words and characters for proper wrapping
-  const parseTextStructure = (text: string) => {
-    const words = text.split(' ');
-    const structure: Array<{
-      type: 'word' | 'space';
-      content: string;
-      wordIndex?: number;
-    }> = [];
+  // Helper function to split text into words and spaces
+  const splitTextIntoTokens = useCallback((text: string) => {
+    const tokens: Array<{ content: string; isSpace: boolean }> = [];
+    let currentWord = '';
 
-    words.forEach((word, wordIndex) => {
-      if (word.length > 0) {
-        structure.push({ type: 'word', content: word, wordIndex });
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (char === ' ') {
+        if (currentWord) {
+          tokens.push({ content: currentWord, isSpace: false });
+          currentWord = '';
+        }
+        tokens.push({ content: ' ', isSpace: true });
+      } else {
+        currentWord += char;
       }
-      // Add space after each word except the last one
-      if (wordIndex < words.length - 1) {
-        structure.push({ type: 'space', content: ' ' });
-      }
-    });
+    }
 
-    return structure;
-  };
+    if (currentWord) {
+      tokens.push({ content: currentWord, isSpace: false });
+    }
+
+    return tokens;
+  }, []);
+
+  // Helper function to rebuild DOM structure for hover animation
+  const rebuildDOMForText = useCallback(
+    (targetText: string) => {
+      const textElement = textElementRef.current;
+      if (!textElement) return;
+
+      // Clear existing content
+      textElement.innerHTML = '';
+
+      // Split target text into tokens
+      const tokens = splitTextIntoTokens(targetText);
+
+      // Create DOM structure for tokens
+      tokens.forEach((token, tokenIndex) => {
+        const tokenSpan = document.createElement('span');
+        tokenSpan.className = `token-${tokenIndex}`;
+
+        if (token.isSpace) {
+          // Space token - simple span
+          tokenSpan.style.whiteSpace = 'pre';
+          tokenSpan.textContent = ' ';
+        } else {
+          // Word token - prevent breaking within the word
+          tokenSpan.style.display = 'inline-block';
+          tokenSpan.style.whiteSpace = 'nowrap';
+
+          // Create character spans within the word
+          token.content.split('').forEach((char, charIndex) => {
+            const charSpan = document.createElement('span');
+            charSpan.className = `char-${tokenIndex}-${charIndex}`;
+            charSpan.textContent = char;
+            charSpan.style.display = 'inline-block';
+            charSpan.style.whiteSpace = 'pre';
+            charSpan.style.verticalAlign = 'text-top';
+            tokenSpan.appendChild(charSpan);
+          });
+        }
+
+        textElement.appendChild(tokenSpan);
+      });
+    },
+    [splitTextIntoTokens]
+  );
 
   // Function to create hover scrambling animation
-  const createHoverScrambleAnimation = (
-    fromText: string,
-    toText: string,
-    duration: number = scrambleDuration,
-    scrambleCount: number = scrambleChars
-  ) => {
-    const textElement = containerRef.current?.querySelector(
-      '.scramble-text-content'
-    ) as HTMLElement;
+  const createHoverScrambleAnimation = useCallback(
+    (
+      fromText: string,
+      toText: string,
+      duration: number = scrambleDuration,
+      scrambleCount: number = scrambleChars
+    ) => {
+      const textElement = textElementRef.current;
+      if (!textElement) return gsap.timeline();
 
-    if (!textElement) return gsap.timeline();
+      // Rebuild DOM structure to match the target text
+      rebuildDOMForText(toText);
 
-    const tl = gsap.timeline();
+      // Set initial text content to fromText
+      const fromTokens = splitTextIntoTokens(fromText);
+      const toTokens = splitTextIntoTokens(toText);
 
-    // Parse both texts into word structures
-    const fromStructure = parseTextStructure(fromText);
-    const toStructure = parseTextStructure(toText);
-
-    // Get the maximum number of elements needed
-    const maxElements = Math.max(fromStructure.length, toStructure.length);
-
-    // Ensure we have enough word/space containers
-    const existingContainers = textElement.querySelectorAll(
-      `[class*="scramble-element-${uniqueId}-"]`
-    );
-
-    if (existingContainers.length < maxElements) {
-      // Add more containers if needed
-      for (let i = existingContainers.length; i < maxElements; i++) {
-        const elementContainer = document.createElement('span');
-        elementContainer.className = `scramble-element-${uniqueId}-${i}`;
-        elementContainer.style.display = 'inline-block';
-        textElement.appendChild(elementContainer);
-      }
-    }
-
-    // Process each element (word or space)
-    for (let elementIndex = 0; elementIndex < maxElements; elementIndex++) {
-      const fromElement =
-        elementIndex < fromStructure.length
-          ? fromStructure[elementIndex]
-          : null;
-      const toElement =
-        elementIndex < toStructure.length ? toStructure[elementIndex] : null;
-
-      const container = textElement.querySelector(
-        `.scramble-element-${uniqueId}-${elementIndex}`
-      ) as HTMLElement;
-
-      if (!container) continue;
-
-      // Handle case where we're removing an element
-      if (!toElement) {
-        tl.set(container, { display: 'none' }, 0);
-        continue;
-      }
-
-      // Show container if it was hidden
-      tl.set(container, { display: 'inline-block' }, 0);
-
-      // Handle spaces
-      if (toElement.type === 'space') {
-        container.innerHTML = ' ';
-        container.style.whiteSpace = 'pre';
-        continue;
-      }
-
-      // Handle words - create character spans within the word container
-      const fromWord = fromElement?.type === 'word' ? fromElement.content : '';
-      const toWord = toElement.content;
-      const maxCharLength = Math.max(fromWord.length, toWord.length);
-
-      // Clear and rebuild character structure for this word
-      container.innerHTML = '';
-      for (let charIndex = 0; charIndex < maxCharLength; charIndex++) {
-        const charSpan = document.createElement('span');
-        charSpan.className = `scramble-char-${uniqueId}-${elementIndex}-${charIndex}`;
-        charSpan.style.display = 'inline-block';
-        charSpan.style.minWidth = '0';
-        charSpan.textContent =
-          charIndex < fromWord.length ? fromWord[charIndex] : '';
-
-        if (charIndex >= fromWord.length) {
-          charSpan.style.display = 'none';
-        }
-
-        container.appendChild(charSpan);
-      }
-
-      // Animate each character in the word
-      for (let charIndex = 0; charIndex < maxCharLength; charIndex++) {
-        const fromChar = charIndex < fromWord.length ? fromWord[charIndex] : '';
-        const toChar = charIndex < toWord.length ? toWord[charIndex] : '';
-
-        const charSelector = `.scramble-char-${uniqueId}-${elementIndex}-${charIndex}`;
-        const startTime = elementIndex * 0.05 + charIndex * 0.02;
-
-        // Show/hide character spans based on target word length
-        if (charIndex >= toWord.length) {
-          tl.set(charSelector, { display: 'none' }, startTime);
-          continue;
-        } else if (charIndex >= fromWord.length) {
-          tl.set(charSelector, { display: 'inline-block' }, startTime);
-        }
-
-        // If characters are the same, just set directly without scrambling
-        if (fromChar === toChar && fromChar !== '') {
-          tl.set(
-            charSelector,
-            {
-              text: { value: toChar, rtl: false },
-            },
-            startTime
+      // Set initial state to fromText
+      fromTokens.forEach((fromToken, tokenIndex) => {
+        if (fromToken.isSpace) {
+          const tokenElement = textElement.querySelector(
+            `.token-${tokenIndex}`
           );
-          continue;
+          if (tokenElement) {
+            tokenElement.textContent = ' ';
+          }
+        } else {
+          fromToken.content.split('').forEach((char, charIndex) => {
+            const charElement = textElement.querySelector(
+              `.char-${tokenIndex}-${charIndex}`
+            );
+            if (charElement) {
+              charElement.textContent = char;
+            }
+          });
         }
+      });
 
-        // Create scrambling sequence for different characters
-        const scrambleInterval = duration / scrambleCount;
+      const tl = gsap.timeline();
 
-        for (let j = 0; j < scrambleCount; j++) {
-          const scrambledChar =
-            j === scrambleCount - 1 ? toChar : getRandomChar();
+      // Process each token for animation
+      const maxTokens = Math.max(fromTokens.length, toTokens.length);
 
-          tl.to(
-            charSelector,
-            {
-              duration: scrambleInterval,
-              text: {
-                value: scrambledChar,
-                rtl: false,
+      for (let tokenIndex = 0; tokenIndex < maxTokens; tokenIndex++) {
+        const fromToken = fromTokens[tokenIndex];
+        const toToken = toTokens[tokenIndex];
+
+        // Handle missing tokens
+        if (!fromToken && toToken) {
+          // New token being added
+          if (toToken.isSpace) {
+            const tokenSelector = `.token-${tokenIndex}`;
+            tl.set(
+              tokenSelector,
+              {
+                text: { value: ' ', rtl: false },
               },
-              ease: 'none',
-            },
-            startTime + j * scrambleInterval
-          );
+              0
+            );
+          } else {
+            toToken.content.split('').forEach((char, charIndex) => {
+              const charSelector = `.char-${tokenIndex}-${charIndex}`;
+              const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+
+              // Set initial to random char, then scramble to target
+              tl.set(
+                charSelector,
+                {
+                  text: { value: getRandomChar(), rtl: false },
+                },
+                startTime
+              );
+
+              const scrambleInterval = duration / scrambleCount;
+              for (let j = 0; j < scrambleCount; j++) {
+                const scrambledChar =
+                  j === scrambleCount - 1 ? char : getRandomChar();
+                tl.to(
+                  charSelector,
+                  {
+                    duration: scrambleInterval,
+                    text: { value: scrambledChar, rtl: false },
+                    ease: 'none',
+                  },
+                  startTime + j * scrambleInterval
+                );
+              }
+            });
+          }
+          continue;
+        }
+
+        if (fromToken && !toToken) {
+          // Token being removed - fade out or scramble away
+          if (!fromToken.isSpace) {
+            fromToken.content.split('').forEach((char, charIndex) => {
+              const charSelector = `.char-${tokenIndex}-${charIndex}`;
+              // Check if element exists before animating
+              const element = textElement.querySelector(charSelector);
+              if (element) {
+                const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+                tl.to(
+                  charSelector,
+                  {
+                    duration: duration,
+                    text: { value: '', rtl: false },
+                    ease: 'power2.inOut',
+                  },
+                  startTime
+                );
+              }
+            });
+          }
+          continue;
+        }
+
+        if (!fromToken || !toToken) continue;
+
+        if (fromToken.isSpace || toToken.isSpace) {
+          // Handle spaces
+          const tokenSelector = `.token-${tokenIndex}`;
+          const element = textElement.querySelector(tokenSelector);
+          if (element) {
+            tl.set(
+              tokenSelector,
+              {
+                text: { value: toToken?.content || '', rtl: false },
+              },
+              0
+            );
+          }
+          continue;
+        }
+
+        // Handle words - scramble each character
+        const fromWord = fromToken.content;
+        const toWord = toToken.content;
+        const maxLength = Math.max(fromWord.length, toWord.length);
+
+        for (let charIndex = 0; charIndex < maxLength; charIndex++) {
+          const fromChar =
+            charIndex < fromWord.length ? fromWord[charIndex] : '';
+          const toChar = charIndex < toWord.length ? toWord[charIndex] : '';
+
+          const charSelector = `.char-${tokenIndex}-${charIndex}`;
+          const element = textElement.querySelector(charSelector);
+
+          // Only animate if element exists and chars are different
+          if (element && fromChar !== toChar) {
+            const startTime = tokenIndex * 0.02 + charIndex * 0.01;
+            const scrambleInterval = duration / scrambleCount;
+
+            for (let j = 0; j < scrambleCount; j++) {
+              const scrambledChar =
+                j === scrambleCount - 1 ? toChar : getRandomChar();
+
+              tl.to(
+                charSelector,
+                {
+                  duration: scrambleInterval,
+                  text: { value: scrambledChar, rtl: false },
+                  ease: 'none',
+                },
+                startTime + j * scrambleInterval
+              );
+            }
+          }
         }
       }
-    }
 
-    return tl;
-  };
+      return tl;
+    },
+    [
+      getRandomChar,
+      rebuildDOMForText,
+      splitTextIntoTokens,
+      scrambleDuration,
+      scrambleChars,
+    ]
+  );
 
   // Function to handle hover events
   const handleHover = useCallback(
     (isHovering: boolean) => {
+      // Prevent re-triggering if already in the same state
+      if (isHoveringRef.current === isHovering) {
+        return;
+      }
+
+      isHoveringRef.current = isHovering;
+
       // Kill any existing hover animation
       if (hoverAnimationRef.current) {
         hoverAnimationRef.current.kill();
@@ -227,93 +317,70 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
       // Play the animation
       hoverAnimation.play();
     },
-    [defaultText, hoverText, scrambleChars, scrambleDuration, uniqueId]
+    [defaultText, hoverText, createHoverScrambleAnimation]
   );
 
-  // Initialize the component with word and character structure
-  useGSAP(
-    () => {
-      if (!containerRef.current) return;
+  // Initialize the component with default text
+  useEffect(() => {
+    if (textElementRef.current) {
+      rebuildDOMForText(defaultText);
 
-      const container = containerRef.current;
-      const textElement = container.querySelector(
-        '.scramble-text-content'
-      ) as HTMLElement;
-
-      if (!textElement) return;
-
-      // Clear and setup initial text structure
-      textElement.innerHTML = '';
-
-      // Parse the default text into word/space structure
-      const defaultStructure = parseTextStructure(defaultText);
-      const hoverStructure = parseTextStructure(hoverText);
-      const maxElements = Math.max(
-        defaultStructure.length,
-        hoverStructure.length
-      );
-
-      // Create containers for each word/space element
-      for (let elementIndex = 0; elementIndex < maxElements; elementIndex++) {
-        const elementContainer = document.createElement('span');
-        elementContainer.className = `scramble-element-${uniqueId}-${elementIndex}`;
-        elementContainer.style.display = 'inline-block';
-
-        const defaultElement =
-          elementIndex < defaultStructure.length
-            ? defaultStructure[elementIndex]
-            : null;
-
-        if (!defaultElement) {
-          elementContainer.style.display = 'none';
-        } else if (defaultElement.type === 'space') {
-          elementContainer.innerHTML = ' ';
-          elementContainer.style.whiteSpace = 'pre';
-        } else {
-          // Create character spans for the word
-          const word = defaultElement.content;
-          for (let charIndex = 0; charIndex < word.length; charIndex++) {
-            const charSpan = document.createElement('span');
-            charSpan.className = `scramble-char-${uniqueId}-${elementIndex}-${charIndex}`;
-            charSpan.textContent = word[charIndex];
-            charSpan.style.display = 'inline-block';
-            charSpan.style.minWidth = '0';
-            elementContainer.appendChild(charSpan);
+      // Set initial content
+      const fromTokens = splitTextIntoTokens(defaultText);
+      fromTokens.forEach((token, tokenIndex) => {
+        if (token.isSpace) {
+          const tokenElement = textElementRef.current?.querySelector(
+            `.token-${tokenIndex}`
+          );
+          if (tokenElement) {
+            tokenElement.textContent = ' ';
           }
+        } else {
+          token.content.split('').forEach((char, charIndex) => {
+            const charElement = textElementRef.current?.querySelector(
+              `.char-${tokenIndex}-${charIndex}`
+            );
+            if (charElement) {
+              charElement.textContent = char;
+            }
+          });
         }
-
-        textElement.appendChild(elementContainer);
-      }
-    },
-    {
-      scope: containerRef,
-      dependencies: [defaultText, hoverText, uniqueId],
+      });
     }
-  );
+  }, [defaultText, rebuildDOMForText, splitTextIntoTokens]);
+
+  // Cleanup animation on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverAnimationRef.current) {
+        hoverAnimationRef.current.kill();
+      }
+    };
+  }, []);
+
+  const combinedStyle = {
+    color: typographyProps.color ?? textColor,
+    cursor: 'pointer',
+    whiteSpace: 'pre-wrap' as const,
+    wordWrap: 'break-word' as const,
+    overflowWrap: 'break-word' as const,
+    transition: 'background-color 0.2s ease',
+    ...style,
+  };
 
   return (
-    <Box
+    <Typography
       ref={containerRef}
-      className={`scramble-text-container ${className}`}
-      sx={{
-        cursor: 'pointer',
-        transition: 'background-color 0.2s ease',
-        color: textColor,
-        ...style,
-      }}
+      className={`scramble-text ${className}`}
+      style={combinedStyle}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
+      {...typographyProps}
     >
-      <Typography
-        className="scramble-text-content"
-        style={{ display: 'inline' }}
-        component="span"
-        {...typographyProps}
-        sx={{ ...typographyProps.sx }}
-      >
-        {/* Word and character spans will be dynamically generated here */}
-      </Typography>
-    </Box>
+      <span ref={textElementRef} style={{ display: 'inline' }}>
+        {/* Content will be dynamically generated */}
+      </span>
+    </Typography>
   );
 };
 
