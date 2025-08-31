@@ -92,7 +92,9 @@ export const BootLayout: React.FC<SciFiLayoutProps> = ({
 
   return (
     <BootContainer {...containerProps}>
-      <Suspense fallback={<LoadingFallback message="Loading portfolio..." />}>
+      <Suspense
+        fallback={<LoadingFallback message="Booting up portfolio..." />}
+      >
         {getLayoutComponent()}
       </Suspense>
     </BootContainer>

@@ -77,7 +77,6 @@ export const TileGrid = ({
     tileOrder
   );
 
-  // TODO - investigate why drag end gets called immediately when dragged from certain areas
   const handleDragStart = (tile: Tile): void => {
     setDragState({
       isDragging: true,
@@ -154,7 +153,8 @@ export const TileGrid = ({
         maxWidth="xl"
         sx={{
           height: '100%',
-          px: breakpoint === 'mobile' ? 0 : undefined,
+          // px: breakpoint === 'mobile' ? 1 : undefined,
+          p: 1,
           display: 'flex',
           flexDirection: 'column',
         }}

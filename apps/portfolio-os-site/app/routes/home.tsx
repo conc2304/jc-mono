@@ -1,17 +1,13 @@
-import { Box, useTheme } from '@mui/material';
-import { DesktopOS } from '@jc/desktop-OS';
-import { BackgroundOverlay } from '@jc/ui-components';
-import { FileSystem } from '../data/file-system';
+import { Box } from '@mui/material';
+import { BackgroundOverlay, LoadingFallback } from '@jc/ui-components';
 
-import { useMediaQuery } from '@mui/system';
-import { PROJECT_NAVIGATION_GROUP } from '../data/project-files';
 import { getThemedBgTexture } from '../data/themed-data/themed-background-texture';
 import { useColorMode, useEnhancedTheme } from '@jc/themes';
+import { lazy, Suspense } from 'react';
+
+const DesktopOS = lazy(() => import('../components/desktop-system'));
 
 export function App() {
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down('md'));
-
   const { currentThemeId } = useEnhancedTheme();
   const { resolvedMode } = useColorMode();
   const themedBgTexture = getThemedBgTexture(currentThemeId, resolvedMode);
@@ -28,11 +24,13 @@ export function App() {
           }}
           className="ThemedBackground--overlay"
         />
-        <DesktopOS
-          fileSystem={FileSystem}
-          navigationGroups={[PROJECT_NAVIGATION_GROUP]}
-          iconArrangement={isXs ? 'grid' : 'linear'}
-        />
+        <Suspense
+          fallback={
+            <LoadingFallback message="Loading portfolio operating system..." />
+          }
+        >
+          <DesktopOS />
+        </Suspense>
       </Box>
     </>
   );

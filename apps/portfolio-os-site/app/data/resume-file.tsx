@@ -11,7 +11,7 @@ import { FileSystemItem } from '@jc/file-system';
 
 export const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
   id: uuidv4(),
-  name: 'Resume.pdf',
+  name: 'Resume',
   icon: <FileTextIcon />,
   type: 'file',
   size: 245760,
