@@ -65,6 +65,7 @@ interface ProjectLinks {
 }
 
 interface ProjectContent {
+  synopsis?: string | string[]; // main project description
   overview?: string | string[]; // main project description
   process?: string | string[]; // how it was made
   results?: string | string[]; // outcomes, impact, metrics

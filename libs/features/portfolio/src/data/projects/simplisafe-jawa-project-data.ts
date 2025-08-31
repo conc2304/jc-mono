@@ -185,6 +185,14 @@ export const simplisafeJawaProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
+    synopsis: `Led complete redesign of SimpliSafe's legacy Flash-based fulfillment software as Technical and Design Lead, collaborating with CEO and COO stakeholders.
+
+    Built modern web application with Angular.js, PHP, and MySQL featuring over-the-air sensor pairing, real-time inventory tracking, and enhanced barcode validation.
+
+    Solved critical workflow issues by enabling device scanning in any sequence, eliminating fulfillment errors and improving warehouse efficiency.
+
+    The system reduced customer support calls and provided scalable infrastructure supporting SimpliSafe's growth from startup to millions of protected customers.`,
+
     overview: `Project Jawa represented a critical digital transformation initiative for SimpliSafe, completely redesigning and replacing the company's legacy Flash-based fulfillment software with a modern, web-based solution. As Technical and Design Lead working directly with CEO and COO stakeholders, I spearheaded the development of a comprehensive system that revolutionized SimpliSafe's warehouse operations and significantly improved customer experience.
 
 The project addressed fundamental challenges in SimpliSafe's fulfillment process, where sensors and security devices needed to be pre-paired with base stations before shipping to customers. The legacy Flash-based system created numerous operational inefficiencies, validation errors, and customer support issues that directly impacted SimpliSafe's ability to scale their home security business effectively.

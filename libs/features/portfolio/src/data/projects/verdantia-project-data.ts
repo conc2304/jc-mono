@@ -315,6 +315,12 @@ export const verdantiaProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
+    synopsis: `Harvard Masters in Digital Media Design capstone project creating a museum installation city builder game focused on urban reforestation and climate education.
+     Built in Unity with C#, featuring real-time heat island simulation using the Thomas Algorithm for scientifically accurate temperature modeling.
+     The touch kiosk interface enables players to build sustainable cities while visualizing immediate environmental impacts through heat maps, pollution metrics, and citizen happiness indicators.
+     The project transforms abstract climate concepts into personally meaningful experiences by demonstrating how green spaces directly affect urban livability.
+     Designed for multi-modal museum engagement with educational popups for both active players and passive observers.`,
+
     overview: `Verdantia is a groundbreaking urban simulation museum installation that transforms climate change education through interactive city building and real-time environmental science visualization. Born from a desire to make reforestation personally meaningful rather than abstractly altruistic, the project enables users to create and manage cities while witnessing the immediate effects of their urban planning decisions on temperature, pollution, happiness, and sustainability metrics.
 
 The game addresses the fundamental challenge identified in climate education: people only care about environmental issues when they personally impact them. By implementing Sarah Ivens' research from "Forest Therapy" about the tangible health and well-being benefits of green spaces, Verdantia reframes reforestation from a distant global concept into an immediately relatable personal experience. Players see how urban heat islands affect their daily comfort, how green spaces reduce mental fatigue, and how sustainable planning directly improves quality of life.

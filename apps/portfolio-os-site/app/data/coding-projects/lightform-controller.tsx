@@ -24,7 +24,6 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
   dateCreated: new Date('2020-08-01'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
       'work',

@@ -185,6 +185,10 @@ export const atomicVisualizerProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
+    synopsis: `Harvard CS50 final project demonstrating cutting-edge 3D web development through an interactive periodic table explorer.
+    Built with React Three Fiber and TypeScript, the application features a 3D carousel navigation system for all 118 elements, real-time atomic structure visualization using scientifically accurate Bohr models, and animated electron orbital mechanics.
+    The project integrates WebGL with educational technology, featuring an electron configuration parsing system that transforms chemistry notation into dynamic 3D visualizations.`,
+
     overview: `The 3D Atomic Visualizer represents a successful exploration of cutting-edge 3D web development technologies, specifically mastering React Three Fiber for WebGL-based educational applications. Developed as a CS50 final project, the application demonstrates practical integration of React component architecture with Three.js 3D rendering to create an interactive exploration platform for atomic structures and periodic table elements.
 
 The project addresses the challenge of learning complex 3D web development while creating a meaningful educational tool. Through implementing scientific atomic visualization using the Bohr model, the application showcases both technical skill development in emerging web technologies and thoughtful application of programming concepts to educational challenges. The electron configuration parsing system and real-time orbital animations demonstrate data processing capabilities alongside 3D graphics programming.

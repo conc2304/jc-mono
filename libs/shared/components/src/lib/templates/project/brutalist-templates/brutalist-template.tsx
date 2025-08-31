@@ -9,6 +9,7 @@ import { HeroSection } from './hero/hero-section';
 import { MobileContent } from './mobile/mobile-content';
 import { DesktopContent } from './desktop/desktop-content';
 import { NavigationContext } from '@jc/file-system';
+import { MarkdownRenderer } from '../../../molecules/markdown-renderer';
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   height: '100%',
@@ -50,7 +51,7 @@ export const BrutalistTemplate: React.FC<
   const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [activeTab, setActiveTab] = useState<string>('synopsis');
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null
   );
@@ -62,12 +63,11 @@ export const BrutalistTemplate: React.FC<
         behavior: 'smooth',
       });
     }
-    // Reset active tab to overview when project changes
-    setActiveTab('overview');
+    // Reset active tab to synopsis when project changes
+    setActiveTab('synopsis');
   }, [project.projectName]);
 
   const data = project;
-  const screenshots = data?.media?.screenshots || [];
 
   const getStatusColor = (
     status?: string
@@ -85,35 +85,11 @@ export const BrutalistTemplate: React.FC<
   };
 
   const renderContent = (content?: string | string[]): React.ReactNode => {
-    if (Array.isArray(content)) {
-      return content.map((paragraph, index) => (
-        <Typography
-          key={index}
-          variant="body1"
-          sx={{
-            mb: 2,
-            lineHeight: 1.6,
-            color: theme.palette.text.primary,
-          }}
-        >
-          {paragraph}
-        </Typography>
-      ));
-    }
-    return (
-      <Typography
-        variant="body1"
-        sx={{
-          lineHeight: 1.6,
-          color: theme.palette.text.primary,
-        }}
-      >
-        {content}
-      </Typography>
-    );
+    return <MarkdownRenderer content={content} />;
   };
 
   const tabsData = [
+    { key: 'synopsis', label: 'Synopsis' },
     { key: 'overview', label: 'Overview' },
     { key: 'process', label: 'Process' },
     { key: 'results', label: 'Results' },

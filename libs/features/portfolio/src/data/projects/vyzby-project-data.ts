@@ -267,6 +267,11 @@ export const vyzbyProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
+    synopsis: `Web framework solving creative coding workflow friction by enabling real-time parameter manipulation in p5.js sketches without code editing.
+Built with Vue.js, p5.js, Web Audio API, and TensorFlow.js, featuring automatic UI generation for sketch parameters, MIDI controller integration, audio-reactive visualization, and webcam body tracking through PoseNet.
+The framework provides  API for multi-modal interaction, supporting live performance capabilities and eliminating repetitive write-compile-test cycles.
+Uses extensible architecture enabling developers to easily add custom sketches and interaction methods while maintaining real-time performance across concurrent visual layers.`,
+
     overview: `VYZBY is a comprehensive web framework designed to solve a fundamental workflow problem in creative coding: the tedious cycle of editing code parameters to see visual variations in p5.js sketches. Born from direct frustration with the repetitive process of modifying source code to experiment with visual parameters, VYZBY provides a sophisticated runtime parameter manipulation system that transforms static creative coding into dynamic, interactive experiences.
 
 The framework bridges the gap between coded creativity and real-time interaction by automatically generating intuitive UI controls for sketch parameters, enabling live manipulation without touching code. Beyond traditional UI controls, VYZBY provides a robust API architecture supporting multiple interaction modalities including MIDI controller integration, Web Audio API reactivity, and TensorFlow-powered webcam body tracking.

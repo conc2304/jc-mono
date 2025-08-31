@@ -199,6 +199,12 @@ export const gravityScavengerProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
+    synopsis: `Harvard Extension School GD50 final project showcasing Unity game development through a 2.5D space exploration game featuring realistic physics simulation and procedural world generation.
+
+    Built in C# using Unity, the game implements Newton's law of universal gravitation for authentic orbital mechanics, real-time trajectory prediction using calculus and trigonometry, and an infinite chunk-based world generation system.
+
+    Players navigate complex gravitational fields while collecting resources, upgrading spacecraft, and engaging physics-influenced combat with intelligent AI enemies.`,
+
     overview: `Gravity Scavenger represents a sophisticated exploration of physics-based game development, combining advanced mathematical concepts with engaging gameplay mechanics to create an immersive space exploration experience. Developed as a final project for Harvard Extension School's GD50 Game Development course, the project demonstrates mastery of Unity engine capabilities, procedural generation techniques, and real-world physics simulation.
 
 The game addresses the challenge of creating engaging physics-based gameplay by implementing Newton's law of universal gravitation for realistic planetary interactions, while incorporating calculus and trigonometry for real-time trajectory prediction. Players must learn to harness gravitational forces strategically, transforming complex physics concepts into intuitive and rewarding gameplay mechanics that encourage exploration and skill development.
