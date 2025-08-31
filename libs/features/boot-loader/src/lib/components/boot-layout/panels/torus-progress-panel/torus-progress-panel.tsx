@@ -20,7 +20,7 @@ export const TorusProgressPanel: React.FC<TorusProgressPanelProps> = ({
   const theme = useTheme();
 
   const colors = {
-    backgroundColor: alpha(theme.palette.background.paper, 0.2),
+    backgroundColor: theme.palette.background.paper,
     beamColor: theme.palette.getInvertedMode('info'),
     torusColor: theme.palette.primary.main,
     particleColor: theme.palette.getInvertedMode('info'),
