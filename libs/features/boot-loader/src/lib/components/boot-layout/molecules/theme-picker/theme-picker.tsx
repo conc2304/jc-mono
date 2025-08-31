@@ -77,11 +77,11 @@ export const ThemePickerPanel = ({
       >
         <Box display="flex" alignItems="center" gap={2}>
           <StatusIndicator />
-          {!isSm && (
-            <Typography variant="caption" sx={{ color: 'primary.main' }}>
-              THEMING INTEGRATION STATUS : {currentTheme?.name.toUpperCase()}
-            </Typography>
-          )}
+          {/* {!isSm && ( */}
+          <Typography variant="caption" sx={{ color: 'primary.main' }}>
+            ACTIVE COLOR THEME : {currentTheme?.name.toUpperCase()}
+          </Typography>
+          {/* )} */}
           {theme.palette.mode === 'dark' ? (
             <DarkMode
               size={'1rem'}

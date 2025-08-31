@@ -14,6 +14,7 @@ interface MobileLayoutProps {
   handlers: any;
   isXs?: boolean;
   triggerPreload?: () => void;
+  progress?: any;
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({
@@ -22,6 +23,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   passwordMessage,
   themedWidgetGifUrl,
   handlers,
+  progress = 100,
   isXs = true,
   triggerPreload,
 }) => (
@@ -53,7 +55,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
           flex={1}
           bgOpacity={0}
         />
-        <TorusProgressPanel showAsBackground hideText />
+        <TorusProgressPanel
+          showAsBackground
+          progress={progress.current}
+          progressMessage={progress.message}
+        />
       </Box>
 
       <ThemePickerPanel compactMenu />

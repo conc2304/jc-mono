@@ -5,43 +5,130 @@ export const ThemedBootMessages: Record<string, Array<BootMessage[]>> = {
   // Clean Professional with Discovery Hints
   'developer-terminal': [
     [
-      '> initializing development environment...',
-      ['> package dependencies: RESOLVED', 'easter eggs included'],
-      '> TypeScript compiler: ACTIVE',
-      ['> build process: OPTIMIZED', '12 themes discovered so far'],
-      '> three.js renderer: COMPILED',
-      ['> creative technologist mode: ENABLED', 'hover for hidden messages'],
-      '> development server: RUNNING',
+      '> A portfolio website to showcase my projects',
+      ['> Created by JOSE CONCHELLO', 'who enjoys making user interfaces'],
+      '> Featuring work from SIMPLISAFE, LIGHTFORM, OCVIBE',
+      [
+        '> And graduate projects from DIGITAL MEDIA DESIGN',
+        'at an institution that shall remain nameless',
+      ],
+      '> Standard portfolio format: REJECTED',
+      [
+        '> This became a SCI-FI HUD OPERATING SYSTEM',
+        'because I got carried away... and I like sci fi UIs',
+      ],
+      '> The restraint department has been sacked',
     ],
-    // Git Workflow with Exploration
+
+    // Simple Portfolio Gone Wrong (your favorite)
     [
-      '> git status: CLEAN WORKING TREE',
-      ['> branch: main AHEAD BY 47 COMMITS', 'secret branches detected'],
-      '> TouchDesigner modules: COMMITTED',
-      ['> p5.js sketches: PUSHED TO ORIGIN', 'interactive surprises deployed'],
-      '> unity assets: STAGED',
-      ['> merge conflicts: RESOLVED', 'curiosity rewarded'],
-      '> welcome to the repository',
+      '> This was supposed to be a SIMPLE PORTFOLIO',
+      [
+        '> Featuring REACT, THREE.JS, P5.JS projects',
+        'and other technical acronyms',
+      ],
+      [
+        '> But I really enjoy making INTERACTIVE DASHBOARDS',
+        'Exhibit A: I made this boot loader for fun',
+      ],
+      [
+        '> So I added 12 THEMED UI EXPERIENCES',
+        'and video game inspired interfaces and operating systems',
+      ],
+      '> Normal portfolio standards: COMPLETELY ABANDONED',
+      [
+        '> I apologize if this is UNCONVENTIONAL',
+        '> The apology writer has also been sacked',
+      ],
+      'enjoy the experience',
     ],
-    // Debug Mode with Hidden Features
+
+    // UI Designer Confession (more context about what you do)
     [
-      '> debugging creative algorithms...',
-      ['> breakpoints set: STRATEGICALLY', 'click everything twice'],
-      '> console.log statements: EXCESSIVE',
-      ['> stack trace: FOLLOWING THE FLOW', 'themes unlock more themes'],
-      '> performance profiler: RUNNING',
-      ['> code coverage: 94.7%', '5.3% reserved for surprises'],
-      '> bug hunt: COMPLETE',
+      ['> Portfolio by FULL-STACK UI DEVELOPER', 'and creative technology'],
+      [
+        '> Who makes ENTERPRISE DASHBOARDS by day',
+        'and sci-fi interfaces by night... but also by day',
+      ],
+      [
+        '> Specializing in REACT, TYPESCRIPT, DESIGN SYSTEMS',
+        'dabbles in Unity, Three.js, P5.JS, Touchdesigner, and art',
+      ],
+      [
+        '> Inspired by CYBERPUNK INTERFACES and GAME HUDS',
+        'tablet OS aesthetics included',
+      ],
+      ['> Featuring hidden messages because WHY NOT', 'like this one'],
+      [
+        '> Normal is boring so NORMAL IS BANNED',
+        'creativity department approved',
+      ],
+      [
+        '> Quality metrics: OVER-ENGINEERED',
+        'as you can tell from this intro screen lol',
+      ],
     ],
-    // IDE Experience with Discovery
+
+    // Over-Engineering Confession
     [
-      '> VS Code workspace: LOADED',
-      ['> extensions enabled: PRODUCTIVITY++', 'curiosity extension installed'],
-      '> syntax highlighting: ACTIVE',
-      ['> intellisense suggestions: HELPFUL', 'try the password field'],
-      '> integrated terminal: READY',
-      ['> welcome to the coding zone', 'where exploration pays off'],
+      ['> Standard portfolio requirements: BASIC NAVIGATION', ''],
+      [
+        '> Actual implementation: FULL OPERATING SYSTEM',
+        'scope creep achievement unlocked',
+      ],
+      '> Inspired by VIDEO GAME and TABLET INTERFACES',
+      [
+        '> Features BOOT SEQUENCES, THEME SYSTEMS, & PENDEJADITAS',
+        "because apparently that's necessary",
+      ],
+      '> The minimalism consultant: SACKED',
+      [
+        '> Sorry if overwhelming but HAVE FUN WITH IT',
+        'embrace the digital chaos',
+      ],
+      [
+        '> The restraint team have also been sacked',
+        'and replaced with a team over-caffeinated llamas',
+      ],
     ],
+    // [
+    //   '> initializing development environment...',
+    //   ['> package dependencies: RESOLVED', 'easter eggs included'],
+    //   '> TypeScript compiler: ACTIVE',
+    //   ['> build process: OPTIMIZED', '12 themes discovered so far'],
+    //   '> three.js renderer: COMPILED',
+    //   ['> creative technologist mode: ENABLED', 'hover for hidden messages'],
+    //   '> development server: RUNNING',
+    // ],
+    // // Git Workflow with Exploration
+    // [
+    //   '> git status: CLEAN WORKING TREE',
+    //   ['> branch: main AHEAD BY 47 COMMITS', 'secret branches detected'],
+    //   '> TouchDesigner modules: COMMITTED',
+    //   ['> p5.js sketches: PUSHED TO ORIGIN', 'interactive surprises deployed'],
+    //   '> unity assets: STAGED',
+    //   ['> merge conflicts: RESOLVED', 'curiosity rewarded'],
+    //   '> welcome to the repository',
+    // ],
+    // // Debug Mode with Hidden Features
+    // [
+    //   '> debugging creative algorithms...',
+    //   ['> breakpoints set: STRATEGICALLY', 'click everything twice'],
+    //   '> console.log statements: EXCESSIVE',
+    //   ['> stack trace: FOLLOWING THE FLOW', 'themes unlock more themes'],
+    //   '> performance profiler: RUNNING',
+    //   ['> code coverage: 94.7%', '5.3% reserved for surprises'],
+    //   '> bug hunt: COMPLETE',
+    // ],
+    // // IDE Experience with Discovery
+    // [
+    //   '> VS Code workspace: LOADED',
+    //   ['> extensions enabled: PRODUCTIVITY++', 'curiosity extension installed'],
+    //   '> syntax highlighting: ACTIVE',
+    //   ['> intellisense suggestions: HELPFUL', 'try the password field'],
+    //   '> integrated terminal: READY',
+    //   ['> welcome to the coding zone', 'where exploration pays off'],
+    // ],
   ],
   'euclid-ci': [
     // UNHINGED Counter Intelligence Corporate

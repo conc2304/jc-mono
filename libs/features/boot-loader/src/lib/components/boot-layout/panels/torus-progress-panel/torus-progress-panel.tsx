@@ -1,6 +1,6 @@
 // components/TorusProgressPanel.tsx
 import React from 'react';
-import { alpha, Box, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { TorusFieldProgressMemo } from '../../../torus-field-progress';
 import { ScanLinesOverlay } from '../../atoms';
 
@@ -36,11 +36,16 @@ export const TorusProgressPanel: React.FC<TorusProgressPanelProps> = ({
           height: '100%',
           width: '100%',
           top: 0,
-          zIndex: -1,
-          opacity: 0.5,
+          zIndex: 0,
+          opacity: 0.25,
         }}
       >
-        <TorusFieldProgressMemo hideText colors={colors} />
+        <TorusFieldProgressMemo
+          hideText
+          colors={colors}
+          progress={progress}
+          progressMessage={progressMessage}
+        />
         <ScanLinesOverlay className="ScanLinesOverlay--component" />
       </Box>
     );
