@@ -414,7 +414,6 @@ const BootTextInner: React.FC<BootTextProps> = ({
   // Function to handle hover events
   const handleMessageHover = useCallback(
     (messageIndex: number, isHovering: boolean) => {
-      console.log('handleMessageHover', isHovering);
       const [defaultMessage, hiddenMessage] = normalizeBootMessage(
         bootMessages[messageIndex]
       );
