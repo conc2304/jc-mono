@@ -32,7 +32,17 @@ export const EnterButton = ({ fontSize, ...buttonProps }: EnterButtonProps) => (
     href="/home"
     {...buttonProps}
   >
-    <Typography variant="display" color="background.paper" fontSize={fontSize}>
+    <Typography
+      variant="h1"
+      color="background.paper"
+      fontSize={fontSize}
+      sx={{
+        '&.MuiTypography-root': {
+          fontSize: fontSize,
+          letterSpacing: '0.75rem',
+        },
+      }}
+    >
       ENTER
     </Typography>
   </AugmentedButton>

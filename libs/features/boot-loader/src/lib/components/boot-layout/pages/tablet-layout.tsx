@@ -172,7 +172,7 @@ const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
             />
 
             <Grid size={{ xs: 4 }} sx={{ flex: 1 }}>
-              <EnterButton fontSize={'2.25rem'} onMouseEnter={triggerPreload} />
+              <EnterButton fontSize={'4rem'} onMouseEnter={triggerPreload} />
             </Grid>
           </Grid>
         </BottomPanel>

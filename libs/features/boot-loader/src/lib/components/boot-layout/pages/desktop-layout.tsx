@@ -197,7 +197,10 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       mt={2}
                     >
                       <Stack width={'100%'} height="33%">
-                        <EnterButton onMouseEnter={triggerPreload} />
+                        <EnterButton
+                          onMouseEnter={triggerPreload}
+                          fontSize={'4.5rem'}
+                        />
                       </Stack>
 
                       <Stack width="100%" px={6}>

@@ -30,7 +30,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   <BrowserFrame>
     {!isXs && <Header compact={true} passwordMsg={passwordMessage} />}
 
-    <Stack sx={{ textAlign: 'center', flexShrink: 0 }}>
+    <Stack sx={{ textAlign: 'center', flexShrink: 0, py: 1.5 }}>
       <HeroText />
     </Stack>
 
@@ -75,7 +75,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
 
       <Box flexGrow={0.25} flexShrink={0}>
-        <EnterButton onMouseEnter={triggerPreload} />
+        <EnterButton onMouseEnter={triggerPreload} fontSize={'3rem'} />
       </Box>
     </Box>
   </BrowserFrame>
