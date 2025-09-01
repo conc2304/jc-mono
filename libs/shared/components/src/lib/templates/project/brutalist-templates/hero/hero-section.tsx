@@ -33,7 +33,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <ImageContainer
           {...imgAttributes}
           lazy={false}
-          showSkeletonDuration={50}
+          showSkeletonDuration={1}
           className="hero-image"
           sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -67,7 +67,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       >
         <Container maxWidth="xl" sx={{ mt: 5 }}>
           <Typography
-            variant="h2"
+            variant="display"
             className="hero-title"
             sx={{
               fontWeight: 'bold',
@@ -75,12 +75,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               color: theme.palette.primary.main,
               lineHeight: 1,
 
-              fontSize: '2rem',
+              fontSize: '1.5rem',
               '@container (min-width: 769px)': {
-                fontSize: '4rem',
+                fontSize: '3.5rem',
               },
               '@container (min-width: 1200px)': {
-                fontSize: '6rem',
+                fontSize: '5.5rem',
               },
             }}
           >

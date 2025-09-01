@@ -143,19 +143,20 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
                 variant="display"
                 sx={{
                   writingMode: 'sideways-lr',
-                  lineHeight: 1.2,
+                  lineHeight: 1.5,
                   textOverflow: 'clip',
                   fontSize: isLg
-                    ? '6.5rem !important'
+                    ? '4rem !important'
                     : isMd
-                    ? '5rem !important'
-                    : '4rem !important',
+                    ? '3rem !important'
+                    : '2.5rem !important',
                   textAlign: 'center',
                   maxHeight: '100%',
                   position: 'absolute',
                   right: 0,
                   top: 0,
                   bottom: 0,
+                  pr: 1,
                   transform: 'translateX(0%)',
                   bgcolor: alpha(theme.palette.action.active, 0.5),
                   zIndex: 0,
