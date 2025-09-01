@@ -360,8 +360,8 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
             color: theme.palette.text.secondary,
           }}
         >
-          Current: {resolvedMode.toUpperCase()}
-          {mode === 'system' && `(${systemMode?.toUpperCase()})`}
+          Current: {mode === 'system' && ` [SYSTEM] `}
+          {resolvedMode.toUpperCase()}
         </Typography>
       </Box>
     );

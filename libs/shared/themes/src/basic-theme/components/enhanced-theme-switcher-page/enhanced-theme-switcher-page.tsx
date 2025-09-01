@@ -582,10 +582,10 @@ export const ThemeCustomizerPage: React.FC = () => {
             }}
           >
             <Box>
-              <CyberTypography variant="h6" sx={{ color: 'primary.main' }}>
+              <CyberTypography variant="h3" color="primary">
                 THEME_CONTROL_CENTER
               </CyberTypography>
-              <Typography variant="caption" sx={{ color: 'success.main' }}>
+              <Typography variant="caption" color="success">
                 Advanced theme management & customization
               </Typography>
             </Box>
@@ -610,6 +610,12 @@ export const ThemeCustomizerPage: React.FC = () => {
                 <ModeButton
                   onClick={() => handleModeChange(modeValue)}
                   isActive={mode === modeValue}
+                  sx={{
+                    borderColor:
+                      resolvedMode === modeValue
+                        ? alpha(theme.palette.warning.main, 0.5)
+                        : theme.palette.action.selected,
+                  }}
                 >
                   {icon}
                 </ModeButton>
@@ -637,10 +643,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                     borderBottom: `2px solid ${theme.palette.primary.main}`,
                   }}
                 >
-                  <CyberTypography
-                    variant="subtitle1"
-                    sx={{ color: 'primary.main' }}
-                  >
+                  <CyberTypography variant="h3" color="primary">
                     <PaletteIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                     THEME_SELECTOR
                   </CyberTypography>
@@ -1058,10 +1061,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                       borderBottom: `2px solid ${theme.palette.secondary.main}`,
                     }}
                   >
-                    <CyberTypography
-                      variant="h6"
-                      sx={{ color: 'secondary.main' }}
-                    >
+                    <CyberTypography variant="h3" color="secondary">
                       <MonitorIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                       CURRENT_THEME
                     </CyberTypography>
@@ -1589,7 +1589,9 @@ export const ThemeCustomizerPage: React.FC = () => {
           borderRadius: 0,
           backgroundColor: 'background.paper',
           p: 3,
-          // mt: 6,
+          [theme.breakpoints.down('md')]: {
+            py: 1,
+          },
         }}
       >
         <Container maxWidth="xl">
@@ -1617,19 +1619,11 @@ export const ThemeCustomizerPage: React.FC = () => {
                 </Box>
                 <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   Theme: {currentTheme?.name?.toUpperCase() || 'NONE'} | Mode:{' '}
+                  {mode === 'system' && ` [SYSTEM] `}
                   {resolvedMode.toUpperCase()}
-                  {mode === 'system' && ` (${systemMode?.toUpperCase()})`}
                 </Typography>
               </Stack>
             </Grid>
-            {/* <Grid
-              size={{ xs: 12, sm: 4 }}
-              sx={{ textAlign: { xs: 'left', sm: 'right' } }}
-            >
-              <Typography variant="caption" sx={{ color: 'info.main' }}>
-                THEME_CONTROL_v2.1.0
-              </Typography>
-            </Grid> */}
           </Grid>
         </Container>
       </Box>
