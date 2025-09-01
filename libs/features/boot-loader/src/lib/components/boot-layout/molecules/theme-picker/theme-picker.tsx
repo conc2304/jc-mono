@@ -1,7 +1,5 @@
 import {
-  alpha,
   Box,
-  darken,
   Dialog,
   styled,
   Typography,
@@ -20,14 +18,7 @@ const StatusBar = styled(AugmentedButton)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-}));
-
-const StatusIndicator = styled(Box)(({ theme }) => ({
-  width: 16,
-  height: 16,
-  border: `1px solid ${theme.palette.getInvertedMode('primary')}`,
-  borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
+  px: 2,
 }));
 
 const StatusIcons = styled(Box)({
@@ -75,45 +66,53 @@ export const ThemePickerPanel = ({
         variant="outlined"
         shape="bottomClipped"
       >
-        <Box display="flex" alignItems="center" gap={2}>
-          <StatusIndicator />
-          {/* {!isSm && ( */}
-          <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            ACTIVE COLOR THEME : {currentTheme?.name.toUpperCase()}
-          </Typography>
-          {/* )} */}
-          {theme.palette.mode === 'dark' ? (
-            <DarkMode
-              size={'1rem'}
-              style={{
-                color: theme.palette.primary.main,
-              }}
-            />
-          ) : (
-            <LightMode
-              size={'1rem'}
-              style={{
-                color: theme.palette.primary.main,
-              }}
-            />
-          )}
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={2}
+          flexWrap={'wrap'}
+          justifyContent={isSm ? 'center' : 'space-between'}
+          width={'100%'}
+          px={1.5}
+        >
+          <Box display="flex" alignItems="center" gap={2}>
+            <Typography variant="caption" sx={{ color: 'primary.main' }}>
+              ACTIVE COLOR THEME : {currentTheme?.name.toUpperCase()}
+            </Typography>
+            {/* Color Mode Icons */}
+            {theme.palette.mode === 'dark' ? (
+              <DarkMode
+                size={'1rem'}
+                style={{
+                  color: theme.palette.primary.main,
+                }}
+              />
+            ) : (
+              <LightMode
+                size={'1rem'}
+                style={{
+                  color: theme.palette.primary.main,
+                }}
+              />
+            )}
+          </Box>
+          <StatusIcons>
+            {themeColors.map((color) => (
+              <StatusIcon
+                sx={(theme) => ({
+                  '& > div': {
+                    width: 8,
+                    height: 8,
+                    backgroundColor: theme.palette[color].main,
+                  },
+                })}
+                key={color}
+              >
+                <div />
+              </StatusIcon>
+            ))}
+          </StatusIcons>
         </Box>
-        <StatusIcons>
-          {themeColors.map((color) => (
-            <StatusIcon
-              sx={(theme) => ({
-                '& > div': {
-                  width: 8,
-                  height: 8,
-                  backgroundColor: theme.palette[color].main,
-                },
-              })}
-              key={color}
-            >
-              <div />
-            </StatusIcon>
-          ))}
-        </StatusIcons>
       </StatusBar>
 
       <Dialog

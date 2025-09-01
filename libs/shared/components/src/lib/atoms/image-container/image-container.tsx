@@ -155,10 +155,8 @@ export const ImageContainer = ({
       />
       {/* <Image sx={{ color: 'grey.400', zIndex: 1 }} /> */}
       <Box
-        component="img"
-        src="gifs/Static.gif"
-        alt={'Loading'}
         sx={{
+          background: `url('./gifs/Static.gif')`,
           width: '100%',
           height: '100%',
           objectFit: 'cover',
