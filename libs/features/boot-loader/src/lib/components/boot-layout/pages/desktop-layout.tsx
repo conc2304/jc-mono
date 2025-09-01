@@ -5,11 +5,7 @@ import { Header, GifContainer, Footer, WarningPanel } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
 import { BackgroundControls } from '../molecules/background-controls/background-controls';
 import { BootTextPanel, ProgressPanel, TorusProgressPanel } from '../panels';
-import {
-  BackgroundOverlay,
-  DiagonalLines,
-  ScrambleText,
-} from '@jc/ui-components';
+import { BackgroundOverlay, DiagonalLines } from '@jc/ui-components';
 
 interface FullDesktopLayoutProps {
   bootMessages: any[];

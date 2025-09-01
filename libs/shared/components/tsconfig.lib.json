@@ -34,7 +34,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "../../../declaration-files/*.d.ts"
-  ],
+, "src/lib/atoms/cyber-border-svg/ui-frame-border-2tsx"  ],
   "references": [
     {
       "path": "../utils/tsconfig.lib.json"
