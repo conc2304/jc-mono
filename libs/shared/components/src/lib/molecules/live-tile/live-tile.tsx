@@ -12,12 +12,12 @@ import { IconContainer, TileContainer } from './styled-components';
 import { TileRenderer } from '@jc/file-system';
 import { DefaultTileContent } from './default-tile-content';
 import { ChevronRight, Folder } from 'lucide-react';
-import { Star } from '@mui/icons-material';
 import { useMediaQuery } from '@mui/system';
 
 export interface TileContentProps<TData = {}> {
   name: string;
   icon?: React.ReactNode;
+  type?: string;
   tileData?: TData;
   children?: any[];
   metadata?: {

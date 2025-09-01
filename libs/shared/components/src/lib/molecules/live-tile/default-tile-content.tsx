@@ -9,6 +9,7 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
   dateModified,
   metadata,
   isLarge,
+  type,
 }) => {
   const theme = useTheme();
 
@@ -39,7 +40,7 @@ export const DefaultTileContent: React.FC<TileContentProps> = ({
               fontSize: '0.65rem',
             }}
           >
-            {size ? `${Math.round(size / 1024)} KB` : 'File'}
+            {size ? `${Math.round(size / 1024)} KB` : type || 'File'}
           </Typography>
           <Typography
             variant="caption"

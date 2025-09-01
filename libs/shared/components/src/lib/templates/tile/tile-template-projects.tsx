@@ -133,56 +133,65 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
           {isMd && (
             <Box
               className="ProjectTile--content-right"
-              flexGrow={1}
+              flexShrink={0}
               sx={{
                 maxHeight: '100%',
-                width: '100%',
+                width: '120px',
+                height: '100%',
+                position: 'relative',
+                bgcolor: alpha(theme.palette.action.active, 0.5),
               }}
             >
-              <Typography
-                variant="display"
+              <Box
                 sx={{
-                  writingMode: 'sideways-lr',
-                  lineHeight: 1.5,
-                  textOverflow: 'clip',
-                  fontSize: isLg
-                    ? '4rem !important'
-                    : isMd
-                    ? '3rem !important'
-                    : '2.5rem !important',
-                  textAlign: 'center',
-                  maxHeight: '100%',
                   position: 'absolute',
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  pr: 1,
-                  transform: 'translateX(0%)',
-                  bgcolor: alpha(theme.palette.action.active, 0.5),
+                  right: '50%',
+                  top: '50%',
+                  bottom: '50%',
+                  left: '50%',
+                  p: 0,
                   zIndex: 0,
+                  overflow: 'visible',
                 }}
               >
-                {(
-                  currentProject.basics.category || currentProject.basics.type
-                ).slice(0, 4)}
-
-                <DiagonalLines
-                  width="20px"
-                  height="100%"
-                  lineThickness={1}
-                  spacing={10}
-                  direction="diagonal"
-                  color={alpha(theme.palette.action.active, 0.5)}
+                <Typography
+                  variant="display"
                   sx={{
+                    lineHeight: 1.5,
+                    textOverflow: 'clip',
+                    fontSize: isLg
+                      ? '4rem !important'
+                      : isMd
+                      ? '3rem !important'
+                      : '2.5rem !important',
+                    textAlign: 'center',
+                    pb: 2,
+
                     position: 'absolute',
-                    left: '-20px',
-                    top: 0,
-                    bottom: 0,
-                    border: '3px solid',
-                    borderColor: alpha(theme.palette.action.active, 0.5),
+                    transform: 'translate(-50%, -50%) rotate(-90deg)',
                   }}
-                />
-              </Typography>
+                >
+                  {(
+                    currentProject.basics.category || currentProject.basics.type
+                  ).slice(0, 4)}
+                </Typography>
+              </Box>
+              <DiagonalLines
+                width="20px"
+                height="100%"
+                lineThickness={1}
+                spacing={10}
+                direction="diagonal-alt"
+                color={alpha(theme.palette.action.active, 0.5)}
+                sx={{
+                  position: 'absolute',
+                  left: '-20px',
+                  top: 0,
+                  bottom: 0,
+                  border: '3px solid',
+                  borderColor: alpha(theme.palette.action.active, 0.5),
+                }}
+              />
             </Box>
           )}
         </ContentContainer>

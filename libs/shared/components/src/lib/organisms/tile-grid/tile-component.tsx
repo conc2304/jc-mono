@@ -26,7 +26,7 @@ import {
 } from '../../molecules/live-tile/styled-components';
 import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
-import { AugmentedButton, DiagonalLines } from '../../atoms';
+import { AugmentedButton } from '../../atoms';
 
 const textureImages = [
   'scratched-glass.png',
@@ -83,6 +83,7 @@ export const TileComponent = memo(
       size,
       name,
       id,
+      type,
     } = tile.fileData;
     // Use provided renderer or fallback to default
     const renderer = tileRenderer || DefaultTileRenderer;
@@ -247,6 +248,7 @@ export const TileComponent = memo(
             >
               <ContentComponent
                 name={name}
+                type={type}
                 icon={icon}
                 tileData={tileData}
                 children={children}
@@ -302,7 +304,7 @@ export const TileComponent = memo(
             </Box>
           </Box>
 
-          <Box
+          {/* <Box
             className="TileComponent--drag-handle"
             data-augmented-ui="border bl-clip br-clip"
             sx={{
@@ -334,7 +336,7 @@ export const TileComponent = memo(
               direction="diagonal-alt"
               color={theme.palette.text.primary}
             />
-          </Box>
+          </Box> */}
         </Box>
       </TileContainer>
     );

@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const SettingsFileSystem: FileSystemItem<{}, {}> = {
   id: uuidv4(),
   name: 'Settings',
-  type: 'Color Themes',
+  type: 'Color Picker',
   icon: <Settings />,
   dateModified: new Date('2024-01-25'),
   dateCreated: new Date('2025-08-29'),
