@@ -12,6 +12,14 @@ export const fontFaces = `
 }
 
 @font-face {
+  font-family: 'Solstice';
+  src: url('/fonts/temp/THE-SOLSTICE.ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Saiba';
   src: url('/fonts/saiba/SAIBA-45.eot'); /* IE9 Compat Modes */
   src: url('/fonts/saiba/SAIBA-45.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */

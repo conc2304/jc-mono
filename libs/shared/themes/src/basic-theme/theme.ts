@@ -29,9 +29,8 @@ type PaletteOptionNames =
 const paletteFallback = basicPalette();
 const typographyFallBack = getTypography({
   primary: `'Exo 2', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
-  secondary: `'Eightgon', Impact, 'Arial Black', 'Trebuchet MS', Arial, sans-serif`,
-  display: `'Saiba', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
-  displayOutline: `'Saiba Outline', 'Orbitron', 'Exo 2', 'Rajdhani', 'Russo One', 'Trebuchet MS', Arial, sans-serif`,
+  secondary: `'Eightgon', Arial, 'Trebuchet MS', Arial, sans-serif`,
+  display: `'Solstice', Impact, 'Trebuchet MS', sans-serif`,
   monospace: `'JetBrains Mono', monospace`,
 });
 
