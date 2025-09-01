@@ -77,7 +77,8 @@ export const ThemePickerPanel = ({
         >
           <Box display="flex" alignItems="center" gap={2}>
             <Typography variant="caption" sx={{ color: 'primary.main' }}>
-              ACTIVE COLOR THEME : {currentTheme?.name.toUpperCase()}
+              {!isSm ? 'ACTIVE COLOR THEME' : 'APP COLORS'} :{' '}
+              {currentTheme?.name.toUpperCase()}
             </Typography>
             {/* Color Mode Icons */}
             {theme.palette.mode === 'dark' ? (

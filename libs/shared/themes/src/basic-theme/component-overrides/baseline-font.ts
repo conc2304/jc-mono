@@ -13,32 +13,11 @@ export const fontFaces = `
 
 @font-face {
   font-family: 'Solstice';
-  src: url('/fonts/temp/THE-SOLSTICE.ttf');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Saiba';
-  src: url('/fonts/saiba/SAIBA-45.eot'); /* IE9 Compat Modes */
-  src: url('/fonts/saiba/SAIBA-45.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('/fonts/saiba/SAIBA-45.woff') format('woff'), /* Modern Browsers */
-       url('/fonts/saiba/SAIBA-45.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('/fonts/saiba/SAIBA-45.otf') format('opentype'); /* Fallback */
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Saiba Outline';
-  src: url('/fonts/saiba/SAIBA-45-Outline.eot'); /* IE9 Compat Modes */
-  src: url('/fonts/saiba/SAIBA-45-Outline.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('/fonts/saiba/SAIBA-45-Outline.woff') format('woff'), /* Modern Browsers */
-       url('/fonts/saiba/SAIBA-45-Outline.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('/fonts/saiba/SAIBA-45-Outline.otf') format('opentype'); /* Fallback */
-  font-weight: 400;
+  src: url('/fonts/solstice/solstice.eot'); /* IE9 Compat Modes */
+  src: url('/fonts/solstice/solstice.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/solstice/solstice.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/solstice/solstice.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/solstice/solstice.otf') format('opentype'); /* Fallback */  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -56,8 +35,6 @@ export const fontFaces = `
 }
 
 
-
-/* Exo 2 Light 300 */
 @font-face {
   font-family: 'Exo 2';
   src: url('./fonts/exo-2/exo-2-latin-300-normal.woff2') format('woff2'),
@@ -78,7 +55,6 @@ export const fontFaces = `
   font-display: swap;
 }
 
-/* Exo 2 Regular 400 */
 @font-face {
   font-family: 'Exo 2';
   src: url('./fonts/exo-2/exo-2-latin-400-normal.woff2') format('woff2'),
