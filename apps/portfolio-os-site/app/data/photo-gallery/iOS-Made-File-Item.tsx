@@ -1,6 +1,7 @@
 import { FileSystemItem } from '@jc/file-system';
 import {
   ArtGalleryMedia_iOS_Made,
+  HighlightVideo,
   ProcessDecorImages,
   ProcessEndImages,
   ProcessStartImages,
@@ -49,6 +50,7 @@ export const iOSImageGallery: FileSystemItem<
       processStartImages: ProcessStartImages,
       processEndImages: ProcessEndImages,
       decorImages: ProcessDecorImages,
+      highlightVideo: HighlightVideo,
       lazy: true,
       showSkeletonDuration: 0,
       rootMargin: '500px',

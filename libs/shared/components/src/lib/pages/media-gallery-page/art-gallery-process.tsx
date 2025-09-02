@@ -1,8 +1,19 @@
-import { Box, Container, Typography, Grid } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  CardContent,
+  Chip,
+} from '@mui/material';
 import { styled, useTheme, getContrastRatio } from '@mui/material/styles';
 import { ImageContainer } from '../../atoms';
-import { ImageMediaData } from '../../organisms';
+import { ImageMediaData, VideoMediaData } from '../../organisms';
 import { CSSProperties } from 'react';
+import { PlayArrow } from '@mui/icons-material';
+import { VideoPlayer } from '../../molecules';
+import { ensureContrast } from '@jc/utils';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   background: `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default}, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
@@ -20,16 +31,18 @@ export interface ArtGalleryProcessProps {
   processStartImages: ImageMediaData[];
   processEndImages: ImageMediaData[];
   decorImages: [ImageMediaData, ImageMediaData];
+  highlightVideo: VideoMediaData;
 }
 
 const ArtGalleryProcess = ({
   processStartImages,
   processEndImages,
   decorImages,
+  highlightVideo: video,
 }: ArtGalleryProcessProps) => {
   const theme = useTheme();
 
-  // decore images are black on a white background, make the black background disappear in any mode with any background
+  // Decor images are black on a white background, make the black background disappear in any mode with any background
   const imgBgRatio = getContrastRatio('#FFF', theme.palette.background.paper);
   const decorImageStyles: CSSProperties =
     imgBgRatio > 5
@@ -136,6 +149,115 @@ const ArtGalleryProcess = ({
                 ))}
               </Grid>
             </Grid>
+          </Grid>
+        </Box>
+
+        <Box mb={15}>
+          <Grid size={12}>
+            <Paper
+              sx={{
+                overflow: 'hidden',
+                backgroundColor:
+                  theme.palette.getInvertedMode?.('secondary') ||
+                  theme.palette.grey[100],
+                border: `1px solid ${theme.palette.divider}`,
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: theme.shadows[8],
+                },
+              }}
+              // onClick={() => handleMediaClick(mediaItem)}
+            >
+              <Box
+                sx={{
+                  height: 'auto',
+                  position: 'relative',
+                  pt: 2,
+                  px: 4,
+                }}
+              >
+                {video.title && (
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mx: 'auto',
+                      textAlign: 'center',
+                      color: ensureContrast(
+                        theme.palette.text.primary,
+                        theme.palette.getInvertedMode('secondary'),
+                        2
+                      ),
+                      py: 2,
+                    }}
+                  >
+                    {video.title}
+                  </Typography>
+                )}
+                <VideoPlayer
+                  video={video}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  muted={false}
+                  controls={true}
+                />
+                {/* Click overlay with play icon */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    bgcolor: 'transparent',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease',
+                    '&:hover': {
+                      opacity: 1,
+                      bgcolor: 'rgba(0, 0, 0, 0.3)',
+                    },
+                  }}
+                >
+                  <PlayArrow sx={{ color: 'white', fontSize: 48 }} />
+                </Box>
+              </Box>
+              {(video.caption || video.title || video.type) && (
+                <CardContent sx={{ p: 2 }}>
+                  <Box
+                    display="flex"
+                    alignItems="flex-start"
+                    gap={1}
+                    mb={1}
+                    flexWrap="wrap"
+                  ></Box>
+                  {video.caption && (
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: ensureContrast(
+                          theme.palette.text.primary,
+                          theme.palette.getInvertedMode('secondary'),
+                          2.5
+                        ),
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                      }}
+                    >
+                      {video.caption}
+                    </Typography>
+                  )}
+                </CardContent>
+              )}
+            </Paper>
           </Grid>
         </Box>
 

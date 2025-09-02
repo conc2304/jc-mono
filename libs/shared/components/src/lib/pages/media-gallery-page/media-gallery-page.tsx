@@ -15,6 +15,7 @@ export const MediaGalleryPage = ({
   processStartImages,
   processEndImages,
   decorImages,
+  highlightVideo,
 }: MediaGalleryProps & ArtGalleryProcessProps) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
@@ -44,6 +45,7 @@ export const MediaGalleryPage = ({
             processStartImages={processStartImages}
             processEndImages={processEndImages}
             decorImages={decorImages}
+            highlightVideo={highlightVideo}
           />
         </Box>
         <Typography

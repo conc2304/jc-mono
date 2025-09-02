@@ -1,6 +1,7 @@
-import { ImageMediaData } from '@jc/ui-components';
+import { ImageMediaData, VideoMediaData } from '@jc/ui-components';
 import { convertPortfolioGalleryToImageData } from './utils';
 import { R2_PROJECT_DIR_GALLERY } from './constants';
+import { getVideoUrl } from '@jc/utils';
 
 export interface PortfolioGalleryItem {
   filename: string;
@@ -1961,3 +1962,17 @@ export const ProcessDecorImages: [ImageMediaData, ImageMediaData] =
     ImageMediaData,
     ImageMediaData
   ];
+
+export const HighlightVideo: VideoMediaData = {
+  url: getVideoUrl(
+    'clyzby-process/Pares Mallis and Arni Cheatham Art 100 Boston.mp4'
+  ),
+  title: 'iOS Artist in the News',
+  // thumbnail?: string;
+  caption: `Featured on local TV discussing my innovative iOS art process - creating digital artwork entirely on iPhone apps and printing on glass due to lack of traditional studio space. Part of an affordable art exhibition supporting breast cancer research.`,
+  detailedCaption: `Honored to be featured in this Boston TV interview about Art 100's affordable art exhibition at the Piano Craft Gallery.
+  As the first "app artist" curator Paris Milas had encountered, I shared how financial constraints led me to innovate - creating all my artwork directly on my iPhone using various apps, then printing the digital pieces on glass.
+  This necessity-driven approach allowed me to continue making art without access to traditional studio space, while contributing to a meaningful cause.
+  The exhibition featured works priced at $100 to make art accessible to new collectors, with proceeds supporting the Susan G. Komen Breast Cancer Foundation.
+  The show ran December 4-19 and showcased how technology can democratize art creation, proving that creativity finds a way regardless of traditional resources or spaces.`,
+};
