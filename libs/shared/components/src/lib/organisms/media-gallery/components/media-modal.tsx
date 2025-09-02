@@ -10,6 +10,7 @@ import {
   Backdrop,
   TextField,
   InputAdornment,
+  alpha,
 } from '@mui/material';
 import { Close, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { VideoPlayer } from '@jc/ui-components';
@@ -149,10 +150,14 @@ export const MediaModal = ({
       open={open}
       onClose={onClose}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-        sx: { backgroundColor: 'rgba(0, 0, 0, 0.9)' },
+      slots={{
+        backdrop: Backdrop,
+      }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+          sx: { backgroundColor: 'rgba(0, 0, 0, 0.9)' },
+        },
       }}
     >
       <Fade in={open}>
@@ -214,7 +219,7 @@ export const MediaModal = ({
                     bgcolor: getVideoTypeColor(
                       (currentMedia.data as VideoMediaData).type
                     ),
-                    color: 'white',
+                    color: theme.palette.text.secondary,
                     textTransform: 'capitalize',
                     mr: 1,
                     display: isMobile ? 'none' : 'inline-flex',
@@ -235,7 +240,10 @@ export const MediaModal = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              bgcolor: currentMedia.type === 'video' ? 'black' : 'grey.100',
+              bgcolor:
+                currentMedia.type === 'video'
+                  ? 'black'
+                  : theme.palette.background.paper,
               overflow: 'hidden',
             }}
           >
@@ -250,12 +258,15 @@ export const MediaModal = ({
                     top: '50%',
                     transform: 'translateY(-50%)',
                     zIndex: 2,
-                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    bgcolor: alpha(theme.palette.primary.main, 0.5),
                     color: 'white',
                     width: isMobile ? 40 : 48,
                     height: isMobile ? 40 : 48,
                     '&:hover': {
-                      bgcolor: 'rgba(0, 0, 0, 0.7)',
+                      bgcolor: alpha(
+                        theme.palette.getInvertedMode('primary'),
+                        0.7
+                      ),
                     },
                   }}
                 >
@@ -270,12 +281,15 @@ export const MediaModal = ({
                     top: '50%',
                     transform: 'translateY(-50%)',
                     zIndex: 2,
-                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    bgcolor: alpha(theme.palette.primary.main, 0.5),
                     color: 'white',
                     width: isMobile ? 40 : 48,
                     height: isMobile ? 40 : 48,
                     '&:hover': {
-                      bgcolor: 'rgba(0, 0, 0, 0.7)',
+                      bgcolor: alpha(
+                        theme.palette.getInvertedMode('primary'),
+                        0.7
+                      ),
                     },
                   }}
                 >
@@ -360,7 +374,7 @@ export const MediaModal = ({
                         '&:hover': {
                           bgcolor:
                             index === currentIndex
-                              ? 'primary.dark'
+                              ? theme.palette.getInvertedMode('primary')
                               : 'grey.600',
                           transform: 'scale(1.2)',
                         },
@@ -374,15 +388,22 @@ export const MediaModal = ({
                   size="small"
                   value={pageInput}
                   onChange={handlePageInputChange}
-                  onKeyPress={handlePageInputSubmit}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="caption" color="text.secondary">
-                          / {mediaItems.length}
-                        </Typography>
-                      </InputAdornment>
-                    ),
+                  onKeyUp={handlePageInputSubmit}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography variant="caption" color="text.secondary">
+                            / {mediaItems.length}
+                          </Typography>
+                        </InputAdornment>
+                      ),
+                    },
+                    htmlInput: {
+                      min: 1,
+                      max: mediaItems.length,
+                      type: 'number',
+                    },
                   }}
                   sx={{
                     width: isMobile ? 100 : 120,
@@ -390,11 +411,6 @@ export const MediaModal = ({
                       textAlign: 'center',
                       fontSize: isMobile ? '0.875rem' : '1rem',
                     },
-                  }}
-                  inputProps={{
-                    min: 1,
-                    max: mediaItems.length,
-                    type: 'number',
                   }}
                 />
               )}
