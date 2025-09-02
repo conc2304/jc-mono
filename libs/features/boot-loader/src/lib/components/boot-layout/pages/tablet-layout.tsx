@@ -149,16 +149,13 @@ const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
           </Stack>
         </Stack>
 
-        <BottomPanel flexShrink={0} className="BottomPanel--root">
+        <BottomPanel flexShrink={0} height="30%" className="BottomPanel--root">
           <Grid container columns={12} spacing={4}>
             <Grid size={6} display="flex">
-              <Stack>
-                <Typography variant="h5" color="primary" mb={0}>
-                  A Portfolio Site Experience by
-                </Typography>
+              <Stack gap={1}>
                 <HeroText />
               </Stack>
-              <Box flexGrow={1} />
+              {/* <Box flexGrow={1} /> */}
             </Grid>
 
             <BackgroundControls

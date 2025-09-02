@@ -153,14 +153,13 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       width={'100%'}
                       display={'flex'}
                       justifyContent={'left'}
-                      mt="2.5rem"
+                      mt="3rem"
                       gap={0.5}
                     >
                       <Typography
                         variant="h4"
                         color="primary"
                         mr="calc(7rem + 25%)"
-                        mb={2}
                       >
                         A Portfolio Site Experience by
                       </Typography>
@@ -169,6 +168,14 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                         variant="display"
                         color="primary"
                         mr="calc(3.5rem * 0.5 )"
+                        my={4}
+                        sx={{
+                          fontSize: {
+                            xs: '2.25rem',
+                            md: '2.5rem',
+                            lg: '2.75rem',
+                          },
+                        }}
                       >
                         Jose Conchello
                       </Typography>

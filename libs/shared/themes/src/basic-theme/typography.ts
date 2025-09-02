@@ -33,14 +33,14 @@ const TypographyTheme = (
     display: {
       fontFamily: display,
       fontWeight: 'normal',
-      fontSize: '2.375rem',
+      fontSize: '1.5rem',
       lineHeight: 1.14,
       letterSpacing: '-0.02em',
     },
     displayOutline: {
       fontFamily: displayOutline,
       fontWeight: 'normal',
-      fontSize: '2.375rem',
+      fontSize: '1.5rem',
       lineHeight: 1.14,
       letterSpacing: '-0.02em',
     },

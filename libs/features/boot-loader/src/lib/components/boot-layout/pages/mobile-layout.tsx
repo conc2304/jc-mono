@@ -30,10 +30,22 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   <BrowserFrame>
     {!isXs && <Header compact={true} passwordMsg={passwordMessage} />}
 
+    <GifContainer
+      flexGrow={1}
+      url={themedWidgetGifUrl.url}
+      sx={{
+        minHeight: '15%',
+        flexGrow: 0.5,
+        backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
+      }}
+    />
+
     <Stack sx={{ textAlign: 'center', flexShrink: 0, py: 1.5 }}>
       <HeroText />
     </Stack>
-
+    <Box flexShrink={0} flexGrow={1.5} px={1} py={4}>
+      <EnterButton onMouseEnter={triggerPreload} fontSize={'3rem'} />
+    </Box>
     <Box
       className="MobileContent--flex-wrapper"
       p={1}
@@ -63,20 +75,6 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       </Box>
 
       <ThemePickerPanel compactMenu />
-
-      <GifContainer
-        flexGrow={1}
-        url={themedWidgetGifUrl.url}
-        sx={{
-          minHeight: '15%',
-          flexGrow: 0.5,
-          backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
-        }}
-      />
-
-      <Box flexGrow={0.25} flexShrink={0}>
-        <EnterButton onMouseEnter={triggerPreload} fontSize={'3rem'} />
-      </Box>
     </Box>
   </BrowserFrame>
 );
