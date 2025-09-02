@@ -1,15 +1,15 @@
 import { ImageMediaData } from '@jc/ui-components';
-import { convertPortfolioToImageData } from './utils';
+import { convertPortfolioGalleryToImageData } from './utils';
 import { R2_PROJECT_DIR_GALLERY } from './constants';
 
 export interface PortfolioGalleryItem {
   filename: string;
-  title: string;
-  caption: string;
-  medium: string;
-  categories: string[];
-  tags: string[];
-  year: number | null;
+  title?: string;
+  caption?: string;
+  medium?: string;
+  categories?: string[];
+  tags?: string[];
+  year?: number | null;
   imageUrl?: string;
 }
 
@@ -1858,4 +1858,106 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
 const projectDir = 'iOS-Made';
 const baseRelativePath = `${R2_PROJECT_DIR_GALLERY}/${projectDir}/`;
 export const ArtGalleryMedia_iOS_Made: ImageMediaData[] =
-  convertPortfolioToImageData(ArtGalleryItems_iOS_Made, baseRelativePath);
+  convertPortfolioGalleryToImageData(
+    ArtGalleryItems_iOS_Made,
+    baseRelativePath
+  );
+
+const processStart: PortfolioGalleryItem[] = [
+  {
+    filename: 'clyzby-process-0.jpg',
+    title: 'clyzby-process-0',
+    caption: 'clyzby process 0',
+  },
+
+  {
+    filename: 'clyzby-process-1.jpg',
+    title: 'clyzby-process-1',
+    caption: 'clyzby process 1',
+  },
+
+  {
+    filename: 'clyzby-process-2.jpg',
+    title: 'clyzby-process-2',
+    caption: 'clyzby process 2',
+  },
+
+  {
+    filename: 'clyzby-process-3.jpg',
+    title: 'clyzby-process-3',
+    caption: 'clyzby process 3',
+  },
+];
+const processDecor: PortfolioGalleryItem[] = [
+  {
+    filename: 'iOS_Made_Minimal_Branch.jpg',
+    title: 'Minimal Branch',
+    caption: 'Minimal Branch',
+    medium: '',
+    categories: ['iOS Made'],
+    tags: ['Mobile Art', 'iOS'],
+    year: null,
+    imageUrl: '',
+  },
+  {
+    filename: 'iOS_Made_Minimal_Winter_Tree.jpg',
+    title: 'Minimal Winter Tree',
+    caption: 'Minimal Winter Tree',
+    medium: '',
+    categories: ['iOS Made'],
+    tags: ['Mobile Art', 'iOS'],
+    year: null,
+    imageUrl: '',
+  },
+];
+
+const processEnd: PortfolioGalleryItem[] = [
+  {
+    filename: 'clyzby-process-4A.jpg',
+    title: 'clyzby-process-4A',
+    caption: 'clyzby process 4A',
+  },
+
+  {
+    filename: 'clyzby-process-4B.jpg',
+    title: 'clyzby-process-4B',
+    caption: 'clyzby process 4B',
+  },
+
+  {
+    filename: 'clyzby-process-5A.jpg',
+    title: 'clyzby-process-5A',
+    caption: 'clyzby process 5A',
+  },
+
+  {
+    filename: 'clyzby-process-6A.jpg',
+    title: 'clyzby-process-6A',
+    caption: 'clyzby process 6A',
+  },
+
+  {
+    filename: 'clyzby-process-6B.jpg',
+    title: 'clyzby-process-6B',
+    caption: 'clyzby process 6B',
+  },
+
+  {
+    filename: 'clyzby-process-7B.jpg',
+    title: 'clyzby-process-7B',
+    caption: 'clyzby process 7B',
+  },
+];
+
+const processRelativePath = `clyzby-process/`;
+export const ProcessStartImages: ImageMediaData[] =
+  convertPortfolioGalleryToImageData(processStart, processRelativePath);
+
+export const ProcessEndImages: ImageMediaData[] =
+  convertPortfolioGalleryToImageData(processEnd, processRelativePath);
+
+export const ProcessDecorImages: [ImageMediaData, ImageMediaData] =
+  convertPortfolioGalleryToImageData(processDecor, baseRelativePath) as [
+    ImageMediaData,
+    ImageMediaData
+  ];

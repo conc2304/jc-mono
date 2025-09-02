@@ -1,6 +1,12 @@
 import { FileSystemItem } from '@jc/file-system';
-import { ArtGalleryMedia_iOS_Made } from '@jc/portfolio';
 import {
+  ArtGalleryMedia_iOS_Made,
+  ProcessDecorImages,
+  ProcessEndImages,
+  ProcessStartImages,
+} from '@jc/portfolio';
+import {
+  ArtGalleryProcessProps,
   DefaultTileContent,
   MediaGalleryPage,
   MediaGalleryProps,
@@ -8,7 +14,10 @@ import {
 import { Image } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
-export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
+export const iOSImageGallery: FileSystemItem<
+  void,
+  MediaGalleryProps & ArtGalleryProcessProps
+> = {
   id: uuidv4(),
   name: 'iOS Art',
   icon: <Image />,
@@ -37,6 +46,9 @@ export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
     component: MediaGalleryPage,
     props: {
       images: ArtGalleryMedia_iOS_Made,
+      processStartImages: ProcessStartImages,
+      processEndImages: ProcessEndImages,
+      decorImages: ProcessDecorImages,
       lazy: true,
       showSkeletonDuration: 0,
       rootMargin: '500px',

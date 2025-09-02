@@ -1,6 +1,9 @@
-import { Container, Paper, useTheme } from '@mui/material';
+import { Box, Container, Paper, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
 import { MediaGallery, MediaGalleryProps } from '../../organisms';
+import ArtGalleryProcess, {
+  ArtGalleryProcessProps,
+} from './art-gallery-process';
 
 export const MediaGalleryPage = ({
   images,
@@ -9,11 +12,12 @@ export const MediaGalleryPage = ({
   lazy,
   rootMargin,
   threshold,
-}: MediaGalleryProps) => {
+  processStartImages,
+  processEndImages,
+  decorImages,
+}: MediaGalleryProps & ArtGalleryProcessProps) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
-
-  console.log({ lazy, rootMargin, threshold });
 
   return (
     <Container
@@ -35,6 +39,13 @@ export const MediaGalleryPage = ({
           },
         }}
       >
+        <Box mb={4}>
+          <ArtGalleryProcess
+            processStartImages={processStartImages}
+            processEndImages={processEndImages}
+            decorImages={decorImages}
+          />
+        </Box>
         <MediaGallery
           images={images}
           videos={videos}
