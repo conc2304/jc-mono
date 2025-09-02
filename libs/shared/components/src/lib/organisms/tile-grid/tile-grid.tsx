@@ -244,6 +244,7 @@ export const TileGrid = ({
             />
           </Box>
 
+          {/* TODO Move Color switcher and Tle placement outside of the tile grid scroll wrapper (if mobile) */}
           {/* Color Mode Switcher */}
           <Box
             className="TileGrid--color-mode-switcher-wrapper"

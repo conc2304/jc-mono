@@ -51,6 +51,8 @@ import {
 import { useColorMode } from '../../context/color-mode-context';
 import { useEnhancedTheme } from '../../context';
 import { EnhancedThemeOption } from '../../types';
+import { ColorModeSwitcher } from '../color-mode-switcher';
+import { ColorModeSwitcherSpeedDial } from '../color-mode-switcher-speed-dial';
 
 // Styled Components with Cyberpunk Aesthetic
 const CyberPaper = styled(Paper)(({ theme }) => ({
@@ -590,38 +592,9 @@ export const ThemeCustomizerPage: React.FC = () => {
               </Typography>
             </Box>
           </Box>
-
           {/* Mode Toggle */}
-          <Stack direction="row" spacing={1}>
-            {[
-              {
-                mode: 'light' as const,
-                icon: <LightMode />,
-                label: 'Light',
-              },
-              {
-                mode: 'system' as const,
-                icon: <SettingsBrightness />,
-                label: 'System',
-              },
-              { mode: 'dark' as const, icon: <DarkMode />, label: 'Dark' },
-            ].map(({ mode: modeValue, icon, label }) => (
-              <Tooltip key={modeValue} title={`${label} mode`}>
-                <ModeButton
-                  onClick={() => handleModeChange(modeValue)}
-                  isActive={mode === modeValue}
-                  sx={{
-                    borderColor:
-                      resolvedMode === modeValue
-                        ? alpha(theme.palette.warning.main, 0.5)
-                        : theme.palette.action.selected,
-                  }}
-                >
-                  {icon}
-                </ModeButton>
-              </Tooltip>
-            ))}
-          </Stack>
+          <ColorModeSwitcherSpeedDial />
+          {/* END TST */}
         </Toolbar>
       </AppBar>
 
@@ -1608,15 +1581,27 @@ export const ThemeCustomizerPage: React.FC = () => {
                 alignItems="center"
                 sx={{ flexWrap: 'wrap' }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <StatusIndicator color={theme.palette.success.main} />
-                  <Typography
-                    variant="caption"
-                    sx={{ color: 'text.secondary' }}
+                {
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+
+                      [theme.breakpoints.down('sm')]: {
+                        display: 'none',
+                      },
+                    }}
                   >
-                    SYSTEM_ACTIVE
-                  </Typography>
-                </Box>
+                    <StatusIndicator color={theme.palette.success.main} />
+                    <Typography
+                      variant="caption"
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      SYSTEM_ACTIVE
+                    </Typography>
+                  </Box>
+                }
                 <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   Theme: {currentTheme?.name?.toUpperCase() || 'NONE'} | Mode:{' '}
                   {mode === 'system' && ` [SYSTEM] `}

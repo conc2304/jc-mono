@@ -9,3 +9,4 @@ export * from './image-container';
 export * from './scramble-text';
 export * from './progress';
 export * from './loading-fallback';
+export * from './radial-speed-dial';

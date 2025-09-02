@@ -24,8 +24,8 @@ export const iOSImageGallery: FileSystemItem<
   type: 'file',
   size: 206862749, // 206.9 MB from Storage
   mimeType: 'jpegs',
-  dateModified: new Date('2024-01-30'),
-  dateCreated: new Date('2021-03-01'),
+  dateModified: new Date('2016-01-30'),
+  dateCreated: new Date('2011-03-01'),
   path: '',
   parentId: '',
   metadata: {
