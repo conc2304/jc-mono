@@ -102,7 +102,7 @@ export const ImageContainer = ({
       const [entry] = entries;
 
       // Debug logging
-      debug &&
+      if (debug) {
         console.log('Intersection Observer triggered:', {
           isIntersecting: entry.isIntersecting,
           intersectionRatio: entry.intersectionRatio,
@@ -111,6 +111,7 @@ export const ImageContainer = ({
           shouldLoad: shouldLoad,
           src: src,
         });
+      }
 
       if (entry.isIntersecting && !shouldLoad) {
         setIsIntersecting(true);
@@ -137,14 +138,16 @@ export const ImageContainer = ({
       root = findScrollableParent(element.parentElement);
     }
 
-    console.log('IntersectionObserver setup:', {
-      root: root
-        ? root.tagName + (root.className ? `.${root.className}` : '')
-        : 'viewport',
-      rootMargin,
-      threshold,
-      elementPosition: element.getBoundingClientRect(),
-    });
+    if (debug) {
+      console.log('IntersectionObserver setup:', {
+        root: root
+          ? root.tagName + (root.className ? `.${root.className}` : '')
+          : 'viewport',
+        rootMargin,
+        threshold,
+        elementPosition: element.getBoundingClientRect(),
+      });
+    }
 
     const observer = new IntersectionObserver(observerCallback, {
       root,
