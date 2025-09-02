@@ -144,6 +144,7 @@ export const MediaGallery = ({
 
     return (
       <Box
+        className="MediaGallery--mobile-thumbnail"
         key={`mobile-${type}-${index}`}
         component="button"
         onClick={() => handleMediaClick(mediaItem)}
@@ -228,7 +229,11 @@ export const MediaGallery = ({
       const image = data as ImageMediaData;
 
       return (
-        <Grid size={gridSize} key={`image-${index}`}>
+        <Grid
+          className="MediaGallery--fullsize-root"
+          size={gridSize}
+          key={`image-${index}`}
+        >
           <Paper
             sx={{
               overflow: 'hidden',
@@ -428,7 +433,7 @@ export const MediaGallery = ({
   }
 
   return (
-    <Box ref={galleryRef}>
+    <Box ref={galleryRef} className="MediaGallery--root">
       <Box
         display="flex"
         alignItems="center"

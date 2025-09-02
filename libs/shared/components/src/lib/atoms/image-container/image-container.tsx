@@ -2,6 +2,45 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Error } from '@mui/icons-material';
 
+// Utility function to find the closest scrollable parent
+const findScrollableParent = (element: Element | null): Element | null => {
+  if (!element) {
+    return null;
+  }
+
+  // Check if we've reached the document element
+  if (element === document.documentElement) {
+    return null;
+  }
+
+  const style = getComputedStyle(element);
+  const overflowY = style.overflowY;
+  const overflowX = style.overflowX;
+  const overflow = style.overflow;
+
+  // Check if element is scrollable and actually has scrollable content
+  const isScrollable =
+    overflowY === 'scroll' ||
+    overflowY === 'auto' ||
+    overflowX === 'scroll' ||
+    overflowX === 'auto' ||
+    overflow === 'scroll' ||
+    overflow === 'auto';
+
+  if (isScrollable) {
+    // Additional check: does it actually have scrollable height?
+    const hasScrollableContent =
+      element.scrollHeight > element.clientHeight ||
+      element.scrollWidth > element.clientWidth;
+
+    if (hasScrollableContent) {
+      return element;
+    }
+  }
+
+  return findScrollableParent(element.parentElement);
+};
+
 interface ImageContainerProps
   extends Omit<BoxProps, 'component'>,
     ImageLoadingProps {
@@ -17,27 +56,17 @@ interface ImageContainerProps
 }
 
 export interface ImageLoadingProps {
-  /**
-   * Minimum duration (in milliseconds) to show the skeleton loader
-   * This ensures the skeleton is visible for a minimum time for better UX
-   * @default 300
-   */
   showSkeletonDuration?: number;
-  /**
-   * Enable lazy loading using Intersection Observer
-   * @default true
-   */
   lazy?: boolean;
-  /**
-   * Root margin for Intersection Observer (how far from viewport to start loading)
-   * @default '50px'
-   */
   rootMargin?: string;
-  /**
-   * Threshold for Intersection Observer (0 = any pixel visible, 1 = fully visible)
-   * @default 0.1
-   */
   threshold?: number;
+  /**
+   * The root element to use for intersection observer
+   * If not provided, will attempt to find the closest scrollable parent
+   * @default null (viewport)
+   */
+  scrollRoot?: Element | null;
+  debug?: boolean;
 }
 
 export const ImageContainer = ({
@@ -54,6 +83,8 @@ export const ImageContainer = ({
   lazy = true,
   rootMargin = '50px',
   threshold = 0.1,
+  scrollRoot,
+  debug = false,
   ...props
 }: ImageContainerProps) => {
   const [imageState, setImageState] = useState('loading');
@@ -69,12 +100,24 @@ export const ImageContainer = ({
   const observerCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
+
+      // Debug logging
+      debug &&
+        console.log('Intersection Observer triggered:', {
+          isIntersecting: entry.isIntersecting,
+          intersectionRatio: entry.intersectionRatio,
+          boundingClientRect: entry.boundingClientRect,
+          rootBounds: entry.rootBounds,
+          shouldLoad: shouldLoad,
+          src: src,
+        });
+
       if (entry.isIntersecting && !shouldLoad) {
         setIsIntersecting(true);
         setShouldLoad(true);
       }
     },
-    [shouldLoad]
+    [shouldLoad, src]
   );
 
   useEffect(() => {
@@ -83,7 +126,28 @@ export const ImageContainer = ({
     const element = containerRef.current;
     if (!element) return;
 
+    // Determine the root element for intersection observer
+    let root: Element | null = null;
+
+    if (scrollRoot !== undefined) {
+      // Use explicitly provided scroll root
+      root = scrollRoot;
+    } else {
+      // Auto-detect scrollable parent
+      root = findScrollableParent(element.parentElement);
+    }
+
+    console.log('IntersectionObserver setup:', {
+      root: root
+        ? root.tagName + (root.className ? `.${root.className}` : '')
+        : 'viewport',
+      rootMargin,
+      threshold,
+      elementPosition: element.getBoundingClientRect(),
+    });
+
     const observer = new IntersectionObserver(observerCallback, {
+      root,
       rootMargin,
       threshold,
     });
@@ -93,7 +157,7 @@ export const ImageContainer = ({
     return () => {
       observer.unobserve(element);
     };
-  }, [lazy, observerCallback, rootMargin, threshold]);
+  }, [lazy, observerCallback, rootMargin, threshold, scrollRoot]);
 
   // Handle image source updates
   useEffect(() => {
@@ -128,7 +192,7 @@ export const ImageContainer = ({
     }
   };
 
-  // Skeleton loader component
+  // Cached skeleton loader component
   const SkeletonLoader = () => (
     <Box
       sx={{
@@ -153,13 +217,13 @@ export const ImageContainer = ({
           bottom: 0,
         }}
       />
-      {/* <Image sx={{ color: 'grey.400', zIndex: 1 }} /> */}
       <Box
         sx={{
-          background: `url('./gifs/Static.gif')`,
+          background: `url('./textures/static.jpg')`,
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
+          backgroundSize: '100% 100%',
+          backgroundPosition: 'center center',
           opacity: 0.5,
           mixBlendMode: 'overlay',
         }}
@@ -249,12 +313,13 @@ export const ImageContainer = ({
             animation="wave"
             sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
           />
-          {/* <Image sx={{ color: 'grey.400', zIndex: 1 }} /> */}
           <Box
             component="img"
-            src="gifs/Static.gif"
-            alt={'Loading'}
+            alt="Loading"
             sx={{
+              backgroundImage: `url('./textures/static.jpg')`,
+              backgroundSize: '100% 100%',
+              backgroundPosition: 'center center',
               width: '100%',
               height: '100%',
               objectFit: 'cover',

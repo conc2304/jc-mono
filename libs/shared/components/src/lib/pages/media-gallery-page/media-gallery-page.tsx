@@ -13,6 +13,8 @@ export const MediaGalleryPage = ({
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
 
+  console.log({ lazy, rootMargin, threshold });
+
   return (
     <Container
       className="MediaGalleryPage--root"

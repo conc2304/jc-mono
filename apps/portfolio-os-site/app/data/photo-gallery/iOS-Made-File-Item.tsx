@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
   id: uuidv4(),
-  name: 'Pictures',
+  name: 'iOS Art',
   icon: <Image />,
   type: 'file',
   size: 206862749, // 206.9 MB from Storage
@@ -39,7 +39,7 @@ export const iOSImageGallery: FileSystemItem<void, MediaGalleryProps> = {
       images: ArtGalleryMedia_iOS_Made,
       lazy: true,
       showSkeletonDuration: 0,
-      rootMargin: '250px',
+      rootMargin: '500px',
       threshold: 0.05,
     },
   },
