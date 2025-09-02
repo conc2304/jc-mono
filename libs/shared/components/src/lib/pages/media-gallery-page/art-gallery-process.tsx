@@ -29,10 +29,8 @@ const ArtGalleryProcess = ({
 }: ArtGalleryProcessProps) => {
   const theme = useTheme();
 
-  //
-  // image is black on a white background, make the black background disappear in any mode with any background
+  // decore images are black on a white background, make the black background disappear in any mode with any background
   const imgBgRatio = getContrastRatio('#FFF', theme.palette.background.paper);
-  console.log({ imgBgRatio });
   const decorImageStyles: CSSProperties =
     imgBgRatio > 5
       ? {
@@ -42,8 +40,6 @@ const ArtGalleryProcess = ({
       : {
           mixBlendMode: 'multiply',
         };
-
-  // getContrastRatio(),
 
   return (
     <StyledBox>

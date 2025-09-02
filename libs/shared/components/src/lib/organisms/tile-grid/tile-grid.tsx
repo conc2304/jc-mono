@@ -1,4 +1,11 @@
-import { Box, Container, IconButton, alpha } from '@mui/material';
+import {
+  Box,
+  Container,
+  IconButton,
+  alpha,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { useEffect, useRef, useState } from 'react';
@@ -14,6 +21,8 @@ export const TileGrid = ({
 }: {
   gridTiles: BaseFileSystemItem[];
 }) => {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const { config, breakpoint } = useResponsiveTileConfig();
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [tiles, setTiles] = useState<BaseFileSystemItem[]>(gridTiles);
@@ -246,50 +255,93 @@ export const TileGrid = ({
 
           {/* TODO Move Color switcher and Tle placement outside of the tile grid scroll wrapper (if mobile) */}
           {/* Color Mode Switcher */}
-          <Box
-            className="TileGrid--color-mode-switcher-wrapper"
-            sx={{
-              position: 'absolute',
-              bottom: '5px',
-              left: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
-              transform: 'translateX(-50%)',
-            }}
-          >
-            <ColorModeSwitcher />
-          </Box>
+          {!isSm && (
+            <>
+              {/* Tile Placement Controls */}
+              <Box
+                className="TileGrid--control-btns"
+                sx={{
+                  position: 'absolute',
+                  bottom: '5px',
+                  left: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
+                  transform: 'translateX(75%)',
+                }}
+              >
+                <IconButton
+                  color="secondary"
+                  onClick={shuffleTiles}
+                  data-augmented-ui="tr-clip"
+                  sx={{
+                    '--aug-tr': '0.75rem',
+                  }}
+                >
+                  <Shuffle />
+                </IconButton>
+                <IconButton
+                  color="secondary"
+                  onClick={resetTiles}
+                  data-augmented-ui="tr-clip"
+                  sx={{
+                    '--aug-tr': '0.75rem',
+                  }}
+                >
+                  <RestartAlt />
+                </IconButton>
+              </Box>
 
-          {/* Tile Placement Controls */}
-          <Box
-            className="TileGrid--control-btns"
-            sx={{
-              position: 'absolute',
-              bottom: '5px',
-              right: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
-              transform: 'translateX(75%)',
-            }}
-          >
-            <IconButton
-              color="secondary"
-              onClick={shuffleTiles}
-              data-augmented-ui="tr-clip"
-              sx={{
-                '--aug-tr': '0.75rem',
-              }}
-            >
-              <Shuffle />
-            </IconButton>
-            <IconButton
-              color="secondary"
-              onClick={resetTiles}
-              data-augmented-ui="tr-clip"
-              sx={{
-                '--aug-tr': '0.75rem',
-              }}
-            >
-              <RestartAlt />
-            </IconButton>
-          </Box>
+              <Box
+                className="TileGrid--color-mode-switcher-wrapper"
+                sx={{
+                  position: 'absolute',
+                  bottom: '5px',
+                  right: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
+                  transform: 'translateX(-50%)',
+                }}
+              >
+                <ColorModeSwitcher />
+              </Box>
+            </>
+          )}
         </Box>
+
+        {isSm && (
+          <Box
+            width="100%"
+            position={'relative'}
+            flexShrink={0}
+            display="flex"
+            p={1}
+            justifyContent={'space-between'}
+          >
+            {/* Tile Placement Controls */}
+            <Box className="TileGrid--control-btns">
+              <IconButton
+                color="secondary"
+                onClick={shuffleTiles}
+                data-augmented-ui="tr-clip"
+                sx={{
+                  '--aug-tr': '0.75rem',
+                }}
+              >
+                <Shuffle />
+              </IconButton>
+              <IconButton
+                color="secondary"
+                onClick={resetTiles}
+                data-augmented-ui="tr-clip"
+                sx={{
+                  '--aug-tr': '0.75rem',
+                }}
+              >
+                <RestartAlt />
+              </IconButton>
+            </Box>
+
+            <Box className="TileGrid--color-mode-switcher-wrapper">
+              <ColorModeSwitcher />
+            </Box>
+          </Box>
+        )}
       </Container>
     </Box>
   );
