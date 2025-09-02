@@ -1,4 +1,4 @@
-import { Box, Container, Paper, useTheme } from '@mui/material';
+import { Box, Container, Paper, Typography, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
 import { MediaGallery, MediaGalleryProps } from '../../organisms';
 import ArtGalleryProcess, {
@@ -46,6 +46,17 @@ export const MediaGalleryPage = ({
             decorImages={decorImages}
           />
         </Box>
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: { xs: '2.5rem', md: '3.5rem', textAlign: 'center' },
+            fontWeight: 300,
+            color: 'text.primary',
+            my: 10,
+          }}
+        >
+          The Gallery
+        </Typography>
         <MediaGallery
           images={images}
           videos={videos}

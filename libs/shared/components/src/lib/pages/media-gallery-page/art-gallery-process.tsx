@@ -1,10 +1,11 @@
 import { Box, Container, Typography, Grid } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, getContrastRatio } from '@mui/material/styles';
 import { ImageContainer } from '../../atoms';
 import { ImageMediaData } from '../../organisms';
+import { CSSProperties } from 'react';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  background: `linear-gradient(to bottom, ${theme.palette.grey[50]}, ${theme.palette.common.white})`,
+  background: `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default}, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
   minHeight: '100vh',
 }));
 
@@ -27,6 +28,22 @@ const ArtGalleryProcess = ({
   decorImages,
 }: ArtGalleryProcessProps) => {
   const theme = useTheme();
+
+  //
+  // image is black on a white background, make the black background disappear in any mode with any background
+  const imgBgRatio = getContrastRatio('#FFF', theme.palette.background.paper);
+  console.log({ imgBgRatio });
+  const decorImageStyles: CSSProperties =
+    imgBgRatio > 5
+      ? {
+          filter: 'invert(1)',
+          mixBlendMode: 'plus-lighter',
+        }
+      : {
+          mixBlendMode: 'multiply',
+        };
+
+  // getContrastRatio(),
 
   return (
     <StyledBox>
@@ -132,7 +149,10 @@ const ArtGalleryProcess = ({
             <Grid size={{ xs: 12, md: 6 }}>
               <ImageContainer
                 {...decorImages[0]}
-                sx={{ height: { xs: '300px', md: '400px' } }}
+                sx={{
+                  ...decorImageStyles,
+                  height: { xs: '300px', md: '400px' },
+                }}
               />
             </Grid>
 
@@ -221,7 +241,10 @@ const ArtGalleryProcess = ({
             <Grid size={{ xs: 12, md: 6 }}>
               <ImageContainer
                 {...decorImages[1]}
-                sx={{ height: { xs: '300px', md: '400px' } }}
+                sx={{
+                  ...decorImageStyles,
+                  height: { xs: '300px', md: '400px' },
+                }}
               />
             </Grid>
           </Grid>
