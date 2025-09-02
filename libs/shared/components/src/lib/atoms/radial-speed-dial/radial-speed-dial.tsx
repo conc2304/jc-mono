@@ -164,7 +164,7 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
                   delay: delay,
                 }),
                 bgcolor: action.isActive
-                  ? alpha(theme.palette.primary.main, 0.1)
+                  ? alpha(theme.palette.getInvertedMode('primary'), 0.7)
                   : theme.palette.background.paper,
                 border: `2px solid ${
                   action.isResolved
@@ -174,7 +174,7 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
                     : theme.palette.divider
                 }`,
                 color: action.isActive
-                  ? theme.palette.primary.main
+                  ? theme.palette.primary.contrastText
                   : theme.palette.text.secondary,
                 boxShadow: theme.shadows[4],
                 '&:hover': {
