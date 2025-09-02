@@ -27,6 +27,7 @@ import {
 
 import { useColorMode } from '../context/color-mode-context';
 import { EnhancedThemeOption, ColorMode } from '../types';
+import { Close } from '@mui/icons-material';
 
 // Styled components with theme-aware brutalist sci-fi aesthetic
 const MainPanel = styled(Box)(({ theme }) => ({
@@ -226,6 +227,7 @@ export interface EnhancedThemeSwitcherProps {
   compact?: boolean;
   compactToggle?: boolean;
   compactMenu?: boolean;
+  onClose?: () => void;
 }
 
 export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
@@ -236,6 +238,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
   compact = false,
   compactToggle = false,
   compactMenu = false,
+  onClose,
 }) => {
   const theme = useTheme();
   const { mode, setMode, resolvedMode, systemMode } = useColorMode();
@@ -489,7 +492,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                 </Typography>
               </Box>
             </Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
+            {/* <Stack direction="row" spacing={1} alignItems="center">
               <PaletteIcon size={16} color={theme.palette.secondary.main} />
               <Stack direction="row" spacing={0.5}>
                 <StatusIndicator
@@ -504,7 +507,8 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                   delay={1}
                 />
               </Stack>
-            </Stack>
+            </Stack> */}
+            {onClose && <Close onClick={onClose} />}
           </Stack>
         </Box>
 

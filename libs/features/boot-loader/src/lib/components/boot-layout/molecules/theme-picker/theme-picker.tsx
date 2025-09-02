@@ -144,6 +144,7 @@ export const ThemePickerPanel = ({
           })}
         >
           <PickerPanel
+            onClose={() => setPickerOpen(false)}
             compact={compact}
             compactMenu={compactMenu}
             compactToggle={compactToggle}

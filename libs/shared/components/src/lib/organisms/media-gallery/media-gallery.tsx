@@ -59,7 +59,7 @@ export const MediaGallery = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [currentModalIndex, setCurrentModalIndex] = useState(0);
 
-  // Combine screenshots and videos into a single media array
+  // Combine images and videos into a single media array
   const createMediaItems = (): MediaItem[] => {
     const unsortedItems: MediaItem[] = [
       ...videos.map((video, index) => ({
@@ -67,9 +67,9 @@ export const MediaGallery = ({
         data: video,
         index: images.length + index, // Temporary index
       })),
-      ...images.map((screenshot, index) => ({
+      ...images.map((image, index) => ({
         type: 'image' as const,
-        data: screenshot,
+        data: image,
         index, // Temporary index
       })),
     ];

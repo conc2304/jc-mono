@@ -4,10 +4,12 @@ export const PickerPanel = ({
   compact = false,
   compactMenu = false,
   compactToggle = false,
+  onClose,
 }: {
   compact?: boolean;
   compactMenu?: boolean;
   compactToggle?: boolean;
+  onClose: () => void;
 }) => {
   const { themes, currentThemeId, changeTheme } = useEnhancedTheme();
 
@@ -20,6 +22,7 @@ export const PickerPanel = ({
       compact={compact}
       compactMenu={compactMenu}
       compactToggle={compactToggle}
+      onClose={onClose}
     />
   );
 };

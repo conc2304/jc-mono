@@ -35,7 +35,7 @@ export const gravityScavengerProject: ProjectData = {
   // =============================================================================
   technical: {
     technologies: [
-      'Unity 2022.3.22f1',
+      'Unity',
       'C# Programming',
       'Unity Physics System',
       'Procedural Generation',

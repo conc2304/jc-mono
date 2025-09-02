@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
 import { alpha, Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { BrowserFrame, EnterButton, AugmentedPanel } from '../atoms';
-import { Header, GifContainer, Footer, WarningPanel } from '../molecules';
+import { Header, GifContainer, Footer } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
 import { BackgroundControls } from '../molecules/background-controls/background-controls';
 import { BootTextPanel, ProgressPanel, TorusProgressPanel } from '../panels';
@@ -199,12 +199,7 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                         />
                       </Stack>
 
-                      <Stack width="100%" px={6}>
-                        <WarningPanel
-                          {...infoPanelContent}
-                          sx={{ width: '100%' }}
-                        />
-                      </Stack>
+                      <Stack width="100%" px={6}></Stack>
                     </Stack>
                   </Stack>
                 </Stack>

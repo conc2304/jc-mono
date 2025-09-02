@@ -65,7 +65,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           padding: theme.spacing(4),
         }}
       >
-        <Container maxWidth="xl" sx={{ mt: 5 }}>
+        <Container maxWidth="xl" sx={{ mt: 24 }}>
           <Typography
             variant="display"
             className="hero-title"

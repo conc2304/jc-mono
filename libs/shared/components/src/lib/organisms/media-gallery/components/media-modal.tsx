@@ -39,6 +39,9 @@ export const MediaModal = ({
   const isMobile = containerWidth < 768; // Responsive based on container width
   const showDots = mediaItems.length <= 10;
 
+  console.log('MediaModal');
+  console.log({ mediaItems });
+
   // Update container width on resize
   useEffect(() => {
     const updateWidth = () => {
@@ -295,7 +298,7 @@ export const MediaModal = ({
               >
                 <Box
                   component="img"
-                  src={(currentMedia.data as ImageMediaData).url}
+                  src={(currentMedia.data as ImageMediaData).src}
                   alt={(currentMedia.data as ImageMediaData).alt}
                   sx={{
                     maxWidth: '100%',
