@@ -1,22 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   IconButton,
-  Stack,
   Tooltip,
   useTheme,
-  useMediaQuery,
   alpha,
   Backdrop,
 } from '@mui/material';
-import {
-  LightMode,
-  DarkMode,
-  SettingsBrightness,
-  Palette,
-  Close,
-  Brightness4,
-} from '@mui/icons-material';
+import { Close, Brightness4 } from '@mui/icons-material';
 
 // Types and Interfaces
 interface TransitionConfig {

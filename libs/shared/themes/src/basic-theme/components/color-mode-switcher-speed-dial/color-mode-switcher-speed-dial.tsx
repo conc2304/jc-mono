@@ -1,23 +1,14 @@
 // Color Mode Switcher Component
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Box,
   IconButton,
   Stack,
   Tooltip,
   useTheme,
   useMediaQuery,
   alpha,
-  Backdrop,
 } from '@mui/material';
-import {
-  LightMode,
-  DarkMode,
-  SettingsBrightness,
-  Palette,
-  Close,
-  Brightness4,
-} from '@mui/icons-material';
+import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
 import {
   RadialSpeedDial,
   SpeedDialAction,

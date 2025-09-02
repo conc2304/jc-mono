@@ -51,7 +51,6 @@ import {
 import { useColorMode } from '../../context/color-mode-context';
 import { useEnhancedTheme } from '../../context';
 import { EnhancedThemeOption } from '../../types';
-import { ColorModeSwitcher } from '../color-mode-switcher';
 import { ColorModeSwitcherSpeedDial } from '../color-mode-switcher-speed-dial';
 
 // Styled Components with Cyberpunk Aesthetic
