@@ -253,7 +253,6 @@ export const TileGrid = ({
             />
           </Box>
 
-          {/* TODO Move Color switcher and Tle placement outside of the tile grid scroll wrapper (if mobile) */}
           {/* Color Mode Switcher */}
           {!isSm && (
             <>
@@ -263,8 +262,8 @@ export const TileGrid = ({
                 sx={{
                   position: 'absolute',
                   bottom: '5px',
-                  left: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
-                  transform: 'translateX(75%)',
+                  left: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`, // matches/compliments the spacing of the augmented bottom border
+                  transform: 'translateX(-50%)',
                 }}
               >
                 <IconButton
@@ -294,8 +293,8 @@ export const TileGrid = ({
                 sx={{
                   position: 'absolute',
                   bottom: '5px',
-                  right: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`,
-                  transform: 'translateX(-50%)',
+                  right: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`, // matches/compliments the spacing of the augmented bottom border
+                  transform: 'translateX(60%)',
                 }}
               >
                 <ColorModeSwitcher />

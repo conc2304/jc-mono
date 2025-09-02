@@ -15,7 +15,7 @@ export default function BaselineCSS(theme: Theme): Components {
         },
         '*': {
           '&::-webkit-scrollbar': {
-            width: '12px',
+            width: '1rem',
             height: '8px',
           },
           '&::-webkit-scrollbar-corner': {
@@ -27,7 +27,8 @@ export default function BaselineCSS(theme: Theme): Components {
                 ? alpha(theme.palette.common.white, 0.1)
                 : alpha(theme.palette.common.black, 0.1),
             borderRadius: '0px',
-            border: theme.palette.background.paper,
+            border: '1px solid',
+            borderColor: theme.palette.background.paper,
             boxShadow: `inset 0px 0px 4px ${
               theme.palette.mode === 'dark'
                 ? alpha(theme.palette.secondary.dark, 0.3)
