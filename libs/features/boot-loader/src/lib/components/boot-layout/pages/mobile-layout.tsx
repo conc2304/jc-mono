@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Box, Stack } from '@mui/material';
 import { BrowserFrame, EnterButton, HeroText } from '../atoms';
 import { Header, GifContainer } from '../molecules';
@@ -66,20 +66,24 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       <Box
         sx={{ position: 'relative', flex: 1, minHeight: 0, overflow: 'hidden' }}
       >
-        <BootTextPanel
-          bootMessages={bootMessages}
-          scrambleCharacterSet={scrambleCharacterSet}
-          onProgress={handlers.handleProgress}
-          onComplete={handlers.handleBootComplete}
-          textWrapMode="ellipsis"
-          flex={1}
-          bgOpacity={0}
-        />
-        <TorusProgressPanel
-          showAsBackground
-          progress={progress.current}
-          progressMessage={progress.message}
-        />
+        <Suspense
+          fallback={<Box sx={{ bgcolor: 'background.paper', opacity: 0.5 }} />}
+        >
+          <BootTextPanel
+            bootMessages={bootMessages}
+            scrambleCharacterSet={scrambleCharacterSet}
+            onProgress={handlers.handleProgress}
+            onComplete={handlers.handleBootComplete}
+            textWrapMode="ellipsis"
+            flex={1}
+            bgOpacity={0}
+          />
+          <TorusProgressPanel
+            showAsBackground
+            progress={progress.current}
+            progressMessage={progress.message}
+          />
+        </Suspense>
       </Box>
 
       <ThemePickerPanel compactMenu />
