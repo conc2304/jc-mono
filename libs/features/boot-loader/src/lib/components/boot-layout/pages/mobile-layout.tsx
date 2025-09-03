@@ -45,6 +45,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         minHeight: '15%',
         flexGrow: 0.5,
         backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
+        px: 1,
       }}
     />
 
