@@ -69,12 +69,6 @@ export const tunecraftProject: ProjectData = {
   // =============================================================================
   media: {
     thumbnail: {
-      relativePath:
-        'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg',
-      url: getImageUrl(
-        'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg',
-        'full'
-      ),
       ...getResponsiveImageSet(
         'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg'
       ),
@@ -157,10 +151,10 @@ export const tunecraftProject: ProjectData = {
         detailedCaption:
           "Professional software integration showcase featuring TouchDesigner's TDAbleton control interface alongside Ableton Live's audio production environment, demonstrating real-time parameter synchronization, audio control mapping, and the sophisticated multi-application coordination that enables seamless object tracking to music control translation",
       },
-    ].map((mediaItem) => ({
+    ].map(({ relativePath, ...mediaItem }) => ({
       ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
+      ...getResponsiveImageSet(relativePath),
+      url: getImageUrl(relativePath, 'full'),
     })),
     videos: [
       {

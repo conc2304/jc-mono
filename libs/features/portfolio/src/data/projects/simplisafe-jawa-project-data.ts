@@ -88,12 +88,6 @@ export const simplisafeJawaProject: ProjectData = {
   // =============================================================================
   media: {
     thumbnail: {
-      relativePath:
-        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
-      url: getImageUrl(
-        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
-        'full'
-      ),
       ...getResponsiveImageSet(
         'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg'
       ),
@@ -145,10 +139,10 @@ export const simplisafeJawaProject: ProjectData = {
         detailedCaption:
           "SimpliSafe's professional home security monitoring service that relies on properly paired and configured devices processed through Project Jawa's advanced fulfillment system, demonstrating the end-user experience that depends on accurate warehouse operations, device pairing reliability, and comprehensive quality assurance workflows",
       },
-    ].map((mediaItem) => ({
+    ].map(({ relativePath, ...mediaItem }) => ({
       ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
+      ...getResponsiveImageSet(relativePath),
+      url: getImageUrl(relativePath, 'full'),
     })),
     videos: [
       // No video content available
@@ -185,19 +179,13 @@ export const simplisafeJawaProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
-    synopsis: `Led complete redesign of SimpliSafe's legacy Flash-based fulfillment software as Technical and Design Lead, collaborating with CEO and COO stakeholders.
+    overview: `Led complete redesign of SimpliSafe's legacy Flash-based fulfillment software as Technical and Design Lead, collaborating with CEO and COO stakeholders.
 
     Built modern web application with Angular.js, PHP, and MySQL featuring over-the-air sensor pairing, real-time inventory tracking, and enhanced barcode validation.
 
     Solved critical workflow issues by enabling device scanning in any sequence, eliminating fulfillment errors and improving warehouse efficiency.
 
     The system reduced customer support calls and provided scalable infrastructure supporting SimpliSafe's growth from startup to millions of protected customers.`,
-
-    overview: `Project Jawa represented a critical digital transformation initiative for SimpliSafe, completely redesigning and replacing the company's legacy Flash-based fulfillment software with a modern, web-based solution. As Technical and Design Lead working directly with CEO and COO stakeholders, I spearheaded the development of a comprehensive system that revolutionized SimpliSafe's warehouse operations and significantly improved customer experience.
-
-The project addressed fundamental challenges in SimpliSafe's fulfillment process, where sensors and security devices needed to be pre-paired with base stations before shipping to customers. The legacy Flash-based system created numerous operational inefficiencies, validation errors, and customer support issues that directly impacted SimpliSafe's ability to scale their home security business effectively.
-
-Project Jawa delivered a modern web application enabling over-the-air sensor pairing, real-time inventory tracking, advanced barcode validation, and comprehensive analytics. The system fundamentally transformed how fulfillment representatives processed orders, eliminated silent pairing failures, and created a more resilient, scalable foundation for SimpliSafe's rapidly growing customer base.`,
 
     process: `**Requirements Definition & Stakeholder Collaboration**: Working directly with SimpliSafe's CEO and COO, I led the process of defining comprehensive project requirements that balanced technical feasibility with business objectives. This executive-level collaboration ensured the solution aligned with SimpliSafe's strategic goals while addressing immediate operational pain points.
 

@@ -66,12 +66,6 @@ export const terrainifyProject: ProjectData = {
   // =============================================================================
   media: {
     thumbnail: {
-      relativePath:
-        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
-      url: getImageUrl(
-        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
-        'full'
-      ),
       ...getResponsiveImageSet(
         'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png'
       ),
@@ -151,15 +145,11 @@ export const terrainifyProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
-    synopsis: `Maya Python plugin for procedural terrain generation featuring BPM-synchronized animation system for music-reactive visual performances.
-Built using Maya API, Python scripting, and custom shading networks with displacement shaders and volume noise generation.
-The plugin automates complex node creation, generates realistic 3D landscapes from 2D planes, and includes innovative BPM analysis that creates automatic keyframe animation synchronized to musical timing.
-`,
-    overview: `Terrainify is a sophisticated Maya Python plugin that combines procedural generation techniques with innovative audio-visual synchronization to create dynamic, music-reactive terrain systems. The plugin demonstrates advanced Maya API programming, custom shading network development, and creative application of BPM analysis for real-time animation control.
+    overview: `Maya Python plugin for procedural terrain generation featuring BPM-synchronized animation system for music-reactive visual performances.
 
-The project addresses the challenge of creating responsive, animated terrain systems for motion graphics and visual performance applications. Rather than static terrain generation, Terrainify introduces a novel BPM synchronization system that automatically generates animation keyframes based on musical timing, enabling terrain that pulses, scales, and moves in perfect sync with audio. This creates powerful tools for VJ performance, music visualization, and motion graphics workflows.
+    Built using Maya API, Python scripting, and custom shading networks with displacement shaders and volume noise generation.
 
-Built entirely in Python using Maya's comprehensive API, the plugin creates complex shading networks including displacement shaders, volume noise generators, and 3D placement controls. The procedural approach enables infinite terrain variations while the BPM animation system transforms static 3D geometry into dynamic, performative visual elements that respond to musical structure and timing.`,
+    The plugin automates complex node creation, generates realistic 3D landscapes from 2D planes, and includes innovative BPM analysis that creates automatic keyframe animation synchronized to musical timing.`,
 
     process: `**Maya API Research & Plugin Architecture**: Developed comprehensive understanding of Maya's Python API, particularly focusing on shading node creation, material assignment, and custom UI development. Researched displacement shader workflows and 3D texture processing to establish technical foundation for procedural terrain generation.
 

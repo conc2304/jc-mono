@@ -51,7 +51,7 @@ export const BrutalistTemplate: React.FC<
   const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [activeTab, setActiveTab] = useState<string>('synopsis');
+  const [activeTab, setActiveTab] = useState<string>('overview');
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null
   );
@@ -63,8 +63,8 @@ export const BrutalistTemplate: React.FC<
         behavior: 'smooth',
       });
     }
-    // Reset active tab to synopsis when project changes
-    setActiveTab('synopsis');
+    // Reset active tab to overview when project changes
+    setActiveTab('overview');
   }, [project.projectName]);
 
   const data = project;
@@ -89,7 +89,6 @@ export const BrutalistTemplate: React.FC<
   };
 
   const tabsData = [
-    { key: 'synopsis', label: 'Synopsis' },
     { key: 'overview', label: 'Overview' },
     { key: 'process', label: 'Process' },
     { key: 'results', label: 'Results' },

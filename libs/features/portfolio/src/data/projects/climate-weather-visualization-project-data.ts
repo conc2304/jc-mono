@@ -78,12 +78,6 @@ export const climateDataVizProject: ProjectData = {
   // =============================================================================
   media: {
     thumbnail: {
-      relativePath:
-        'projects/climate-data-vis/climate-data-hero-exploration-page.png',
-      url: getImageUrl(
-        'projects/climate-data-vis/climate-data-hero-exploration-page.png',
-        'full'
-      ),
       ...getResponsiveImageSet(
         'projects/climate-data-vis/climate-data-hero-exploration-page.png'
       ),
@@ -153,10 +147,10 @@ export const climateDataVizProject: ProjectData = {
         detailedCaption:
           'Advanced comparative line chart system enabling side-by-side analysis of climate event data across multiple US states, featuring multi-series visualization, interactive legend controls, and dynamic data binding that updates based on user selections, supporting comprehensive regional comparison and vulnerability assessment for climate impact analysis',
       },
-    ].map((mediaItem) => ({
+    ].map(({ relativePath, ...mediaItem }) => ({
       ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
+      ...getResponsiveImageSet(relativePath),
+      url: getImageUrl(relativePath, 'full'),
     })),
     videos: [
       {
@@ -210,16 +204,13 @@ export const climateDataVizProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
-    synopsis: `Harvard CS171 final project exploring critical correlations between rising global temperatures and severe weather patterns across US states through interactive data visualization.
+    overview: `Harvard CS171 final project exploring critical correlations between rising global temperatures and severe weather patterns across US states through interactive data visualization.
+
     Built with React, TypeScript, and D3.js, "Planet Habitability" features an integrated analysis combining US heatmaps, temporal temperature anomaly timelines, multi-state comparative line charts, and radar chart systems for comprehensive regional vulnerability assessment.
+
     The application enables users to filter climate data by time periods, weather event types, and geographic regions while discovering trends through intuitive interactive exploration.
+
     The project transforms complex climate science datasets into information that reveal which regions face greatest climate risks and how severe weather patterns correlate with temperature changes over time.`,
-
-    overview: `Planet Habitability is a comprehensive interactive data visualization project that explores the critical relationship between rising global temperatures and severe weather patterns across the United States. Developed as a collaborative final project for Harvard's CS171 Data Visualization course, the application enables users to discover trends, correlations, and regional vulnerabilities in climate data through sophisticated interactive analysis tools.
-
-The project addresses fundamental questions about climate impact: How are rising temperatures affecting severe weather patterns? Which regions and populations face the greatest risks? What trends can we identify to inform climate adaptation strategies? Through an intuitive interface combining temporal exploration, geographic visualization, and multi-dimensional filtering, users can independently discover insights from complex climate datasets.
-
-Built using modern web technologies including React, TypeScript, and D3.js, the application features dynamic heatmaps, temporal filtering systems, comparative analysis tools, and animated transitions that transform static climate data into engaging, explorable narratives. The project demonstrates the power of interactive visualization to make complex environmental data accessible and actionable for diverse audiences.`,
 
     process: `**Team Formation & Project Scope Definition**: Formed "The Three Planeteers" team and established project focus on climate data visualization addressing the intersection of temperature anomalies and severe weather impacts. Defined primary research questions and target audience needs for climate impact exploration and regional vulnerability assessment.
 

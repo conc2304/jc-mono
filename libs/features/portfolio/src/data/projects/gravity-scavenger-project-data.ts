@@ -69,12 +69,6 @@ export const gravityScavengerProject: ProjectData = {
   // =============================================================================
   media: {
     thumbnail: {
-      relativePath:
-        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
-      url: getImageUrl(
-        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
-        'full'
-      ),
       ...getResponsiveImageSet(
         'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png'
       ),
@@ -150,10 +144,10 @@ export const gravityScavengerProject: ProjectData = {
         detailedCaption:
           'Professional game start screen showcasing polished visual design, comprehensive UI systems, and cohesive space-themed aesthetic that introduces players to the physics-based gameplay experience, demonstrating attention to user experience design and the educational game development approach combining academic rigor with engaging presentation',
       },
-    ].map((mediaItem) => ({
+    ].map(({ relativePath, ...mediaItem }) => ({
       ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
+      ...getResponsiveImageSet(relativePath),
+      url: getImageUrl(relativePath, 'full'),
     })),
     videos: [
       {
@@ -199,17 +193,11 @@ export const gravityScavengerProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
-    synopsis: `Harvard Extension School GD50 final project showcasing Unity game development through a 2.5D space exploration game featuring realistic physics simulation and procedural world generation.
+    overview: `Harvard Extension School GD50 final project showcasing Unity game development through a 2.5D space exploration game featuring realistic physics simulation and procedural world generation.
 
     Built in C# using Unity, the game implements Newton's law of universal gravitation for authentic orbital mechanics, real-time trajectory prediction using calculus and trigonometry, and an infinite chunk-based world generation system.
 
     Players navigate complex gravitational fields while collecting resources, upgrading spacecraft, and engaging physics-influenced combat with intelligent AI enemies.`,
-
-    overview: `Gravity Scavenger represents a sophisticated exploration of physics-based game development, combining advanced mathematical concepts with engaging gameplay mechanics to create an immersive space exploration experience. Developed as a final project for Harvard Extension School's GD50 Game Development course, the project demonstrates mastery of Unity engine capabilities, procedural generation techniques, and real-world physics simulation.
-
-The game addresses the challenge of creating engaging physics-based gameplay by implementing Newton's law of universal gravitation for realistic planetary interactions, while incorporating calculus and trigonometry for real-time trajectory prediction. Players must learn to harness gravitational forces strategically, transforming complex physics concepts into intuitive and rewarding gameplay mechanics that encourage exploration and skill development.
-
-Built entirely in Unity using C#, the project showcases advanced game development architecture including procedural world generation, sophisticated AI systems, comprehensive upgrade mechanics, and custom shader development. The infinite scrolling world system dynamically generates challenges that scale with player progression, while the trajectory prediction system provides educational value by visualizing mathematical concepts in an interactive, engaging context.`,
 
     process: `**Game Design & Physics Research**: Conducted comprehensive research into physics-based game mechanics, studying classical games like Asteroids and modern titles like Spore and Gravitura for inspiration. Designed core gameplay loop centered around resource management, strategic use of gravitational physics, and progressive difficulty scaling through procedural generation.
 

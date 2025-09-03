@@ -89,11 +89,6 @@ export const verdantiaProject: ProjectData = {
   // =============================================================================
   media: {
     thumbnail: {
-      relativePath:
-        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png',
-      url: getImageUrl(
-        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png'
-      ),
       ...getResponsiveImageSet(
         'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png'
       ),
@@ -315,17 +310,15 @@ export const verdantiaProject: ProjectData = {
   // PROJECT CONTENT & NARRATIVE
   // =============================================================================
   content: {
-    synopsis: `Harvard Masters in Digital Media Design capstone project creating a museum installation city builder game focused on urban reforestation and climate education.
-     Built in Unity with C#, featuring real-time heat island simulation using the Thomas Algorithm for scientifically accurate temperature modeling.
-     The touch kiosk interface enables players to build sustainable cities while visualizing immediate environmental impacts through heat maps, pollution metrics, and citizen happiness indicators.
-     The project transforms abstract climate concepts into personally meaningful experiences by demonstrating how green spaces directly affect urban livability.
-     Designed for multi-modal museum engagement with educational popups for both active players and passive observers.`,
+    overview: `Harvard Masters in Digital Media Design capstone project creating a museum installation city builder game focused on urban reforestation and climate education.
 
-    overview: `Verdantia is a groundbreaking urban simulation museum installation that transforms climate change education through interactive city building and real-time environmental science visualization. Born from a desire to make reforestation personally meaningful rather than abstractly altruistic, the project enables users to create and manage cities while witnessing the immediate effects of their urban planning decisions on temperature, pollution, happiness, and sustainability metrics.
+      Built in Unity with C#, featuring real-time heat island simulation using the Thomas Algorithm for scientifically accurate temperature modeling.
 
-The game addresses the fundamental challenge identified in climate education: people only care about environmental issues when they personally impact them. By implementing Sarah Ivens' research from "Forest Therapy" about the tangible health and well-being benefits of green spaces, Verdantia reframes reforestation from a distant global concept into an immediately relatable personal experience. Players see how urban heat islands affect their daily comfort, how green spaces reduce mental fatigue, and how sustainable planning directly improves quality of life.
+      The touch kiosk interface enables players to build sustainable cities while visualizing immediate environmental impacts through heat maps, pollution metrics, and citizen happiness indicators.
 
-The project represents a sophisticated fusion of advanced mathematical modeling, game design, environmental education, and museum installation experience. At its technical core, it implements the heat equation using the Thomas Algorithm to simulate urban heat island effects with scientific accuracy, while maintaining an accessible, engaging interface designed for diverse museum audiences.`,
+      The project transforms abstract climate concepts into personally meaningful experiences by demonstrating how green spaces directly affect urban livability.
+
+      Designed for multi-modal museum engagement with educational popups for both active players and passive observers.`,
 
     process: `The development journey began with an ambitious vision to create a multi-modal multimedia exhibit inspired by art house documentaries like Koyaanisqatsi and museum installations by Moment Factory. After extensive research at the Museum of Science Boston and New England Botanic Garden, the scope crystallized around a single, deeply developed city builder game that could address the complexity of urban environmental systems without oversimplifying critical decision-making processes.
 
