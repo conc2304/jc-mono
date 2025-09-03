@@ -7,7 +7,6 @@ import {
   useMemo,
   CSSProperties,
 } from 'react';
-// import set from 'lodash.set';
 import { useResizeObserver } from './use-resize-observer';
 import { Property } from 'csstype';
 import { wrap } from '../utils';
