@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { ProjectData } from '../../types';
+import { GitHub, Preview } from '@mui/icons-material';
 
 interface MobileProjectDetailsProps {
   data: ProjectData;
@@ -24,8 +25,7 @@ export const MobileProjectDetails: React.FC<MobileProjectDetailsProps> = ({
       <Grid size={{ xs: 6 }}>
         <Paper
           sx={{
-            backgroundColor: alpha(theme.palette.grey[800], 0.5),
-            border: `1px solid ${theme.palette.grey[700]}`,
+            border: `1px solid ${theme.palette.secondary.main}`,
             p: 2,
           }}
         >
@@ -40,7 +40,11 @@ export const MobileProjectDetails: React.FC<MobileProjectDetailsProps> = ({
               <Box>
                 <Typography
                   variant="caption"
-                  sx={{ color: theme.palette.grey[400] }}
+                  sx={{
+                    textTransform: 'uppercase',
+                    letterSpacing: 2,
+                    color: theme.palette.getInvertedMode('secondary'),
+                  }}
                 >
                   Type:
                 </Typography>
@@ -56,7 +60,11 @@ export const MobileProjectDetails: React.FC<MobileProjectDetailsProps> = ({
               <Box>
                 <Typography
                   variant="caption"
-                  sx={{ color: theme.palette.grey[400] }}
+                  sx={{
+                    textTransform: 'uppercase',
+                    letterSpacing: 2,
+                    color: theme.palette.getInvertedMode('secondary'),
+                  }}
                 >
                   Duration:
                 </Typography>
@@ -72,8 +80,8 @@ export const MobileProjectDetails: React.FC<MobileProjectDetailsProps> = ({
       <Grid size={{ xs: 6 }}>
         <Paper
           sx={{
-            backgroundColor: alpha(theme.palette.grey[800], 0.5),
-            border: `1px solid ${theme.palette.grey[700]}`,
+            border: `1px solid ${theme.palette.secondary.main}`,
+
             p: 2,
           }}
         >
@@ -93,13 +101,15 @@ export const MobileProjectDetails: React.FC<MobileProjectDetailsProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1,
-                  color: theme.palette.primary.main,
+                  color: theme.palette.getInvertedMode('info'),
                   textDecoration: 'none',
-                  fontSize: '0.75rem',
-                  '&:hover': { color: theme.palette.primary.light },
+                  '&:hover': {
+                    color: theme.palette.info.main,
+                  },
                 }}
               >
-                Demo
+                <Preview />
+                Live Demo
               </Link>
             )}
             {data.links?.repository && (
@@ -111,13 +121,15 @@ export const MobileProjectDetails: React.FC<MobileProjectDetailsProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1,
-                  color: theme.palette.grey[300],
+                  color: theme.palette.getInvertedMode('info'),
                   textDecoration: 'none',
-                  fontSize: '0.75rem',
-                  '&:hover': { color: theme.palette.common.white },
+                  '&:hover': {
+                    color: theme.palette.info.main,
+                  },
                 }}
               >
-                Code
+                <GitHub />
+                Source Code
               </Link>
             )}
           </Box>

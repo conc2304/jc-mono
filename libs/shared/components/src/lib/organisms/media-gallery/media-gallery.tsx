@@ -150,8 +150,8 @@ export const MediaGallery = ({
         onClick={() => handleMediaClick(mediaItem)}
         sx={{
           flexShrink: 0,
-          width: 80,
-          height: 64,
+          width: 80 * 3,
+          height: 64 * 3,
           borderRadius: 1,
           overflow: 'hidden',
           border: 2,

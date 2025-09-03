@@ -18,15 +18,19 @@ export const MobileTabContent: React.FC<MobileTabContentProps> = ({
   return (
     <Paper
       sx={{
-        backgroundColor: alpha(theme.palette.grey[900], 0.5),
-        border: `1px solid ${theme.palette.grey[700]}`,
+        border: `2px solid ${theme.palette.primary.main}`,
         p: 2,
         mb: 3,
       }}
     >
       <Typography
-        variant="h5"
-        sx={{ mb: 2, fontWeight: 'bold', textTransform: 'capitalize' }}
+        variant="h4"
+        sx={{
+          mb: 2,
+          fontWeight: 'bold',
+          textTransform: 'capitalize',
+          color: theme.palette.primary.main,
+        }}
       >
         {activeTab}
       </Typography>

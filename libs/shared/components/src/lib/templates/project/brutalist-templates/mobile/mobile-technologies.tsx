@@ -14,8 +14,8 @@ export const MobileTechnologies: React.FC<MobileTechnologiesProps> = ({
   return (
     <Paper
       sx={{
-        backgroundColor: alpha(theme.palette.grey[800], 0.5),
-        border: `1px solid ${theme.palette.grey[700]}`,
+        border: `1px solid ${theme.palette.secondary.main}`,
+
         p: 2,
       }}
     >
@@ -32,8 +32,13 @@ export const MobileTechnologies: React.FC<MobileTechnologiesProps> = ({
             label={tech}
             size="small"
             sx={{
-              backgroundColor: theme.palette.grey[700],
-              border: `1px solid ${theme.palette.grey[600]}`,
+              backgroundColor: theme.palette.getInvertedMode('secondary'),
+              color: theme.palette.getContrastText(
+                theme.palette.getInvertedMode('secondary')
+              ),
+              border: `1px solid ${
+                theme.palette.secondary[theme.palette.mode]
+              }`,
               fontSize: '0.75rem',
             }}
           />

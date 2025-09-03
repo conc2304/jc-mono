@@ -61,9 +61,9 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ data }) => {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
-    color: theme.palette.getInvertedMode('secondary'),
+    color: theme.palette.getInvertedMode('info'),
     textDecoration: 'none',
-    '&:hover': { color: theme.palette.secondary.main },
+    '&:hover': { color: theme.palette.info.main },
   }));
 
   return (

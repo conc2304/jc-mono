@@ -214,7 +214,7 @@ export const FileManager = ({
   };
 
   const selectedItem = getItemById(selectedItems[0]);
-  console.log({ selectedItem, selectedItems });
+
   return (
     <FileSystemContext.Provider value={contextValue}>
       <Box

@@ -40,9 +40,6 @@ export const MediaModal = ({
   const isMobile = containerWidth < 768; // Responsive based on container width
   const showDots = mediaItems.length <= 10;
 
-  console.log('MediaModal');
-  console.log({ mediaItems });
-
   // Update container width on resize
   useEffect(() => {
     const updateWidth = () => {
