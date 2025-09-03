@@ -1,6 +1,6 @@
 import { ImageMediaData } from '@jc/ui-components';
 import { PortfolioGalleryItem } from './iOS-made-media';
-import { getImageUrl, getResponsiveImageSet } from '@jc/utils';
+import { getResponsiveImageSet } from '@jc/utils';
 
 /**
  * Converts portfolio data to ImageMediaData format
