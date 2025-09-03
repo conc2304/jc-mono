@@ -47,6 +47,14 @@ export default defineConfig(() => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Chunk Project data to load later
+          if (id.includes('art-gallery/iOS-made-media')) {
+            return 'art-gallery-data';
+          }
+          if (id.includes('portfolio/src/data/projects')) {
+            return 'project-data';
+          }
+
           // Skip externalized modules (React, React-DOM, etc.)
           if (id.includes('node_modules')) {
             // Only chunk non-externalized vendor libraries
