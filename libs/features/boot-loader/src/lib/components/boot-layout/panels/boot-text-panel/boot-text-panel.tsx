@@ -67,3 +67,5 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
     </AugmentedPanel>
   );
 };
+
+export default BootTextPanel;

@@ -29,17 +29,17 @@ const gradient = (theme: Theme) =>
     0.4
   )}, ${alpha(theme.palette.background.paper, 0.4)})`;
 
-export const SliderGradient = styled(Box)<{ url: string }>(
-  ({ theme, url }) => ({
-    width: '100%',
-    height: '100%',
-    background: `${gradient(theme)}, url('${url}')`,
-    backgroundSize: 'cover',
-    backgroundPositionY: 'center',
-    opacity: 0.5,
-    backgroundBlendMode: 'hard-light',
-  })
-);
+export const SliderGradient = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'url',
+})<{ url: string }>(({ theme, url }) => ({
+  width: '100%',
+  height: '100%',
+  background: `${gradient(theme)}, url('${url}')`,
+  backgroundSize: 'cover',
+  backgroundPositionY: 'center',
+  opacity: 0.5,
+  backgroundBlendMode: 'hard-light',
+}));
 
 export const FilterEffect = styled(Box)(({ theme }) => ({
   position: 'absolute',

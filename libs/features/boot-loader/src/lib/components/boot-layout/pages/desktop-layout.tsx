@@ -1,11 +1,19 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, lazy, Suspense } from 'react';
 import { alpha, Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { BrowserFrame, EnterButton, AugmentedPanel } from '../atoms';
 import { Header, GifContainer, Footer } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
 import { BackgroundControls } from '../molecules/background-controls/background-controls';
-import { BootTextPanel, ProgressPanel, TorusProgressPanel } from '../panels';
+import { ProgressPanel } from '../panels';
 import { BackgroundOverlay, DiagonalLines } from '@jc/ui-components';
+
+const TorusProgressPanel = lazy(
+  () => import('../panels/torus-progress-panel/torus-progress-panel')
+);
+
+const BootTextPanel = lazy(
+  () => import('../panels/boot-text-panel/boot-text-panel')
+);
 
 interface FullDesktopLayoutProps {
   bootMessages: any[];
@@ -81,10 +89,18 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                       padding: theme.spacing(0),
                     }}
                   >
-                    <TorusProgressPanel
-                      progress={progress.current}
-                      progressMessage={progress.message}
-                    />
+                    <Suspense
+                      fallback={
+                        <Box
+                          sx={{ bgcolor: 'background.paper', opacity: 0.5 }}
+                        />
+                      }
+                    >
+                      <TorusProgressPanel
+                        progress={progress.current}
+                        progressMessage={progress.message}
+                      />
+                    </Suspense>
                   </AugmentedPanel>
                   <GifContainer
                     url={themedWidgetGifUrl.url}
@@ -230,14 +246,20 @@ const FullDesktopLayout: React.FC<FullDesktopLayoutProps> = ({
                   minHeight={0} // Critical: allows flex item to shrink below content size
                   overflow="hidden" // Prevent this container from growing
                 >
-                  <BootTextPanel
-                    bootMessages={bootMessages}
-                    scrambleCharacterSet={scrambleCharacterSet}
-                    onProgress={handlers.handleProgress}
-                    onComplete={handlers.handleBootComplete}
-                    textWrapMode="wrap"
-                    flex={1} // let it fill the available space
-                  />
+                  <Suspense
+                    fallback={
+                      <Box sx={{ bgcolor: 'background.paper', opacity: 0.5 }} />
+                    }
+                  >
+                    <BootTextPanel
+                      bootMessages={bootMessages}
+                      scrambleCharacterSet={scrambleCharacterSet}
+                      onProgress={handlers.handleProgress}
+                      onComplete={handlers.handleBootComplete}
+                      textWrapMode="wrap"
+                      flex={1} // let it fill the available space
+                    />
+                  </Suspense>
                 </Box>
 
                 <Box
