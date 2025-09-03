@@ -7,7 +7,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { randomInt } from 'd3';
 import { Star } from '@mui/icons-material';
 
 import { useWindowActions } from '../../context';
@@ -36,7 +35,7 @@ const textureImages = [
   'scratched-glass-intense-medium.png',
 ];
 
-const getRandomImgFn = randomInt(textureImages.length);
+const getRandomImgFn = () => Math.floor(Math.random() * textureImages.length);
 
 interface TileComponentProps {
   tile: PlacedTile;
