@@ -7,7 +7,7 @@ import {
   useMemo,
   CSSProperties,
 } from 'react';
-import set from 'lodash.set';
+// import set from 'lodash.set';
 import { useResizeObserver } from './use-resize-observer';
 import { Property } from 'csstype';
 import { wrap } from '../utils';
@@ -176,7 +176,7 @@ export const RadarChart = ({
         .range([0, radius])
         // @ts-ignore
         .domain([0, axisMax === 0 ? 100 : axisMax]);
-      set(axisScaleMap, axisName, axisScale);
+      axisScaleMap[axisName] = axisScale;
     });
 
     const domainMax = d3.max(data, (i) => d3.max(i.map((j) => j.value)));
