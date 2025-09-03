@@ -513,24 +513,20 @@ export const WindowProvider: React.FC<{
         );
       } else {
         // Create new window with content (potentially with navigation)
-        const maximized = fsItem.type !== 'folder' && !isXs;
+        const maximizeWindow = true; // for now always maximize window
 
-        const x =
-          fsItem.type === 'folder' && !isXs ? 200 + windows.length * 30 : 0;
-        const y =
-          fsItem.type === 'folder' && !isXs ? 100 + windows.length * 30 : 0;
+        const x = maximizeWindow ? 0 : 200 + windows.length * 30;
+        const y = maximizeWindow ? 0 : 100 + windows.length * 30;
 
         const maxHeight = window.innerHeight - y;
-        const height =
-          fsItem.type === 'folder' && !isXs
-            ? Math.min(window.innerHeight * 0.5, maxHeight)
-            : window.innerHeight;
+        const height = maximizeWindow
+          ? window.innerHeight
+          : Math.min(window.innerHeight * 0.5, maxHeight);
 
         const maxWidth = window.innerWidth - x;
-        const width =
-          fsItem.type === 'folder' && !isXs
-            ? Math.min(window.innerWidth * 0.66, maxWidth)
-            : window.innerWidth;
+        const width = maximizeWindow
+          ? window.innerWidth
+          : Math.min(window.innerWidth * 0.66, maxWidth);
 
         const newWindow: AnimatedWindowMetaData = {
           id,
@@ -542,7 +538,7 @@ export const WindowProvider: React.FC<{
           height,
           zIndex: windowZIndex + 1,
           minimized: false,
-          maximized,
+          maximized: maximizeWindow,
           windowContent: getWindowContent(
             fsItem,
             fileSystemItems,

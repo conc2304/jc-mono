@@ -97,13 +97,13 @@ export const ListViewItem = ({
         />
       )}
       <Star
-        style={{
+        sx={(theme) => ({
           flexShrink: 0,
-          color: 'warning.main',
+          color: theme.palette.warning.main,
           fill: 'currentcolor',
           fontSize: 16,
           visibility: item.metadata.favorite ? 'visible' : 'hidden',
-        }}
+        })}
       />
     </ListItem>
   );

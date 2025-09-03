@@ -41,7 +41,7 @@ export const FileManager = ({
   const [quickAccessCollapsed, setQuickAccessCollapsed] = useState(true);
   const [previewCollapsed, setPreviewCollapsed] = useState(!hasPreviewPanel);
   const [currentPath, setCurrentPath] = useState(initialPath);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [sortBy, setSortBy] = useState<SortBy>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
@@ -192,6 +192,9 @@ export const FileManager = ({
   };
 
   const folderItems = getFolderItems();
+  const [selectedItems, setSelectedItems] = useState<string[]>([
+    folderItems[0].id,
+  ]);
 
   const contextValue = {
     fs: fileSystemItems,
@@ -211,6 +214,7 @@ export const FileManager = ({
   };
 
   const selectedItem = getItemById(selectedItems[0]);
+  console.log({ selectedItem, selectedItems });
   return (
     <FileSystemContext.Provider value={contextValue}>
       <Box

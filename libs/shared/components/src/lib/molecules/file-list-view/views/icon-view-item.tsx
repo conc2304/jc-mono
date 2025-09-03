@@ -34,6 +34,15 @@ export const IconViewItem = ({
                   paddingBottom: '2px',
                   paddingRight: '2px',
                 }}
+                sx={(theme) => ({
+                  color: theme.palette.warning.main,
+                  fill: 'currentcolor',
+                  fontSize: 16,
+                  display: 'inline',
+                  lineHeight: 1.5,
+                  paddingBottom: '2px',
+                  paddingRight: '2px',
+                })}
               />
             )
           }

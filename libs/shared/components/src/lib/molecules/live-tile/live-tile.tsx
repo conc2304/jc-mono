@@ -228,13 +228,6 @@ export const LiveTile = memo<LiveTileProps>(
               </Typography>
 
               <Box display="flex" alignItems="center" gap={1}>
-                {/* {metadata?.favorite && (
-                  <Star
-                    size={12}
-                    style={{ color: 'warning.main' }}
-                    fill="currentColor"
-                  />
-                )} */}
                 {config.showLiveContent && children && children.length > 1 && (
                   <Box display="flex" gap={0.5}>
                     {children.slice(0, 4).map((_, index) => (
