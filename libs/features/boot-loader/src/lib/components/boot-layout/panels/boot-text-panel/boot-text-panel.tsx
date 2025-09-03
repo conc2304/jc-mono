@@ -35,7 +35,6 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
     <AugmentedPanel
       augmentType="envelope"
       sx={{
-        // Key changes: use proper flex shorthand and ensure container constraints
         flex: `${flex} 1 0`, // flex-grow: flex, flex-shrink: 1, flex-basis: 0
         minHeight: 0, // Critical: allows flex item to shrink
         height: '100%', // Fill the parent container
@@ -43,6 +42,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
         display: 'flex',
         flexDirection: 'column',
         background: alpha(theme.palette.background.paper, bgOpacity),
+        pb: '1.5rem',
       }}
     >
       <BootText
@@ -62,7 +62,7 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
         textWrapMode={textWrapMode}
         flex={1} // Fill available space within the panel
         minHeight={0} // Allow shrinking
-        autoScroll={true} // Enable internal scrolling
+        autoScroll={true}
       />
     </AugmentedPanel>
   );

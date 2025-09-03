@@ -1,4 +1,4 @@
-import { Paper, Typography, Box, Chip, alpha, useTheme } from '@mui/material';
+import { Paper, Typography, Box, Chip, useTheme } from '@mui/material';
 
 interface MobileTechnologiesProps {
   technologies?: string[];

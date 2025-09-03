@@ -149,32 +149,23 @@ const TabletLayout: React.FC<SmallDesktopLayoutProps> = ({
           </Stack>
         </Stack>
 
-        <BottomPanel flexShrink={0} height="30%" className="BottomPanel--root">
+        <BottomPanel flexShrink={0} className="BottomPanel--root">
           <Grid container columns={12} spacing={4}>
-            <Grid size={6} display="flex">
+            <Grid size={{ xs: 7 }} display="flex">
               <Stack gap={1}>
                 <HeroText />
               </Stack>
-              {/* <Box flexGrow={1} /> */}
             </Grid>
 
-            <BackgroundControls
-              backgroundAnimated={backgroundState.animateBackground}
-              onBackgroundSizeChange={backgroundState.handleBackgroundResize}
-              onBlendModeChange={backgroundState.setBackgroundBlendMode}
-              onToggleBackground={() =>
-                backgroundState.setAnimateBackground((prev: boolean) => !prev)
-              }
-              blendModeActive={backgroundState.backgroundBlendMode}
-            />
-
-            <Grid size={{ xs: 4 }} sx={{ flex: 1 }}>
+            <Grid size={{ xs: 5 }} sx={{ flex: 1 }} flexShrink={0}>
               <EnterButton fontSize={'4rem'} onMouseEnter={triggerPreload} />
             </Grid>
           </Grid>
         </BottomPanel>
 
-        <Footer />
+        <Box flexShrink={0}>
+          <Footer />
+        </Box>
       </BrowserFrame>
     </>
   );

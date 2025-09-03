@@ -41,6 +41,7 @@ export const getThemedDataset = (
     bootMessagesThemed[bootMessagesThemed.length - 1],
     newLine,
     endMessage,
+    newLine,
   ];
 
   const scrambleCharacterSet = getScrambleCharacters(themeId);

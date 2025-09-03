@@ -48,7 +48,6 @@ export const BrutalistTemplate: React.FC<
   // Project props
   ...project
 }) => {
-  const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<string>('overview');
