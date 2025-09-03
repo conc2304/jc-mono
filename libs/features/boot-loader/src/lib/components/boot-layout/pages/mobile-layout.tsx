@@ -51,7 +51,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
     <Stack sx={{ textAlign: 'center', flexShrink: 0, py: 1.5 }}>
       <HeroText />
     </Stack>
-    <Box flexShrink={0} flexGrow={1.5} px={1} py={4}>
+    <Box flexShrink={0} flexGrow={1.5} px={1} pt={2}>
       <EnterButton onMouseEnter={triggerPreload} fontSize={'3rem'} />
     </Box>
     <Box
