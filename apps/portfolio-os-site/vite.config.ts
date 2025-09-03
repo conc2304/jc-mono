@@ -58,7 +58,10 @@ export default defineConfig(() => ({
               return 'vendor-gsap';
             }
 
-            if (id.includes('d3')) {
+            if (
+              id.includes('node_modules/d3-') ||
+              id.includes('node_modules/d3/')
+            ) {
               return 'vendor-d3';
             }
 

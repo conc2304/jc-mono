@@ -5,9 +5,9 @@ import { ButtonProps, Typography } from '@mui/material';
 
 const url = '/gifs/art-flow-bg.gif';
 const urlStyle = `url("${url}") 50% 50% / 200% 200%;`;
-const gradientStyle = `radial-gradient(${alpha('#fff', 0.3)}, ${alpha(
+const gradientStyle = `linear-gradient(135deg, ${alpha('#fff', 0.2)}, ${alpha(
   '#000',
-  0.4
+  0.2
 )})`;
 const bgStyle = `${gradientStyle}, ${urlStyle}`;
 
