@@ -37,7 +37,14 @@ export const MobileNavigation: React.FC<
           <Box>
             <Button
               startIcon={<ArrowLeft />}
-              sx={{ color: theme.palette.grey[400], textTransform: 'none' }}
+              sx={{
+                color: onPrevious
+                  ? theme.palette.secondary.contrastText
+                  : 'text.disabled',
+                '&:hover': {
+                  background: onPrevious ? 'action.hover' : 'transparent',
+                },
+              }}
               onClick={onPrevious}
               disabled={!onPrevious}
             >
@@ -46,7 +53,14 @@ export const MobileNavigation: React.FC<
 
             <Button
               endIcon={<ArrowRight />}
-              sx={{ color: theme.palette.grey[400], textTransform: 'none' }}
+              sx={{
+                color: onNext
+                  ? theme.palette.secondary.contrastText
+                  : 'text.disabled',
+                '&:hover': {
+                  background: onNext ? 'action.hover' : 'transparent',
+                },
+              }}
               onClick={onNext}
               disabled={!onNext}
             >
