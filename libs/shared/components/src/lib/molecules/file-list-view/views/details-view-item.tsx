@@ -13,14 +13,27 @@ export const DetailsViewItem = ({
 }: FileListItemProps) => {
   const context = useContext(FileSystemContext);
   const fileSystemItem = useFileSystemItem(item, handlers, viewConfig);
-
+  const isSelected = context?.selectedItems.includes(item.id);
   return (
     <TableRow
       hover
-      selected={context?.selectedItems.includes(item.id)}
+      selected={isSelected}
       draggable
       {...fileSystemItem.itemProps}
-      sx={fileSystemItem.mergeStyles({ cursor: 'pointer' })}
+      sx={fileSystemItem.mergeStyles({
+        cursor: 'pointer',
+
+        borderWidth: 0,
+        borderTopWidth: '2px',
+        borderBottomWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: isSelected ? 'primary.main' : 'transparent',
+        transition: 'border-color 0.75s ease-out',
+        '&:hover': {
+          borderColor: 'secondary.main',
+          transition: 'border-color 0s ease-in',
+        },
+      })}
     >
       <TableCell>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

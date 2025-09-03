@@ -45,19 +45,21 @@ export const FileSystemIcon = ({
               : theme.palette.common.white,
             !isActive ? 0.01 : 0.1
           ),
-          transition: theme.transitions.create(['border'], {
-            duration: theme.transitions.duration.standard,
-          }),
 
-          '&.FileSystemIcon--icon[data-augmented-ui]': {
-            '--aug-tr': '6px',
-            '--aug-tl': '5px',
-            '--aug-bl': '5px',
-            '--aug-br': '5px',
-            '--aug-border-all': '1.5px',
-            '--aug-border-bg': !isActive
-              ? 'transparent'
-              : theme.palette.primary.main,
+          '--aug-tr': '6px',
+          '--aug-tl': '5px',
+          '--aug-bl': '5px',
+          '--aug-br': '5px',
+          '--aug-border-all': '1.5px',
+
+          '--aug-border-bg': !isActive
+            ? theme.palette.action.focus
+            : theme.palette.primary.main,
+
+          transition: '--aug-border-bg 0.75s ease-out',
+          '&:hover': {
+            '--aug-border-bg': theme.palette.secondary.main,
+            transition: '--aug-border-bg 0s ease-in',
           },
         })}
       >
