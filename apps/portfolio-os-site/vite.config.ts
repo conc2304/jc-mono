@@ -55,10 +55,7 @@ export default defineConfig(() => ({
             return 'project-data';
           }
 
-          // // Don't let data files pull in UI libraries
-          // if (id.includes('/data/') && !id.includes('node_modules')) {
-          //   return 'app-data';
-          // }
+          if (id.includes('libs/shared')) return 'shared-lib';
 
           // Skip externalized modules (React, React-DOM, etc.)
           if (id.includes('node_modules')) {
