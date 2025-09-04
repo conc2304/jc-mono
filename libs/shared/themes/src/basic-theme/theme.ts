@@ -46,6 +46,10 @@ export const createThemeFromOptions = ({
         md: 1024,
         lg: 1266,
         xl: 1536,
+
+        shortHeight: 0,
+        mediumHeight: 700,
+        tallHeight: 900,
       },
     },
     direction: 'ltr',

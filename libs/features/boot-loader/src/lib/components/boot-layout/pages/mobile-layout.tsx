@@ -40,17 +40,22 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       flexGrow={1}
       url={themedWidgetGifUrl.url}
       sx={{
-        minHeight: '15%',
+        minHeight: '80px',
+        maxHeight: '200px',
+        flexShrink: 0,
         flexGrow: 0.5,
         backgroundPositionY: themedWidgetGifUrl.backgroundPositionY,
-        p: 1,
+        m: 1,
+        '@media (max-height: 700px)': {
+          display: 'none',
+        },
       }}
     />
 
     <Stack sx={{ textAlign: 'center', flexShrink: 0, py: 1.5 }}>
       <HeroText />
     </Stack>
-    <Box flexShrink={0} flexGrow={1.5} px={1} pt={2}>
+    <Box flexShrink={0} flexGrow={1.5} px={1} py={2}>
       <EnterButton onMouseEnter={triggerPreload} fontSize={'3rem'} />
     </Box>
     <Box
@@ -61,9 +66,15 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       gap={1}
       flexGrow={1}
       overflow="hidden"
+      sx={{ minHeight: '150px' }} // Add this
     >
       <Box
-        sx={{ position: 'relative', flex: 1, minHeight: 0, overflow: 'hidden' }}
+        sx={{
+          position: 'relative',
+          flex: 1,
+          minHeight: '150px', // Ensure BootTextPanel gets at least 150px
+          overflow: 'hidden',
+        }}
       >
         <Suspense
           fallback={<Box sx={{ bgcolor: 'background.paper', opacity: 0.5 }} />}
@@ -85,7 +96,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         </Suspense>
       </Box>
 
-      <ThemePickerPanel compactMenu />
+      <Box flexShrink={0}>
+        <ThemePickerPanel compactMenu />
+      </Box>
     </Box>
   </BrowserFrame>
 );

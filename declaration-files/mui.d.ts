@@ -1,6 +1,13 @@
 import { CSSProperties, PaletteMode } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    // Add custom height breakpoints
+    shortHeight: true;
+    mediumHeight: true;
+    tallHeight: true;
+  }
+
   // Allow for custom mixins to be added
   interface Mixins {
     taskbar: CSSProperties;
