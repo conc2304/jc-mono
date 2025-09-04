@@ -1,6 +1,11 @@
 // Color Mode Switcher Component - Refactored
 import React from 'react';
-import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
+import {
+  LightMode,
+  DarkMode,
+  SettingsBrightness,
+  Brightness4,
+} from '@mui/icons-material';
 import {
   ResponsiveAction,
   TransitionConfig,
@@ -77,6 +82,7 @@ const ColorModeSwitcherSpeedDial: React.FC<ColorModeSwitcherProps> = ({
       radiusMultiplier={radiusMultiplier}
       staggerDelay={staggerDelay}
       transitionConfig={transitionConfig}
+      slotProps={{ speedDial: { mainIcon: <Brightness4 /> } }}
     />
   );
 };

@@ -1,28 +1,27 @@
 import { TileGrid, useWindowManager, Window } from '@jc/ui-components';
 import { Box } from '@mui/system';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 
-export // Inner component that uses the context
-const DesktopContent = () => {
+export const DesktopContent = ({ footer }: { footer?: ReactNode }) => {
   const { windows, fileSystemItems } = useWindowManager();
 
   // Get desktop icons (root-level items only)
-  const desktopItems = useMemo(() => {
+  const rootFileSystemItems = useMemo(() => {
     return fileSystemItems.filter((item) => !item.parentId);
   }, [fileSystemItems]);
 
   return (
     <Box
       className="DesktopOS--root"
-      sx={(theme) => ({
+      sx={{
         width: '100%',
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
         contain: 'layout style paint',
-      })}
+      }}
     >
-      <TileGrid gridTiles={desktopItems} />
+      <TileGrid gridTiles={rootFileSystemItems} footer={footer} />
 
       {/* Windows */}
       {windows.map((window) => (

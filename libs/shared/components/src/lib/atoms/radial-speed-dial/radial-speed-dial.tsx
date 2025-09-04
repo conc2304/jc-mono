@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   Box,
   IconButton,
@@ -7,7 +7,7 @@ import {
   alpha,
   Backdrop,
 } from '@mui/material';
-import { Close, Brightness4 } from '@mui/icons-material';
+import { Close, AddCircleOutline } from '@mui/icons-material';
 
 // Types and Interfaces
 interface TransitionConfig {
@@ -43,6 +43,8 @@ interface RadialSpeedDialProps {
   animationDuration?: number;
   staggerDelay?: number;
   transitionConfig?: TransitionConfig;
+  mainIcon?: ReactNode;
+  openIcon?: ReactNode;
 }
 
 interface ArcPosition {
@@ -66,6 +68,8 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
     start: { opacity: 0, scale: 0 },
     end: { opacity: 1, scale: 1 },
   },
+  mainIcon = <AddCircleOutline />,
+  openIcon = <Close />,
 }) => {
   const theme = useTheme();
 
@@ -161,7 +165,7 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
                   delay: delay,
                 }),
                 bgcolor: action.isActive
-                  ? alpha(theme.palette.getInvertedMode('primary'), 0.7)
+                  ? alpha(theme.palette.primary.main, 0.7)
                   : theme.palette.background.paper,
                 border: `2px solid ${
                   action.isResolved
@@ -221,11 +225,10 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
 
           '--aug-tl': isOpen ? '0.75rem' : '0rem',
           '--aug-br': isOpen ? '0.75rem' : '0rem',
-          // transition: '--ag-tl 200ms ease-in',
         }}
         data-augmented-ui="tl-clip br-clip"
       >
-        {isOpen ? <Close /> : <Brightness4 />}
+        {isOpen ? openIcon : mainIcon}
       </IconButton>
     </Box>
   );

@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { DragState, InsertionSide, Tile } from './types';
 import { useTilePlacement } from './use-tile-placement';
 import { BaseFileSystemItem } from '@jc/file-system';
@@ -18,11 +18,14 @@ import { ColorModeSwitcher } from '@jc/themes';
 
 export const TileGrid = ({
   gridTiles = [],
+  footer,
 }: {
   gridTiles: BaseFileSystemItem[];
+  footer?: ReactNode;
 }) => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const { config, breakpoint } = useResponsiveTileConfig();
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [tiles, setTiles] = useState<BaseFileSystemItem[]>(gridTiles);
@@ -77,7 +80,7 @@ export const TileGrid = ({
     ) {
       setTileOrder(newOrder);
     }
-  }, [tiles]); // Removed tileOrder from dependencies to prevent shuffle resets
+  }, [tiles]);
 
   const { placedTiles, insertionZones } = useTilePlacement(
     tiles,
@@ -175,7 +178,7 @@ export const TileGrid = ({
           sx={(theme) => ({
             '--aug-border-bg': theme.palette.secondary.main,
             '--aug-border-all': '1.5px',
-            '--aug-b': config.containerPadding / 2 + 'px',
+            '--aug-b': config.containerPadding + 'px',
             '--aug-br': config.containerPadding / 2 + 'px',
             '--aug-bl': config.containerPadding / 2 + 'px',
             '--aug-tl': config.containerPadding / 2 + 'px',
@@ -303,6 +306,20 @@ export const TileGrid = ({
           )}
         </Box>
 
+        {!isSm && footer && (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: isMd ? '0' : '0.5rem',
+              left: '50%',
+              right: '50%',
+              transform: 'translateX(-50%)',
+            }}
+          >
+            {footer}
+          </Box>
+        )}
+
         {isSm && (
           <Box
             width="100%"
@@ -335,6 +352,9 @@ export const TileGrid = ({
                 <RestartAlt />
               </IconButton>
             </Box>
+
+            {/* Footer */}
+            {footer && <Box>{footer}</Box>}
 
             <Box className="TileGrid--color-mode-switcher-wrapper">
               <ColorModeSwitcher />

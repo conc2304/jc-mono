@@ -1618,7 +1618,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                       variant="caption"
                       sx={{ color: 'text.secondary' }}
                     >
-                      SYSTEM_ACTIVE
+                      COLORS_ACTIVE
                     </Typography>
                   </Box>
                 }

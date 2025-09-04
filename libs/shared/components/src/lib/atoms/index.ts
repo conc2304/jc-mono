@@ -11,3 +11,4 @@ export * from './progress';
 export * from './loading-fallback';
 export * from './radial-speed-dial';
 export * from './speed-dial-responsive';
+export * from './button-group';

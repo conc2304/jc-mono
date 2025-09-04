@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { ItemPosition, WindowProvider } from '@jc/ui-components';
 
 import { generateDefaultDesktopItemPositions } from '../utils';
@@ -10,6 +10,7 @@ type DesktopOSProps = {
   navigationGroups?: NavigationGroup[];
   iconArrangement?: 'linear' | 'grid' | 'circular';
   customDesktopItemPositions?: Record<string, ItemPosition>;
+  footer?: ReactNode;
 };
 
 // Main component that provides the context
@@ -18,6 +19,7 @@ export const DesktopOS = ({
   navigationGroups = [],
   iconArrangement = 'linear',
   customDesktopItemPositions,
+  footer,
 }: DesktopOSProps) => {
   // Generate default icon positions
   const defaultDesktopItemPositions = useMemo(() => {
@@ -27,13 +29,17 @@ export const DesktopOS = ({
     return generateDefaultDesktopItemPositions(fileSystem, iconArrangement);
   }, [fileSystem, iconArrangement, customDesktopItemPositions]);
 
+  console.log('DesktopOS: About to render WindowProvider');
+
   return (
     <WindowProvider
       fileSystemItems={fileSystem}
       defaultDesktopItemPositions={defaultDesktopItemPositions}
       navigationGroups={navigationGroups}
     >
-      <DesktopContent />
+      {/* {console.log('DesktopOS: WindowProvider children rendering')} */}
+
+      <DesktopContent footer={footer} />
     </WindowProvider>
   );
 };

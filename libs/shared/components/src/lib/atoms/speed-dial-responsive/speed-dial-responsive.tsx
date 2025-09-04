@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
+import { useTheme, useMediaQuery, Breakpoint } from '@mui/material';
 import {
-  IconButton,
-  Stack,
-  Tooltip,
-  useTheme,
-  useMediaQuery,
-  alpha,
-  Breakpoint,
-} from '@mui/material';
-import {
+  AugmentedButtonGroup,
+  AugmentedButtonGroupProps,
+  ButtonGroupItem,
   RadialSpeedDial,
+  RadialSpeedDialProps,
   SpeedDialAction,
   TransitionConfig,
 } from '@jc/ui-components';
@@ -23,11 +19,16 @@ interface ResponsiveAction {
   isResolved?: boolean;
 }
 
+interface SpeedDialSlotProps {
+  speedDial?: Partial<RadialSpeedDialProps>;
+  buttonGroup?: Partial<AugmentedButtonGroupProps>;
+}
+
 interface SpeedDialResponsiveProps {
   actions: ResponsiveAction[];
   direction?: 'row' | 'column';
   spacing?: number;
-  // RadialSpeedDial props
+  // RadialSpeedDial props (can be overridden by slotProps.speedDial)
   arcStartDegree?: number;
   arcEndDegree?: number;
   itemSize?: number;
@@ -35,6 +36,15 @@ interface SpeedDialResponsiveProps {
   staggerDelay?: number;
   transitionConfig?: TransitionConfig;
   breakpoint?: number | Breakpoint;
+  // Slot props for customizing individual components
+  slotProps?: SpeedDialSlotProps;
+  // AugmentedButtonGroup props (can be overridden by slotProps.buttonGroup)
+  upperClip?: string;
+  lowerClip?: string;
+  activeColor?: string;
+  padding?: string;
+  mainIcon?: ReactNode;
+  openIcon?: ReactNode;
 }
 
 const SpeedDialResponsive: React.FC<SpeedDialResponsiveProps> = ({
@@ -51,6 +61,11 @@ const SpeedDialResponsive: React.FC<SpeedDialResponsiveProps> = ({
     start: { opacity: 0, scale: 0 },
     end: { opacity: 1, scale: 1 },
   },
+  slotProps,
+  upperClip = '8px',
+  lowerClip = '8px',
+  activeColor = 'primary.main',
+  padding = '12px',
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(breakpoint));
@@ -64,49 +79,34 @@ const SpeedDialResponsive: React.FC<SpeedDialResponsiveProps> = ({
     setSpeedDialOpen(!speedDialOpen);
   };
 
+  // Transform ResponsiveAction[] to ButtonGroupItem[]
+  const buttonGroupItems: ButtonGroupItem[] = actions.map(
+    ({ key, icon, label, onClick, isActive, isResolved }) => ({
+      key,
+      icon,
+      label,
+      onClick,
+      isActive,
+      isResolved,
+    })
+  );
+
   if (!isMobile) {
-    // Desktop/tablet layout - horizontal or vertical stack
-    return (
-      <Stack direction={direction} spacing={spacing}>
-        {actions.map(({ key, icon, label, onClick, isActive, isResolved }) => (
-          <Tooltip key={key} title={label}>
-            <IconButton
-              onClick={onClick}
-              size="small"
-              sx={{
-                width: itemSize,
-                height: itemSize,
-                border: '2px solid',
-                borderColor: isResolved
-                  ? alpha(theme.palette.warning.main, 0.5)
-                  : isActive
-                  ? theme.palette.primary.main
-                  : theme.palette.divider,
-                bgcolor: isActive
-                  ? alpha(theme.palette.primary.main, 0.1)
-                  : 'transparent',
-                color: isActive
-                  ? theme.palette.primary.main
-                  : theme.palette.text.secondary,
-                transition: theme.transitions.create(
-                  ['background-color', 'border-color', 'color'],
-                  {
-                    duration: theme.transitions.duration.short,
-                  }
-                ),
-                '&:hover': {
-                  bgcolor: isActive
-                    ? alpha(theme.palette.primary.main, 0.15)
-                    : alpha(theme.palette.action.hover, 0.04),
-                },
-              }}
-            >
-              {icon}
-            </IconButton>
-          </Tooltip>
-        ))}
-      </Stack>
-    );
+    // Desktop/tablet layout - use AugmentedButtonGroup
+    const buttonGroupProps: AugmentedButtonGroupProps = {
+      items: buttonGroupItems,
+      direction,
+      spacing,
+      upperClip,
+      lowerClip,
+      activeColor,
+      padding,
+      // itemSize,
+      // Override with slotProps.buttonGroup if provided
+      ...slotProps?.buttonGroup,
+    };
+
+    return <AugmentedButtonGroup {...buttonGroupProps} />;
   }
 
   // Mobile layout - radial SpeedDial
@@ -121,21 +121,33 @@ const SpeedDialResponsive: React.FC<SpeedDialResponsiveProps> = ({
     })
   );
 
+  // Merge default speedDial props with slotProps.speedDial
+  const speedDialProps = {
+    arcStartDegree,
+    arcEndDegree,
+    itemSize,
+    radiusMultiplier,
+    staggerDelay,
+    transitionConfig,
+    ...slotProps?.speedDial,
+  };
+
   return (
     <RadialSpeedDial
       isOpen={speedDialOpen}
       onToggle={handleSpeedDialToggle}
       onClose={handleSpeedDialClose}
       actions={speedDialActions}
-      arcStartDegree={arcStartDegree}
-      arcEndDegree={arcEndDegree}
-      itemSize={itemSize}
-      radiusMultiplier={radiusMultiplier}
-      staggerDelay={staggerDelay}
-      transitionConfig={transitionConfig}
+      {...speedDialProps}
     />
   );
 };
 
-export { SpeedDialResponsive };
-export type { ResponsiveAction, SpeedDialResponsiveProps };
+export { SpeedDialResponsive, RadialSpeedDial };
+export type {
+  ResponsiveAction,
+  SpeedDialResponsiveProps,
+  SpeedDialSlotProps,
+  TransitionConfig,
+  SpeedDialAction,
+};
