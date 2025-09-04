@@ -12,7 +12,6 @@ export default function BaselineCSS(theme: Theme): Components {
           height: '100dvh',
           width: '100dvw',
           overflow: 'hidden',
-          background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         },
 
         '*': {

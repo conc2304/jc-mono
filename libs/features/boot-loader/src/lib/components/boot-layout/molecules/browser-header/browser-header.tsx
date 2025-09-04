@@ -1,4 +1,3 @@
-import { ScrambleText } from '@jc/ui-components';
 import { Typography, Box, styled, alpha } from '@mui/material';
 
 export const BrowserHeader = styled(Box)(({ theme }) => ({
@@ -17,8 +16,6 @@ export const AddressBar = styled(Box)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.background.paper, 0.2),
   border: `1px solid ${theme.palette.primary.main}`,
   padding: theme.spacing(0.5, 1.5),
-  // fontSize: '0.75rem',
-  // color: theme.palette.primary.main,
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
