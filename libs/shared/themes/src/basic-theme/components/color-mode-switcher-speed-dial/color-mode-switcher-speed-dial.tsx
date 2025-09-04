@@ -1,23 +1,17 @@
-// Color Mode Switcher Component
-import React, { useState } from 'react';
-import {
-  IconButton,
-  Stack,
-  Tooltip,
-  useTheme,
-  useMediaQuery,
-  alpha,
-} from '@mui/material';
+// Color Mode Switcher Component - Refactored
+import React from 'react';
 import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
 import {
-  RadialSpeedDial,
-  SpeedDialAction,
+  ResponsiveAction,
   TransitionConfig,
+  SpeedDialResponsive,
 } from '@jc/ui-components';
 import { ColorMode } from '../../types';
 import { useColorMode } from '../../context';
 
 interface ColorModeSwitcherProps {
+  direction?: 'row' | 'column';
+  spacing?: number;
   arcStartDegree?: number;
   arcEndDegree?: number;
   itemSize?: number;
@@ -27,6 +21,8 @@ interface ColorModeSwitcherProps {
 }
 
 const ColorModeSwitcherSpeedDial: React.FC<ColorModeSwitcherProps> = ({
+  direction = 'row',
+  spacing = 1,
   arcStartDegree = 180,
   arcEndDegree = 270,
   itemSize = 40,
@@ -37,110 +33,44 @@ const ColorModeSwitcherSpeedDial: React.FC<ColorModeSwitcherProps> = ({
     end: { opacity: 1, scale: 1 },
   },
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const { mode, setMode, resolvedMode } = useColorMode();
-
-  const [speedDialOpen, setSpeedDialOpen] = useState<boolean>(false);
-
-  const modes = [
-    {
-      mode: 'light' as const,
-      icon: <LightMode />,
-      label: 'Light',
-    },
-    {
-      mode: 'system' as const,
-      icon: <SettingsBrightness />,
-      label: 'System',
-    },
-    {
-      mode: 'dark' as const,
-      icon: <DarkMode />,
-      label: 'Dark',
-    },
-  ];
 
   const handleModeChange = (newMode: ColorMode): void => {
     setMode(newMode);
   };
 
-  const handleSpeedDialClose = (): void => {
-    setSpeedDialOpen(false);
-  };
-
-  const handleSpeedDialToggle = (): void => {
-    setSpeedDialOpen(!speedDialOpen);
-  };
-
-  if (!isMobile) {
-    // Desktop/tablet layout - horizontal stack
-    return (
-      <Stack direction="row" spacing={1}>
-        {modes.map(({ mode: modeValue, icon, label }) => (
-          <Tooltip key={modeValue} title={`${label} mode`}>
-            <IconButton
-              onClick={() => handleModeChange(modeValue)}
-              size="small"
-              sx={{
-                width: itemSize,
-                height: itemSize,
-                border: '2px solid',
-                borderColor:
-                  resolvedMode === modeValue
-                    ? alpha(theme.palette.warning.main, 0.5)
-                    : mode === modeValue
-                    ? theme.palette.primary.main
-                    : theme.palette.divider,
-                bgcolor:
-                  mode === modeValue
-                    ? alpha(theme.palette.primary.main, 0.1)
-                    : 'transparent',
-                color:
-                  mode === modeValue
-                    ? theme.palette.primary.main
-                    : theme.palette.text.secondary,
-                transition: theme.transitions.create(
-                  ['background-color', 'border-color', 'color'],
-                  {
-                    duration: theme.transitions.duration.short,
-                  }
-                ),
-                '&:hover': {
-                  bgcolor:
-                    mode === modeValue
-                      ? alpha(theme.palette.primary.main, 0.15)
-                      : alpha(theme.palette.action.hover, 0.04),
-                },
-              }}
-            >
-              {icon}
-            </IconButton>
-          </Tooltip>
-        ))}
-      </Stack>
-    );
-  }
-
-  // Mobile layout - custom radial SpeedDial
-  const speedDialActions: SpeedDialAction[] = modes.map(
-    ({ mode: modeValue, icon, label }) => ({
-      key: modeValue,
-      icon,
-      tooltip: `${label} mode`,
-      onClick: () => handleModeChange(modeValue),
-      isActive: mode === modeValue,
-      isResolved: resolvedMode === modeValue,
-    })
-  );
+  const modes: ResponsiveAction[] = [
+    {
+      key: 'light',
+      icon: <LightMode />,
+      label: 'Light mode',
+      onClick: () => handleModeChange('light'),
+      isActive: mode === 'light',
+      isResolved: resolvedMode === 'light',
+    },
+    {
+      key: 'system',
+      icon: <SettingsBrightness />,
+      label: 'System mode',
+      onClick: () => handleModeChange('system'),
+      isActive: mode === 'system',
+      isResolved: false,
+    },
+    {
+      key: 'dark',
+      icon: <DarkMode />,
+      label: 'Dark mode',
+      onClick: () => handleModeChange('dark'),
+      isActive: mode === 'dark',
+      isResolved: resolvedMode === 'dark',
+    },
+  ];
 
   return (
-    <RadialSpeedDial
-      isOpen={speedDialOpen}
-      onToggle={handleSpeedDialToggle}
-      onClose={handleSpeedDialClose}
-      actions={speedDialActions}
+    <SpeedDialResponsive
+      actions={modes}
+      direction={direction}
+      spacing={spacing}
       arcStartDegree={arcStartDegree}
       arcEndDegree={arcEndDegree}
       itemSize={itemSize}
@@ -152,5 +82,4 @@ const ColorModeSwitcherSpeedDial: React.FC<ColorModeSwitcherProps> = ({
 };
 
 export default ColorModeSwitcherSpeedDial;
-export { RadialSpeedDial, ColorModeSwitcherSpeedDial };
 export type { ColorModeSwitcherProps };

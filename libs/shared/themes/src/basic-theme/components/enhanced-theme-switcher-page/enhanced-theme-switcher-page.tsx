@@ -17,7 +17,6 @@ import {
   Card,
   CardContent,
   Stack,
-  Tooltip,
   Alert,
   Switch,
   FormControlLabel,
@@ -37,9 +36,6 @@ import {
 import {
   Palette as PaletteIcon,
   Monitor as MonitorIcon,
-  LightMode,
-  DarkMode,
-  SettingsBrightness,
   // Zap,
   Visibility,
   Save,
@@ -591,9 +587,7 @@ export const ThemeCustomizerPage: React.FC = () => {
               </Typography>
             </Box>
           </Box>
-          {/* Mode Toggle */}
           <ColorModeSwitcherSpeedDial />
-          {/* END TST */}
         </Toolbar>
       </AppBar>
 

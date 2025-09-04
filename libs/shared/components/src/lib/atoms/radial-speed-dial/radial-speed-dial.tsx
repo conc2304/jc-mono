@@ -50,9 +50,6 @@ interface ArcPosition {
   y: number;
 }
 
-type ColorMode = 'light' | 'dark' | 'system';
-
-// Custom Radial SpeedDial Component
 const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
   isOpen,
   onToggle,
@@ -234,11 +231,5 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
   );
 };
 
-// export default ColorModeSwitcherSpeedDial;
 export { RadialSpeedDial };
-export type {
-  RadialSpeedDialProps,
-  // ColorModeSwitcherProps,
-  SpeedDialAction,
-  TransitionConfig,
-};
+export type { RadialSpeedDialProps, TransitionConfig, SpeedDialAction };

@@ -60,8 +60,8 @@ export const BootTextPanel: React.FC<BootTextPanelProps> = ({
         onProgress={onProgress}
         onComplete={onComplete}
         textWrapMode={textWrapMode}
-        flex={1} // Fill available space within the panel
-        minHeight={0} // Allow shrinking
+        flex={1}
+        minHeight={0}
         autoScroll={true}
       />
     </AugmentedPanel>
