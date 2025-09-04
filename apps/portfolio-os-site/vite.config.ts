@@ -55,14 +55,10 @@ export default defineConfig(() => ({
             return 'project-data';
           }
 
-          if (id.includes('libs/shared')) return 'shared-lib';
+          // if (id.includes('libs/shared')) return 'shared-lib';
 
           // Skip externalized modules (React, React-DOM, etc.)
           if (id.includes('node_modules')) {
-            if (id.includes('@mui/')) {
-              return 'vendor-mui';
-            }
-
             // Only chunk non-externalized vendor libraries
             if (id.includes('three') || id.includes('THREE')) {
               return 'vendor-three';

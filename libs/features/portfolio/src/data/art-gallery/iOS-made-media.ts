@@ -1,4 +1,4 @@
-import type { ImageMediaData, VideoMediaData } from '@jc/ui-components';
+import { ImageMediaData, VideoMediaData } from '@jc/ui-components';
 import { convertPortfolioGalleryToImageData } from './utils';
 import { R2_PROJECT_DIR_GALLERY } from './constants';
 import { getVideoUrl } from '@jc/utils';
