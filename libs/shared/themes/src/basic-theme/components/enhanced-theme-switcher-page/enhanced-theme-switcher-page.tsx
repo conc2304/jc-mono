@@ -154,17 +154,35 @@ const CyberTypography = styled(Typography)(({ theme }) => ({
   textTransform: 'uppercase',
 }));
 
-const StatusIndicator = styled(Box)<{ color: string }>(({ color }) => ({
-  width: '12px',
-  height: '12px',
-  borderRadius: '50%',
-  backgroundColor: color,
-  animation: 'pulse 2s infinite',
-  '@keyframes pulse': {
-    '0%, 100%': { opacity: 1 },
-    '50%': { opacity: 0.5 },
-  },
-}));
+const StatusIndicator = styled(Box)<{ colors: string[] }>(({ colors }) => {
+  // Pre-calculate the keyframes object
+  const keyframeSteps: Record<string, { backgroundColor: string }> = {};
+
+  colors.forEach((color, index) => {
+    const percentage = `${Math.round((index / colors.length) * 100)}%`;
+    keyframeSteps[percentage] = { backgroundColor: color };
+  });
+
+  // Ensure loop back to first color
+  keyframeSteps['100%'] = { backgroundColor: colors[0] };
+
+  const pulseSec = 2;
+  const rotateSec = colors.length * pulseSec;
+  return {
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    backgroundColor: colors[0],
+    animation: `colorRotate ${rotateSec}s infinite linear, pulse ${pulseSec}s infinite ease-in-out`,
+
+    '@keyframes colorRotate': keyframeSteps,
+
+    '@keyframes pulse': {
+      '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+      '50%': { opacity: 0.7, transform: 'scale(0.9)' },
+    },
+  };
+});
 
 const ColorSwatch = styled(Box)<{ color: string }>(({ color, theme }) => ({
   width: '40px',
@@ -489,7 +507,7 @@ export const ThemeCustomizerPage: React.FC = () => {
                   backgroundColor: `${status.color}20`,
                 }}
               >
-                <StatusIndicator color={status.color} />
+                <StatusIndicator colors={[status.color]} />
                 <Typography variant="caption">{status.text}</Typography>
               </Box>
             ))}
@@ -1586,7 +1604,16 @@ export const ThemeCustomizerPage: React.FC = () => {
                       },
                     }}
                   >
-                    <StatusIndicator color={theme.palette.success.main} />
+                    <StatusIndicator
+                      colors={[
+                        theme.palette.getInvertedMode('primary', true),
+                        theme.palette.getInvertedMode('secondary', true),
+                        theme.palette.getInvertedMode('error', true),
+                        theme.palette.getInvertedMode('warning', true),
+                        theme.palette.getInvertedMode('info', true),
+                        theme.palette.getInvertedMode('success', true),
+                      ]}
+                    />
                     <Typography
                       variant="caption"
                       sx={{ color: 'text.secondary' }}
