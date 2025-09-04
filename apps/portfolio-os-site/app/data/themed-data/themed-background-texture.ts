@@ -19,8 +19,9 @@ export const ThemedBgTexture: Record<string, ThemeTextureConfig> = {
     light: {
       url: path('developer-terminal-bg.jpg'),
       style: {
-        opacity: 0.3,
-        mixBlendMode: 'difference',
+        opacity: 0.5,
+        mixBlendMode: 'darken',
+        filter: 'invert(1)',
       },
     },
     dark: {

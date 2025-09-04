@@ -17,7 +17,7 @@ const DesktopContent = () => {
       sx={(theme) => ({
         width: '100%',
         height: '100%',
-        background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
+        // background: `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.secondary.main}20)`,
         position: 'relative',
         overflow: 'hidden',
         contain: 'layout style paint',

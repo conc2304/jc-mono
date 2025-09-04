@@ -15,15 +15,16 @@ export function App() {
   return (
     <>
       <Box position={'relative'} height={'100%'}>
-        <BackgroundOverlay
+        {/* <BackgroundOverlay
           url={themedBgTexture.url}
           style={{
-            ...themedBgTexture.style,
             backgroundPosition: 'center center',
+            backgroundSize: 'cover',
             zIndex: 0,
+            ...themedBgTexture.style,
           }}
           className="ThemedBackground--overlay"
-        />
+        /> */}
         <Suspense
           fallback={
             <LoadingFallback message="Loading portfolio operating system..." />

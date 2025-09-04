@@ -17,6 +17,7 @@ export const BackgroundOverlay = ({
         width: '100%',
         height: '100%',
         backgroundImage: `url('${url}')`,
+
         ...boxProps.sx,
       }}
     />

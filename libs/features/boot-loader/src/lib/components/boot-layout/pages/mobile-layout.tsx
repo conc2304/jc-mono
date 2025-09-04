@@ -3,8 +3,6 @@ import { Box, Stack } from '@mui/material';
 import { BrowserFrame, EnterButton, HeroText } from '../atoms';
 import { Header, GifContainer } from '../molecules';
 import { ThemePickerPanel } from '../molecules/theme-picker/theme-picker';
-// import { BootTextPanel } from '../panels/boot-text-panel';
-// import { TorusProgressPanel } from '../panels/torus-progress-panel';
 
 const TorusProgressPanel = lazy(
   () => import('../panels/torus-progress-panel/torus-progress-panel')

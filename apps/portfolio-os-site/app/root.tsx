@@ -10,6 +10,7 @@ import {
 import 'augmented-ui/augmented-ui.min.css';
 
 import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
+import { ThemedBgContainer } from './components/themed-bg-container';
 
 export const meta: MetaFunction = () => [
   // Basic meta tags
@@ -424,6 +425,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           themeStorageKey="clyzby-app-theme"
           colorModeStorageKey="clyzby-app-color-mode"
         >
+          <ThemedBgContainer />
           {children}
         </EnhancedThemeProvider>
         <ScrollRestoration />

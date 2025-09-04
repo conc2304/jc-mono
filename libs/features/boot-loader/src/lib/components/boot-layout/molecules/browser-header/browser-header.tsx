@@ -8,13 +8,13 @@ export const BrowserHeader = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   borderBottom: `1px solid ${theme.palette.primary.main}`,
   padding: theme.spacing(1),
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: alpha(theme.palette.background.default, 0.28),
 }));
 
 export const AddressBar = styled(Box)(({ theme }) => ({
   flex: 1,
   margin: `0 ${theme.spacing(2)}`,
-  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+  backgroundColor: alpha(theme.palette.background.paper, 0.2),
   border: `1px solid ${theme.palette.primary.main}`,
   padding: theme.spacing(0.5, 1.5),
   // fontSize: '0.75rem',

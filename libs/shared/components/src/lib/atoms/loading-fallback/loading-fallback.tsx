@@ -15,7 +15,6 @@ export const LoadingFallback = ({ message = 'Loading...' }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: theme.palette.background.default,
         zIndex: theme.zIndex.modal,
       }}
     >

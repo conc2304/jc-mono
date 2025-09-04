@@ -7,7 +7,7 @@ export const Footer = () => {
     <Box
       sx={(theme) => ({
         borderTop: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: alpha(theme.palette.background.paper, 0.5),
       })}
     >
       <DiagonalLines
