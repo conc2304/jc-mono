@@ -14,7 +14,7 @@ import { useTilePlacement } from './use-tile-placement';
 import { BaseFileSystemItem } from '@jc/file-system';
 import { TileComponent } from './tile-component';
 import { RestartAlt, Shuffle } from '@mui/icons-material';
-import { ColorModeSwitcher } from '@jc/themes';
+import { ColorModeSwitcher, ColorModeSwitcherSpeedDial } from '@jc/themes';
 
 export const TileGrid = ({
   gridTiles = [],
@@ -306,11 +306,13 @@ export const TileGrid = ({
           )}
         </Box>
 
-        {!isSm && footer && (
+        {footer && (
           <Box
             sx={{
               position: 'absolute',
-              bottom: isMd ? '0' : '0.5rem',
+              p: 1,
+
+              bottom: '5px',
               left: '50%',
               right: '50%',
               transform: 'translateX(-50%)',
@@ -354,10 +356,13 @@ export const TileGrid = ({
             </Box>
 
             {/* Footer */}
-            {footer && <Box>{footer}</Box>}
+            {/* {footer && <Box>{footer}</Box>} */}
 
             <Box className="TileGrid--color-mode-switcher-wrapper">
-              <ColorModeSwitcher />
+              <ColorModeSwitcherSpeedDial
+                arcStartDegree={270}
+                arcEndDegree={360}
+              />
             </Box>
           </Box>
         )}
