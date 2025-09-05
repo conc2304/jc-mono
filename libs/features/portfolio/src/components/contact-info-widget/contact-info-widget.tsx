@@ -1,5 +1,11 @@
-import { FaLinkedin, FaGithub, FaInstagram, FaYoutube } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
+import {
+  FaLinkedin,
+  FaGithub,
+  FaInstagram,
+  FaYoutube,
+  FaRegEnvelope,
+} from 'react-icons/fa';
+// import { MdEmail } from 'react-icons/md';
 import { Box, useTheme } from '@mui/material';
 import { ResponsiveAction, SpeedDialResponsive } from '@jc/ui-components';
 import { RiContactsFill } from 'react-icons/ri';
@@ -11,6 +17,7 @@ export const ContactInfoWidget: React.FC = () => {
 
   const theme = useTheme();
   const iconProps = {
+    backgroundColor: 'red',
     color: theme.palette.getInvertedMode('info'),
     size: '1.5rem',
     width: '40px',
@@ -19,7 +26,7 @@ export const ContactInfoWidget: React.FC = () => {
   const connectActions: ResponsiveAction[] = [
     {
       key: 'email',
-      icon: <MdEmail {...iconProps} />,
+      icon: <FaRegEnvelope {...iconProps} />,
       label: 'Email me',
       onClick: () => handleLinkClick('mailto:jose.conchello@gmail.com'),
     },
