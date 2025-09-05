@@ -3,6 +3,7 @@ import {
   Container,
   Grid,
   IconButton,
+  Tooltip,
   alpha,
   useMediaQuery,
   useTheme,
@@ -273,26 +274,30 @@ export const TileGrid = ({
                   transform: 'translateX(-50%)',
                 }}
               >
-                <IconButton
-                  color="secondary"
-                  onClick={shuffleTiles}
-                  data-augmented-ui="tr-clip"
-                  sx={{
-                    '--aug-tr': '0.75rem',
-                  }}
-                >
-                  <Shuffle />
-                </IconButton>
-                <IconButton
-                  color="secondary"
-                  onClick={resetTiles}
-                  data-augmented-ui="tr-clip"
-                  sx={{
-                    '--aug-tr': '0.75rem',
-                  }}
-                >
-                  <RestartAlt />
-                </IconButton>
+                <Tooltip title="Shuffle Tiles">
+                  <IconButton
+                    color="secondary"
+                    onClick={shuffleTiles}
+                    data-augmented-ui="tr-clip"
+                    sx={{
+                      '--aug-tr': '0.75rem',
+                    }}
+                  >
+                    <Shuffle />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Reset Tiles">
+                  <IconButton
+                    color="secondary"
+                    onClick={resetTiles}
+                    data-augmented-ui="tr-clip"
+                    sx={{
+                      '--aug-tr': '0.75rem',
+                    }}
+                  >
+                    <RestartAlt />
+                  </IconButton>
+                </Tooltip>
               </Box>
 
               <Box
