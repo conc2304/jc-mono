@@ -184,7 +184,17 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
                 '&:hover': {
                   bgcolor: action.isActive
                     ? alpha(theme.palette.secondary.main, 0.2)
-                    : alpha(theme.palette.action.hover, 0.08),
+                    : alpha(theme.palette.action.hover, 0.5),
+
+                  color: action.isActive
+                    ? theme.palette.text.secondary
+                    : theme.palette.secondary.contrastText,
+
+                  '& svg': {
+                    // color: 'red',
+                    color: 'inherit !important',
+                  },
+
                   transform: isOpen
                     ? `translate(-50%, -50%) translate(${position.x}px, ${
                         position.y
@@ -213,6 +223,7 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
           border: '1px solid',
           borderColor: theme.palette.secondary.main,
           bgcolor: alpha(theme.palette.secondary.main, 0.2),
+          // color: isOpen ? 'blue' : 'red',
           color: theme.palette.secondary.contrastText,
           zIndex: theme.zIndex.modal + 1,
           boxShadow: theme.shadows[6],
@@ -227,6 +238,18 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
           '&:hover': {
             bgcolor: theme.palette.getInvertedMode('secondary'),
             boxShadow: theme.shadows[8],
+            '& svg': {
+              // fill: theme.palette.secondary.contrastText,
+              // stroke: theme.palette.secondary.contrastText,
+            },
+          },
+
+          '& svg': {
+            color: 'inherit',
+
+            // fill: theme.palette.secondary.main,
+            // strokeWidth: 0,
+            // stroke: theme.palette.secondary.main,
           },
 
           '--aug-tl': isOpen ? '0.75rem' : '0rem',

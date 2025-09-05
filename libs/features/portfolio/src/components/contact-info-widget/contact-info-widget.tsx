@@ -19,6 +19,7 @@ export const ContactInfoWidget: React.FC = () => {
   const iconProps = {
     backgroundColor: 'red',
     color: theme.palette.getInvertedMode('info'),
+    // color: 'red',
     size: '1.5rem',
     width: '40px',
   };
@@ -75,12 +76,7 @@ export const ContactInfoWidget: React.FC = () => {
             },
           },
           speedDial: {
-            mainIcon: (
-              <RiContactsFill
-                {...iconProps}
-                color={theme.palette.background.paper}
-              />
-            ),
+            mainIcon: <RiContactsFill {...iconProps} color="inherit" />,
           },
         }}
         actions={connectActions}

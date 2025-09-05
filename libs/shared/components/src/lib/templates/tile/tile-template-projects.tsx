@@ -26,8 +26,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
   const projects: ProjectData[] = tileData || [];
   const currentProject = projects[currentIndex];
 
-  const { relativePath, detailedCaption, ...imageProps } =
-    currentProject.media.thumbnail;
+  const { detailedCaption, ...imageProps } = currentProject.media.thumbnail;
   return (
     <Box
       className="TileTemplate--projects"
@@ -40,7 +39,6 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
         <ContentContainer
           sx={{
             justifyContent: isMd ? 'flex-start' : 'center',
-            border: '2px solid red',
           }}
         >
           <Box
