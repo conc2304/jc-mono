@@ -26,7 +26,7 @@ export const EnterButton = ({ fontSize, ...buttonProps }: EnterButtonProps) => (
       flexShrink: 0,
       height: '100%',
       '&[data-augmented-ui]': {
-        '--aug-border-bg': `${bgStyle} !important`,
+        // '--aug-border-bg': `${bgStyle} !important`,
         '--aug-border-all': '2px',
       },
     }}
