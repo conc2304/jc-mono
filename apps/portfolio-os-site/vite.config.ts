@@ -19,17 +19,23 @@ export default defineConfig(() => ({
   },
   plugins: [
     !process.env.VITEST && reactRouter(),
-    process.env.ANALYZE == 'true' &&
-      visualizer({
-        filename: 'dist/stats.html',
-        open: true,
-        gzipSize: true,
-        brotliSize: true,
-      }),
+    // process.env.ANALYZE == 'true' &&
+    //   visualizer({
+    //     filename: 'dist/stats.html',
+    //     open: true,
+    //     gzipSize: true,
+    //     brotliSize: true,
+    //   }),
     process.env.ANALYZE == 'true' &&
       analyzer({
         analyzerMode: 'server',
         openAnalyzer: true,
+      }),
+
+    process.env.ANALYZE === 'true' &&
+      analyzer({
+        analyzerMode: 'json', // Outputs JSON report
+        fileName: './dist/bundle-report.json',
       }),
   ],
   // Uncomment this if you are using workers.

@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { useResizeObserver } from './use-resize-observer';
 import { Property } from 'csstype';
-import { wrap } from '../utils';
+import { wrap } from './utils';
 
 // Generic radar data types
 export type RadarDataEntry = {

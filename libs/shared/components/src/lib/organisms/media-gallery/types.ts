@@ -1,4 +1,4 @@
-export interface ImageMediaData {
+interface ImageMediaData {
   src: string;
   srcSet?: string;
   sizes?: string;
@@ -7,7 +7,7 @@ export interface ImageMediaData {
   detailedCaption?: string; // For longer captions in modal
 }
 
-export interface VideoMediaData {
+interface VideoMediaData {
   url: string;
   title?: string;
   type?: 'demo' | 'process' | 'final' | 'inspiration';
@@ -16,8 +16,10 @@ export interface VideoMediaData {
   detailedCaption?: string; // For longer captions in modal
 }
 
-export interface MediaItem {
+interface MediaItem {
   type: 'image' | 'video';
   data: ImageMediaData | VideoMediaData;
   index: number;
 }
+
+export type { ImageMediaData, VideoMediaData, MediaItem };
