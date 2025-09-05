@@ -3,16 +3,19 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/features/desktop-OS"
+      "path": "../../libs/shared/utils"
     },
     {
       "path": "../../libs/shared/file-system"
     },
     {
+      "path": "../../libs/shared/components"
+    },
+    {
       "path": "../../libs/features/portfolio"
     },
     {
-      "path": "../../libs/shared/components"
+      "path": "../../libs/features/desktop-OS"
     },
     {
       "path": "../../libs/shared/themes"

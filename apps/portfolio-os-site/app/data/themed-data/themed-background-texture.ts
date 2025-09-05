@@ -1,8 +1,13 @@
+import { getImageUrl } from '@jc/utils';
 import { CSSProperties } from '@mui/material';
 
 // Themed character sets for text scrambling effects
-const path = (fileName: string) => `/textures/themed/${fileName}`;
-
+const path = (fileName: string) => {
+  const relativePath = `textures/themed/${fileName}`;
+  const imgUrl = getImageUrl(relativePath, 'full');
+  return imgUrl;
+};
+//
 interface ThemeTextureConfig {
   light: {
     url: string;

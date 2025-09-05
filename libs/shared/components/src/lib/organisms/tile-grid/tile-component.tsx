@@ -26,13 +26,14 @@ import {
 import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton } from '../../atoms';
+import { getImageUrl } from '@jc/utils';
 
 const textureImages = [
-  'scratched-glass.png',
-  'scratched-glass-with-scuffs.png',
-  'scratched-glass-minimal.png',
-  'scratched-glass-intense-medium-bottom-distressed.png',
-  'scratched-glass-intense-medium.png',
+  'scratched-glass.jpg',
+  'scratched-glass-with-scuffs.jpg',
+  'scratched-glass-minimal.jpg',
+  'scratched-glass-intense-medium-bottom-distressed.jpg',
+  'scratched-glass-intense-medium.jpg',
 ];
 
 const getRandomImgFn = () => Math.floor(Math.random() * textureImages.length);
@@ -122,7 +123,7 @@ export const TileComponent = memo(
       () => textureImages[getRandomImgFn()],
       []
     );
-    const bgImgPath = `/textures/ui/${tileBackgroundImg}`;
+    const bgImgPath = getImageUrl(`textures/ui/${tileBackgroundImg}`, 'full');
 
     return (
       <TileContainer

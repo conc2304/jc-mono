@@ -7,6 +7,7 @@ import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
 import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from '@jc/utils';
 
 export const DesktopPageNotFound404 = ({
   onHomeClick,
@@ -130,7 +131,10 @@ export const DesktopPageNotFound404 = ({
         <Box
           // Upper Panel Background Texture
           sx={{
-            backgroundImage: `url('/textures/ui/stone-texture.jpg')`,
+            backgroundImage: `url(${getImageUrl(
+              'textures/ui/stone-texture.jpg',
+              'full'
+            )})`,
             backgroundPosition: '0 0',
             position: 'absolute',
             top: 0,
@@ -339,7 +343,11 @@ export const DesktopPageNotFound404 = ({
           sx={{
             position: 'absolute',
             ...bgOverlayProps,
-            backgroundImage: `url('/textures/ui/old-black-fabric-material.jpg')`,
+            backgroundImage: `url(${getImageUrl(
+              'textures/ui/old-black-fabric-material.jpg',
+              'full'
+            )})`,
+
             backgroundPosition: '0 0%',
             backgroundSize: '100%',
             opacity: 0.5,
@@ -374,7 +382,10 @@ export const DesktopPageNotFound404 = ({
             className="bottom-inner-left-bg--bg-overlay"
             sx={(theme) => ({
               ...bgOverlayProps,
-              background: `url('/textures/ui/grunge-dirty-concrete-texture-background.jpg')`,
+              backgroundImage: `url(${getImageUrl(
+                'textures/ui/grunge-dirty-concrete-texture-background.jpg',
+                'full'
+              )})`,
               opacity: 0.5,
               backgroundSize: 'cover',
               mixBlendMode: 'overlay',
@@ -403,7 +414,10 @@ export const DesktopPageNotFound404 = ({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url('/textures/ui/scratched-glass-with-scuffs.jpg')`,
+              backgroundImage: `url(${getImageUrl(
+                'textures/ui/scratched-glass-with-scuffs.jpg',
+                'full'
+              )})`,
               backgroundBlendMode: 'screen',
               opacity: 0.25,
               top: 0,

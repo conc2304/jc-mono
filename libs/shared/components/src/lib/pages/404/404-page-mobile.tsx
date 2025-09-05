@@ -6,6 +6,7 @@ import { MinimalThemeSwitcher } from '@jc/themes';
 import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
+import { getImageUrl } from '@jc/utils';
 
 export const MobilePageNotFound404 = ({
   onHomeClick,
@@ -40,7 +41,10 @@ export const MobilePageNotFound404 = ({
         width: '100%',
         padding: 2,
         bgcolor: theme.palette.background.paper,
-        backgroundImage: `url('/textures/ui/old-black-fabric-material.jpg')`,
+        backgroundImage: `url(${getImageUrl(
+          'textures/ui/old-black-fabric-material.jpg',
+          'full'
+        )})`,
         backgroundPosition: '0% 0%',
         backgroundSize: '100%',
         justifyContent: 'space-between',

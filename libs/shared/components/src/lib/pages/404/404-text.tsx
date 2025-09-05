@@ -1,6 +1,6 @@
 import { Box, Typography, TypographyProps, alpha } from '@mui/material';
 import { GlitchText, ScrambleText } from '../../atoms';
-import { ensureContrast } from '@jc/utils';
+import { ensureContrast, getImageUrl } from '@jc/utils';
 
 export const Text404 = () => {
   return (
@@ -34,7 +34,10 @@ export const Text404 = () => {
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url('/textures/ui/scratched-glass-with-scuffs.jpg')`,
+              backgroundImage: `url(${getImageUrl(
+                'textures/ui/scratched-glass-with-scuffs.jpg',
+                'full'
+              )})`,
               backgroundBlendMode: 'screen',
               backgroundSize: 'cover',
               opacity: 0.15,
@@ -114,7 +117,10 @@ export const Text404 = () => {
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url('/textures/ui/scratched-glass-with-scuffs.jpg')`,
+              backgroundImage: `url(${getImageUrl(
+                'textures/ui/scratched-glass-with-scuffs.jpg',
+                'full'
+              )})`,
               backgroundBlendMode: 'screen',
               backgroundSize: 'cover',
               opacity: 0.15,
