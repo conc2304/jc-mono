@@ -113,12 +113,14 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
 
   return (
     <Box
+      className="RadialSpeedDial--root"
       sx={{
         position: 'relative',
       }}
     >
       {/* Backdrop */}
       <Backdrop
+        className="RadialSpeedDial--backdrop"
         open={isOpen}
         onClick={onClose}
         sx={{
@@ -143,6 +145,7 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
         return (
           <Tooltip key={action.key} title={action.tooltip} placement="top">
             <IconButton
+              className="RadialSpeedDial--action-btn"
               onClick={() => {
                 action.onClick();
                 onClose();
@@ -165,22 +168,22 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
                   delay: delay,
                 }),
                 bgcolor: action.isActive
-                  ? alpha(theme.palette.primary.main, 0.7)
+                  ? alpha(theme.palette.secondary.main, 0.7)
                   : theme.palette.background.paper,
                 border: `2px solid ${
                   action.isResolved
                     ? theme.palette.warning.main
                     : action.isActive
-                    ? theme.palette.primary.main
+                    ? theme.palette.secondary.main
                     : theme.palette.divider
                 }`,
                 color: action.isActive
-                  ? theme.palette.primary.contrastText
+                  ? theme.palette.secondary.contrastText
                   : theme.palette.text.secondary,
                 boxShadow: theme.shadows[4],
                 '&:hover': {
                   bgcolor: action.isActive
-                    ? alpha(theme.palette.primary.main, 0.2)
+                    ? alpha(theme.palette.secondary.main, 0.2)
                     : alpha(theme.palette.action.hover, 0.08),
                   transform: isOpen
                     ? `translate(-50%, -50%) translate(${position.x}px, ${
@@ -201,13 +204,16 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
 
       {/* Main Button */}
       <IconButton
+        className="RadialSpeedDial--main-btn"
         onClick={onToggle}
         sx={{
           position: 'relative',
           width: mainButtonSize,
           height: mainButtonSize,
-          bgcolor: theme.palette.primary.main,
-          color: theme.palette.primary.contrastText,
+          border: '1px solid',
+          borderColor: theme.palette.secondary.main,
+          bgcolor: alpha(theme.palette.secondary.main, 0.2),
+          color: theme.palette.secondary.contrastText,
           zIndex: theme.zIndex.modal + 1,
           boxShadow: theme.shadows[6],
           transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
@@ -219,7 +225,7 @@ const RadialSpeedDial: React.FC<RadialSpeedDialProps> = ({
             }
           ),
           '&:hover': {
-            bgcolor: theme.palette.primary.dark,
+            bgcolor: theme.palette.getInvertedMode('secondary'),
             boxShadow: theme.shadows[8],
           },
 

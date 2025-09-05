@@ -1,6 +1,7 @@
 import {
   Box,
   Container,
+  Grid,
   IconButton,
   alpha,
   useMediaQuery,
@@ -165,7 +166,6 @@ export const TileGrid = ({
         maxWidth="xl"
         sx={{
           height: '100%',
-          // px: breakpoint === 'mobile' ? 1 : undefined,
           p: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -181,11 +181,13 @@ export const TileGrid = ({
             '--aug-b': config.containerPadding + 'px',
             '--aug-br': config.containerPadding / 2 + 'px',
             '--aug-bl': config.containerPadding / 2 + 'px',
+            '--aug-br-extend2': isMd ? '12.5%' : undefined,
+            '--aug-bl-extend1': isMd ? '12.5%' : undefined,
             '--aug-tl': config.containerPadding / 2 + 'px',
             '--aug-tl-extend2': '12.5%',
             '--aug-tr-extend1': '12.5%',
             '--aug-tr': config.containerPadding / 2 + 'px',
-            '--aug-b-extend1': '50%',
+            '--aug-b-extend1': isSm ? '25%' : '50%',
 
             position: 'relative',
             width: '100%',
@@ -257,7 +259,7 @@ export const TileGrid = ({
           </Box>
 
           {/* Color Mode Switcher */}
-          {!isSm && (
+          {!isMd && (
             <>
               {/* Tile Placement Controls */}
               <Box
@@ -265,7 +267,9 @@ export const TileGrid = ({
                 sx={{
                   position: 'absolute',
                   bottom: '5px',
-                  left: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`, // matches/compliments the spacing of the augmented bottom border
+                  left: `calc( ((25% - ${config.containerPadding}px) + ${
+                    config.containerPadding * 2
+                  }px) / 2 )`, // matches/compliments the spacing of the augmented bottom border to center in the left divot
                   transform: 'translateX(-50%)',
                 }}
               >
@@ -294,10 +298,13 @@ export const TileGrid = ({
               <Box
                 className="TileGrid--color-mode-switcher-wrapper"
                 sx={{
+                  zIndex: 0,
                   position: 'absolute',
                   bottom: '5px',
-                  right: `calc(((${config.containerPadding * 2}px) + 25%) / 2)`, // matches/compliments the spacing of the augmented bottom border
-                  transform: 'translateX(60%)',
+                  right: `calc( ((25% - ${config.containerPadding}px) + ${
+                    config.containerPadding * 2
+                  }px) / 2 )`, // matches/compliments the spacing of the augmented bottom border to center in the right divot
+                  transform: 'translate(50%, 0%)',
                 }}
               >
                 <ColorModeSwitcher />
@@ -306,13 +313,13 @@ export const TileGrid = ({
           )}
         </Box>
 
-        {footer && (
+        {!isMd && footer && (
           <Box
             sx={{
               position: 'absolute',
-              p: 1,
-
-              bottom: '5px',
+              // p: 1,
+              bottom: 0,
+              // bottom: '5px',
               left: '50%',
               right: '50%',
               transform: 'translateX(-50%)',
@@ -322,48 +329,69 @@ export const TileGrid = ({
           </Box>
         )}
 
-        {isSm && (
-          <Box
-            width="100%"
-            position={'relative'}
-            flexShrink={0}
-            display="flex"
-            p={1}
-            justifyContent={'space-between'}
-          >
-            {/* Tile Placement Controls */}
-            <Box className="TileGrid--control-btns">
-              <IconButton
-                color="secondary"
-                onClick={shuffleTiles}
-                data-augmented-ui="tr-clip"
-                sx={{
-                  '--aug-tr': '0.75rem',
-                }}
-              >
-                <Shuffle />
-              </IconButton>
-              <IconButton
-                color="secondary"
-                onClick={resetTiles}
-                data-augmented-ui="tr-clip"
-                sx={{
-                  '--aug-tr': '0.75rem',
-                }}
-              >
-                <RestartAlt />
-              </IconButton>
-            </Box>
+        {isMd && (
+          <Box height={isSm ? 40 : 20}>
+            <Grid
+              container
+              sx={{
+                width: '100%',
+                position: 'absolute',
+                height: '60px',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                flexShrink: 0,
+                p: 1,
+                zIndex: 0,
+                alignItems: 'center',
+              }}
+              columns={3}
+            >
+              {/* Tile Placement Controls */}
+              <Grid size={{ xs: 1 }}>
+                <Box className="TileGrid--control-btns">
+                  <IconButton
+                    color="secondary"
+                    onClick={shuffleTiles}
+                    data-augmented-ui="tr-clip"
+                    sx={{
+                      '--aug-tr': '0.75rem',
+                    }}
+                  >
+                    <Shuffle />
+                  </IconButton>
+                  <IconButton
+                    color="secondary"
+                    onClick={resetTiles}
+                    data-augmented-ui="tr-clip"
+                    sx={{
+                      '--aug-tr': '0.75rem',
+                    }}
+                  >
+                    <RestartAlt />
+                  </IconButton>
+                </Box>
+              </Grid>
 
-            {/* Footer */}
-            {/* {footer && <Box>{footer}</Box>} */}
+              <Grid
+                size={{ xs: 1 }}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              >
+                {footer}
+              </Grid>
 
-            <Box className="TileGrid--color-mode-switcher-wrapper">
-              <ColorModeSwitcherSpeedDial
-                arcStartDegree={270}
-                arcEndDegree={360}
-              />
-            </Box>
+              <Grid
+                size={{ xs: 1 }}
+                sx={{ display: 'flex', justifyContent: 'flex-end' }}
+              >
+                <Box className="TileGrid--color-mode-switcher-wrapper">
+                  <ColorModeSwitcherSpeedDial
+                    arcStartDegree={270}
+                    arcEndDegree={360}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
           </Box>
         )}
       </Container>
