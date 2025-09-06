@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Box,
   Typography,
@@ -13,204 +13,217 @@ import { ProjectData } from '../project';
 import { DiagonalLines, ImageContainer } from '../../atoms';
 import { Star } from '@mui/icons-material';
 
-export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> = ({
-  name,
-  children,
-  currentIndex = 0,
-  isLarge,
-  tileData,
-}) => {
-  const theme = useTheme();
-  const isMd = useMediaQuery(theme.breakpoints.up('sm'));
-  const isLg = useMediaQuery(theme.breakpoints.up('md'));
-  const projects: ProjectData[] = tileData || [];
-  const currentProject = projects[currentIndex];
+export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
+  memo(({ name, children, currentIndex = 0, isLarge, tileData }) => {
+    const theme = useTheme();
+    const isMd = useMediaQuery(theme.breakpoints.up('sm'));
+    const isLg = useMediaQuery(theme.breakpoints.up('md'));
+    const projects: ProjectData[] = tileData || [];
+    const currentProject = projects[currentIndex];
 
-  const { detailedCaption, ...imageProps } = currentProject.media.thumbnail;
-  return (
-    <Box
-      className="TileTemplate--projects"
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      width="100%"
-    >
-      {currentProject && isLarge && (
-        <ContentContainer
-          sx={{
-            justifyContent: isMd ? 'flex-start' : 'center',
-          }}
-        >
-          <Box
-            className="ProjectTile--content-left"
+    return (
+      <Box
+        className="TileTemplate--projects"
+        display="flex"
+        flexDirection="column"
+        height="100%"
+        width="100%"
+      >
+        {currentProject && isLarge && (
+          <ContentContainer
             sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              alignContent: isMd ? 'flex-start' : 'center',
-              pl: isMd ? 4 : undefined,
-              justifyContent: 'space-evenly',
-              flexWrap: 'wrap',
+              justifyContent: isMd ? 'flex-start' : 'center',
             }}
           >
-            {/* Image Flex Item */}
             <Box
-              data-augmented-ui="tl-clip br-clip border"
+              className="ProjectTile--content-left"
               sx={{
-                '--aug-border-bg': theme.palette.action.focus,
-                '--aug-border-all': '2px',
-                flexGrow: 1,
-                maxWidth: '60%',
-                maxHeight: '40%',
-                mx: isMd ? 'initial' : 'auto',
-              }}
-            >
-              <ImageContainer
-                className="ProjectImageContainer--root"
-                {...imageProps}
-                showSkeletonDuration={0}
-                lazy={false}
-                sx={{
-                  height: '100%',
-                  '*': { objectFit: 'fill' },
-                }}
-              />
-            </Box>
-
-            {/* Text Flex Item */}
-            <Box display={'flex'} position={'relative'} sx={{}}>
-              {isMd && (
-                <DiagonalLines
-                  lineThickness={4}
-                  height="4rem"
-                  width="4rem"
-                  direction="diagonal-alt"
-                  color={theme.palette.text.primary}
-                  mr={2}
-                />
-              )}
-
-              <Stack
-                textAlign={isMd ? 'left' : 'center'}
-                position="relative"
-                flexGrow={1}
-                justifyContent="space-between"
-              >
-                <Typography
-                  variant="h3"
-                  color="textPrimary"
-                  fontWeight="medium"
-                  noWrap
-                >
-                  {currentProject.projectName}
-                  {currentProject.metadata?.featured && (
-                    <Star
-                      sx={{
-                        pt: 0.25,
-                        ml: 1,
-                        color: 'warning.main',
-                        fontSize: 12,
-                      }}
-                      fill="currentColor"
-                    />
-                  )}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="textPrimary"
-                  fontWeight="medium"
-                  noWrap
-                >
-                  {currentProject.projectSubtitle}
-                </Typography>
-              </Stack>
-            </Box>
-          </Box>
-
-          {isMd && (
-            <Box
-              className="ProjectTile--content-right"
-              flexShrink={0}
-              sx={{
-                maxHeight: '100%',
-                width: '120px',
-                height: '100%',
                 position: 'relative',
-                bgcolor: alpha(theme.palette.action.active, 0.5),
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                alignContent: isMd ? 'flex-start' : 'center',
+                pl: isMd ? 4 : undefined,
+                justifyContent: 'space-evenly',
+                flexWrap: 'wrap',
+                flexGrow: 1,
               }}
             >
+              {/* Image Container - Render all images, show current one */}
               <Box
+                data-augmented-ui="tl-clip br-clip border"
                 sx={{
-                  position: 'absolute',
-                  right: '50%',
-                  top: '50%',
-                  bottom: '50%',
-                  left: '50%',
-                  p: 0,
-                  zIndex: 0,
-                  overflow: 'visible',
+                  '--aug-border-bg': theme.palette.action.focus,
+                  '--aug-border-all': '2px',
+                  flexGrow: 1,
+                  width: '100%',
+                  maxWidth: '60%',
+                  maxHeight: '40%',
+                  mx: isMd ? 'initial' : 'auto',
+                  position: 'relative',
                 }}
               >
-                <Typography
-                  variant="display"
-                  sx={{
-                    lineHeight: 1.5,
-                    textOverflow: 'clip',
-                    fontSize: isLg
-                      ? '4rem !important'
-                      : isMd
-                      ? '3rem !important'
-                      : '2.5rem !important',
-                    textAlign: 'center',
-                    pb: 2,
+                {projects.map((project, index) => {
+                  if (!project.media?.thumbnail) return null;
 
+                  const { detailedCaption, ...imageProps } =
+                    project.media.thumbnail;
+
+                  return (
+                    <ImageContainer
+                      key={`project-image-${index}`}
+                      className="ProjectImageContainer--root"
+                      {...imageProps}
+                      showSkeletonDuration={0}
+                      lazy={false}
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        height: '100%',
+                        width: '100%',
+                        opacity: index === currentIndex ? 1 : 0,
+                        transition: 'opacity 0.3s ease-in-out',
+                        '*': { objectFit: 'fill' },
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+
+              {/* Text Content */}
+              <Box display={'flex'} position={'relative'}>
+                {isMd && (
+                  <DiagonalLines
+                    lineThickness={4}
+                    height="4rem"
+                    width="4rem"
+                    direction="diagonal-alt"
+                    color={theme.palette.text.primary}
+                    mr={2}
+                  />
+                )}
+
+                <Stack
+                  textAlign={isMd ? 'left' : 'center'}
+                  position="relative"
+                  flexGrow={1}
+                  justifyContent="space-between"
+                >
+                  <Typography
+                    variant="h3"
+                    color="textPrimary"
+                    fontWeight="medium"
+                    noWrap
+                  >
+                    {currentProject.projectName}
+                    {currentProject.metadata?.featured && (
+                      <Star
+                        sx={{
+                          pt: 0.25,
+                          ml: 1,
+                          color: 'warning.main',
+                          fontSize: 12,
+                        }}
+                        fill="currentColor"
+                      />
+                    )}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    color="textPrimary"
+                    fontWeight="medium"
+                    noWrap
+                  >
+                    {currentProject.projectSubtitle}
+                  </Typography>
+                </Stack>
+              </Box>
+            </Box>
+
+            {isMd && (
+              <Box
+                className="ProjectTile--content-right"
+                flexShrink={0}
+                sx={{
+                  maxHeight: '100%',
+                  width: '120px',
+                  height: '100%',
+                  position: 'relative',
+                  bgcolor: alpha(theme.palette.action.active, 0.5),
+                }}
+              >
+                <Box
+                  sx={{
                     position: 'absolute',
-                    transform: 'translate(-50%, -50%) rotate(-90deg)',
+                    right: '50%',
+                    top: '50%',
+                    bottom: '50%',
+                    left: '50%',
+                    p: 0,
+                    zIndex: 0,
+                    overflow: 'visible',
                   }}
                 >
-                  {(
-                    currentProject.basics.category || currentProject.basics.type
-                  ).slice(0, 4)}
-                </Typography>
+                  <Typography
+                    variant="display"
+                    sx={{
+                      lineHeight: 1.5,
+                      textOverflow: 'clip',
+                      fontSize: isLg
+                        ? '4rem !important'
+                        : isMd
+                        ? '3rem !important'
+                        : '2.5rem !important',
+                      textAlign: 'center',
+                      pb: 2,
+                      position: 'absolute',
+                      transform: 'translate(-50%, -50%) rotate(-90deg)',
+                    }}
+                  >
+                    {(
+                      currentProject.basics.category ||
+                      currentProject.basics.type
+                    ).slice(0, 4)}
+                  </Typography>
+                </Box>
+                <DiagonalLines
+                  width="20px"
+                  height="100%"
+                  lineThickness={1}
+                  spacing={10}
+                  direction="diagonal-alt"
+                  color={alpha(theme.palette.action.active, 0.5)}
+                  sx={{
+                    position: 'absolute',
+                    left: '-20px',
+                    top: 0,
+                    bottom: 0,
+                    border: '3px solid',
+                    borderColor: alpha(theme.palette.action.active, 0.5),
+                  }}
+                />
               </Box>
-              <DiagonalLines
-                width="20px"
-                height="100%"
-                lineThickness={1}
-                spacing={10}
-                direction="diagonal-alt"
-                color={alpha(theme.palette.action.active, 0.5)}
-                sx={{
-                  position: 'absolute',
-                  left: '-20px',
-                  top: 0,
-                  bottom: 0,
-                  border: '3px solid',
-                  borderColor: alpha(theme.palette.action.active, 0.5),
-                }}
-              />
-            </Box>
-          )}
-        </ContentContainer>
-      )}
+            )}
+          </ContentContainer>
+        )}
 
-      {!isLarge && (
-        <Box textAlign="center">
-          <Typography variant="caption" color="white" fontWeight="bold">
-            {name}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{
-              color: alpha(theme.palette.common.white, 0.8),
-              display: 'block',
-            }}
-          >
-            {projects.length} projects loaded
-          </Typography>
-        </Box>
-      )}
-    </Box>
-  );
-};
+        {!isLarge && (
+          <Box textAlign="center">
+            <Typography variant="caption" color="white" fontWeight="bold">
+              {name}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: alpha(theme.palette.common.white, 0.8),
+                display: 'block',
+              }}
+            >
+              {projects.length} projects loaded
+            </Typography>
+          </Box>
+        )}
+      </Box>
+    );
+  });

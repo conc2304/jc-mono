@@ -17,9 +17,7 @@ export const ContactInfoWidget: React.FC = () => {
 
   const theme = useTheme();
   const iconProps = {
-    backgroundColor: 'red',
     color: theme.palette.getInvertedMode('info'),
-    // color: 'red',
     size: '1.5rem',
     width: '40px',
   };

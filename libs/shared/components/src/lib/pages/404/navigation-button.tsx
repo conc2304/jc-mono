@@ -1,7 +1,7 @@
 import { Box, Stack, useTheme, keyframes } from '@mui/material';
 import { DiagonalLines } from '../../atoms';
 import { HomeFilled } from '@mui/icons-material';
-import { ensureContrast } from '@jc/utils';
+import { ensureContrast, getImageUrl } from '@jc/utils';
 import { useState } from 'react';
 import { useMediaQuery } from '@mui/system';
 import { HomeTextBox } from './home-text-box';
@@ -149,7 +149,10 @@ export const NavigationButtons = ({
             width: '100%',
             height: '100%',
             position: 'absolute',
-            backgroundImage: `url('/textures/ui/scratched-glass-with-scuffs.jpg')`,
+            backgroundImage: `url(${getImageUrl(
+              'textures/ui/scratched-glass-with-scuffs.jpg',
+              'full'
+            )})`,
             backgroundBlendMode: 'screen',
             opacity: 0.25,
             top: 0,

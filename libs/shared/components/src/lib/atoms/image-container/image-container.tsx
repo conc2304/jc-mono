@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Error } from '@mui/icons-material';
+import { getImageUrl } from '@jc/utils';
 
 // Utility function to find the closest scrollable parent
 const findScrollableParent = (element: Element | null): Element | null => {
@@ -121,6 +122,8 @@ export const ImageContainer = ({
     [shouldLoad, src]
   );
 
+  const skeletonImageUrl = getImageUrl('textures/ui/static.jpg', 'full');
+
   useEffect(() => {
     if (!lazy) return;
 
@@ -222,7 +225,7 @@ export const ImageContainer = ({
       />
       <Box
         sx={{
-          background: `url('./textures/static.jpg')`,
+          background: `url(${skeletonImageUrl})`,
           width: '100%',
           height: '100%',
           backgroundSize: '100% 100%',
@@ -320,7 +323,7 @@ export const ImageContainer = ({
             component="img"
             alt="Loading"
             sx={{
-              backgroundImage: `url('./textures/static.jpg')`,
+              backgroundImage: `url(${skeletonImageUrl})`,
               backgroundSize: '100% 100%',
               backgroundPosition: 'center center',
               width: '100%',

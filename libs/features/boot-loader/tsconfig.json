@@ -6,6 +6,9 @@
       "path": "../../shared/themes"
     },
     {
+      "path": "../../shared/utils"
+    },
+    {
       "path": "../../shared/components"
     },
     {

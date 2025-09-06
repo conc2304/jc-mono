@@ -5,6 +5,7 @@ import { darken, lighten, Theme } from '@mui/material';
 import { remap } from '../utils';
 import { RadarChartProps } from '../radar-chart-widget/radar-chart-widget';
 import { FormatDataFn } from '../radar-chart-widget';
+import { getImageUrl } from '@jc/utils';
 
 export const defaultScrambleCharacterSet =
   '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -27,7 +28,7 @@ export const DefaultProgressMessages = {
 };
 
 export const defaultGif = {
-  url: '/textures/ui/ambient-vintage-clouds.gif',
+  url: getImageUrl('gifs/ambient-vintage-clouds.gif', 'full'),
   backgroundPositionY: 'center',
 };
 
