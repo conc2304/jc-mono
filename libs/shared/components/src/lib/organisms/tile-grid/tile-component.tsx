@@ -120,7 +120,7 @@ export const TileComponent = memo(
       []
     );
     const bgImgPath = useMemo(
-      () => getImageUrl(`textures/ui/${tileBackgroundImg}`, 'full'),
+      () => getImageUrl(`textures/ui/${tileBackgroundImg}`, 'thumbnail'),
       [tileBackgroundImg]
     );
 
