@@ -136,7 +136,6 @@ export const TileComponent = memo(
     useEffect(() => {
       if (config.showLiveContent && tileData) {
         const imageUrls = extractImageUrls(tileData, maxPreviews);
-        console.log({ imageUrls });
         if (imageUrls.length > 0) {
           preloadImages(imageUrls);
           setImagesPreloaded(true);

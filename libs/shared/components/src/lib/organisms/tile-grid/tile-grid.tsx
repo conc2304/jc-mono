@@ -17,6 +17,7 @@ import { BaseFileSystemItem } from '@jc/file-system';
 import { TileComponent } from './tile-component';
 import { RestartAlt, Shuffle } from '@mui/icons-material';
 import { ColorModeSwitcher, ColorModeSwitcherSpeedDial } from '@jc/themes';
+import { SciFiBackground } from '../../atoms/background-scifi-animated';
 
 export const TileGrid = ({
   gridTiles = [],
@@ -163,6 +164,19 @@ export const TileGrid = ({
         p: breakpoint === 'mobile' ? 0 : 2,
       }}
     >
+      <Box
+        className="Scifi-background"
+        sx={{
+          height: '100%',
+          width: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        }}
+      >
+        <SciFiBackground />
+      </Box>
       <Container
         maxWidth="xl"
         sx={{
