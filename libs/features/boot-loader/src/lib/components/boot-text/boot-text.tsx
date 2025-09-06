@@ -93,6 +93,8 @@ const BootTextInner: React.FC<BootTextProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const currentLineRef = useRef<number>(0);
   const hoverAnimationsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
+  // Track which messages have been completed and have hover enabled
+  const completedMessagesRef = useRef<Set<number>>(new Set());
 
   // Store callbacks in refs to avoid dependency issues
   const onCompleteRef = useRef(onComplete);
@@ -110,6 +112,9 @@ const BootTextInner: React.FC<BootTextProps> = ({
       top: 0,
       behavior: 'instant',
     });
+
+    // Reset completed messages when new messages are passed in
+    completedMessagesRef.current.clear();
   }, [bootMessages]);
 
   // Smart scrolling function - only scrolls when needed for new lines
@@ -414,6 +419,11 @@ const BootTextInner: React.FC<BootTextProps> = ({
   // Function to handle hover events
   const handleMessageHover = useCallback(
     (messageIndex: number, isHovering: boolean) => {
+      // Only allow hover if this message has been completed
+      if (!completedMessagesRef.current.has(messageIndex)) {
+        return;
+      }
+
       const [defaultMessage, hiddenMessage] = normalizeBootMessage(
         bootMessages[messageIndex]
       );
@@ -444,6 +454,53 @@ const BootTextInner: React.FC<BootTextProps> = ({
     [bootMessages, hoverScrambleChars, hoverScrambleDuration]
   );
 
+  // Function to enable hover functionality for a completed message
+  const enableHoverForMessage = useCallback(
+    (messageIndex: number) => {
+      if (completedMessagesRef.current.has(messageIndex)) {
+        return; // Already enabled
+      }
+
+      const [, hiddenMessage] = normalizeBootMessage(
+        bootMessages[messageIndex]
+      );
+
+      // Only add hover if there's a hidden message
+      if (!hiddenMessage) return;
+
+      const messageBlock = containerRef.current?.querySelector(
+        `.boot-message-${messageIndex}`
+      ) as HTMLElement;
+
+      if (!messageBlock) return;
+
+      // Mark as completed
+      completedMessagesRef.current.add(messageIndex);
+
+      // Add hover styling
+      messageBlock.style.cursor = 'pointer';
+      messageBlock.style.transition = 'background-color 0.2s ease';
+
+      // Add hover event listeners
+      const handleMouseEnter = () => {
+        messageBlock.style.backgroundColor = 'rgba(0, 255, 65, 0.05)';
+        handleMessageHover(messageIndex, true);
+      };
+
+      const handleMouseLeave = () => {
+        messageBlock.style.backgroundColor = 'transparent';
+        handleMessageHover(messageIndex, false);
+      };
+
+      messageBlock.addEventListener('mouseenter', handleMouseEnter);
+      messageBlock.addEventListener('mouseleave', handleMouseLeave);
+
+      // Store cleanup function if needed (for component unmount)
+      messageBlock.setAttribute('data-hover-enabled', 'true');
+    },
+    [bootMessages, handleMessageHover]
+  );
+
   useGSAP(
     () => {
       if (!autoStart || !containerRef.current || bootMessages.length === 0)
@@ -454,6 +511,7 @@ const BootTextInner: React.FC<BootTextProps> = ({
       // Clear container and reset
       container.innerHTML = '';
       currentLineRef.current = 0;
+      completedMessagesRef.current.clear();
 
       // Calculate total characters across all messages for progress tracking
       const normalizedMessages = bootMessages.map(
@@ -468,29 +526,13 @@ const BootTextInner: React.FC<BootTextProps> = ({
       // Create message blocks for each boot message
       const messageBlocks: HTMLDivElement[] = [];
       bootMessages.forEach((messageData, index) => {
-        const [defaultMessage, hiddenMessage] =
-          normalizeBootMessage(messageData);
+        const [defaultMessage] = normalizeBootMessage(messageData);
 
         const messageBlock = document.createElement('div');
         messageBlock.className = `boot-message boot-message-${index}`;
-
         messageBlock.style.minHeight = defaultMessage === '' ? '1.6em' : 'auto';
 
-        // Add hover functionality if there's a hidden message
-        if (hiddenMessage) {
-          messageBlock.style.cursor = 'pointer';
-          messageBlock.style.transition = 'background-color 0.2s ease';
-
-          messageBlock.addEventListener('mouseenter', () => {
-            messageBlock.style.backgroundColor = 'rgba(0, 255, 65, 0.05)';
-            handleMessageHover(index, true);
-          });
-
-          messageBlock.addEventListener('mouseleave', () => {
-            messageBlock.style.backgroundColor = 'transparent';
-            handleMessageHover(index, false);
-          });
-        }
+        // DO NOT add hover functionality here - it will be added after completion
 
         const textElement = document.createElement('span');
         textElement.className = `boot-text-${index}`;
@@ -747,11 +789,15 @@ const BootTextInner: React.FC<BootTextProps> = ({
           }, 10);
         });
 
-        // Create the message animation
+        // Create the message animation with completion callback
         const messageAnimation = createMessageAnimation(
           defaultMessage,
           index,
-          cumulativeCharacters
+          cumulativeCharacters,
+          () => {
+            // Enable hover functionality when message completes
+            enableHoverForMessage(index);
+          }
         );
 
         masterTimeline.add(messageAnimation);

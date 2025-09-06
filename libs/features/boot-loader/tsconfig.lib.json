@@ -40,6 +40,9 @@
       "path": "../../shared/themes/tsconfig.lib.json"
     },
     {
+      "path": "../../shared/utils/tsconfig.lib.json"
+    },
+    {
       "path": "../../shared/components/tsconfig.lib.json"
     }
   ]
