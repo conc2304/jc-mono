@@ -6,6 +6,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from 'react';
 import { Star } from '@mui/icons-material';
 
@@ -38,6 +39,25 @@ const textureImages = [
 
 const getRandomImgFn = () => Math.floor(Math.random() * textureImages.length);
 
+// Image preloading utility
+const preloadImages = (imageUrls: string[]) => {
+  imageUrls.forEach((url) => {
+    if (url) {
+      const img = new Image();
+      img.src = url;
+    }
+  });
+};
+
+// Extract image URLs from tile data
+const extractImageUrls = (tileData: any[]): string[] => {
+  if (!tileData) return [];
+
+  return tileData
+    .map((item) => item?.media?.thumbnail?.src || item?.media?.thumbnail?.url)
+    .filter(Boolean);
+};
+
 interface TileComponentProps {
   tile: PlacedTile;
   tileConfig: ResponsiveBreakpointConfig;
@@ -62,6 +82,7 @@ export const TileComponent = memo(
     const { openWindow } = useWindowActions();
 
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [imagesPreloaded, setImagesPreloaded] = useState(false);
 
     const DefaultTileRenderer: TileRenderer = {
       component: DefaultTileContent,
@@ -71,6 +92,7 @@ export const TileComponent = memo(
         color: 'primary',
       },
     };
+
     const isLarge = tile.size === 'large';
 
     const {
@@ -85,10 +107,40 @@ export const TileComponent = memo(
       id,
       type,
     } = tile.fileData;
+
     // Use provided renderer or fallback to default
     const renderer = tileRenderer || DefaultTileRenderer;
     const config = renderer.config;
     const ContentComponent = renderer.component;
+
+    // Memoize texture background image
+    const tileBackgroundImg = useMemo(
+      () => textureImages[getRandomImgFn()],
+      []
+    );
+    const bgImgPath = useMemo(
+      () => getImageUrl(`textures/ui/${tileBackgroundImg}`, 'full'),
+      [tileBackgroundImg]
+    );
+
+    // Memoize tile color
+    const tileColor = useMemo(
+      () =>
+        theme.palette?.[config.color as PaletteOptionName]?.main ||
+        config.color,
+      [theme.palette, config.color]
+    );
+
+    // Preload images when component mounts
+    useEffect(() => {
+      if (config.showLiveContent && tileData) {
+        const imageUrls = extractImageUrls(tileData);
+        if (imageUrls.length > 0) {
+          preloadImages(imageUrls);
+          setImagesPreloaded(true);
+        }
+      }
+    }, [tileData, config.showLiveContent]);
 
     // Set up rotation for live content
     useEffect(() => {
@@ -104,26 +156,57 @@ export const TileComponent = memo(
         return () => clearInterval(interval);
       }
       return;
-    }, [children, tileData, config.showLiveContent, config.updateInterval]);
+    }, [
+      children,
+      tileData,
+      config.showLiveContent,
+      config.updateInterval,
+      maxPreviews,
+    ]);
 
-    const handleDragStart = (e: React.DragEvent<HTMLDivElement>): void => {
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', tile.id.toString());
-      onDragStart(tile);
-    };
-
-    const handleDragEnd = (e: React.DragEvent<HTMLDivElement>): void => {
-      onDragEnd();
-    };
-
-    const tileColor =
-      theme.palette?.[config.color as PaletteOptionName]?.main || config.color;
-
-    const tileBackgroundImg = useMemo(
-      () => textureImages[getRandomImgFn()],
-      []
+    const handleDragStart = useCallback(
+      (e: React.DragEvent<HTMLDivElement>): void => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', tile.id.toString());
+        onDragStart(tile);
+      },
+      [tile, onDragStart]
     );
-    const bgImgPath = getImageUrl(`textures/ui/${tileBackgroundImg}`, 'full');
+
+    const handleDragEnd = useCallback(
+      (e: React.DragEvent<HTMLDivElement>): void => {
+        onDragEnd();
+      },
+      [onDragEnd]
+    );
+
+    const handleOpenWindow = useCallback(() => {
+      openWindow(id);
+    }, [openWindow, id]);
+
+    // Memoize style objects
+    const containerStyle = useMemo(
+      () => ({
+        left: tile.x,
+        top: tile.y,
+        width: tile.width,
+        height: tile.height,
+        padding: tileConfig.tilePadding,
+        boxShadow: isDragging
+          ? '0 8px 32px rgba(0,0,0,0.3)'
+          : '0 2px 8px rgba(0,0,0,0.1)',
+        transform: isBeingReordered ? 'scale(0.95)' : 'scale(1)',
+      }),
+      [
+        tile.x,
+        tile.y,
+        tile.width,
+        tile.height,
+        tileConfig.tilePadding,
+        isDragging,
+        isBeingReordered,
+      ]
+    );
 
     return (
       <TileContainer
@@ -135,17 +218,7 @@ export const TileComponent = memo(
         tileColor={tileColor}
         size={config.size}
         data-augmented-ui="t-clip border tl-clip tr-clip bl-clip br-clip"
-        style={{
-          left: tile.x,
-          top: tile.y,
-          width: tile.width,
-          height: tile.height,
-          padding: tileConfig.tilePadding,
-          boxShadow: isDragging
-            ? '0 8px 32px rgba(0,0,0,0.3)'
-            : '0 2px 8px rgba(0,0,0,0.1)',
-          transform: isBeingReordered ? 'scale(0.95)' : 'scale(1)',
-        }}
+        style={containerStyle}
       >
         <Box
           sx={{
@@ -230,10 +303,11 @@ export const TileComponent = memo(
                 />
               )}
             </Box>
+
             {/* Dynamic Content Area */}
             <AugmentedButton
               className="TileComponent--content-area"
-              onClick={() => openWindow(id)}
+              onClick={handleOpenWindow}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -261,6 +335,7 @@ export const TileComponent = memo(
                 {...(renderer.props || {})}
               />
             </AugmentedButton>
+
             {/* Footer */}
             <Box
               display="flex"
@@ -303,40 +378,6 @@ export const TileComponent = memo(
               </Box>
             </Box>
           </Box>
-
-          {/* <Box
-            className="TileComponent--drag-handle"
-            data-augmented-ui="border bl-clip br-clip"
-            sx={{
-              '--aug-border-top': '2px',
-              '--aug-border-bottom': '0px',
-
-              position: 'absolute',
-              bottom: 0,
-              left: '50%',
-              right: '50%',
-              transform: 'translateX(-50%)',
-              width: '20%',
-              height: '15px',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <DiagonalLines
-              height="100%"
-              lineThickness={5}
-              spacing={20}
-              direction="diagonal"
-              color={theme.palette.text.primary}
-            />
-            <DiagonalLines
-              height="100%"
-              lineThickness={5}
-              spacing={20}
-              direction="diagonal-alt"
-              color={theme.palette.text.primary}
-            />
-          </Box> */}
         </Box>
       </TileContainer>
     );
