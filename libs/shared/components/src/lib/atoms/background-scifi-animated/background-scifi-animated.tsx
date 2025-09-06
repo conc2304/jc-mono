@@ -322,7 +322,7 @@ const DataStreams: React.FC = () => {
       }, 6000);
     };
 
-    const interval: NodeJS.Timeout = setInterval(createStream, 12000);
+    const interval: NodeJS.Timeout = setInterval(createStream, 1200);
 
     return () => clearInterval(interval);
   }, []);
