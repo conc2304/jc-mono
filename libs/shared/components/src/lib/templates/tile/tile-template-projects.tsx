@@ -46,6 +46,7 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
                 pl: isMd ? 4 : undefined,
                 justifyContent: 'space-evenly',
                 flexWrap: 'wrap',
+                flexGrow: 1,
               }}
             >
               {/* Image Container - Render all images, show current one */}

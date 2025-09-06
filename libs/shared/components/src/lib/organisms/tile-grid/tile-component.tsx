@@ -50,10 +50,11 @@ const preloadImages = (imageUrls: string[]) => {
 };
 
 // Extract image URLs from tile data
-const extractImageUrls = (tileData: any[]): string[] => {
+const extractImageUrls = (tileData: any[], maxPreviews: number): string[] => {
   if (!tileData) return [];
 
   return tileData
+    .slice(0, maxPreviews)
     .map((item) => item?.media?.thumbnail?.src || item?.media?.thumbnail?.url)
     .filter(Boolean);
 };
@@ -134,7 +135,8 @@ export const TileComponent = memo(
     // Preload images when component mounts
     useEffect(() => {
       if (config.showLiveContent && tileData) {
-        const imageUrls = extractImageUrls(tileData);
+        const imageUrls = extractImageUrls(tileData, maxPreviews);
+        console.log({ imageUrls });
         if (imageUrls.length > 0) {
           preloadImages(imageUrls);
           setImagesPreloaded(true);
