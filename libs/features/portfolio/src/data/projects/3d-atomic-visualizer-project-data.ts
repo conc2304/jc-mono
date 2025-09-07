@@ -68,13 +68,13 @@ export const atomicVisualizerProject: ProjectData = {
   media: {
     hero: {
       ...getResponsiveImageSet(
-        'projects/3d-atomic-visualizer/atomic-structure-hero.png'
+        'projects/3d-atomic-visualizer/atomic-structure-hero.jpg'
       ),
       alt: 'Atomic Structure Hero',
     },
     thumbnail: {
       src: getImageUrl(
-        'projects/3d-atomic-visualizer/atomic-structure-hero.png',
+        'projects/3d-atomic-visualizer/atomic-structure-hero.jpg',
         'thumbnail'
       ),
       alt: 'Atomic Structure Hero',
@@ -82,7 +82,7 @@ export const atomicVisualizerProject: ProjectData = {
     screenshots: [
       {
         relativePath:
-          'projects/3d-atomic-visualizer/Screenshot-atomic-structure-3:4.png',
+          'projects/3d-atomic-visualizer/Screenshot-atomic-structure-3:4.jpg',
         alt: '3D atomic structure visualization showing Bohr model with animated electron orbits around atomic nucleus in WebGL rendered scene',
         caption: '3D atomic structure with animated electron orbits',
         detailedCaption:
@@ -90,14 +90,14 @@ export const atomicVisualizerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/3d-atomic-visualizer/Screenshot-atomic-structure.png',
+          'projects/3d-atomic-visualizer/Screenshot-atomic-structure.jpg',
         alt: 'Interactive 3D atomic structure display with electron configuration visualization and orbital animation in React Three Fiber application',
         caption: 'Interactive atomic structure with orbital mechanics',
         detailedCaption:
           'Real-time atomic structure rendering showcasing the sophisticated electron configuration processing system that automatically generates accurate atomic structures from standard chemistry notation strings, complete with animated orbital mechanics and shell-based electron organization using React Three Fiber',
       },
       {
-        relativePath: 'projects/3d-atomic-visualizer/Screenshot-info-card.png',
+        relativePath: 'projects/3d-atomic-visualizer/Screenshot-info-card.jpg',
         alt: 'Element information interface displaying periodic table data, atomic properties, and navigation controls integrated with 3D visualization system',
         caption: 'Element information panel with atomic data',
         detailedCaption:
@@ -105,14 +105,14 @@ export const atomicVisualizerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/3d-atomic-visualizer/Screenshot-search-menu.png',
+          'projects/3d-atomic-visualizer/Screenshot-search-menu.jpg',
         alt: 'Interactive search interface for periodic table navigation with element filtering and selection controls in 3D web application',
         caption: 'Search interface for element navigation',
         detailedCaption:
           'Intuitive search and filtering system enabling efficient discovery and navigation across all 118 periodic elements, featuring responsive design patterns and smooth integration with the 3D carousel interface while maintaining optimal performance for WebGL rendering',
       },
       {
-        relativePath: 'projects/3d-atomic-visualizer/Screenshot-tile-view.png',
+        relativePath: 'projects/3d-atomic-visualizer/Screenshot-tile-view.jpg',
         alt: 'Periodic table element tile display showing individual element cards with hover interactions and 3D spatial navigation controls',
         caption: 'Interactive element tiles with hover effects',
         detailedCaption:
@@ -120,14 +120,14 @@ export const atomicVisualizerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/3d-atomic-visualizer/Screenshot-tile-carousel.png',
+          'projects/3d-atomic-visualizer/Screenshot-tile-carousel.jpg',
         alt: '3D carousel interface displaying periodic table elements as interactive tiles with smooth navigation and dynamic focus management',
         caption: '3D carousel navigation through periodic elements',
         detailedCaption:
           'Sophisticated 3D carousel system featuring all 118 periodic elements with smooth transitions, dynamic focus management, and responsive layout adaptation. Demonstrates complex state coordination between carousel position, active element selection, and atomic structure updates using React state management',
       },
       {
-        relativePath: 'projects/3d-atomic-visualizer/atomic-structure-hero.png',
+        relativePath: 'projects/3d-atomic-visualizer/atomic-structure-hero.jpg',
         alt: 'Hero image of 3D Atomic Visualizer showing WebGL-rendered periodic table explorer with React Three Fiber implementation and educational interface design',
         caption: '3D Atomic Visualizer application overview',
         detailedCaption:
@@ -141,7 +141,7 @@ export const atomicVisualizerProject: ProjectData = {
     videos: [
       {
         url: getVideoUrl(
-          'projects/3d-atomic-visualizer/Jose Conchello - Harvard CS50 Final Project - 3D Atomic Structure Visualizer.mp4'
+          'projects/3d-atomic-visualizer/Jose Conchello - Harvard CS50 Final Project - 3D Atomic Structure.mp4'
         ),
         title: '3D Atomic Visualizer Demo',
         type: 'demo',

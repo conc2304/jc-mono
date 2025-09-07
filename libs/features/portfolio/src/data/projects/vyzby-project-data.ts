@@ -70,7 +70,7 @@ export const vyzbyProject: ProjectData = {
   media: {
     thumbnail: {
       ...getResponsiveImageSet(
-        'projects/vyzby/vyzby-screenshot-tunnel-hero.png'
+        'projects/vyzby/vyzby-screenshot-tunnel-hero.jpg'
       ),
       alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
       caption: 'Immersive tunnel visualization hero demonstration',
@@ -79,7 +79,7 @@ export const vyzbyProject: ProjectData = {
     },
     hero: {
       src: getImageUrl(
-        'projects/vyzby/vyzby-screenshot-tunnel-hero.png',
+        'projects/vyzby/vyzby-screenshot-tunnel-hero.jpg',
         'thumbnail'
       ),
       alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
@@ -90,7 +90,7 @@ export const vyzbyProject: ProjectData = {
     screenshots: [
       {
         relativePath:
-          'projects/vyzby/vyzby-audio-player-interface-music-selection.png',
+          'projects/vyzby/vyzby-audio-player-interface-music-selection.jpg',
         alt: 'VYZBY audio player interface showing music selection controls and Web Audio API integration for audio-reactive visual programming',
         caption: 'Audio player interface with Web Audio API integration',
         detailedCaption:
@@ -98,7 +98,7 @@ export const vyzbyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/vyzby/vyzby-home-screen-with-interactive-mouse-chasing-brush-processing-sketch.png',
+          'projects/vyzby/vyzby-home-screen-with-interactive-mouse-chasing-brush-processing-sketch.jpg',
         alt: 'VYZBY home screen featuring interactive mouse-chasing brush sketch demonstrating real-time parameter manipulation and creative coding framework capabilities',
         caption:
           'Interactive home screen with mouse-chasing brush sketch demonstration',
@@ -107,7 +107,7 @@ export const vyzbyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/vyzby/vyzby-initial-scene-with-sin-wave-sketches.png',
+          'projects/vyzby/vyzby-initial-scene-with-sin-wave-sketches.jpg',
         alt: 'Initial VYZBY scene displaying mathematical sin wave sketches with parameter controls demonstrating algorithmic visual generation and real-time manipulation',
         caption:
           'Mathematical sin wave sketches with real-time parameter controls',
@@ -168,7 +168,7 @@ export const vyzbyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/vyzby/vyzby-processing-sketch-parameter-control-panel.png',
+          'projects/vyzby/vyzby-processing-sketch-parameter-control-panel.jpg',
         alt: 'VYZBY parameter control panel interface showing automatic UI generation with sliders, knobs, and controls for real-time sketch manipulation',
         caption:
           'Automatic parameter control panel with intuitive UI generation',
@@ -177,7 +177,7 @@ export const vyzbyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/vyzby/vyzby-screenshot-multi-layer-scene-with-3d-lamborghinis.png',
+          'projects/vyzby/vyzby-screenshot-multi-layer-scene-with-3d-lamborghinis.jpg',
         alt: 'Multi-layer scene composition featuring 3D Lamborghini models demonstrating advanced 3D rendering and layer management in VYZBY creative coding framework',
         caption:
           'Multi-layer 3D scene with complex model rendering and management',
@@ -186,7 +186,7 @@ export const vyzbyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/vyzby/vyzby-screenshot-parametric-lines-sketch.png',
+          'projects/vyzby/vyzby-screenshot-parametric-lines-sketch.jpg',
         alt: 'Parametric line sketch showing mathematical curve generation with real-time parameter control demonstrating algorithmic art creation in VYZBY framework',
         caption:
           'Parametric line sketch with mathematical curve generation algorithms',
@@ -194,7 +194,7 @@ export const vyzbyProject: ProjectData = {
           'Elegant parametric line sketch demonstrating mathematical curve generation with real-time parameter control, showcasing how VYZBY enables creators to explore algorithmic art concepts through immediate parameter feedback and live experimentation with mathematical formulas',
       },
       {
-        relativePath: 'projects/vyzby/vyzby-screenshot-tunnel-hero.png',
+        relativePath: 'projects/vyzby/vyzby-screenshot-tunnel-hero.jpg',
         alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
         caption: 'Immersive tunnel visualization hero demonstration',
         detailedCaption:
@@ -210,7 +210,7 @@ export const vyzbyProject: ProjectData = {
           "Sophisticated showcase composition combining tunnel environment, 3D Lamborghini model, and parametric line algorithms, demonstrating VYZBY's comprehensive creative coding capabilities, multi-layer composition system, and ability to integrate diverse visual elements with unified parameter control",
       },
       {
-        relativePath: 'projects/vyzby/vyzby-sketch-catalogue-menu.png',
+        relativePath: 'projects/vyzby/vyzby-sketch-catalogue-menu.jpg',
         alt: 'VYZBY sketch catalogue interface showing organized collection of creative coding projects with metadata and selection system for framework extensibility',
         caption:
           'Organized sketch catalogue with extensible framework architecture',

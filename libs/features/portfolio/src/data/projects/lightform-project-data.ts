@@ -126,34 +126,34 @@ export const lightformWebControllerProject: ProjectData = {
         caption: 'Front view showing camera array and projection lens',
       },
       {
-        relativePath: 'projects/lightform/FTUX-Step-2-Update-Firmware.png',
+        relativePath: 'projects/lightform/FTUX-Step-2-Update-Firmware.jpg',
         alt: 'First Time User Experience - Firmware Update',
         caption: 'Step 2 of device setup process - firmware update interface',
       },
       {
-        relativePath: 'projects/lightform/FTUX-Step-3-Device-Registration.png',
+        relativePath: 'projects/lightform/FTUX-Step-3-Device-Registration.jpg',
         alt: 'First Time User Experience - Device Registration',
         caption: 'Step 3 of device setup - registering device to user account',
       },
       {
-        relativePath: 'projects/lightform/OAK-Step-1-Object-Scanning.png',
+        relativePath: 'projects/lightform/OAK-Step-1-Object-Scanning.jpg',
         alt: 'Object Alignment Kit - 3D Scanning Interface',
         caption:
           'Real-time 3D scanning interface for object detection and alignment',
       },
       {
-        relativePath: 'projects/lightform/OAK-Step-2-Environments-UI.png',
+        relativePath: 'projects/lightform/OAK-Step-2-Environments-UI.jpg',
         alt: 'Object Alignment Kit - Environment Selection',
         caption: 'Environment selection interface for projection mapping setup',
       },
       {
-        relativePath: 'projects/lightform/OAK-Step-2-Object-Alignment.png',
+        relativePath: 'projects/lightform/OAK-Step-2-Object-Alignment.jpg',
         alt: 'Object Alignment Kit - Precision Alignment',
         caption:
           'Fine-tuned object alignment controls for accurate projection mapping',
       },
       {
-        relativePath: 'projects/lightform/article-1-step-1-v1.png',
+        relativePath: 'projects/lightform/article-1-step-1-v1.jpg',
         alt: 'Tutorial Article 1 - Getting Started',
         caption: 'Step-by-step tutorial showing initial device setup process',
       },

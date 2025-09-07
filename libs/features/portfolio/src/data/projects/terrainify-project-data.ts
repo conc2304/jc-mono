@@ -67,7 +67,7 @@ export const terrainifyProject: ProjectData = {
   media: {
     hero: {
       ...getResponsiveImageSet(
-        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png'
+        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.jpg'
       ),
       alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
       caption:
@@ -77,7 +77,7 @@ export const terrainifyProject: ProjectData = {
     },
     thumbnail: {
       src: getImageUrl(
-        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
+        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.jpg',
         'thumbnail'
       ),
       alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
@@ -89,7 +89,7 @@ export const terrainifyProject: ProjectData = {
     screenshots: [
       {
         relativePath:
-          'projects/terrainify/terrainify-noise-based-terrain-generated-over-2d-plane-object.png',
+          'projects/terrainify/terrainify-noise-based-terrain-generated-over-2d-plane-object.jpg',
         alt: 'Procedural terrain generation showing volume noise displacement applied to 2D plane object creating realistic 3D mountainous landscape using Maya shading networks',
         caption:
           'Procedural terrain generation using volume noise displacement',
@@ -98,7 +98,7 @@ export const terrainifyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
+          'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.jpg',
         alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
         caption:
           'High-quality rendered terrain with mountains and water features',
@@ -107,7 +107,7 @@ export const terrainifyProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/terrainify/terrainify-terrain-generator-ui-modal-parameter-settings.png',
+          'projects/terrainify/terrainify-terrain-generator-ui-modal-parameter-settings.jpg',
         alt: 'Custom Maya UI panel showing Terrainify plugin interface with terrain generation parameters, BPM settings, and real-time control options for procedural landscape creation',
         caption: 'Custom Maya plugin interface with terrain and BPM parameters',
         detailedCaption:

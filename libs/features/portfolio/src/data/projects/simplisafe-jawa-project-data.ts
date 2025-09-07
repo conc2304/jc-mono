@@ -108,7 +108,7 @@ export const simplisafeJawaProject: ProjectData = {
     },
     screenshots: [
       {
-        relativePath: 'projects/simplisafe-jawa/Jawa-UI-Home-view.png',
+        relativePath: 'projects/simplisafe-jawa/Jawa-UI-Home-view.jpg',
         alt: 'Project Jawa fulfillment system home interface showing modern web application design with inventory tracking, order processing controls, and analytics dashboard for SimpliSafe warehouse operations',
         caption:
           'Modern fulfillment system home interface with operational controls',

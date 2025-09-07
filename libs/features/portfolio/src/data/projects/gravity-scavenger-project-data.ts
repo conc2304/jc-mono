@@ -70,7 +70,7 @@ export const gravityScavengerProject: ProjectData = {
   media: {
     hero: {
       ...getResponsiveImageSet(
-        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png'
+        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.jpg'
       ),
       alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
       caption: 'Advanced orbital mechanics with trajectory prediction system',
@@ -79,7 +79,7 @@ export const gravityScavengerProject: ProjectData = {
     },
     thumbnail: {
       src: getImageUrl(
-        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
+        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.jpg',
         'thumbnail'
       ),
       alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
@@ -90,7 +90,7 @@ export const gravityScavengerProject: ProjectData = {
     screenshots: [
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
+          'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.jpg',
         alt: 'Spacecraft orbiting planet with gravitational physics simulation showing trajectory prediction lines and resource pickup items scattered in space',
         caption:
           'Gravitational orbiting mechanics with resource collection gameplay',
@@ -99,7 +99,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-orbiting-planet-with-pickups.png',
+          'projects/gravity-scavenger/gravity-scavenger-orbiting-planet-with-pickups.jpg',
         alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
         caption: 'Advanced orbital mechanics with trajectory prediction system',
         detailedCaption:
@@ -107,7 +107,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-pickup-item.png',
+          'projects/gravity-scavenger/gravity-scavenger-pickup-item.jpg',
         alt: 'Close-up view of resource pickup item collection in space environment with particle effects and physics-based interaction systems',
         caption:
           'Resource collection with particle effects and physics interaction',
@@ -116,7 +116,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-pickups-fuel-parts-and-health.png',
+          'projects/gravity-scavenger/gravity-scavenger-pickups-fuel-parts-and-health.jpg',
         alt: 'Various resource types including fuel, ship parts, and health items scattered in space environment with distinct visual designs for gameplay clarity',
         caption: 'Diverse resource types with strategic collection mechanics',
         detailedCaption:
@@ -124,7 +124,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-ship-upgrade-center-ui.png',
+          'projects/gravity-scavenger/gravity-scavenger-ship-upgrade-center-ui.jpg',
         alt: 'Ship upgrade interface showing Unity UI Toolkit implementation with upgrade options, resource costs, and progression systems for spacecraft customization',
         caption: 'Comprehensive ship upgrade system with resource management',
         detailedCaption:
@@ -132,7 +132,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-shoot-asteroids.png',
+          'projects/gravity-scavenger/gravity-scavenger-shoot-asteroids.jpg',
         alt: 'Combat system showing spacecraft shooting asteroids with physics-based projectile trajectories influenced by gravitational fields in space environment',
         caption: 'Physics-based combat with gravitational projectile mechanics',
         detailedCaption:
@@ -140,7 +140,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-space-station-upgrade-station.png',
+          'projects/gravity-scavenger/gravity-scavenger-space-station-upgrade-station.jpg',
         alt: 'Space station upgrade facility showing procedurally generated structure with docking interface and comprehensive upgrade system integration',
         caption: 'Procedurally generated space station with upgrade facilities',
         detailedCaption:
@@ -148,7 +148,7 @@ export const gravityScavengerProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/gravity-scavenger/gravity-scavenger-start-screen.png',
+          'projects/gravity-scavenger/gravity-scavenger-start-screen.jpg',
         alt: 'Game start screen showing polished UI design with title graphics, navigation options, and space-themed visual presentation for physics-based game experience',
         caption: 'Polished game start screen with professional UI design',
         detailedCaption:
@@ -162,7 +162,7 @@ export const gravityScavengerProject: ProjectData = {
     videos: [
       {
         url: getVideoUrl(
-          'projects/gravity-scavenger/Gravity%20Scavenger%20_%20GD50%20Final%20Project%20-%20Game%20Development.mp4'
+          'projects/gravity-scavenger/Gravity%20Scavenger%20_%20GD50%20Final%20Project%20-%20Game%20Development_optimized.mp4'
         ),
         title: 'Gravity Scavenger Final Project Demo',
         type: 'demo',

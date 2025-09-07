@@ -79,7 +79,7 @@ export const climateDataVizProject: ProjectData = {
   media: {
     hero: {
       ...getResponsiveImageSet(
-        'projects/climate-data-vis/climate-data-hero-exploration-page.png'
+        'projects/climate-data-vis/climate-data-hero-exploration-page.jpg'
       ),
       alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
       caption: 'Complete Planet Habitability application interface overview',
@@ -89,7 +89,7 @@ export const climateDataVizProject: ProjectData = {
 
     thumbnail: {
       src: getImageUrl(
-        'projects/climate-data-vis/climate-data-hero-exploration-page.png',
+        'projects/climate-data-vis/climate-data-hero-exploration-page.jpg',
         'thumbnail'
       ),
       alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
@@ -100,7 +100,7 @@ export const climateDataVizProject: ProjectData = {
     screenshots: [
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-exploration-page-initial-state.png',
+          'projects/climate-data-vis/climate-data-exploration-page-initial-state.jpg',
         alt: 'Initial state of climate data exploration interface showing US heatmap, temperature anomaly timeline, and navigation controls for interactive data analysis',
         caption:
           'Main exploration interface with US heatmap and timeline controls',
@@ -109,7 +109,7 @@ export const climateDataVizProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-exploration-page-radar-chart-metric-comparison-with-tooltip.png',
+          'projects/climate-data-vis/climate-data-exploration-page-radar-chart-metric-comparison-with-tooltip.jpg',
         alt: 'Radar chart visualization showing multi-dimensional climate metrics comparison between states with interactive tooltip displaying detailed data values',
         caption:
           'Interactive radar chart for multi-state climate metrics comparison',
@@ -118,7 +118,7 @@ export const climateDataVizProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-exploration-page-timeline-scrubbing-selection.png',
+          'projects/climate-data-vis/climate-data-exploration-page-timeline-scrubbing-selection.jpg',
         alt: 'Interactive timeline interface with temporal scrubbing controls for filtering climate data by specific time periods and observing trend evolution',
         caption:
           'Temporal filtering with interactive timeline scrubbing controls',
@@ -127,7 +127,7 @@ export const climateDataVizProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-exploration-page-weather-type-selection-menu.png',
+          'projects/climate-data-vis/climate-data-exploration-page-weather-type-selection-menu.jpg',
         alt: 'Weather event type selection interface showing filtering options for different storm categories and severe weather patterns in climate analysis',
         caption: 'Weather event type filtering and selection interface',
         detailedCaption:
@@ -135,7 +135,7 @@ export const climateDataVizProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-hero-exploration-page.png',
+          'projects/climate-data-vis/climate-data-hero-exploration-page.jpg',
         alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
         caption: 'Complete Planet Habitability application interface overview',
         detailedCaption:
@@ -143,7 +143,7 @@ export const climateDataVizProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-intro-storms-events-over-time.png',
+          'projects/climate-data-vis/climate-data-intro-storms-events-over-time.jpg',
         alt: 'Temporal visualization showing storm events frequency over time with trend analysis and pattern identification for climate impact assessment',
         caption: 'Storm events frequency trends over time visualization',
         detailedCaption:
@@ -151,7 +151,7 @@ export const climateDataVizProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/climate-data-vis/climate-data-line-chart-events-by-state.png',
+          'projects/climate-data-vis/climate-data-line-chart-events-by-state.jpg',
         alt: 'Comparative line chart visualization showing climate events data by state with multi-series analysis and interactive legend controls',
         caption:
           'Multi-state comparative analysis with interactive line charts',
@@ -166,7 +166,7 @@ export const climateDataVizProject: ProjectData = {
     videos: [
       {
         url: getVideoUrl(
-          'projects/climate-data-vis/The Future of Climate and Severe Weather - Data Vis Final Video.mp4'
+          'projects/climate-data-vis/The Future of Climate and Severe Weather - Data Vis Final Video_optimized.mp4'
         ),
         caption:
           'Complete project walkthrough of climate data visualization application',
