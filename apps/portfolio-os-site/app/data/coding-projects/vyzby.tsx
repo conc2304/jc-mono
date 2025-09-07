@@ -24,7 +24,6 @@ export const vyzbyFileSystemItem: FileSystemItem<
   dateCreated: new Date('2021-03-01'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
       'personal',

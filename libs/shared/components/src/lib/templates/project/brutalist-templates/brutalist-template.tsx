@@ -131,7 +131,7 @@ export const BrutalistTemplate: React.FC<
       />
 
       <HeroSection
-        heroImage={data.media.thumbnail}
+        heroImage={data.media.hero}
         projectName={data.projectName}
         description={data.basics?.description}
         projectSubtitle={data.projectSubtitle}

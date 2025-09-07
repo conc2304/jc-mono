@@ -122,7 +122,7 @@ export const ImageContainer = ({
     [shouldLoad, src]
   );
 
-  const skeletonImageUrl = getImageUrl('textures/ui/static.jpg', 'full');
+  const skeletonImageUrl = getImageUrl('textures/ui/static.jpg', 'thumbnail');
 
   useEffect(() => {
     if (!lazy) return;

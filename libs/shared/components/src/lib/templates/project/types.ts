@@ -48,7 +48,8 @@ interface ProjectTechnical {
 }
 
 interface ProjectMedia {
-  thumbnail: ImageMediaData; // main project image
+  thumbnail: ImageMediaData; // main project image thumbnail size
+  hero: ImageMediaData; // main project image
   screenshots?: ImageMediaData[];
   videos?: VideoMediaData[];
 }

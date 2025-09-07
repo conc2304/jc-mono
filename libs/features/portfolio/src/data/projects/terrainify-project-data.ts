@@ -65,9 +65,20 @@ export const terrainifyProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png'
+      ),
+      alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
+      caption:
+        'High-quality rendered terrain with mountains and water features',
+      detailedCaption:
+        "Sophisticated render result showcasing the final output of Terrainify's procedural generation system, featuring detailed mountainous terrain with realistic water features, demonstrating the complex shading network integration, displacement mapping techniques, and material assignment systems that create production-quality 3D landscapes for motion graphics and visual performance applications",
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.png',
+        'thumbnail'
       ),
       alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
       caption:

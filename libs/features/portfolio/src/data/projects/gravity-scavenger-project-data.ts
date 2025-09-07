@@ -68,9 +68,19 @@ export const gravityScavengerProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png'
+      ),
+      alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
+      caption: 'Advanced orbital mechanics with trajectory prediction system',
+      detailedCaption:
+        'Sophisticated physics demonstration showcasing the trajectory prediction system using calculus and trigonometry implementation, where players must strategically use gravitational forces to navigate orbital paths while collecting resources, demonstrating educational value of mathematical concepts applied to engaging interactive gameplay',
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.png',
+        'thumbnail'
       ),
       alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
       caption: 'Advanced orbital mechanics with trajectory prediction system',

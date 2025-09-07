@@ -91,9 +91,17 @@ export const lightformWebControllerProject: ProjectData = {
   // =============================================================================
   media: {
     // Thumbnail/hero image
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg'
+      ),
+      alt: 'Lightform LF2+ AR Projector - Primary Hardware',
+    },
+
+    thumbnail: {
+      src: getImageUrl(
+        'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+        'thumbnail'
       ),
       alt: 'Lightform LF2+ AR Projector - Primary Hardware',
     },

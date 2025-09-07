@@ -87,11 +87,20 @@ export const simplisafeJawaProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg'
       ),
-
+      alt: 'SimpliSafe home security installation showing professional monitoring service that depends on properly paired devices processed through Project Jawa fulfillment system',
+      caption: 'SimpliSafe home security monitoring service implementation',
+      detailedCaption:
+        "SimpliSafe's professional home security monitoring service that relies on properly paired and configured devices processed through Project Jawa's advanced fulfillment system, demonstrating the end-user experience that depends on accurate warehouse operations, device pairing reliability, and comprehensive quality assurance workflows",
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
+        'thumbnail'
+      ),
       alt: 'SimpliSafe home security installation showing professional monitoring service that depends on properly paired devices processed through Project Jawa fulfillment system',
       caption: 'SimpliSafe home security monitoring service implementation',
       detailedCaption:

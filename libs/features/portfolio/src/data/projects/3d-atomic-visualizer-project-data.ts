@@ -66,9 +66,16 @@ export const atomicVisualizerProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/3d-atomic-visualizer/atomic-structure-hero.png'
+      ),
+      alt: 'Atomic Structure Hero',
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/3d-atomic-visualizer/atomic-structure-hero.png',
+        'thumbnail'
       ),
       alt: 'Atomic Structure Hero',
     },

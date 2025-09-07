@@ -77,6 +77,16 @@ export const vyzbyProject: ProjectData = {
       detailedCaption:
         "Striking tunnel visualization serving as VYZBY's hero demonstration, featuring immersive perspective effects, dynamic lighting, and complex visual algorithms that showcase the framework's potential for creating compelling visual experiences through creative coding and real-time parameter manipulation",
     },
+    hero: {
+      src: getImageUrl(
+        'projects/vyzby/vyzby-screenshot-tunnel-hero.png',
+        'thumbnail'
+      ),
+      alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
+      caption: 'Immersive tunnel visualization hero demonstration',
+      detailedCaption:
+        "Striking tunnel visualization serving as VYZBY's hero demonstration, featuring immersive perspective effects, dynamic lighting, and complex visual algorithms that showcase the framework's potential for creating compelling visual experiences through creative coding and real-time parameter manipulation",
+    },
     screenshots: [
       {
         relativePath:

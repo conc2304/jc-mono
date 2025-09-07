@@ -77,9 +77,20 @@ export const climateDataVizProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/climate-data-vis/climate-data-hero-exploration-page.png'
+      ),
+      alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
+      caption: 'Complete Planet Habitability application interface overview',
+      detailedCaption:
+        'Project hero showcase highlighting the comprehensive climate data visualization platform featuring integrated US heatmap, temporal analysis tools, comparative charts, and interactive controls, demonstrating the successful integration of React, TypeScript, and D3.js technologies for exploring complex climate science data and regional vulnerability assessment',
+    },
+
+    thumbnail: {
+      src: getImageUrl(
+        'projects/climate-data-vis/climate-data-hero-exploration-page.png',
+        'thumbnail'
       ),
       alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
       caption: 'Complete Planet Habitability application interface overview',

@@ -24,7 +24,6 @@ export const climateDataVizFileSystemItem: FileSystemItem<
   dateCreated: new Date('2023-09-01'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
       'school',

@@ -88,9 +88,19 @@ export const verdantiaProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png'
+      ),
+      alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
+      caption: 'Welcome screen with environmental theme introduction',
+      detailedCaption:
+        "Engaging welcome screen featuring forest imagery that introduces Verdantia's environmental themes and educational objectives, setting the foundation for learning about urban reforestation, sustainable development, and the personal benefits of green spaces in city planning through interactive simulation experience",
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png',
+        'thumbnail'
       ),
       alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
       caption: 'Welcome screen with environmental theme introduction',
