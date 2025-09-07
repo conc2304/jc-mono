@@ -24,7 +24,6 @@ export const gravityScavengerFileSystemItem: FileSystemItem<
   dateCreated: new Date('2024-01-15'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
       'school',

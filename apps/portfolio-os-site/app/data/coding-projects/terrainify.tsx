@@ -24,7 +24,6 @@ export const terrainifyFileSystemItem: FileSystemItem<
   dateCreated: new Date('2023-03-01'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
       'personal',

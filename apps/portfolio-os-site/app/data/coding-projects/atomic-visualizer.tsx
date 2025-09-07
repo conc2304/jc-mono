@@ -24,7 +24,6 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
   dateCreated: new Date('2023-06-01'),
   path: '',
   parentId: '',
-  permissions: { read: true, write: true, execute: false },
   metadata: {
     tags: [
       'school',

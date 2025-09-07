@@ -87,11 +87,20 @@ export const simplisafeJawaProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg'
       ),
-
+      alt: 'SimpliSafe home security installation showing professional monitoring service that depends on properly paired devices processed through Project Jawa fulfillment system',
+      caption: 'SimpliSafe home security monitoring service implementation',
+      detailedCaption:
+        "SimpliSafe's professional home security monitoring service that relies on properly paired and configured devices processed through Project Jawa's advanced fulfillment system, demonstrating the end-user experience that depends on accurate warehouse operations, device pairing reliability, and comprehensive quality assurance workflows",
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/simplisafe-jawa/ss_presskit3-247-monitoring-house-with-simplisafe-sign-press-kit.jpeg',
+        'thumbnail'
+      ),
       alt: 'SimpliSafe home security installation showing professional monitoring service that depends on properly paired devices processed through Project Jawa fulfillment system',
       caption: 'SimpliSafe home security monitoring service implementation',
       detailedCaption:
@@ -99,7 +108,7 @@ export const simplisafeJawaProject: ProjectData = {
     },
     screenshots: [
       {
-        relativePath: 'projects/simplisafe-jawa/Jawa-UI-Home-view.png',
+        relativePath: 'projects/simplisafe-jawa/Jawa-UI-Home-view.jpg',
         alt: 'Project Jawa fulfillment system home interface showing modern web application design with inventory tracking, order processing controls, and analytics dashboard for SimpliSafe warehouse operations',
         caption:
           'Modern fulfillment system home interface with operational controls',

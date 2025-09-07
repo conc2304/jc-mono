@@ -119,7 +119,8 @@ export const TileComponent = memo(
       () => textureImages[getRandomImgFn()],
       []
     );
-    const bgImgPath = useMemo(
+
+    const bgTextureImgPath = useMemo(
       () => getImageUrl(`textures/ui/${tileBackgroundImg}`, 'thumbnail'),
       [tileBackgroundImg]
     );
@@ -228,7 +229,7 @@ export const TileComponent = memo(
             left: 0,
             height: '100%',
             width: '100%',
-            backgroundImage: `url('${bgImgPath}')`,
+            backgroundImage: `url('${bgTextureImgPath}')`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             mixBlendMode: 'screen',

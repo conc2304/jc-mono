@@ -88,9 +88,19 @@ export const verdantiaProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
-        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png'
+        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.jpg'
+      ),
+      alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
+      caption: 'Welcome screen with environmental theme introduction',
+      detailedCaption:
+        "Engaging welcome screen featuring forest imagery that introduces Verdantia's environmental themes and educational objectives, setting the foundation for learning about urban reforestation, sustainable development, and the personal benefits of green spaces in city planning through interactive simulation experience",
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.jpg',
+        'thumbnail'
       ),
       alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
       caption: 'Welcome screen with environmental theme introduction',
@@ -100,7 +110,7 @@ export const verdantiaProject: ProjectData = {
     screenshots: [
       {
         relativePath:
-          'projects/verdantia/verdantia-gameplay-building-selection-menu-on-left-city-map-with-heat-map-on-right.png',
+          'projects/verdantia/verdantia-gameplay-building-selection-menu-on-left-city-map-with-heat-map-on-right.jpg',
         alt: 'Verdantia gameplay interface showing building selection menu with construction options alongside city map featuring heat island visualization using scientific calculus simulation',
         caption:
           'Building selection interface with real-time heat map visualization',
@@ -109,7 +119,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-gameplay-screenshot-city-neighborhood-with-parks.png',
+          'projects/verdantia/verdantia-gameplay-screenshot-city-neighborhood-with-parks.jpg',
         alt: 'Urban neighborhood gameplay view showing green spaces, parks, and sustainable city planning with low-poly 3D art style and environmental design elements',
         caption:
           'Sustainable neighborhood with integrated green spaces and parks',
@@ -118,7 +128,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-gameplay-screenshot-green-city-with-eco-building.png',
+          'projects/verdantia/verdantia-gameplay-screenshot-green-city-with-eco-building.jpg',
         alt: 'Eco-friendly city development showing sustainable buildings, green roofs, and environmental architecture integrated into urban planning simulation gameplay',
         caption:
           'Eco-friendly city development with sustainable building systems',
@@ -127,7 +137,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-gameplay-screenshot-heatmap-on-left-city-stats-bar-on-top-city-in-main-view.png',
+          'projects/verdantia/verdantia-gameplay-screenshot-heatmap-on-left-city-stats-bar-on-top-city-in-main-view.jpg',
         alt: 'Complete game interface showing heat map panel, city statistics dashboard, and main city view with comprehensive environmental data visualization and metrics',
         caption:
           'Complete interface with heat simulation and city metrics dashboard',
@@ -136,14 +146,14 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-gameplay-screenshot-heatmap-overlay-with-factoid-popup.png',
+          'projects/verdantia/verdantia-gameplay-screenshot-heatmap-overlay-with-factoid-popup.jpg',
         alt: 'Heat map visualization overlay with educational factoid popup displaying environmental science information and urban heat island effects explanation',
         caption: 'Heat map overlay with educational popup content integration',
         detailedCaption:
           'Educational interface integration showcasing heat map visualization with contextual factoid popups that provide scientific information about urban heat island effects, forest therapy benefits, and environmental science concepts, demonstrating how Verdantia transforms complex climate science into personally meaningful and immediately understandable experiences',
       },
       {
-        relativePath: 'projects/verdantia/verdantia-hero-image-city-ai.png',
+        relativePath: 'projects/verdantia/verdantia-hero-image-city-ai.jpg',
         alt: "Verdantia hero image showing futuristic green city with sustainable architecture and urban forest integration representing the game's environmental vision",
         caption: 'Project hero image showcasing sustainable city vision',
         detailedCaption:
@@ -151,7 +161,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-kiosk-and-main-game-game-completion-screen.png',
+          'projects/verdantia/verdantia-kiosk-and-main-game-game-completion-screen.jpg',
         alt: 'Museum kiosk installation showing game completion screen with final city results and environmental impact summary for educational assessment',
         caption: 'Museum kiosk with game completion and results summary',
         detailedCaption:
@@ -159,7 +169,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-projected-gameplay-intro-scene.png',
+          'projects/verdantia/verdantia-projected-gameplay-intro-scene.jpg',
         alt: 'Large-scale projected gameplay introduction scene for museum installation showing immersive environmental storytelling and game narrative presentation',
         caption:
           'Large-scale projection intro for museum installation experience',
@@ -168,7 +178,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.png',
+          'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.jpg',
         alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
         caption: 'Welcome screen with environmental theme introduction',
         detailedCaption:
@@ -176,7 +186,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-touchscreen-kiosk-building-selection-menu.png',
+          'projects/verdantia/verdantia-touchscreen-kiosk-building-selection-menu.jpg',
         alt: 'Touch kiosk interface showing comprehensive building selection menu with sustainable construction options and environmental impact indicators for museum visitors',
         caption: 'Touch kiosk building selection with sustainability metrics',
         detailedCaption:
@@ -184,7 +194,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-touchscreen-kiosk-main-menu-actions-with-virtual-joystick.png',
+          'projects/verdantia/verdantia-touchscreen-kiosk-main-menu-actions-with-virtual-joystick.jpg',
         alt: 'Touch kiosk main menu interface with virtual joystick navigation controls and action buttons optimized for museum installation accessibility and user interaction',
         caption: 'Touch kiosk main menu with virtual navigation controls',
         detailedCaption:
@@ -192,7 +202,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-touchscreen-kiosk-mission-selection-menu.png',
+          'projects/verdantia/verdantia-touchscreen-kiosk-mission-selection-menu.jpg',
         alt: 'Mission selection interface showing educational challenges and learning objectives for progressive city building and environmental stewardship skill development',
         caption:
           'Mission system for progressive environmental education challenges',
@@ -201,7 +211,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-touchscreen-kiosk-screenshot-building-menu-for-eco-high-rise-building-with-building-metrics.png',
+          'projects/verdantia/verdantia-touchscreen-kiosk-screenshot-building-menu-for-eco-high-rise-building-with-building-metrics.jpg',
         alt: 'Detailed building information interface showing eco-friendly high-rise specifications with environmental metrics, energy efficiency data, and sustainability indicators',
         caption:
           'Detailed building metrics for eco-friendly high-rise construction',
@@ -210,7 +220,7 @@ export const verdantiaProject: ProjectData = {
       },
       {
         relativePath:
-          'projects/verdantia/verdantia-touchscreen-kiosk-ui-city-metrics.png',
+          'projects/verdantia/verdantia-touchscreen-kiosk-ui-city-metrics.jpg',
         alt: 'City metrics dashboard displaying real-time environmental data including temperature, pollution levels, citizen happiness, and sustainability scores for educational assessment',
         caption:
           'Real-time city metrics dashboard for environmental assessment',

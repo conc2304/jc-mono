@@ -68,9 +68,19 @@ export const tunecraftProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
+    hero: {
       ...getResponsiveImageSet(
         'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg'
+      ),
+      alt: 'Real-time visual feedback showing tracked shoe object with spotlight positioning and RGB arc rotation indicators for XYZ axis rotations in projected interface',
+      caption: 'Real-time object tracking with visual rotation feedback',
+      detailedCaption:
+        'Advanced projected augmented reality interface demonstrating real-time object tracking visualization with spotlight position tracking and RGB arc system representing XYZ rotation values, providing immediate visual feedback for users to understand their physical interactions and object pose detection accuracy in the interactive music control system',
+    },
+    thumbnail: {
+      src: getImageUrl(
+        'projects/tunecraft/tunecraft-spotlight-tracking-of-shoe-with-rotation-markers-XYZ-as-RGB-arcs.jpg',
+        'thumbnail'
       ),
       alt: 'Real-time visual feedback showing tracked shoe object with spotlight positioning and RGB arc rotation indicators for XYZ axis rotations in projected interface',
       caption: 'Real-time object tracking with visual rotation feedback',
