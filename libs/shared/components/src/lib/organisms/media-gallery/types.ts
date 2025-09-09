@@ -1,7 +1,11 @@
-interface ImageMediaData {
+export interface ImageMediaSource {
   src: string;
   srcSet?: string;
   sizes?: string;
+}
+
+interface ImageMediaData {
+  sources: MediaSource[];
   alt: string;
   caption?: string;
   detailedCaption?: string; // For longer captions in modal

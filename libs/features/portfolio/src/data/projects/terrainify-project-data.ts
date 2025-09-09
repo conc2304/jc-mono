@@ -66,20 +66,8 @@ export const terrainifyProject: ProjectData = {
   // =============================================================================
   media: {
     hero: {
-      ...getResponsiveImageSet(
-        'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.jpg'
-      ),
-      alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
-      caption:
-        'High-quality rendered terrain with mountains and water features',
-      detailedCaption:
-        "Sophisticated render result showcasing the final output of Terrainify's procedural generation system, featuring detailed mountainous terrain with realistic water features, demonstrating the complex shading network integration, displacement mapping techniques, and material assignment systems that create production-quality 3D landscapes for motion graphics and visual performance applications",
-    },
-    thumbnail: {
-      src: getImageUrl(
+      relativePath:
         'projects/terrainify/terrainify-terrain-generation-render-result-mountains-with-lakes.jpg',
-        'thumbnail'
-      ),
       alt: 'Final rendered terrain showing detailed mountains and lakes created through procedural generation with displacement mapping and custom material shading systems',
       caption:
         'High-quality rendered terrain with mountains and water features',
@@ -113,16 +101,11 @@ export const terrainifyProject: ProjectData = {
         detailedCaption:
           "Advanced custom UI development showcasing Terrainify's native Maya interface panel with comprehensive parameter controls for terrain generation, BPM synchronization settings, animation timing configuration, and real-time adjustment capabilities, demonstrating professional Maya plugin development with intuitive workflow integration and immediate visual feedback systems",
       },
-    ].map((mediaItem) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/terrainify/Terrainify-Python-Scripting-Final-Project-Demo.mp4'
-        ),
+        relativePath:
+          'projects/terrainify/Terrainify-Python-Scripting-Final-Project-Demo.mp4',
         caption:
           'Complete Maya plugin demonstration with BPM-synchronized terrain animation',
         detailedCaption:

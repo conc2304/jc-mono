@@ -1,6 +1,7 @@
 import { ProjectData } from '@jc/ui-components';
 import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
 
+const projectDir = 'projects/3d-atomic-visualizer/';
 export const atomicVisualizerProject: ProjectData = {
   // =============================================================================
   // CORE PROJECT INFORMATION
@@ -67,16 +68,7 @@ export const atomicVisualizerProject: ProjectData = {
   // =============================================================================
   media: {
     hero: {
-      ...getResponsiveImageSet(
-        'projects/3d-atomic-visualizer/atomic-structure-hero.jpg'
-      ),
-      alt: 'Atomic Structure Hero',
-    },
-    thumbnail: {
-      src: getImageUrl(
-        'projects/3d-atomic-visualizer/atomic-structure-hero.jpg',
-        'thumbnail'
-      ),
+      relativePath: 'projects/3d-atomic-visualizer/atomic-structure-hero.jpg',
       alt: 'Atomic Structure Hero',
     },
     screenshots: [
@@ -133,16 +125,11 @@ export const atomicVisualizerProject: ProjectData = {
         detailedCaption:
           'Project hero image highlighting the successful integration of cutting-edge 3D web development technologies with educational applications, showcasing React Three Fiber mastery through interactive atomic structure exploration, modern WebGL implementation, and the intersection of advanced programming skills with scientific visualization',
       },
-    ].map(({ relativePath, ...mediaItem }) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(relativePath),
-      url: getImageUrl(relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/3d-atomic-visualizer/Jose Conchello - Harvard CS50 Final Project - 3D Atomic Structure.mp4'
-        ),
+        relativePath:
+          'projects/3d-atomic-visualizer/Jose Conchello - Harvard CS50 Final Project - 3D Atomic Structure.mp4',
         title: '3D Atomic Visualizer Demo',
         type: 'demo',
         caption: 'Complete project walkthrough and feature demonstration',

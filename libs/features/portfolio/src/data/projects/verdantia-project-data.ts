@@ -89,19 +89,8 @@ export const verdantiaProject: ProjectData = {
   // =============================================================================
   media: {
     hero: {
-      ...getResponsiveImageSet(
-        'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.jpg'
-      ),
-      alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
-      caption: 'Welcome screen with environmental theme introduction',
-      detailedCaption:
-        "Engaging welcome screen featuring forest imagery that introduces Verdantia's environmental themes and educational objectives, setting the foundation for learning about urban reforestation, sustainable development, and the personal benefits of green spaces in city planning through interactive simulation experience",
-    },
-    thumbnail: {
-      src: getImageUrl(
+      relativePath:
         'projects/verdantia/verdantia-screenshot-welcome-screen-over-forest-hero-image.jpg',
-        'thumbnail'
-      ),
       alt: 'Game welcome screen displaying over forest background imagery introducing environmental themes and sustainable city building educational objectives',
       caption: 'Welcome screen with environmental theme introduction',
       detailedCaption:
@@ -227,16 +216,11 @@ export const verdantiaProject: ProjectData = {
         detailedCaption:
           'Advanced city metrics visualization system displaying real-time environmental data including temperature patterns from heat equation simulation, pollution levels, citizen happiness indices, and comprehensive sustainability scores, providing immediate feedback on urban planning decisions and demonstrating the complex relationships between city design and environmental health',
       },
-    ].map((mediaItem) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/verdantia/Verdantia - Green City Builder _ Final Graduate Capstone Presentation.mp4'
-        ),
+        relativePath:
+          'projects/verdantia/Verdantia - Green City Builder _ Final Graduate Capstone Presentation.mp4',
         title: 'Graduate Capstone Final Presentation',
         type: 'final',
         caption:
@@ -245,9 +229,8 @@ export const verdantiaProject: ProjectData = {
           "Comprehensive graduate capstone presentation covering Verdantia's educational objectives, advanced heat equation implementation using Thomas Algorithm, museum installation design, environmental science integration, and the project's role in transforming climate change education through interactive city building and real-time environmental simulation",
       },
       {
-        url: getVideoUrl(
-          'projects/verdantia/Verdantia _ Green City Builder Game (2024 Graduate Capstone)  Walk Through.mp4'
-        ),
+        relativePath:
+          'projects/verdantia/Verdantia _ Green City Builder Game (2024 Graduate Capstone)  Walk Through.mp4',
         title: 'Complete Game Walkthrough',
         type: 'demo',
         caption:
@@ -256,9 +239,8 @@ export const verdantiaProject: ProjectData = {
           "Complete gameplay walkthrough showcasing Verdantia's touch kiosk interface, city building mechanics, real-time heat island simulation, environmental metrics visualization, mission system, and educational pop-up integration designed for museum audiences to learn about urban planning and sustainability through interactive experience",
       },
       {
-        url: getVideoUrl(
-          'projects/verdantia/Arctice_Drone_Exhibit-touchscreen-kiosk-gameplay-inspiration-by-moment-factory.mp4'
-        ),
+        relativePath:
+          'projects/verdantia/Arctice_Drone_Exhibit-touchscreen-kiosk-gameplay-inspiration-by-moment-factory.mp4',
         title: 'Arctic Drone Exhibit - Moment Factory Inspiration',
         type: 'inspiration',
         caption:
@@ -267,9 +249,8 @@ export const verdantiaProject: ProjectData = {
           "Inspirational reference showcasing Moment Factory's Arctic Drone exhibit with sophisticated touchscreen kiosk interface design, demonstrating professional museum installation standards, interactive experience design principles, and multi-modal engagement strategies that influenced Verdantia's development approach and user interface design philosophy",
       },
       {
-        url: getVideoUrl(
-          'projects/verdantia/Charles_River_Infrastructure_Installation-inspiration-documentation.MOV.mp4'
-        ),
+        relativePath:
+          'projects/verdantia/Charles_River_Infrastructure_Installation-inspiration-documentation.MOV.mp4',
         title: 'Charles River Infrastructure Installation Research',
         type: 'inspiration',
         caption:

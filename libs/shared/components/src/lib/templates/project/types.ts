@@ -47,11 +47,26 @@ interface ProjectTechnical {
   }>;
 }
 
+interface BaseImageData {
+  relativePath: string;
+  alt: string;
+  caption?: string;
+  detailedCaption?: string;
+}
+
+interface BaseVideoData {
+  relativePath: string;
+  title?: string;
+  type?: 'demo' | 'process' | 'final' | 'inspiration';
+  thumbnail?: string;
+  caption?: string;
+  detailedCaption?: string; // For longer captions in modal
+}
+
 interface ProjectMedia {
-  thumbnail: ImageMediaData; // main project image thumbnail size
-  hero: ImageMediaData; // main project image
-  screenshots?: ImageMediaData[];
-  videos?: VideoMediaData[];
+  hero: BaseImageData; // main project image
+  screenshots?: BaseImageData[];
+  videos?: BaseVideoData[];
 }
 
 interface ProjectLinks {

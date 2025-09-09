@@ -68,20 +68,8 @@ export const vyzbyProject: ProjectData = {
   // MEDIA ASSETS
   // =============================================================================
   media: {
-    thumbnail: {
-      ...getResponsiveImageSet(
-        'projects/vyzby/vyzby-screenshot-tunnel-hero.jpg'
-      ),
-      alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
-      caption: 'Immersive tunnel visualization hero demonstration',
-      detailedCaption:
-        "Striking tunnel visualization serving as VYZBY's hero demonstration, featuring immersive perspective effects, dynamic lighting, and complex visual algorithms that showcase the framework's potential for creating compelling visual experiences through creative coding and real-time parameter manipulation",
-    },
     hero: {
-      src: getImageUrl(
-        'projects/vyzby/vyzby-screenshot-tunnel-hero.jpg',
-        'thumbnail'
-      ),
+      relativePath: 'projects/vyzby/vyzby-screenshot-tunnel-hero.jpg',
       alt: 'VYZBY hero image featuring immersive tunnel visualization with dynamic lighting and perspective effects demonstrating advanced creative coding capabilities',
       caption: 'Immersive tunnel visualization hero demonstration',
       detailedCaption:
@@ -217,16 +205,11 @@ export const vyzbyProject: ProjectData = {
         detailedCaption:
           "Comprehensive sketch catalogue interface demonstrating VYZBY's extensible architecture with organized creative coding project collection, metadata management, preview system, and easy sketch selection that enables developers to build and share creative coding libraries within the framework",
       },
-    ].map(({ relativePath, ...mediaItem }) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(relativePath),
-      url: getImageUrl(relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/vyzby/vyzby-audio-reactive-demo-jam-session.mp4'
-        ),
+        relativePath:
+          'projects/vyzby/vyzby-audio-reactive-demo-jam-session.mp4',
         title: 'Audio-Reactive Live Performance Demo',
         type: 'demo',
         caption:
