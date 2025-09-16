@@ -35,7 +35,7 @@ export const terrainifyFileSystemItem: FileSystemItem<
       'python',
     ],
     favorite: false,
-    thumbnail: terrainifyProject.media.thumbnail,
+    thumbnail: terrainifyProject.media.hero,
 
     description:
       'Maya Python plugin for procedural terrain with BPM-synchronized animation and music visualization',

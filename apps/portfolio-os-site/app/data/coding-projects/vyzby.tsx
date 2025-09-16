@@ -35,7 +35,7 @@ export const vyzbyFileSystemItem: FileSystemItem<
       'developer-tools',
     ],
     favorite: true,
-    thumbnail: vyzbyProject.media.thumbnail,
+    thumbnail: vyzbyProject.media.hero,
     description:
       'Interactive audio visualizer framework - real-time parameter control for creative coding workflows',
   },

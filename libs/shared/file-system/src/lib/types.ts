@@ -1,5 +1,5 @@
 import { ComponentType, ReactNode } from 'react';
-import { ImageMediaData, TileContentProps } from '@jc/ui-components';
+import { BaseImageData, TileContentProps } from '@jc/ui-components';
 import { Property } from 'csstype';
 import { PaletteOptionName } from '@mui/material/styles';
 
@@ -26,7 +26,7 @@ export interface FileSystemMetaData {
   description?: string;
   tags: string[];
   favorite: boolean;
-  thumbnail?: ImageMediaData;
+  thumbnail?: BaseImageData;
   customProperties?: Record<string, any>;
 }
 

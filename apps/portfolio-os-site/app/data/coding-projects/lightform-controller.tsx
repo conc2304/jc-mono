@@ -35,7 +35,7 @@ export const lightformWebControllerFileSystemItem: FileSystemItem<
       'creative-coding',
     ],
     favorite: true,
-    thumbnail: lightformWebControllerProject.media.thumbnail,
+    thumbnail: lightformWebControllerProject.media.hero,
 
     description:
       'PWA projection mapping controller with FTUX - AR hardware interface and creative coding',

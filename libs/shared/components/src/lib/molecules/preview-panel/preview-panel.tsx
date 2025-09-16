@@ -3,6 +3,7 @@ import { ChevronDown, ChevronLeft, Info } from 'lucide-react';
 
 import { FileSystemItem } from '@jc/file-system';
 import { ImageContainer } from '../../atoms';
+import { useMediaProvider } from '../../context';
 
 interface PreviewPanelProps {
   collapsed: boolean;
@@ -15,6 +16,8 @@ export const PreviewPanel = ({
   onToggle,
   selectedItem = null,
 }: PreviewPanelProps) => {
+  const { generateImageSources } = useMediaProvider().provider;
+
   return (
     <Box
       sx={{
@@ -61,9 +64,10 @@ export const PreviewPanel = ({
                 <ImageContainer
                   lazy={false}
                   showSkeletonDuration={0}
-                  src={selectedItem.metadata.thumbnail.src}
-                  srcSet={selectedItem.metadata.thumbnail.srcSet}
-                  sizes={selectedItem.metadata.thumbnail.sizes}
+                  {...generateImageSources(
+                    selectedItem.metadata.thumbnail.relativePath,
+                    'thumbnail'
+                  )}
                   alt={selectedItem.metadata.thumbnail.alt}
                 />
               ) : (

@@ -34,7 +34,7 @@ export const atomicVisualizerFileSystemItem: FileSystemItem<
       'harvard-cs50',
     ],
     favorite: false,
-    thumbnail: atomicVisualizerProject.media.thumbnail,
+    thumbnail: atomicVisualizerProject.media.hero,
     description:
       '3D WebGL periodic table explorer with animated atomic structures',
   },
