@@ -14,11 +14,7 @@ import {
 } from '@mui/material';
 import { Close, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { VideoPlayer } from '@jc/ui-components';
-import {
-  MediaItem,
-  ImageRenderAttributes,
-  VideoRenderAttributes,
-} from '../types';
+import { MediaItem, ImageMediaData, VideoMediaData } from '../types';
 
 interface MediaModalProps {
   mediaItems: MediaItem[];
@@ -136,10 +132,10 @@ export const MediaModal = ({
 
   const getDetailedCaption = (media: MediaItem) => {
     if (media.type === 'video') {
-      const video = media.data as VideoRenderAttributes;
+      const video = media.data as VideoMediaData;
       return video.detailedCaption || video.caption || video.title;
     } else {
-      const image = media.data as ImageRenderAttributes;
+      const image = media.data as ImageMediaData;
       return image.detailedCaption || image.caption;
     }
   };
@@ -203,9 +199,8 @@ export const MediaModal = ({
                 }}
               >
                 {currentMedia.type === 'video'
-                  ? (currentMedia.data as VideoRenderAttributes).title ||
-                    'Video'
-                  : (currentMedia.data as ImageRenderAttributes).alt || 'Image'}
+                  ? (currentMedia.data as VideoMediaData).title || 'Video'
+                  : (currentMedia.data as ImageMediaData).alt || 'Image'}
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 {currentIndex + 1} of {mediaItems.length} • {currentMedia.type}
@@ -213,13 +208,13 @@ export const MediaModal = ({
             </Box>
 
             {currentMedia.type === 'video' &&
-              (currentMedia.data as VideoRenderAttributes).type && (
+              (currentMedia.data as VideoMediaData).type && (
                 <Chip
-                  label={(currentMedia.data as VideoRenderAttributes).type}
+                  label={(currentMedia.data as VideoMediaData).type}
                   size="small"
                   sx={{
                     bgcolor: getVideoTypeColor(
-                      (currentMedia.data as VideoRenderAttributes).type
+                      (currentMedia.data as VideoMediaData).type
                     ),
                     color: theme.palette.text.secondary,
                     textTransform: 'capitalize',
@@ -314,8 +309,8 @@ export const MediaModal = ({
               >
                 <Box
                   component="img"
-                  src={(currentMedia.data as ImageRenderAttributes).src}
-                  alt={(currentMedia.data as ImageRenderAttributes).alt}
+                  src={(currentMedia.data as ImageMediaData).src}
+                  alt={(currentMedia.data as ImageMediaData).alt}
                   sx={{
                     maxWidth: '100%',
                     maxHeight: '100%',
@@ -328,7 +323,7 @@ export const MediaModal = ({
               <Box sx={{ width: '100%', height: '100%' }}>
                 <VideoPlayer
                   video={{
-                    ...(currentMedia.data as VideoRenderAttributes),
+                    ...(currentMedia.data as VideoMediaData),
                   }}
                   sx={{ width: '100%', height: '100%' }}
                   controls={true}

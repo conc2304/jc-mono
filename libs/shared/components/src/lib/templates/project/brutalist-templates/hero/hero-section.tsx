@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
 import { ImageContainer } from '../../../../atoms';
-import { ImageMediaData } from '../../../../organisms';
+import { ImageRenderAttributes } from '../../../../organisms';
 
 interface HeroSectionProps {
-  heroImage: ImageMediaData;
+  heroImage: ImageRenderAttributes;
   projectName: string;
   projectSubtitle?: string;
   description?: string;
@@ -18,7 +18,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const theme = useTheme();
 
-  const { relativePath, detailedCaption, ...imgAttributes } = heroImage;
+  const { src, sizes, alt } = heroImage;
   return (
     <Box sx={{ position: 'relative' }}>
       <Box
@@ -31,7 +31,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }}
       >
         <ImageContainer
-          {...imgAttributes}
+          src={src}
+          sizes={sizes}
+          alt={alt}
           lazy={false}
           showSkeletonDuration={1}
           className="hero-image"

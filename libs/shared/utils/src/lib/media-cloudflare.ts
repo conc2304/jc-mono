@@ -1,8 +1,10 @@
-import type { ImageMediaData } from '@jc/ui-components';
+import type {
+  ImageMediaData,
+  ImageMediaSource,
+  MediaContextSize,
+} from '@jc/ui-components';
 
 // Cloudflare Images transformation utilities
-
-type ImageContext = 'thumbnail' | 'gallery' | 'hero' | 'full';
 
 interface ImageContextConfig {
   maxWidth: number;
@@ -11,7 +13,7 @@ interface ImageContextConfig {
   breakpoints: number[];
 }
 
-const IMAGE_CONTEXTS: Record<ImageContext, ImageContextConfig> = {
+const IMAGE_CONTEXTS: Record<MediaContextSize, ImageContextConfig> = {
   thumbnail: {
     maxWidth: 400,
     quality: 80,
@@ -29,6 +31,13 @@ const IMAGE_CONTEXTS: Record<ImageContext, ImageContextConfig> = {
     quality: 90,
     sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1400px',
     breakpoints: [640, 1024, 1400],
+  },
+  modal: {
+    maxWidth: 1800,
+    quality: 95,
+    sizes:
+      '(max-width: 640px) 95vw, (max-width: 1024px) 85vw, (max-width: 1400px) 75vw, 1800px',
+    breakpoints: [600, 1000, 1400, 1800],
   },
   full: {
     maxWidth: 2000,
@@ -63,11 +72,8 @@ export function getImageUrl(
  */
 export function getContextualImage(
   path: string,
-  context: ImageContext,
-  alt: string,
-  caption?: string,
-  detailedCaption?: string
-): ImageMediaData {
+  context: MediaContextSize
+): ImageMediaSource {
   const config = IMAGE_CONTEXTS[context];
 
   // Generate srcSet with context-appropriate breakpoints
@@ -79,9 +85,6 @@ export function getContextualImage(
     src: getImageUrl(path, config.maxWidth, config.quality),
     srcSet,
     sizes: config.sizes,
-    alt,
-    caption,
-    detailedCaption,
   };
 }
 
@@ -92,20 +95,19 @@ export function getContextualImage(
 export function getMultiContextImage(
   path: string,
   alt: string,
-  contexts: ImageContext[],
+  contexts: MediaContextSize[],
   caption?: string,
   detailedCaption?: string
-): Record<ImageContext, ImageMediaData> {
-  const result = {} as Record<ImageContext, ImageMediaData>;
+): Record<MediaContextSize, ImageMediaData> {
+  const result = {} as Record<MediaContextSize, ImageMediaData>;
 
   contexts.forEach((context) => {
-    result[context] = getContextualImage(
-      path,
-      context,
+    result[context] = {
+      sources: [getContextualImage(path, context)],
       alt,
       caption,
-      detailedCaption
-    );
+      detailedCaption,
+    };
   });
 
   return result;
@@ -123,7 +125,7 @@ export function getVideoUrl(path: string): string {
  * @deprecated Use getContextualImage instead for better optimization
  */
 export function getResponsiveImageSet(path: string) {
-  return getContextualImage(path, 'gallery', '');
+  return getContextualImage(path, 'gallery');
 }
 
 /**

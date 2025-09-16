@@ -12,15 +12,23 @@ import { PlayArrow } from '@mui/icons-material';
 import {
   ImageContainer,
   ImageLoadingProps,
+  MediaContextSize,
+  useMediaProvider,
   VideoPlayer,
 } from '@jc/ui-components';
-import { MediaItem, ImageMediaData, VideoMediaData } from './types';
+import {
+  MediaItem,
+  ImageRenderAttributes,
+  VideoRenderAttributes,
+  BaseImageData,
+  BaseVideoData,
+} from './types';
 import { MediaModal } from './components';
 import { ensureContrast } from '@jc/utils';
 
 export interface MediaGalleryProps extends ImageLoadingProps {
-  images?: ImageMediaData[];
-  videos?: VideoMediaData[];
+  images?: BaseImageData[];
+  videos?: BaseVideoData[];
   onMediaClick?: (mediaItem: MediaItem) => void;
   /**
    * Whether to enable horizontal scrolling layout on mobile devices
@@ -59,17 +67,23 @@ export const MediaGallery = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [currentModalIndex, setCurrentModalIndex] = useState(0);
 
+  const { generateImageSources, generateVideoUrl } =
+    useMediaProvider().provider;
+
   // Combine images and videos into a single media array
-  const createMediaItems = (): MediaItem[] => {
+  const createMediaItems = (contextSize: MediaContextSize): MediaItem[] => {
     const unsortedItems: MediaItem[] = [
       ...videos.map((video, index) => ({
         type: 'video' as const,
-        data: video,
+        data: { url: generateVideoUrl(video.relativePath), ...video },
         index: images.length + index, // Temporary index
       })),
       ...images.map((image, index) => ({
         type: 'image' as const,
-        data: image,
+        data: {
+          ...image,
+          ...generateImageSources(image.relativePath, 'gallery'),
+        },
         index, // Temporary index
       })),
     ];
@@ -86,7 +100,8 @@ export const MediaGallery = ({
     }));
   };
 
-  const mediaItems: MediaItem[] = createMediaItems();
+  const mediaItemsGallery: MediaItem[] = createMediaItems('gallery');
+  const mediaItemsModal: MediaItem[] = createMediaItems('modal');
 
   // Update container width for responsive behavior
   useEffect(() => {
@@ -108,7 +123,7 @@ export const MediaGallery = ({
   // Determine if we should use mobile layout
   const isMobile = containerWidth < mobileBreakpoint;
   const useMobileScrolling =
-    allowMobileScrolling && isMobile && mediaItems.length > 1;
+    allowMobileScrolling && isMobile && mediaItemsGallery.length > 1;
 
   const getVideoTypeColor = (type?: string) => {
     switch (type) {
@@ -140,11 +155,10 @@ export const MediaGallery = ({
   };
 
   const renderMobileThumbnail = (mediaItem: MediaItem, index: number) => {
-    const { type, data } = mediaItem;
-
+    const { type, data: media } = mediaItem;
     return (
       <Box
-        className="MediaGallery--mobile-thumbnail"
+        className="MediaGallery--mobile-root"
         key={`mobile-${type}-${index}`}
         component="button"
         onClick={() => handleMediaClick(mediaItem)}
@@ -168,10 +182,10 @@ export const MediaGallery = ({
       >
         {type === 'image' ? (
           <ImageContainer
-            src={(data as ImageMediaData).src}
-            srcSet={(data as ImageMediaData).srcSet}
-            sizes={(data as ImageMediaData).sizes}
-            alt={(data as ImageMediaData).alt}
+            src={(media as ImageRenderAttributes).src}
+            srcSet={(media as ImageRenderAttributes).srcSet}
+            sizes={(media as ImageRenderAttributes).sizes}
+            alt={(media as ImageRenderAttributes).alt}
             sx={{
               width: '100%',
               height: '100%',
@@ -185,7 +199,7 @@ export const MediaGallery = ({
         ) : (
           <>
             <VideoPlayer
-              video={data as VideoMediaData}
+              video={media}
               sx={{
                 width: '100%',
                 height: '100%',
@@ -218,7 +232,7 @@ export const MediaGallery = ({
   };
 
   const renderDesktopMediaItem = (mediaItem: MediaItem) => {
-    const { type, data, index } = mediaItem;
+    const { type, data: media, index } = mediaItem;
 
     // Adjust grid sizing based on whether we're forcing desktop layout on mobile
     const gridSize = useMobileScrolling
@@ -226,11 +240,9 @@ export const MediaGallery = ({
       : { xs: 12, sm: 6, lg: 6 };
 
     if (type === 'image') {
-      const image = data as ImageMediaData;
-
       return (
         <Grid
-          className="MediaGallery--fullsize-root"
+          className="MediaGallery--desktop-root"
           size={gridSize}
           key={`image-${index}`}
         >
@@ -258,10 +270,10 @@ export const MediaGallery = ({
               }}
             >
               <ImageContainer
-                src={image.src}
-                srcSet={image.srcSet}
-                sizes={image.sizes}
-                alt={image.alt}
+                src={(media as ImageRenderAttributes).src}
+                srcSet={(media as ImageRenderAttributes).srcSet}
+                sizes={(media as ImageRenderAttributes).sizes}
+                alt={(media as ImageRenderAttributes).alt}
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -275,7 +287,7 @@ export const MediaGallery = ({
                 threshold={threshold}
               />
             </Box>
-            {image.caption && (
+            {media.caption && (
               <CardContent sx={{ p: 2, overflowY: 'auto' }}>
                 <Typography
                   variant="body2"
@@ -292,7 +304,7 @@ export const MediaGallery = ({
                     WebkitBoxOrient: 'vertical',
                   }}
                 >
-                  {image.caption}
+                  {media.caption}
                 </Typography>
               </CardContent>
             )}
@@ -302,7 +314,7 @@ export const MediaGallery = ({
     }
 
     if (type === 'video') {
-      const video = { ...(data as VideoMediaData) };
+      const video = { ...(media as VideoRenderAttributes) };
 
       return (
         <Grid size={gridSize} key={`video-${index}`}>
@@ -428,7 +440,7 @@ export const MediaGallery = ({
     return null;
   };
 
-  if (mediaItems.length === 0) {
+  if (mediaItemsGallery.length === 0) {
     return null;
   }
 
@@ -483,7 +495,7 @@ export const MediaGallery = ({
               },
             }}
           >
-            {mediaItems.map((mediaItem, index) =>
+            {mediaItemsGallery.map((mediaItem, index) =>
               renderMobileThumbnail(mediaItem, index)
             )}
           </Box>
@@ -491,13 +503,13 @@ export const MediaGallery = ({
       ) : (
         /* Desktop/Grid layout */
         <Grid container spacing={isMobile ? 2 : 3}>
-          {mediaItems.map(renderDesktopMediaItem)}
+          {mediaItemsGallery.map(renderDesktopMediaItem)}
         </Grid>
       )}
 
       {/* Media Modal */}
       <MediaModal
-        mediaItems={mediaItems}
+        mediaItems={mediaItemsModal}
         currentIndex={currentModalIndex}
         open={modalOpen}
         onClose={handleModalClose}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Error } from '@mui/icons-material';
-import { getImageUrl } from '@jc/utils';
+import { useMediaProvider } from '../../context';
 
 // Utility function to find the closest scrollable parent
 const findScrollableParent = (element: Element | null): Element | null => {
@@ -97,6 +97,10 @@ export const ImageContainer = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const {
+    provider: { generateImageSources },
+  } = useMediaProvider();
+
   // Intersection Observer hook
   const observerCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -122,7 +126,10 @@ export const ImageContainer = ({
     [shouldLoad, src]
   );
 
-  const skeletonImageUrl = getImageUrl('textures/ui/static.jpg', 'thumbnail');
+  const skeletonImageUrl = generateImageSources(
+    'textures/ui/static.jpg',
+    'thumbnail'
+  );
 
   useEffect(() => {
     if (!lazy) return;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography, useTheme, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
 import ProjectData from '../types';
 import { MobileNavigation } from './navigation/mobile-navigation';
@@ -10,6 +10,8 @@ import { MobileContent } from './mobile/mobile-content';
 import { DesktopContent } from './desktop/desktop-content';
 import { NavigationContext } from '@jc/file-system';
 import { MarkdownRenderer } from '../../../molecules/markdown-renderer';
+import { useMediaProvider } from '../../../context';
+import { ImageRenderAttributes } from '../../../organisms';
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   height: '100%',
@@ -46,7 +48,7 @@ export const BrutalistTemplate: React.FC<
   onSelectItem,
   navigationInfo,
   // Project props
-  ...project
+  ...portfolioProject
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +56,11 @@ export const BrutalistTemplate: React.FC<
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null
   );
+
+  portfolioProject;
+  // const transformedMedia = useProjectMedia(portfolioProject);
+
+  const { generateImageSources } = useMediaProvider().provider;
 
   useEffect(() => {
     if (containerRef.current) {
@@ -64,9 +71,9 @@ export const BrutalistTemplate: React.FC<
     }
     // Reset active tab to overview when project changes
     setActiveTab('overview');
-  }, [project.projectName]);
+  }, [portfolioProject.projectName]);
 
-  const data = project;
+  const projectData = { ...portfolioProject };
 
   const getStatusColor = (
     status?: string
@@ -102,6 +109,13 @@ export const BrutalistTemplate: React.FC<
     setActiveTab(newValue);
   };
 
+  const heroImageData: ImageRenderAttributes = {
+    ...generateImageSources(projectData.media.hero.relativePath, 'hero'),
+    alt: projectData.media.hero.alt,
+    caption: projectData.media.hero.caption,
+    detailedCaption: projectData.media.hero.detailedCaption,
+  };
+
   return (
     <ResponsiveContainer ref={containerRef}>
       <MobileNavigation
@@ -118,12 +132,17 @@ export const BrutalistTemplate: React.FC<
         tabs={tabsData}
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        status={data.metadata?.status}
+        status={projectData.metadata?.status}
         getStatusColor={getStatusColor}
+      />
+      <MobileContent
+        activeTab={activeTab}
+        data={projectData}
+        renderContent={renderContent}
       />
 
       <DesktopNavigation
-        title={data.projectName}
+        title={projectData.projectName}
         onNext={onNext}
         onPrevious={onPrevious}
         onSelectItem={onSelectItem}
@@ -131,20 +150,14 @@ export const BrutalistTemplate: React.FC<
       />
 
       <HeroSection
-        heroImage={data.media.hero}
-        projectName={data.projectName}
-        description={data.basics?.description}
-        projectSubtitle={data.projectSubtitle}
-      />
-
-      <MobileContent
-        activeTab={activeTab}
-        data={data}
-        renderContent={renderContent}
+        heroImage={heroImageData}
+        projectName={projectData.projectName}
+        description={projectData.basics?.description}
+        projectSubtitle={projectData.projectSubtitle}
       />
 
       <DesktopContent
-        data={data}
+        projectData={projectData}
         activeTab={activeTab}
         onTabChange={handleTabChange}
         tabs={tabsData}

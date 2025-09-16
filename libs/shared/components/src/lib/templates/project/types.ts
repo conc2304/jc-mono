@@ -1,8 +1,8 @@
-import { ImageMediaData, VideoMediaData } from '../../organisms';
-
 // =============================================================================
 // CORE INTERFACES (MVP - Essential for getting projects live)
 // =============================================================================
+
+import { BaseImageData, BaseVideoData } from '../../organisms';
 
 interface ProjectCore {
   id: string; // unique identifier for routing/linking
@@ -45,22 +45,6 @@ interface ProjectTechnical {
     role?: string;
     url?: string;
   }>;
-}
-
-interface BaseImageData {
-  relativePath: string;
-  alt: string;
-  caption?: string;
-  detailedCaption?: string;
-}
-
-interface BaseVideoData {
-  relativePath: string;
-  title?: string;
-  type?: 'demo' | 'process' | 'final' | 'inspiration';
-  thumbnail?: string;
-  caption?: string;
-  detailedCaption?: string; // For longer captions in modal
 }
 
 interface ProjectMedia {

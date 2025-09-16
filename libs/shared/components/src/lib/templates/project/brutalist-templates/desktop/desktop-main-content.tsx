@@ -1,12 +1,9 @@
 import React from 'react';
 import { Box, Tabs, Tab, Typography, useTheme } from '@mui/material';
 import { ProjectData, ProjectContent } from '../../types';
-import {
-  MediaGallery,
-  ImageMediaData,
-  VideoMediaData,
-} from '../../../../organisms';
+import { MediaGallery } from '../../../../organisms';
 import { simplePriorityVideoSort } from '../../../../molecules';
+import { useProjectMedia } from '../../../../hooks/project-media';
 
 interface TabData {
   key: string;
@@ -14,24 +11,20 @@ interface TabData {
 }
 
 interface DesktopMainContentProps {
-  data: ProjectData;
+  projectData: ProjectData;
   activeTab: string;
   onTabChange: (event: React.SyntheticEvent, newValue: string) => void;
   tabs: TabData[];
   renderContent: (content?: string | string[]) => React.ReactNode;
-  screenshots?: ImageMediaData[];
-  videos?: VideoMediaData[];
   onMediaClick?: (mediaItem: any) => void; // Callback for when media is clicked
 }
 
 export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
-  data,
+  projectData,
   activeTab,
   onTabChange,
   tabs,
   renderContent,
-  screenshots = [],
-  videos = [],
   onMediaClick,
 }) => {
   const theme = useTheme();
@@ -64,7 +57,7 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
 
       {/* Tab Content */}
       <Box sx={{ mb: 8 }}>
-        {data.content?.[activeTab as keyof ProjectContent] && (
+        {projectData.content?.[activeTab as keyof ProjectContent] && (
           <Box>
             <Typography
               variant="h4"
@@ -77,16 +70,21 @@ export const DesktopMainContent: React.FC<DesktopMainContentProps> = ({
             >
               {activeTab}
             </Typography>
-            {renderContent(data.content[activeTab as keyof ProjectContent])}
+            {renderContent(
+              projectData.content[activeTab as keyof ProjectContent]
+            )}
           </Box>
         )}
       </Box>
 
       {/* Gallery Component */}
-      {(screenshots.length > 0 || videos.length > 0) && (
+      {((projectData?.media?.screenshots &&
+        projectData?.media?.screenshots?.length > 0) ||
+        (projectData?.media?.videos &&
+          projectData?.media?.videos.length > 0)) && (
         <MediaGallery
-          images={screenshots}
-          videos={videos}
+          images={projectData?.media?.screenshots}
+          videos={projectData?.media?.videos}
           onMediaClick={onMediaClick}
           sortFunction={simplePriorityVideoSort}
         />

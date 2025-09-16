@@ -511,3 +511,540 @@ const transformedProject = projectService.transformProject(LIGHTFORM_RAW_DATA);
 □ 9. Update any remaining components to use new architecture
 □ 10. Remove old media utility functions
 */
+
+// ============================================================================
+// STRATEGY 1: ADAPTER PATTERN WITH GENERIC INTERFACES
+// ============================================================================
+
+// types/media-core.ts - Generic, provider-agnostic types
+export interface MediaSource {
+  src: string;
+  srcSet?: string;
+  sizes?: string;
+}
+
+export interface GenericImageData {
+  sources: MediaSource[];
+  alt: string;
+  caption?: string;
+  detailedCaption?: string;
+  aspectRatio?: number;
+}
+
+export interface GenericVideoData {
+  url: string;
+  title?: string;
+  type?: 'demo' | 'process' | 'final' | 'inspiration';
+  thumbnail?: string;
+  caption?: string;
+  detailedCaption?: string;
+  duration?: number;
+}
+
+export interface GenericMediaItem {
+  type: 'image' | 'video';
+  data: GenericImageData | GenericVideoData;
+  index: number;
+}
+
+// types/project-data.ts - Raw project data (provider-agnostic)
+export interface RawProjectMedia {
+  heroPath: string;
+  screenshots?: Array<{
+    path: string;
+    alt: string;
+    caption?: string;
+    detailedCaption?: string;
+  }>;
+  videos?: Array<{
+    path: string;
+    title?: string;
+    type?: 'demo' | 'process' | 'final' | 'inspiration';
+    caption?: string;
+    detailedCaption?: string;
+  }>;
+}
+
+export interface RawProjectData {
+  projectName: string;
+  projectSubtitle?: string;
+  media: RawProjectMedia;
+  // ... other project fields
+}
+
+// ============================================================================
+// STRATEGY 2: MEDIA PROVIDER INTERFACE
+// ============================================================================
+
+export type MediaContext = 'thumbnail' | 'gallery' | 'hero' | 'modal';
+
+export interface MediaProvider {
+  name: string;
+  generateImageSources(path: string, context: MediaContext): MediaSource[];
+  generateVideoUrl(path: string): string;
+  generatePlaceholder(path: string): string;
+  isVideo(path: string): boolean;
+  isImage(path: string): boolean;
+}
+
+// providers/cloudflare-provider.ts
+import { getContextualImage } from '../cloudflare/media';
+
+export class CloudflareMediaProvider implements MediaProvider {
+  name = 'cloudflare';
+
+  generateImageSources(path: string, context: MediaContext): MediaSource[] {
+    const contextualData = getContextualImage(path, context, '');
+    return [
+      {
+        src: contextualData.src,
+        srcSet: contextualData.srcSet,
+        sizes: contextualData.sizes,
+      },
+    ];
+  }
+
+  generateVideoUrl(path: string): string {
+    return `https://media.clyzby.com/${path}`;
+  }
+
+  generatePlaceholder(path: string): string {
+    // Generate low-quality placeholder
+    return `https://clyzby.com/cdn-cgi/image/width=50,quality=50,blur=5,format=auto/https://media.clyzby.com/${path}`;
+  }
+
+  isVideo(path: string): boolean {
+    const videoExtensions = ['.mp4', '.webm', '.mov', '.avi'];
+    return videoExtensions.some((ext) => path.toLowerCase().endsWith(ext));
+  }
+
+  isImage(path: string): boolean {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+    return imageExtensions.some((ext) => path.toLowerCase().endsWith(ext));
+  }
+}
+
+// providers/generic-provider.ts - Fallback for other providers
+export class GenericMediaProvider implements MediaProvider {
+  name = 'generic';
+  private baseUrl: string;
+
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  generateImageSources(path: string, context: MediaContext): MediaSource[] {
+    // Simple responsive images without transformation
+    const baseUrl = `${this.baseUrl}/${path}`;
+    return [
+      {
+        src: baseUrl,
+        srcSet: `${baseUrl} 1x, ${baseUrl} 2x`,
+        sizes: this.getSizesForContext(context),
+      },
+    ];
+  }
+
+  generateVideoUrl(path: string): string {
+    return `${this.baseUrl}/${path}`;
+  }
+
+  generatePlaceholder(path: string): string {
+    // Return a simple placeholder or data URL
+    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjwvc3ZnPgo=';
+  }
+
+  isVideo(path: string): boolean {
+    const videoExtensions = ['.mp4', '.webm', '.mov', '.avi'];
+    return videoExtensions.some((ext) => path.toLowerCase().endsWith(ext));
+  }
+
+  isImage(path: string): boolean {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+    return imageExtensions.some((ext) => path.toLowerCase().endsWith(ext));
+  }
+
+  private getSizesForContext(context: MediaContext): string {
+    switch (context) {
+      case 'thumbnail':
+        return '(max-width: 640px) 200px, 300px';
+      case 'gallery':
+        return '(max-width: 640px) 100vw, 50vw';
+      case 'hero':
+        return '100vw';
+      case 'modal':
+        return '90vw';
+      default:
+        return '100vw';
+    }
+  }
+}
+
+// ============================================================================
+// STRATEGY 3: REACT CONTEXT AND HOOKS
+// ============================================================================
+
+// context/MediaContext.tsx
+import React, { createContext, useContext, ReactNode } from 'react';
+
+interface MediaContextType {
+  provider: MediaProvider;
+  defaultContext: MediaContext;
+}
+
+const MediaContext = createContext<MediaContextType | null>(null);
+
+interface MediaProviderProps {
+  provider: MediaProvider;
+  defaultContext?: MediaContext;
+  children: ReactNode;
+}
+
+export const MediaProviderComponent: React.FC<MediaProviderProps> = ({
+  provider,
+  defaultContext = 'gallery',
+  children,
+}) => {
+  return (
+    <MediaContext.Provider value={{ provider, defaultContext }}>
+      {children}
+    </MediaContext.Provider>
+  );
+};
+
+export const useMediaProvider = () => {
+  const context = useContext(MediaContext);
+  if (!context) {
+    throw new Error(
+      'useMediaProvider must be used within a MediaProviderComponent'
+    );
+  }
+  return context;
+};
+
+// hooks/useMedia.ts
+import { useMemo } from 'react';
+import { useMediaProvider } from '../context/MediaContext';
+
+export const useMedia = (path: string, context?: MediaContext) => {
+  const { provider, defaultContext } = useMediaProvider();
+  const resolvedContext = context || defaultContext;
+
+  const mediaData = useMemo(() => {
+    if (provider.isImage(path)) {
+      return {
+        type: 'image' as const,
+        sources: provider.generateImageSources(path, resolvedContext),
+        placeholder: provider.generatePlaceholder(path),
+      };
+    } else if (provider.isVideo(path)) {
+      return {
+        type: 'video' as const,
+        url: provider.generateVideoUrl(path),
+      };
+    }
+    return null;
+  }, [path, resolvedContext, provider]);
+
+  return mediaData;
+};
+
+// hooks/useProjectMedia.ts
+import { useMemo } from 'react';
+import { useMediaProvider } from '../context/MediaContext';
+
+export const useProjectMedia = (rawProject: RawProjectData) => {
+  const { provider } = useMediaProvider();
+
+  const transformedMedia = useMemo(() => {
+    // Transform hero image
+    const hero: GenericImageData = {
+      sources: provider.generateImageSources(rawProject.media.heroPath, 'hero'),
+      alt: `${rawProject.projectName} - Hero Image`,
+    };
+
+    const thumbnail: GenericImageData = {
+      sources: provider.generateImageSources(
+        rawProject.media.heroPath,
+        'thumbnail'
+      ),
+      alt: `${rawProject.projectName} - Thumbnail`,
+    };
+
+    // Transform screenshots
+    const screenshots: GenericImageData[] =
+      rawProject.media.screenshots?.map((screenshot) => ({
+        sources: provider.generateImageSources(screenshot.path, 'gallery'),
+        alt: screenshot.alt,
+        caption: screenshot.caption,
+        detailedCaption: screenshot.detailedCaption,
+      })) || [];
+
+    // Transform videos
+    const videos: GenericVideoData[] =
+      rawProject.media.videos?.map((video) => ({
+        url: provider.generateVideoUrl(video.path),
+        title: video.title,
+        type: video.type,
+        caption: video.caption,
+        detailedCaption: video.detailedCaption,
+      })) || [];
+
+    return {
+      hero,
+      thumbnail,
+      screenshots,
+      videos,
+    };
+  }, [rawProject, provider]);
+
+  return transformedMedia;
+};
+
+// ============================================================================
+// STRATEGY 4: UPDATED UI COMPONENTS
+// ============================================================================
+
+// components/GenericImage.tsx
+import React from 'react';
+import { GenericImageData } from '../types/media-core';
+
+interface GenericImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  imageData: GenericImageData;
+  loading?: 'lazy' | 'eager';
+}
+
+export const GenericImage: React.FC<GenericImageProps> = ({
+  imageData,
+  loading = 'lazy',
+  ...props
+}) => {
+  // Use the first (best) source
+  const primarySource = imageData.sources[0];
+
+  return (
+    <img
+      src={primarySource.src}
+      srcSet={primarySource.srcSet}
+      sizes={primarySource.sizes}
+      alt={imageData.alt}
+      loading={loading}
+      {...props}
+    />
+  );
+};
+
+// components/AdaptiveImage.tsx
+import React from 'react';
+import { useMedia } from '../hooks/useMedia';
+
+interface AdaptiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  path: string;
+  alt: string;
+  context?: MediaContext;
+  loading?: 'lazy' | 'eager';
+}
+
+export const AdaptiveImage: React.FC<AdaptiveImageProps> = ({
+  path,
+  alt,
+  context,
+  loading = 'lazy',
+  ...props
+}) => {
+  const mediaData = useMedia(path, context);
+
+  if (!mediaData || mediaData.type !== 'image') {
+    return <div>Invalid image</div>;
+  }
+
+  const primarySource = mediaData.sources[0];
+
+  return (
+    <img
+      src={primarySource.src}
+      srcSet={primarySource.srcSet}
+      sizes={primarySource.sizes}
+      alt={alt}
+      loading={loading}
+      {...props}
+    />
+  );
+};
+
+// ============================================================================
+// STRATEGY 5: UPDATED MEDIA GALLERY (GENERIC)
+// ============================================================================
+
+// components/GenericMediaGallery.tsx
+import React, { useState } from 'react';
+import {
+  GenericImageData,
+  GenericVideoData,
+  GenericMediaItem,
+} from '../types/media-core';
+import { GenericImage } from './GenericImage';
+
+interface GenericMediaGalleryProps {
+  images?: GenericImageData[];
+  videos?: GenericVideoData[];
+  onMediaClick?: (mediaItem: GenericMediaItem) => void;
+  className?: string;
+}
+
+export const GenericMediaGallery: React.FC<GenericMediaGalleryProps> = ({
+  images = [],
+  videos = [],
+  onMediaClick,
+  className,
+}) => {
+  const [selectedMedia, setSelectedMedia] = useState<GenericMediaItem | null>(
+    null
+  );
+
+  // Combine images and videos
+  const mediaItems: GenericMediaItem[] = [
+    ...images.map((image, index) => ({
+      type: 'image' as const,
+      data: image,
+      index,
+    })),
+    ...videos.map((video, index) => ({
+      type: 'video' as const,
+      data: video,
+      index: images.length + index,
+    })),
+  ];
+
+  const handleMediaClick = (mediaItem: GenericMediaItem) => {
+    setSelectedMedia(mediaItem);
+    onMediaClick?.(mediaItem);
+  };
+
+  return (
+    <div className={`media-gallery ${className || ''}`}>
+      <div className="media-grid">
+        {mediaItems.map((mediaItem) => (
+          <div
+            key={mediaItem.index}
+            className="media-item"
+            onClick={() => handleMediaClick(mediaItem)}
+          >
+            {mediaItem.type === 'image' ? (
+              <GenericImage
+                imageData={mediaItem.data as GenericImageData}
+                className="gallery-image"
+                loading="lazy"
+              />
+            ) : (
+              <video
+                src={(mediaItem.data as GenericVideoData).url}
+                className="gallery-video"
+                muted
+                preload="metadata"
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// STRATEGY 6: USAGE EXAMPLES
+// ============================================================================
+
+// App.tsx - Setup providers
+import React from 'react';
+import { CloudflareMediaProvider } from './providers/cloudflare-provider';
+import { MediaProviderComponent } from './context/MediaContext';
+import { ProjectPage } from './pages/ProjectPage';
+
+const cloudflareProvider = new CloudflareMediaProvider();
+
+export const App: React.FC = () => {
+  return (
+    <MediaProviderComponent
+      provider={cloudflareProvider}
+      defaultContext="gallery"
+    >
+      <ProjectPage />
+    </MediaProviderComponent>
+  );
+};
+
+// pages/ProjectPage.tsx - Use the transformed data
+import React from 'react';
+import { useProjectMedia } from '../hooks/useProjectMedia';
+import { GenericMediaGallery } from '../components/GenericMediaGallery';
+
+const rawProjectData: RawProjectData = {
+  projectName: 'Lightform',
+  media: {
+    heroPath: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
+    screenshots: [
+      {
+        path: 'projects/lightform/App-Header.jpg',
+        alt: 'Web Application Header Interface',
+        caption: 'Main application header',
+      },
+    ],
+    videos: [
+      {
+        path: 'projects/lightform/Desktop-View-Full-With-Errors-.mp4',
+        title: 'Desktop Application Demo',
+        type: 'demo',
+      },
+    ],
+  },
+};
+
+export const ProjectPage: React.FC = () => {
+  const media = useProjectMedia(rawProjectData);
+
+  return (
+    <div>
+      <h1>{rawProjectData.projectName}</h1>
+
+      {/* Hero section */}
+      <div className="hero">
+        <GenericImage imageData={media.hero} loading="eager" />
+      </div>
+
+      {/* Gallery */}
+      <GenericMediaGallery
+        images={media.screenshots}
+        videos={media.videos}
+        onMediaClick={(item) => console.log('Clicked:', item)}
+      />
+    </div>
+  );
+};
+
+// Alternative: Direct path usage with AdaptiveImage
+import { AdaptiveImage } from '../components/AdaptiveImage';
+
+export const AlternativeUsage: React.FC = () => {
+  return (
+    <div>
+      {/* Hero with specific context */}
+      <AdaptiveImage
+        path="projects/lightform/hero.jpg"
+        alt="Project Hero"
+        context="hero"
+        loading="eager"
+      />
+
+      {/* Gallery thumbnails */}
+      <div className="gallery">
+        <AdaptiveImage
+          path="projects/lightform/screenshot1.jpg"
+          alt="Screenshot 1"
+          context="gallery"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  );
+};
