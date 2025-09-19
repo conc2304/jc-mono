@@ -135,11 +135,6 @@ export const BrutalistTemplate: React.FC<
         status={projectData.metadata?.status}
         getStatusColor={getStatusColor}
       />
-      <MobileContent
-        activeTab={activeTab}
-        data={projectData}
-        renderContent={renderContent}
-      />
 
       <DesktopNavigation
         title={projectData.projectName}
@@ -154,6 +149,12 @@ export const BrutalistTemplate: React.FC<
         projectName={projectData.projectName}
         description={projectData.basics?.description}
         projectSubtitle={projectData.projectSubtitle}
+      />
+
+      <MobileContent
+        activeTab={activeTab}
+        data={projectData}
+        renderContent={renderContent}
       />
 
       <DesktopContent

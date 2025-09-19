@@ -1,1050 +1,780 @@
-// ============================================================================
-// MIGRATION GUIDE: UPDATING YOUR EXISTING COMPONENTS
-// ============================================================================
+import React, { useRef, useState, useCallback } from 'react';
+import { ReactNode, ComponentType } from 'react';
+import {
+  Box,
+  Typography,
+  Paper,
+  Container,
+  Grid,
+  Card,
+  CardMedia,
+  Chip,
+  useTheme,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { gsap } from 'gsap';
+import { Observer } from 'gsap/Observer';
+import { useGSAP } from '@gsap/react';
 
-// Step 1: Update your project data structure
-// OLD: projects/project-data.ts
-/*
-const media: ProjectMedia = {
-  hero: {
-    ...getResponsiveImageSet('projects/lightform/hero.jpg'),
-    alt: 'Lightform LF2+ AR Projector',
-  },
-  screenshots: [
-    {
-      ...getResponsiveImageSet('projects/lightform/App-Header.jpg'),
-      alt: 'Web Application Header Interface',
-      caption: 'Main application header',
-    },
-  ],
-};
+// Register GSAP plugins
+gsap.registerPlugin(Observer, useGSAP);
+
+
+import { v4 as uuidv4 } from 'uuid';
+import { sculpturesData } from './your-sculpture-data';
+import SculptureIcon from '@mui/icons-material/FormatShapes';
+
+// Convert your sculpture data to include BaseImageData arrays
+const convertedSculpturesData: Sculpture[] = sculpturesData.map(sculpture => ({
+  ...sculpture,
+  images: Array.from({ length: sculpture.images }, (_, index) => ({
+    relativePath: `/images/sculptures/${sculpture.id}/image-${index + 1}.jpg`,
+    alt: `${sculpture.title} - View ${index + 1}`,
+    caption: sculpture.title,
+    detailedCaption: `${sculpture.title} (${sculpture.date}) - ${sculpture.materials}`
+  }))
+}));
+
+// Create the file system item
+export const sculpturePortfolioFile = sculpturePortfolioFileSystemItem(
+  convertedSculpturesData,
+  uuidv4,
+  <SculptureIcon />
+);
+
+// Use in your component
+<SculpturePortfolio sculpturesData={convertedSculpturesData} />
 */
 
-// NEW: projects/project-data.ts
-export const LIGHTFORM_RAW_DATA: RawProjectData = {
-  projectName: 'Lightform LF2+ AR Projector',
-  projectSubtitle: 'Web-based AR projection mapping controller',
-  media: {
-    heroPath: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
-    screenshots: [
-      {
-        path: 'projects/lightform/App-Header.jpg',
-        alt: 'Web Application Header Interface',
-        caption: 'Main application header showing navigation',
-        detailedCaption:
-          'Main application header showing navigation, device status, and project management controls for the Lightform web interface.',
-      },
-      {
-        path: 'projects/lightform/Desktop-View.jpg',
-        alt: 'Desktop Application Interface',
-        caption: 'Full desktop application view',
-        detailedCaption:
-          'Complete desktop application interface showcasing the projection mapping tools and real-time preview capabilities.',
-      },
-    ],
-    videos: [
-      {
-        path: 'projects/lightform/Desktop-View-Full-With-Errors-.mp4',
-        title: 'Desktop Application Demo with Error Handling',
-        type: 'demo',
-        caption:
-          'Complete desktop application walkthrough including error state management',
-      },
-    ],
+// Styled components
+const FullScreenContainer = styled(Box)(({ theme }) => ({
+  height: '100vh',
+  width: '100vw',
+  overflow: 'hidden',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  backgroundColor: theme.palette.background.default,
+  fontFamily: theme.typography.fontFamily,
+}));
+
+const SlideContainer = styled(Box)(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+  position: 'fixed',
+  top: 0,
+  visibility: 'hidden',
+  zIndex: 1,
+}));
+
+const SlideOuter = styled(Box)({
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+});
+
+const SlideInner = styled(Box)({
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+});
+
+const SlideContent = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'absolute',
+  height: '100%',
+  width: '100%',
+  top: 0,
+});
+
+const GradientBox = styled(Box)(({ gradientcolors }) => ({
+  background: `linear-gradient(135deg, ${gradientcolors[0]} 0%, ${gradientcolors[1]} 100%)`,
+  width: '100%',
+  height: '100%',
+}));
+
+const SculptureImage = styled(CardMedia)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  borderRadius: theme.spacing(1),
+  cursor: 'pointer',
+  transition: 'transform 0.3s ease',
+  '&:hover': {
+    transform: 'scale(1.05)',
   },
-  content: {
-    overview: 'Revolutionary AR projection mapping technology...',
-    process: 'The development process involved...',
-    // ... other content
-  },
-};
+}));
 
-// ============================================================================
-// Step 2: Update your BrutalistTemplate to use the new architecture
-// ============================================================================
+const ModalOverlay = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  backdropFilter: 'blur(10px)',
+  zIndex: 1000,
+  opacity: 0,
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+}));
 
-// templates/BrutalistTemplate.tsx (updated)
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography, useTheme, styled } from '@mui/material';
-import { useProjectMedia } from '../hooks/useProjectMedia';
-import { RawProjectData } from '../types/project-data';
-import { NavigationContext } from '@jc/file-system';
+const ModalContent = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
+  cursor: 'pointer',
+});
 
-// ... existing styled components ...
+const ModalImage = styled('img')(({ theme }) => ({
+  maxWidth: '90vw',
+  maxHeight: '90vh',
+  objectFit: 'contain',
+  borderRadius: theme.spacing(1.5),
+  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+  cursor: 'default',
+}));
 
-export interface BrutalistTemplateProps {
-  hasNavigation?: boolean;
-  rawProject: RawProjectData; // Changed from ProjectData to RawProjectData
+const NavigationContainer = styled(Paper)(({ theme }) => ({
+  position: 'fixed',
+  zIndex: 999,
+  bottom: theme.spacing(3),
+  left: '50%',
+  transform: 'translateX(-50%)',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  backdropFilter: 'blur(10px)',
+  padding: theme.spacing(1, 2),
+  borderRadius: theme.spacing(6),
+  border: `1px solid rgba(255, 255, 255, 0.1)`,
+}));
+
+const OverlayCounter = styled(Typography)(({ theme }) => ({
+  position: 'fixed',
+  top: theme.spacing(4),
+  right: theme.spacing(4),
+  zIndex: 2,
+  fontFamily: '"Playfair Display", serif',
+  fontSize: 'clamp(4rem, 8vw, 8rem)',
+  fontWeight: 300,
+  color: 'rgba(255, 255, 255, 0.1)',
+  lineHeight: 0.8,
+  pointerEvents: 'none',
+}));
+
+// Interfaces
+interface BaseImageData {
+  relativePath: string;
+  alt: string;
+  caption?: string;
+  detailedCaption?: string;
 }
 
-export const BrutalistTemplate: React.FC<
-  BrutalistTemplateProps & NavigationContext
-> = ({
-  hasNavigation = false,
-  onNext,
-  onPrevious,
-  onSelectItem,
-  navigationInfo,
-  rawProject, // Raw data input
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<string>('overview');
-
-  // Transform raw project data using the hook
-  const transformedMedia = useProjectMedia(rawProject);
-
-  // ... existing state and handlers ...
-
-  return (
-    <ResponsiveContainer ref={containerRef}>
-      {/* Navigation components remain the same */}
-      <MobileNavigation
-        hasNavigation={hasNavigation}
-        onMenuClick={(e) => setMobileMenuAnchor(e.currentTarget)}
-        onNext={onNext}
-        onPrevious={onPrevious}
-        navigationInfo={navigationInfo}
-      />
-
-      {/* Hero section now uses transformed data */}
-      <HeroSection
-        heroImage={transformedMedia.hero} // Generic image data
-        projectName={rawProject.projectName}
-        description={rawProject.basics?.description}
-        projectSubtitle={rawProject.projectSubtitle}
-      />
-
-      {/* Content sections pass transformed data */}
-      <MobileContent
-        activeTab={activeTab}
-        rawProject={rawProject}
-        transformedMedia={transformedMedia}
-        renderContent={renderContent}
-      />
-
-      <DesktopContent
-        rawProject={rawProject}
-        transformedMedia={transformedMedia}
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        tabs={tabsData}
-        renderContent={renderContent}
-      />
-    </ResponsiveContainer>
-  );
-};
-
-// ============================================================================
-// Step 3: Update HeroSection to use GenericImageData
-// ============================================================================
-
-// components/hero/HeroSection.tsx (updated)
-import React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
-import { GenericImageData } from '../../types/media-core';
-import { GenericImage } from '../GenericImage';
-
-interface HeroSectionProps {
-  heroImage: GenericImageData; // Changed from ImageMediaData
-  projectName: string;
-  description?: string;
-  projectSubtitle?: string;
+interface Sculpture {
+  id: number;
+  title: string;
+  subtitle?: string;
+  date: string;
+  materials: string;
+  images: BaseImageData[];
+  description: string;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({
-  heroImage,
-  projectName,
-  description,
-  projectSubtitle,
-}) => {
+// Gradient color mapping based on sculpture themes
+const getGradientColors = (title: string, date: string): [string, string] => {
+  // Map based on sculpture characteristics
+  if (title.includes('Hoodie')) return ['#667eea', '#764ba2']; // Blue-purple for tech/modern
+  if (title.includes('Square')) return ['#f093fb', '#f5576c']; // Pink for geometric
+  if (title.includes('Belly') || title.includes('Heart') || title.includes('Rolls')) return ['#43e97b', '#38f9d7']; // Green for body positivity series
+  if (title.includes('Intersections')) return ['#4facfe', '#00f2fe']; // Cyan for mixed materials
+  if (title.includes('Spinal')) return ['#fa709a', '#fee140']; // Warm for organic forms
+
+  // Default based on date as fallback
+  const year = parseInt(date.match(/\d{4}/)?.[0] || '2020');
+  if (year >= 2018) return ['#667eea', '#764ba2'];
+  if (year >= 2016) return ['#f093fb', '#f5576c'];
+  if (year >= 2010) return ['#4facfe', '#00f2fe'];
+  return ['#43e97b', '#38f9d7'];
+};
+
+// Component props interface
+interface SculpturePortfolioProps {
+  sculpturesData: Sculpture[];
+}
+
+const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({ sculpturesData }) => {
   const theme = useTheme();
+  const containerRef = useRef();
+  const slidesRef = useRef([]);
+  const outerWrappersRef = useRef([]);
+  const innerWrappersRef = useRef([]);
+  const modalRef = useRef();
+  const modalContentRef = useRef();
+  const countRef = useRef();
+  const navCounterRef = useRef();
 
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100%',
-        height: { xs: '60vh', md: '70vh' },
-        overflow: 'hidden',
-        mb: 4,
-      }}
-    >
-      {/* Background Image */}
-      <GenericImage
-        imageData={heroImage}
-        loading="eager"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: 1,
-        }}
-      />
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
+  const [originalImageState, setOriginalImageState] = useState(null);
 
-      {/* Overlay Content */}
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-          color: 'white',
-          p: { xs: 3, md: 4 },
-          zIndex: 2,
-        }}
-      >
-        <Typography
-          variant="h2"
-          component="h1"
-          sx={{ fontWeight: 'bold', mb: 1 }}
-        >
-          {projectName}
-        </Typography>
-        {projectSubtitle && (
-          <Typography variant="h5" sx={{ mb: 2, opacity: 0.9 }}>
-            {projectSubtitle}
-          </Typography>
-        )}
-        {description && (
-          <Typography variant="body1" sx={{ maxWidth: '600px' }}>
-            {description}
-          </Typography>
-        )}
-      </Box>
-    </Box>
-  );
-};
+  // GSAP animations using useGSAP hook
+  useGSAP(() => {
+    // Set initial positions
+    gsap.set(outerWrappersRef.current, { xPercent: 100 });
+    gsap.set(innerWrappersRef.current, { xPercent: -100 });
+    gsap.set(outerWrappersRef.current[0], { xPercent: 0 });
+    gsap.set(innerWrappersRef.current[0], { xPercent: 0 });
 
-// ============================================================================
-// Step 4: Update DesktopContent to use transformed data
-// ============================================================================
-
-// components/desktop/DesktopContent.tsx (updated)
-import React from 'react';
-import { Box, Tabs, Tab, Typography, useTheme } from '@mui/material';
-import { RawProjectData } from '../../types/project-data';
-import { GenericImageData, GenericVideoData } from '../../types/media-core';
-import { GenericMediaGallery } from '../GenericMediaGallery';
-
-interface TransformedMedia {
-  hero: GenericImageData;
-  thumbnail: GenericImageData;
-  screenshots: GenericImageData[];
-  videos: GenericVideoData[];
-}
-
-interface DesktopContentProps {
-  rawProject: RawProjectData;
-  transformedMedia: TransformedMedia;
-  activeTab: string;
-  onTabChange: (event: React.SyntheticEvent, newValue: string) => void;
-  tabs: Array<{ key: string; label: string }>;
-  renderContent: (content?: string | string[]) => React.ReactNode;
-}
-
-export const DesktopContent: React.FC<DesktopContentProps> = ({
-  rawProject,
-  transformedMedia,
-  activeTab,
-  onTabChange,
-  tabs,
-  renderContent,
-}) => {
-  const theme = useTheme();
-
-  return (
-    <Box sx={{ maxWidth: '1200px', mx: 'auto', px: 4 }}>
-      {/* Tab Navigation */}
-      <Tabs
-        value={activeTab}
-        onChange={onTabChange}
-        sx={{
-          mb: 4,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-        }}
-      >
-        {tabs.map((tab) => (
-          <Tab key={tab.key} label={tab.label} value={tab.key} />
-        ))}
-      </Tabs>
-
-      {/* Tab Content */}
-      <Box sx={{ mb: 8 }}>
-        {rawProject.content?.[activeTab] && (
-          <Box>
-            <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-            </Typography>
-            {renderContent(rawProject.content[activeTab])}
-          </Box>
-        )}
-      </Box>
-
-      {/* Gallery Component - Now provider-agnostic */}
-      {(transformedMedia.screenshots.length > 0 ||
-        transformedMedia.videos.length > 0) && (
-        <GenericMediaGallery
-          images={transformedMedia.screenshots}
-          videos={transformedMedia.videos}
-          onMediaClick={(item) => console.log('Media clicked:', item)}
-        />
-      )}
-    </Box>
-  );
-};
-
-// ============================================================================
-// Step 5: Create a compatibility adapter for existing components
-// ============================================================================
-
-// adapters/legacy-adapter.ts
-import { GenericImageData, GenericVideoData } from '../types/media-core';
-
-// For components that still expect the old ImageMediaData format
-export interface LegacyImageMediaData {
-  src: string;
-  srcSet?: string;
-  sizes?: string;
-  alt: string;
-  caption?: string;
-  detailedCaption?: string;
-}
-
-export interface LegacyVideoMediaData {
-  url: string;
-  title?: string;
-  type?: 'demo' | 'process' | 'final' | 'inspiration';
-  thumbnail?: string;
-  caption?: string;
-  detailedCaption?: string;
-}
-
-/**
- * Convert GenericImageData to legacy format for backward compatibility
- */
-export function toLegacyImageData(
-  genericImage: GenericImageData
-): LegacyImageMediaData {
-  const primarySource = genericImage.sources[0];
-  return {
-    src: primarySource.src,
-    srcSet: primarySource.srcSet,
-    sizes: primarySource.sizes,
-    alt: genericImage.alt,
-    caption: genericImage.caption,
-    detailedCaption: genericImage.detailedCaption,
-  };
-}
-
-/**
- * Convert GenericVideoData to legacy format
- */
-export function toLegacyVideoData(
-  genericVideo: GenericVideoData
-): LegacyVideoMediaData {
-  return {
-    url: genericVideo.url,
-    title: genericVideo.title,
-    type: genericVideo.type,
-    thumbnail: genericVideo.thumbnail,
-    caption: genericVideo.caption,
-    detailedCaption: genericVideo.detailedCaption,
-  };
-}
-
-// ============================================================================
-// Step 6: Gradual migration wrapper for existing MediaGallery
-// ============================================================================
-
-// components/MediaGalleryWrapper.tsx
-import React from 'react';
-import { MediaGallery as ExistingMediaGallery } from '@jc/ui-components';
-import { GenericImageData, GenericVideoData } from '../types/media-core';
-import {
-  toLegacyImageData,
-  toLegacyVideoData,
-} from '../adapters/legacy-adapter';
-
-interface MediaGalleryWrapperProps {
-  images?: GenericImageData[];
-  videos?: GenericVideoData[];
-  onMediaClick?: (mediaItem: any) => void;
-  [key: string]: any; // Allow other props to pass through
-}
-
-/**
- * Wrapper that converts new format to legacy format for existing MediaGallery
- * Use this during migration period
- */
-export const MediaGalleryWrapper: React.FC<MediaGalleryWrapperProps> = ({
-  images = [],
-  videos = [],
-  onMediaClick,
-  ...otherProps
-}) => {
-  // Convert to legacy format
-  const legacyImages = images.map(toLegacyImageData);
-  const legacyVideos = videos.map(toLegacyVideoData);
-
-  return (
-    <ExistingMediaGallery
-      images={legacyImages}
-      videos={legacyVideos}
-      onMediaClick={onMediaClick}
-      {...otherProps}
-    />
-  );
-};
-
-// ============================================================================
-// Step 7: Application setup with provider
-// ============================================================================
-
-// App.tsx or main application entry point
-import React from 'react';
-import { MediaProviderComponent } from './context/MediaContext';
-import { CloudflareMediaProvider } from './providers/cloudflare-provider';
-import { BrutalistTemplate } from './templates/BrutalistTemplate';
-import { LIGHTFORM_RAW_DATA } from './projects/project-data';
-
-// Initialize your media provider
-const mediaProvider = new CloudflareMediaProvider();
-
-export const App: React.FC = () => {
-  return (
-    <MediaProviderComponent provider={mediaProvider} defaultContext="gallery">
-      <BrutalistTemplate
-        rawProject={LIGHTFORM_RAW_DATA}
-        hasNavigation={true}
-        // ... other props
-      />
-    </MediaProviderComponent>
-  );
-};
-
-// ============================================================================
-// Step 8: Alternative - Project-level data transformation
-// ============================================================================
-
-// If you prefer to transform data at the project level rather than component level
-// services/project-service.ts
-import { CloudflareMediaProvider } from '../providers/cloudflare-provider';
-import { RawProjectData } from '../types/project-data';
-import { GenericImageData, GenericVideoData } from '../types/media-core';
-
-export class ProjectService {
-  constructor(private mediaProvider: MediaProvider) {}
-
-  transformProject(rawProject: RawProjectData) {
-    return {
-      ...rawProject,
-      media: {
-        hero: this.transformImage(
-          rawProject.media.heroPath,
-          'hero',
-          `${rawProject.projectName} - Hero`
-        ),
-        thumbnail: this.transformImage(
-          rawProject.media.heroPath,
-          'thumbnail',
-          `${rawProject.projectName} - Thumbnail`
-        ),
-        screenshots:
-          rawProject.media.screenshots?.map((screenshot) =>
-            this.transformImage(
-              screenshot.path,
-              'gallery',
-              screenshot.alt,
-              screenshot.caption,
-              screenshot.detailedCaption
-            )
-          ) || [],
-        videos:
-          rawProject.media.videos?.map((video) => ({
-            url: this.mediaProvider.generateVideoUrl(video.path),
-            title: video.title,
-            type: video.type,
-            caption: video.caption,
-            detailedCaption: video.detailedCaption,
-          })) || [],
-      },
-    };
-  }
-
-  private transformImage(
-    path: string,
-    context: MediaContext,
-    alt: string,
-    caption?: string,
-    detailedCaption?: string
-  ): GenericImageData {
-    return {
-      sources: this.mediaProvider.generateImageSources(path, context),
-      alt,
-      caption,
-      detailedCaption,
-    };
-  }
-}
-
-// Usage in your application
-const projectService = new ProjectService(new CloudflareMediaProvider());
-const transformedProject = projectService.transformProject(LIGHTFORM_RAW_DATA);
-
-// ============================================================================
-// MIGRATION CHECKLIST
-// ============================================================================
-
-/*
-□ 1. Create new raw project data structure (remove Cloudflare-specific URLs)
-□ 2. Set up MediaProvider and context in your app root
-□ 3. Update project templates to use useProjectMedia hook
-□ 4. Update hero/gallery components to use GenericImageData
-□ 5. Use MediaGalleryWrapper for gradual migration of existing components
-□ 6. Test with Cloudflare provider
-□ 7. Create alternative providers for testing (generic, local, etc.)
-□ 8. Remove legacy adapters once migration is complete
-□ 9. Update any remaining components to use new architecture
-□ 10. Remove old media utility functions
-*/
-
-// ============================================================================
-// STRATEGY 1: ADAPTER PATTERN WITH GENERIC INTERFACES
-// ============================================================================
-
-// types/media-core.ts - Generic, provider-agnostic types
-export interface MediaSource {
-  src: string;
-  srcSet?: string;
-  sizes?: string;
-}
-
-export interface GenericImageData {
-  sources: MediaSource[];
-  alt: string;
-  caption?: string;
-  detailedCaption?: string;
-  aspectRatio?: number;
-}
-
-export interface GenericVideoData {
-  url: string;
-  title?: string;
-  type?: 'demo' | 'process' | 'final' | 'inspiration';
-  thumbnail?: string;
-  caption?: string;
-  detailedCaption?: string;
-  duration?: number;
-}
-
-export interface GenericMediaItem {
-  type: 'image' | 'video';
-  data: GenericImageData | GenericVideoData;
-  index: number;
-}
-
-// types/project-data.ts - Raw project data (provider-agnostic)
-export interface RawProjectMedia {
-  heroPath: string;
-  screenshots?: Array<{
-    path: string;
-    alt: string;
-    caption?: string;
-    detailedCaption?: string;
-  }>;
-  videos?: Array<{
-    path: string;
-    title?: string;
-    type?: 'demo' | 'process' | 'final' | 'inspiration';
-    caption?: string;
-    detailedCaption?: string;
-  }>;
-}
-
-export interface RawProjectData {
-  projectName: string;
-  projectSubtitle?: string;
-  media: RawProjectMedia;
-  // ... other project fields
-}
-
-// ============================================================================
-// STRATEGY 2: MEDIA PROVIDER INTERFACE
-// ============================================================================
-
-export type MediaContext = 'thumbnail' | 'gallery' | 'hero' | 'modal';
-
-export interface MediaProvider {
-  name: string;
-  generateImageSources(path: string, context: MediaContext): MediaSource[];
-  generateVideoUrl(path: string): string;
-  generatePlaceholder(path: string): string;
-  isVideo(path: string): boolean;
-  isImage(path: string): boolean;
-}
-
-// providers/cloudflare-provider.ts
-import { getContextualImage } from '../cloudflare/media';
-
-export class CloudflareMediaProvider implements MediaProvider {
-  name = 'cloudflare';
-
-  generateImageSources(path: string, context: MediaContext): MediaSource[] {
-    const contextualData = getContextualImage(path, context, '');
-    return [
-      {
-        src: contextualData.src,
-        srcSet: contextualData.srcSet,
-        sizes: contextualData.sizes,
-      },
-    ];
-  }
-
-  generateVideoUrl(path: string): string {
-    return `https://media.clyzby.com/${path}`;
-  }
-
-  generatePlaceholder(path: string): string {
-    // Generate low-quality placeholder
-    return `https://clyzby.com/cdn-cgi/image/width=50,quality=50,blur=5,format=auto/https://media.clyzby.com/${path}`;
-  }
-
-  isVideo(path: string): boolean {
-    const videoExtensions = ['.mp4', '.webm', '.mov', '.avi'];
-    return videoExtensions.some((ext) => path.toLowerCase().endsWith(ext));
-  }
-
-  isImage(path: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-    return imageExtensions.some((ext) => path.toLowerCase().endsWith(ext));
-  }
-}
-
-// providers/generic-provider.ts - Fallback for other providers
-export class GenericMediaProvider implements MediaProvider {
-  name = 'generic';
-  private baseUrl: string;
-
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
-
-  generateImageSources(path: string, context: MediaContext): MediaSource[] {
-    // Simple responsive images without transformation
-    const baseUrl = `${this.baseUrl}/${path}`;
-    return [
-      {
-        src: baseUrl,
-        srcSet: `${baseUrl} 1x, ${baseUrl} 2x`,
-        sizes: this.getSizesForContext(context),
-      },
-    ];
-  }
-
-  generateVideoUrl(path: string): string {
-    return `${this.baseUrl}/${path}`;
-  }
-
-  generatePlaceholder(path: string): string {
-    // Return a simple placeholder or data URL
-    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjwvc3ZnPgo=';
-  }
-
-  isVideo(path: string): boolean {
-    const videoExtensions = ['.mp4', '.webm', '.mov', '.avi'];
-    return videoExtensions.some((ext) => path.toLowerCase().endsWith(ext));
-  }
-
-  isImage(path: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-    return imageExtensions.some((ext) => path.toLowerCase().endsWith(ext));
-  }
-
-  private getSizesForContext(context: MediaContext): string {
-    switch (context) {
-      case 'thumbnail':
-        return '(max-width: 640px) 200px, 300px';
-      case 'gallery':
-        return '(max-width: 640px) 100vw, 50vw';
-      case 'hero':
-        return '100vw';
-      case 'modal':
-        return '90vw';
-      default:
-        return '100vw';
+    // Set first slide as visible
+    if (slidesRef.current[0]) {
+      slidesRef.current[0].style.visibility = 'visible';
     }
-  }
-}
 
-// ============================================================================
-// STRATEGY 3: REACT CONTEXT AND HOOKS
-// ============================================================================
+    // Create mouse parallax effect
+    let mouseY = 0;
+    let targetY = 0;
 
-// context/MediaContext.tsx
-import React, { createContext, useContext, ReactNode } from 'react';
+    const handleMouseMove = (e) => {
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    };
 
-interface MediaContextType {
-  provider: MediaProvider;
-  defaultContext: MediaContext;
-}
+    document.addEventListener('mousemove', handleMouseMove);
 
-const MediaContext = createContext<MediaContextType | null>(null);
+    const ticker = gsap.ticker.add(() => {
+      if (isModalOpen) return;
 
-interface MediaProviderProps {
-  provider: MediaProvider;
-  defaultContext?: MediaContext;
-  children: ReactNode;
-}
+      targetY += (mouseY - targetY) * 0.05;
 
-export const MediaProviderComponent: React.FC<MediaProviderProps> = ({
-  provider,
-  defaultContext = 'gallery',
-  children,
-}) => {
-  return (
-    <MediaContext.Provider value={{ provider, defaultContext }}>
-      {children}
-    </MediaContext.Provider>
-  );
-};
+      const allImages = document.querySelectorAll('.sculpture-img');
+      allImages.forEach((img, index) => {
+        if (img.closest('.slide-container').style.visibility !== 'hidden') {
+          const speed = parseFloat(img.dataset.speed) || 1;
+          gsap.set(img, {
+            yPercent: targetY * 10 * speed,
+            rotationY: targetY * 5 * speed
+          });
+        }
+      });
+    });
 
-export const useMediaProvider = () => {
-  const context = useContext(MediaContext);
-  if (!context) {
-    throw new Error(
-      'useMediaProvider must be used within a MediaProviderComponent'
-    );
-  }
-  return context;
-};
+    // Observer for navigation
+    const observer = Observer.create({
+      type: "wheel,touch,pointer",
+      preventDefault: true,
+      wheelSpeed: -1,
+      onUp: () => {
+        if (animating || isModalOpen) return;
+        gotoSection(currentIndex + 1, +1);
+      },
+      onDown: () => {
+        if (animating || isModalOpen) return;
+        gotoSection(currentIndex - 1, -1);
+      },
+      tolerance: 10
+    });
 
-// hooks/useMedia.ts
-import { useMemo } from 'react';
-import { useMediaProvider } from '../context/MediaContext';
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      gsap.ticker.remove(ticker);
+      observer.kill();
+    };
+  }, [currentIndex, animating, isModalOpen]);
 
-export const useMedia = (path: string, context?: MediaContext) => {
-  const { provider, defaultContext } = useMediaProvider();
-  const resolvedContext = context || defaultContext;
+  // Navigation function
+  const gotoSection = useCallback((index, direction) => {
+    if (animating) return;
 
-  const mediaData = useMemo(() => {
-    if (provider.isImage(path)) {
-      return {
-        type: 'image' as const,
-        sources: provider.generateImageSources(path, resolvedContext),
-        placeholder: provider.generatePlaceholder(path),
-      };
-    } else if (provider.isVideo(path)) {
-      return {
-        type: 'video' as const,
-        url: provider.generateVideoUrl(path),
-      };
+    setAnimating(true);
+    const wrappedIndex = gsap.utils.wrap(0, sculpturesData.length)(index);
+
+    const tl = gsap.timeline({
+      defaults: { duration: 1.2, ease: "expo.inOut" },
+      onComplete: () => {
+        setAnimating(false);
+        setCurrentIndex(wrappedIndex);
+      }
+    });
+
+    const currentSection = slidesRef.current[currentIndex];
+    const nextSection = slidesRef.current[wrappedIndex];
+    const heading = currentSection?.querySelector(".slide-title");
+    const nextHeading = nextSection?.querySelector(".slide-title");
+
+    // Set z-index and visibility
+    gsap.set(slidesRef.current, { zIndex: 0, autoAlpha: 0 });
+    gsap.set(currentSection, { zIndex: 1, autoAlpha: 1 });
+    gsap.set(nextSection, { zIndex: 2, autoAlpha: 1 });
+
+    // Update counters
+    tl.set(countRef.current, { text: (wrappedIndex + 1).toString() }, 0.32)
+      .set(navCounterRef.current, { text: (wrappedIndex + 1).toString().padStart(2, '0') }, 0.32);
+
+    // Slide animations
+    tl.fromTo(outerWrappersRef.current[wrappedIndex], {
+      xPercent: 100 * direction
+    }, {
+      xPercent: 0
+    }, 0)
+    .fromTo(innerWrappersRef.current[wrappedIndex], {
+      xPercent: -100 * direction
+    }, {
+      xPercent: 0
+    }, 0);
+
+    // Text animations
+    if (heading) {
+      tl.to(heading, {
+        xPercent: 30 * direction,
+        opacity: 0.3
+      }, 0);
     }
-    return null;
-  }, [path, resolvedContext, provider]);
 
-  return mediaData;
-};
+    if (nextHeading) {
+      tl.fromTo(nextHeading, {
+        xPercent: -30 * direction,
+        opacity: 0
+      }, {
+        xPercent: 0,
+        opacity: 1
+      }, 0);
+    }
 
-// hooks/useProjectMedia.ts
-import { useMemo } from 'react';
-import { useMediaProvider } from '../context/MediaContext';
+    // Image animations
+    const currentImages = currentSection?.querySelectorAll('.sculpture-img');
+    const nextImages = nextSection?.querySelectorAll('.sculpture-img');
 
-export const useProjectMedia = (rawProject: RawProjectData) => {
-  const { provider } = useMediaProvider();
+    if (currentImages) {
+      tl.to(currentImages, {
+        yPercent: -50 * direction,
+        scale: 0.8,
+        opacity: 0.3,
+        stagger: 0.05
+      }, 0);
+    }
 
-  const transformedMedia = useMemo(() => {
-    // Transform hero image
-    const hero: GenericImageData = {
-      sources: provider.generateImageSources(rawProject.media.heroPath, 'hero'),
-      alt: `${rawProject.projectName} - Hero Image`,
+    if (nextImages) {
+      tl.fromTo(nextImages, {
+        yPercent: 50 * direction,
+        scale: 1.3,
+        opacity: 0
+      }, {
+        yPercent: 0,
+        scale: 1,
+        opacity: 1,
+        stagger: 0.05
+      }, 0.3);
+    }
+  }, [animating, currentIndex]);
+
+  // Modal functions
+  const openImageModal = useCallback((img) => {
+    if (isModalOpen || animating) return;
+
+    setIsModalOpen(true);
+
+    const rect = img.getBoundingClientRect();
+    const imageState = {
+      element: img,
+      x: rect.left,
+      y: rect.top,
+      width: rect.width,
+      height: rect.height,
     };
+    setOriginalImageState(imageState);
 
-    const thumbnail: GenericImageData = {
-      sources: provider.generateImageSources(
-        rawProject.media.heroPath,
-        'thumbnail'
-      ),
-      alt: `${rawProject.projectName} - Thumbnail`,
-    };
+    const modalImg = img.cloneNode(true);
+    modalImg.className = 'modal-image-clone';
+    setModalImage(modalImg);
+    modalContentRef.current.appendChild(modalImg);
 
-    // Transform screenshots
-    const screenshots: GenericImageData[] =
-      rawProject.media.screenshots?.map((screenshot) => ({
-        sources: provider.generateImageSources(screenshot.path, 'gallery'),
-        alt: screenshot.alt,
-        caption: screenshot.caption,
-        detailedCaption: screenshot.detailedCaption,
-      })) || [];
+    gsap.set(modalImg, {
+      position: 'fixed',
+      top: imageState.y,
+      left: imageState.x,
+      width: imageState.width,
+      height: imageState.height,
+      transform: 'none',
+      zIndex: 1001
+    });
 
-    // Transform videos
-    const videos: GenericVideoData[] =
-      rawProject.media.videos?.map((video) => ({
-        url: provider.generateVideoUrl(video.path),
-        title: video.title,
-        type: video.type,
-        caption: video.caption,
-        detailedCaption: video.detailedCaption,
-      })) || [];
+    gsap.set(img, { opacity: 0 });
+    gsap.set(modalRef.current, { display: 'flex' });
 
-    return {
-      hero,
-      thumbnail,
-      screenshots,
-      videos,
-    };
-  }, [rawProject, provider]);
+    const tl = gsap.timeline();
+    tl.to(modalRef.current, {
+      opacity: 1,
+      duration: 0.3,
+      ease: "power2.out"
+    })
+    .to(modalImg, {
+      top: '50%',
+      left: '50%',
+      width: 'auto',
+      height: '90vh',
+      transform: 'translate(-50%, -50%)',
+      duration: 0.8,
+      ease: "expo.out"
+    }, 0.1);
+  }, [isModalOpen, animating]);
 
-  return transformedMedia;
-};
+  const closeImageModal = useCallback(() => {
+    if (!isModalOpen || !modalImage || !originalImageState) return;
 
-// ============================================================================
-// STRATEGY 4: UPDATED UI COMPONENTS
-// ============================================================================
+    const tl = gsap.timeline({
+      onComplete: () => {
+        modalContentRef.current.innerHTML = '';
+        gsap.set(modalRef.current, { display: 'none' });
+        gsap.set(originalImageState.element, { opacity: 1 });
 
-// components/GenericImage.tsx
-import React from 'react';
-import { GenericImageData } from '../types/media-core';
+        setModalImage(null);
+        setOriginalImageState(null);
+        setIsModalOpen(false);
+      }
+    });
 
-interface GenericImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  imageData: GenericImageData;
-  loading?: 'lazy' | 'eager';
-}
+    tl.to(modalImage, {
+      top: originalImageState.y,
+      left: originalImageState.x,
+      width: originalImageState.width,
+      height: originalImageState.height,
+      transform: 'none',
+      duration: 0.6,
+      ease: "expo.out"
+    })
+    .to(modalRef.current, {
+      opacity: 0,
+      duration: 0.3,
+      ease: "power2.out"
+    }, 0.2);
+  }, [isModalOpen, modalImage, originalImageState]);
 
-export const GenericImage: React.FC<GenericImageProps> = ({
-  imageData,
-  loading = 'lazy',
-  ...props
-}) => {
-  // Use the first (best) source
-  const primarySource = imageData.sources[0];
+  // Event handlers
+  const handleKeyPress = useCallback((e) => {
+    if (isModalOpen) {
+      if (e.code === 'Escape') {
+        closeImageModal();
+      }
+      return;
+    }
+
+    if ((e.code === "ArrowUp" || e.code === "ArrowLeft") && !animating) {
+      gotoSection(currentIndex - 1, -1);
+    }
+    if ((e.code === "ArrowDown" || e.code === "ArrowRight" || e.code === "Space" || e.code === "Enter") && !animating) {
+      e.preventDefault();
+      gotoSection(currentIndex + 1, 1);
+    }
+  }, [isModalOpen, animating, currentIndex, gotoSection, closeImageModal]);
+
+  const handleModalBackdropClick = useCallback((e) => {
+    if (e.target === modalRef.current || e.target === modalContentRef.current) {
+      closeImageModal();
+    }
+  }, [closeImageModal]);
+
+  const handleImageClick = useCallback((e) => {
+    e.stopPropagation();
+    openImageModal(e.target);
+  }, [openImageModal]);
+
+  // Effects
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
 
   return (
-    <img
-      src={primarySource.src}
-      srcSet={primarySource.srcSet}
-      sizes={primarySource.sizes}
-      alt={imageData.alt}
-      loading={loading}
-      {...props}
-    />
-  );
-};
-
-// components/AdaptiveImage.tsx
-import React from 'react';
-import { useMedia } from '../hooks/useMedia';
-
-interface AdaptiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  path: string;
-  alt: string;
-  context?: MediaContext;
-  loading?: 'lazy' | 'eager';
-}
-
-export const AdaptiveImage: React.FC<AdaptiveImageProps> = ({
-  path,
-  alt,
-  context,
-  loading = 'lazy',
-  ...props
-}) => {
-  const mediaData = useMedia(path, context);
-
-  if (!mediaData || mediaData.type !== 'image') {
-    return <div>Invalid image</div>;
-  }
-
-  const primarySource = mediaData.sources[0];
-
-  return (
-    <img
-      src={primarySource.src}
-      srcSet={primarySource.srcSet}
-      sizes={primarySource.sizes}
-      alt={alt}
-      loading={loading}
-      {...props}
-    />
-  );
-};
-
-// ============================================================================
-// STRATEGY 5: UPDATED MEDIA GALLERY (GENERIC)
-// ============================================================================
-
-// components/GenericMediaGallery.tsx
-import React, { useState } from 'react';
-import {
-  GenericImageData,
-  GenericVideoData,
-  GenericMediaItem,
-} from '../types/media-core';
-import { GenericImage } from './GenericImage';
-
-interface GenericMediaGalleryProps {
-  images?: GenericImageData[];
-  videos?: GenericVideoData[];
-  onMediaClick?: (mediaItem: GenericMediaItem) => void;
-  className?: string;
-}
-
-export const GenericMediaGallery: React.FC<GenericMediaGalleryProps> = ({
-  images = [],
-  videos = [],
-  onMediaClick,
-  className,
-}) => {
-  const [selectedMedia, setSelectedMedia] = useState<GenericMediaItem | null>(
-    null
-  );
-
-  // Combine images and videos
-  const mediaItems: GenericMediaItem[] = [
-    ...images.map((image, index) => ({
-      type: 'image' as const,
-      data: image,
-      index,
-    })),
-    ...videos.map((video, index) => ({
-      type: 'video' as const,
-      data: video,
-      index: images.length + index,
-    })),
-  ];
-
-  const handleMediaClick = (mediaItem: GenericMediaItem) => {
-    setSelectedMedia(mediaItem);
-    onMediaClick?.(mediaItem);
-  };
-
-  return (
-    <div className={`media-gallery ${className || ''}`}>
-      <div className="media-grid">
-        {mediaItems.map((mediaItem) => (
-          <div
-            key={mediaItem.index}
-            className="media-item"
-            onClick={() => handleMediaClick(mediaItem)}
+    <ThemeProvider theme={sculptureTheme}>
+      <FullScreenContainer ref={containerRef}>
+        {sculpturesData.map((sculpture, index) => {
+          const gradientColors = getGradientColors(sculpture.title, sculpture.date);
+          return (
+          <SlideContainer
+            key={sculpture.id}
+            className="slide-container"
+            ref={el => slidesRef.current[index] = el}
           >
-            {mediaItem.type === 'image' ? (
-              <GenericImage
-                imageData={mediaItem.data as GenericImageData}
-                className="gallery-image"
-                loading="lazy"
-              />
-            ) : (
-              <video
-                src={(mediaItem.data as GenericVideoData).url}
-                className="gallery-video"
-                muted
-                preload="metadata"
-              />
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+            <SlideOuter ref={el => outerWrappersRef.current[index] = el}>
+              <SlideInner ref={el => innerWrappersRef.current[index] = el}>
+                <SlideContent>
+                  <GradientBox gradientcolors={gradientColors}>
+                    <Container maxWidth="xl" sx={{ height: '90vh', py: 4 }}>
+                      <Grid container spacing={4} sx={{ height: '100%', alignItems: 'center' }}>
+                        <Grid item xs={12} md={6}>
+                          <Box>
+                            <Typography
+                              variant="h1"
+                              className="slide-title"
+                              sx={{
+                                color: theme.palette.text.primary,
+                                mixBlendMode: 'difference',
+                                mb: 2
+                              }}
+                            >
+                              {sculpture.title}
+                            </Typography>
+
+                            {sculpture.subtitle && (
+                              <Typography
+                                variant="h2"
+                                sx={{
+                                  color: theme.palette.text.secondary,
+                                  mb: 3
+                                }}
+                              >
+                                {sculpture.subtitle}
+                              </Typography>
+                            )}
+
+                            <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                              <Chip
+                                label={`Date: ${sculpture.date}`}
+                                variant="outlined"
+                                sx={{
+                                  color: theme.palette.text.primary,
+                                  borderColor: theme.palette.text.primary
+                                }}
+                              />
+                              <Chip
+                                label={`Materials: ${sculpture.materials}`}
+                                variant="outlined"
+                                sx={{
+                                  color: theme.palette.text.primary,
+                                  borderColor: theme.palette.text.primary
+                                }}
+                              />
+                            </Box>
+
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                color: theme.palette.text.secondary,
+                                maxWidth: 500
+                              }}
+                            >
+                              {sculpture.description}
+                            </Typography>
+                          </Box>
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                          <Box sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
+                            <Grid container spacing={1} sx={{ height: '120%' }}>
+                              {sculpture.images.map((image, imgIndex) => {
+                                // Calculate grid positioning based on number of images
+                                const isEven = imgIndex % 2 === 0;
+                                const rowSpan = sculpture.images.length <= 2 ? 6 : 3;
+                                const colSpan = sculpture.images.length === 1 ? 12 : (isEven ? 7 : 5);
+
+                                return (
+                                  <Grid
+                                    item
+                                    key={imgIndex}
+                                    xs={colSpan}
+                                    sx={{
+                                      height: sculpture.images.length <= 2 ? '50%' : (imgIndex < 2 ? '40%' : '60%'),
+                                      '&:nth-of-type(3)': { order: 3 },
+                                      '&:nth-of-type(4)': { order: 4 }
+                                    }}
+                                  >
+                                    <SculptureImage
+                                      component="img"
+                                      className="sculpture-img"
+                                      data-speed={[0.8, 1.1, 0.9, 1.2, 1.0][imgIndex] || 1.0}
+                                      src={image.relativePath}
+                                      alt={image.alt}
+                                      onClick={handleImageClick}
+                                      sx={{
+                                        height: '100%',
+                                        '&:hover': {
+                                          transform: 'scale(1.1)',
+                                        }
+                                      }}
+                                    />
+                                  </Grid>
+                                );
+                              })}
+                            </Grid>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </Container>
+                  </GradientBox>
+                </SlideContent>
+              </SlideInner>
+            </SlideOuter>
+          </SlideContainer>
+        )})}
+
+
+        {/* Overlay Counter */}
+        <OverlayCounter>
+          0<span ref={countRef}>1</span>
+        </OverlayCounter>
+
+        {/* Navigation */}
+        <NavigationContainer>
+          <Typography
+            ref={navCounterRef}
+            variant="body1"
+            sx={{ fontWeight: 600, color: theme.palette.text.primary }}
+          >
+            01
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ color: theme.palette.text.secondary }}
+          >
+            / {sculpturesData.length.toString().padStart(2, '0')}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: theme.palette.text.secondary,
+              ml: 2,
+              display: { xs: 'none', sm: 'block' }
+            }}
+          >
+            Scroll or use arrow keys to navigate
+          </Typography>
+        </NavigationContainer>
+
+        {/* Image Modal */}
+        <ModalOverlay
+          ref={modalRef}
+          onClick={handleModalBackdropClick}
+          sx={{ display: 'none' }}
+        >
+          <ModalContent ref={modalContentRef} />
+        </ModalOverlay>
+      </FullScreenContainer>
+    </ThemeProvider>
   );
 };
 
-// ============================================================================
-// STRATEGY 6: USAGE EXAMPLES
-// ============================================================================
+export default SculpturePortfolio;
 
-// App.tsx - Setup providers
-import React from 'react';
-import { CloudflareMediaProvider } from './providers/cloudflare-provider';
-import { MediaProviderComponent } from './context/MediaContext';
-import { ProjectPage } from './pages/ProjectPage';
+// File System Integration
+export interface BaseFileSystemItem {
+  id: string;
+  name: string;
+  type: 'file' | 'folder' | string;
+  icon: ReactNode;
+  size?: number;
+  dateModified: Date;
+  dateCreated: Date;
+  extension?: string;
+  mimeType?: string;
+  path: string;
+  parentId?: string | null;
+  children?: BaseFileSystemItem[];
+  metadata: FileSystemMetaData;
+  tileRenderer?: TileRenderer<any, any>;
+  tileData?: any;
+}
 
-const cloudflareProvider = new CloudflareMediaProvider();
+export interface FileSystemMetaData {
+  description?: string;
+  tags: string[];
+  favorite: boolean;
+  thumbnail?: BaseImageData;
+  customProperties?: Record<string, any>;
+}
 
-export const App: React.FC = () => {
-  return (
-    <MediaProviderComponent
-      provider={cloudflareProvider}
-      defaultContext="gallery"
-    >
-      <ProjectPage />
-    </MediaProviderComponent>
-  );
-};
+export interface NavigationInfo {
+  currentIndex: number;
+  totalItems: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  items: { id: string; name: string }[];
+}
 
-// pages/ProjectPage.tsx - Use the transformed data
-import React from 'react';
-import { useProjectMedia } from '../hooks/useProjectMedia';
-import { GenericMediaGallery } from '../components/GenericMediaGallery';
+export interface NavigationContext {
+  onNext?: () => void;
+  onPrevious?: () => void;
+  onSelectItem?: (id: string) => void;
+  navigationInfo?: NavigationInfo;
+}
 
-const rawProjectData: RawProjectData = {
-  projectName: 'Lightform',
-  media: {
-    heroPath: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
-    screenshots: [
-      {
-        path: 'projects/lightform/App-Header.jpg',
-        alt: 'Web Application Header Interface',
-        caption: 'Main application header',
-      },
-    ],
-    videos: [
-      {
-        path: 'projects/lightform/Desktop-View-Full-With-Errors-.mp4',
-        title: 'Desktop Application Demo',
-        type: 'demo',
-      },
-    ],
+export interface FileRenderer<TData = {}, TProps = {}> {
+  component: ComponentType<TData & TProps & NavigationContext>;
+  props?: TProps;
+  navigationGroup?: string;
+  shouldNavigate?: boolean;
+}
+
+export interface FileSystemItem<TData = {}, TProps = {}>
+  extends BaseFileSystemItem {
+  fileData?: TData;
+  renderer?: FileRenderer<TData, TProps>;
+}
+
+export interface TileRenderer<TData = {}, TConfig = {}> {
+  component: ComponentType<any>;
+  config?: TConfig;
+}
+
+// Sculpture Portfolio FileSystemItem
+export const sculpturePortfolioFileSystemItem = (
+  sculpturesData: Sculpture[],
+  uuidv4: () => string,
+  SculptureIcon: ReactNode
+): FileSystemItem<{ sculptures: Sculpture[] }, { sculpturesData: Sculpture[] }> => ({
+  id: uuidv4(),
+  name: 'Sculpture Portfolio',
+  icon: SculptureIcon,
+  type: 'file',
+  size: sculpturesData.reduce((total, sculpture) =>
+    total + sculpture.images.length * 2000000, 0
+  ), // Approximate size based on image count
+  mimeType: 'interactive/sculpture-portfolio',
+  dateModified: new Date(), // Most recent sculpture date
+  dateCreated: new Date(
+    Math.min(...sculpturesData.map(s =>
+      new Date(s.date.replace(/\w+ /, '') + '-01-01').getTime()
+    ))
+  ), // Earliest sculpture date
+  path: '/portfolio/sculptures',
+  metadata: {
+    tags: ['art', 'sculpture', 'portfolio', 'interactive', 'gsap'],
+    favorite: true,
+    description: 'Interactive sculpture portfolio with parallax scrolling and modal image viewing',
+    thumbnail: sculpturesData[0]?.images[0], // First image as thumbnail
+    customProperties: {
+      sculptureCount: sculpturesData.length,
+      totalImages: sculpturesData.reduce((total, s) => total + s.images.length, 0),
+      materials: [...new Set(sculpturesData.map(s => s.materials))],
+      dateRange: {
+        earliest: Math.min(...sculpturesData.map(s =>
+          new Date(s.date.replace(/\w+ /, '') + '-01-01').getTime()
+        )),
+        latest: Math.max(...sculpturesData.map(s =>
+          new Date(s.date.replace(/\w+ /, '') + '-01-01').getTime()
+        ))
+      }
+    }
   },
-};
-
-export const ProjectPage: React.FC = () => {
-  const media = useProjectMedia(rawProjectData);
-
-  return (
-    <div>
-      <h1>{rawProjectData.projectName}</h1>
-
-      {/* Hero section */}
-      <div className="hero">
-        <GenericImage imageData={media.hero} loading="eager" />
-      </div>
-
-      {/* Gallery */}
-      <GenericMediaGallery
-        images={media.screenshots}
-        videos={media.videos}
-        onMediaClick={(item) => console.log('Clicked:', item)}
-      />
-    </div>
-  );
-};
-
-// Alternative: Direct path usage with AdaptiveImage
-import { AdaptiveImage } from '../components/AdaptiveImage';
-
-export const AlternativeUsage: React.FC = () => {
-  return (
-    <div>
-      {/* Hero with specific context */}
-      <AdaptiveImage
-        path="projects/lightform/hero.jpg"
-        alt="Project Hero"
-        context="hero"
-        loading="eager"
-      />
-
-      {/* Gallery thumbnails */}
-      <div className="gallery">
-        <AdaptiveImage
-          path="projects/lightform/screenshot1.jpg"
-          alt="Screenshot 1"
-          context="gallery"
-          loading="lazy"
-        />
-      </div>
-    </div>
-  );
-};
+  fileData: {
+    sculptures: sculpturesData
+  },
+  renderer: {
+    component: SculpturePortfolio,
+    props: {
+      sculpturesData
+    },
+    shouldNavigate: false // This is a standalone portfolio experience
+  }
+});
