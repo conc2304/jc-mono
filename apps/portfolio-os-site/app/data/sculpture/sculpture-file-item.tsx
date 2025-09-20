@@ -67,7 +67,7 @@ export const sculpturePortfolioFileSystemItem: FileSystemItem<
   renderer: {
     component: SculpturePortfolio,
     props: {
-      sculpturesData,
+      sculptures: sculpturesData,
     },
     shouldNavigate: false,
   },
