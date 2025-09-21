@@ -303,6 +303,7 @@ export const ImageContainer = ({
           opacity: imageState === 'loading' ? 0 : 1,
           transition: 'opacity 0.3s ease-in-out',
           objectFit: 'cover',
+          ...sx,
         }}
       />
       {imageState === 'loading' && !showSkeleton && (
