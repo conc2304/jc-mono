@@ -199,7 +199,7 @@ export const MediaGallery = ({
         ) : (
           <>
             <VideoPlayer
-              video={media}
+              video={media as VideoRenderAttributes}
               sx={{
                 width: '100%',
                 height: '100%',

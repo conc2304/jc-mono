@@ -1,4 +1,4 @@
-import { ImageMediaData } from '@jc/ui-components';
+import { BaseImageData, ImageMediaData } from '@jc/ui-components';
 import { PortfolioGalleryItem } from './iOS-made-media';
 import { getResponsiveImageSet } from '@jc/utils';
 
@@ -12,7 +12,7 @@ import { getResponsiveImageSet } from '@jc/utils';
 export function convertPortfolioGalleryToImageData(
   portfolioData: PortfolioGalleryItem[],
   baseRelativePath: string = '/gallery/'
-): ImageMediaData[] {
+): BaseImageData[] {
   return portfolioData.map((item) => {
     // Create relative path
     const relativePath = `${baseRelativePath}${item.filename}`;
@@ -43,61 +43,14 @@ export function convertPortfolioGalleryToImageData(
 
     const detailedCaption = detailedParts.join(' | ');
 
-    const { sizes, srcSet, src } = getResponsiveImageSet(relativePath);
-
     return {
-      // relativePath,
-      // url: getImageUrl(relativePath),
-      src,
-      srcSet,
-      sizes,
+      relativePath,
       alt: altText,
       caption: shortCaption,
       detailedCaption,
     };
   });
 }
-
-// export function convertPortfolioImageToImageData(
-//   portfolioImage: PortfolioGalleryItem,
-//   baseRelativePath: string = '/gallery/'
-// ): ImageMediaData {
-//   // Create relative path
-//   const item = portfolioImage;
-//   const relativePath = `${baseRelativePath}${item.filename}`;
-
-//   // Create alt text from title and medium
-//   const altText = item.medium ? `${item.title} - ${item.medium}` : item.title;
-
-//   // Create short caption (title with year if available)
-//   const shortCaption = item.year ? `${item.title} (${item.year})` : item.title;
-
-//   // Create detailed caption with all metadata
-//   const detailedParts = [
-//     item.title,
-//     item.year ? `${item.year}` : null,
-//     item.medium || null,
-//     item.categories.length > 0
-//       ? `Categories: ${item.categories.join(', ')}`
-//       : null,
-//     item.tags.length > 0 ? `Tags: ${item.tags.join(', ')}` : null,
-//   ].filter(Boolean);
-
-//   const detailedCaption = detailedParts.join(' | ');
-
-//   const { sizes, srcSet, src } = getResponsiveImageSet(relativePath);
-
-//   return {
-//     // relativePath,
-//     // url: getImageUrl(relativePath),
-//     src,
-//     srcSet,
-//     sizes,
-//     alt: altText,
-//     caption: shortCaption,
-//     detailedCaption,
-//   };
-// };
 
 /**
  * Filter function to get images by category

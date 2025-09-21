@@ -1,4 +1,4 @@
-import type { ImageMediaData, VideoMediaData } from '@jc/ui-components';
+import type { BaseImageData, BaseVideoData } from '@jc/ui-components';
 import { convertPortfolioGalleryToImageData } from './utils';
 import { R2_PROJECT_DIR_GALLERY } from './constants';
 import { getVideoUrl } from '@jc/utils';
@@ -11,7 +11,6 @@ export interface PortfolioGalleryItem {
   categories?: string[];
   tags?: string[];
   year?: number | null;
-  imageUrl?: string;
 }
 
 const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
@@ -23,8 +22,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Double Exposure', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Flow-Double-expo.jpg',
   },
   {
     filename: 'iOS_Made_Mob_Queen.jpg',
@@ -34,8 +31,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Mob-Queen.jpg',
   },
   {
     filename: 'iOS_Made_Raphaelite.jpg',
@@ -45,8 +40,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Digital Collage', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Raphaelite-square.jpg',
   },
   {
     filename: 'iOS_Made_Identify.jpg',
@@ -62,8 +55,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
       'iOS',
     ],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Identify.jpg',
   },
   {
     filename: 'iOS_Made_Sneak.jpg',
@@ -73,8 +64,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Sneak.jpg',
   },
   {
     filename: 'iOS_Made_Last_Seer.jpg',
@@ -84,8 +73,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Last-Seer.jpg',
   },
   {
     filename: 'iOS_Made_Selfie.jpg',
@@ -95,8 +82,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Selfie.jpg',
   },
   {
     filename: 'iOS_Made_Leer.jpg',
@@ -106,8 +91,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Jean-In-black.jpg',
   },
   {
     filename: 'iOS_Made_Mind_of_Society_Collab.jpg',
@@ -117,8 +100,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Mind-of-Society-Collab.jpg',
   },
   {
     filename: 'iOS_Made_Next_Today_Sir.jpg',
@@ -128,8 +109,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Dog-1.jpg',
   },
   {
     filename: 'iOS_Made_Jergalo.jpg',
@@ -139,8 +118,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/0051.jpg',
   },
   {
     filename: 'iOS_Made_Novi_Squared.jpg',
@@ -150,8 +127,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: [],
     tags: ['Glitch', 'Photography Edit'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Novi-Squared.jpg',
   },
   {
     filename: 'iOS_Made_Lo-Rez.jpg',
@@ -161,8 +136,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/0111.jpg',
   },
   {
     filename: 'iOS_Made_Billy_(close_up).jpg',
@@ -172,8 +145,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Billy-Upclose.jpg',
   },
   {
     filename: 'iOS_Made_Starfoxxx.jpg',
@@ -183,8 +154,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['FFA', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/260.jpg',
   },
   {
     filename: 'iOS_Made_Baby_Portraits.jpg',
@@ -194,8 +163,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/165.jpg',
   },
   {
     filename: 'iOS_Made_Fragile.png',
@@ -205,8 +172,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/057.png',
   },
   {
     filename: 'iOS_Made_Ballin.jpg',
@@ -216,8 +181,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Ballin.jpg',
   },
   {
     filename: 'iOS_Made_Grime.jpg',
@@ -227,8 +190,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Grime.jpg',
   },
   {
     filename: 'iOS_Made_Rose_Cave_Reflection.jpg',
@@ -238,8 +199,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: [],
     tags: ['Minimal', 'Photography Edit'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Rose-Cave-reflection.jpg',
   },
   {
     filename: 'iOS_Made_Rucking_Fut.jpg',
@@ -249,8 +208,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Rucking-Fut.jpg',
   },
   {
     filename: 'iOS_Made_Spokane.jpg',
@@ -260,8 +217,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Spokane.jpg',
   },
   {
     filename: 'iOS_Made_Tronnin.jpg',
@@ -271,8 +226,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Skeuomorphic', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Tronnin.jpg',
   },
   {
     filename: 'iOS_Made_Turn_Around.jpg',
@@ -282,8 +235,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Turn-Around.jpg',
   },
   {
     filename: 'iOS_Made_Tycho.jpg',
@@ -293,8 +244,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Tycho.jpg',
   },
   {
     filename: 'iOS_Made_Underground_Mantra.jpg',
@@ -304,8 +253,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Underground-Mantra.jpg',
   },
   {
     filename: 'iOS_Made_Mt_Sur_le.jpg',
@@ -315,8 +262,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['FFA', 'Minimal', 'Skeuomorphic', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Mt-Sur-le-_.jpg',
   },
   {
     filename: 'iOS_Made_Nautilus.jpg',
@@ -326,8 +271,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Nautilus.jpg',
   },
   {
     filename: 'iOS_Made_Pre_Glitch.jpg',
@@ -337,8 +280,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/pre-glitch.jpg',
   },
   {
     filename: 'iOS_Made_Restrepo.jpg',
@@ -348,8 +289,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Restrepo.jpg',
   },
   {
     filename: 'iOS_Made_Temple_of_Boom.jpg',
@@ -359,8 +298,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Temple-of-Boom.jpg',
   },
   {
     filename: 'iOS_Made_Tesselate.jpg',
@@ -370,8 +307,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Skeuomorphic', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Tesselate.jpg',
   },
   {
     filename: 'iOS_Made_Water_Analysis.jpg',
@@ -381,8 +316,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['FFA', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Water-Analysis.jpg',
   },
   {
     filename: 'iOS_Made_Water_Scan.jpg',
@@ -392,8 +325,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Water-Scan.jpg',
   },
   {
     filename: 'iOS_Made_Aztec_Rain.jpg',
@@ -403,8 +334,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/008.jpg',
   },
   {
     filename: 'iOS_Made_Polka_Sith.jpg',
@@ -414,8 +343,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['FFA', 'Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/014.jpg',
   },
   {
     filename: 'iOS_Made_Something_Blue.jpg',
@@ -425,8 +352,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Minimal', 'Skeuomorphic', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/027.jpg',
   },
   {
     filename: 'iOS_Made_Flux_and_Decay.jpg',
@@ -436,8 +361,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/028.jpg',
   },
   {
     filename: 'iOS_Made_Buttons.jpg',
@@ -447,8 +370,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Anaglyph', 'Flat', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/033.jpg',
   },
   {
     filename: 'iOS_Made_Untitled.jpg',
@@ -458,8 +379,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Minimal', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/042.jpg',
   },
   {
     filename: 'iOS_Made_Pills.jpg',
@@ -469,8 +388,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Skeuomorphic', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/051.jpg',
   },
   {
     filename: 'iOS_Made_Shape_Porn.jpg',
@@ -480,8 +397,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/052.jpg',
   },
   {
     filename: 'iOS_Made_Storm_Front.jpg',
@@ -491,8 +406,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/062-2.jpg',
   },
   {
     filename: 'iOS_Made_Light_Rope.jpg',
@@ -502,8 +415,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Skeuomorphic', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/081.jpg',
   },
   {
     filename: 'iOS_Made_Fault.jpg',
@@ -513,8 +424,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/137.jpg',
   },
   {
     filename: 'iOS_Made_Bedouin.png',
@@ -524,8 +433,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Glitch', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/160.png',
   },
   {
     filename: 'iOS_Made_Pipe_Dream.jpg',
@@ -535,8 +442,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Glitch', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/196.jpg',
   },
   {
     filename: 'iOS_Made_Ø.jpg',
@@ -546,8 +451,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/218.jpg',
   },
   {
     filename: 'iOS_Made_Slice.jpg',
@@ -557,8 +460,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Minimal', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/277.jpg',
   },
   {
     filename: 'iOS_Made_Baru.jpg',
@@ -568,8 +469,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Baru.jpg',
   },
   {
     filename: 'iOS_Made_BeetleJuice.jpg',
@@ -579,8 +478,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/BeetleJuice.jpg',
   },
   {
     filename: 'iOS_Made_Black_Gold.jpg',
@@ -590,8 +487,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Black-Gold.jpg',
   },
   {
     filename: 'iOS_Made_Brother.jpg',
@@ -601,8 +496,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Brother.jpg',
   },
   {
     filename: 'iOS_Made_Carried_Away.jpg',
@@ -612,8 +505,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Carried-Away.jpg',
   },
   {
     filename: 'iOS_Made_Cualicino.jpg',
@@ -623,8 +514,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Cualicino.jpg',
   },
   {
     filename: 'iOS_Made_Do_Less.jpg',
@@ -634,8 +523,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Do-Less.jpg',
   },
   {
     filename: 'iOS_Made_Droplet_Like_Its_Hot.jpg',
@@ -645,8 +532,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Droplet-Like-its-Hot.jpg',
   },
   {
     filename: 'iOS_Made_Electro_Funk.jpg',
@@ -656,8 +541,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Electric-Funk.jpg',
   },
   {
     filename: 'iOS_Made_Fire_Marshall.jpg',
@@ -667,8 +550,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Fire-Marshall.jpg',
   },
   {
     filename: 'iOS_Made_Fjorb.jpg',
@@ -678,8 +559,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Fjorb.jpg',
   },
   {
     filename: 'iOS_Made_Flapjack.jpg',
@@ -689,8 +568,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Flapkack-Union-Abstract.jpg',
   },
   {
     filename: 'iOS_Made_Flume.jpg',
@@ -700,8 +577,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Flume.jpg',
   },
   {
     filename: 'iOS_Made_Food_Chain.jpg',
@@ -711,8 +586,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Food-Chain.jpg',
   },
   {
     filename: 'iOS_Made_Harvest.jpg',
@@ -722,8 +595,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Flat', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Harvest.jpg',
   },
   {
     filename: 'iOS_Made_Past.jpg',
@@ -733,8 +604,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Past.jpg',
   },
   {
     filename: 'iOS_Made_Mainely_Solitude.jpg',
@@ -744,8 +613,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Maine-Solitude.jpg',
   },
   {
     filename: 'iOS_Made_Basick.jpg',
@@ -755,8 +622,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Basick.jpg',
   },
   {
     filename: 'iOS_Made_Diagon_Alley.jpg',
@@ -766,8 +631,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Diagon-Alley.jpg',
   },
   {
     filename: 'iOS_Made_Okemo.jpg',
@@ -777,8 +640,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Okemo.jpg',
   },
   {
     filename: 'iOS_Made_Above.jpg',
@@ -788,8 +649,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Above.jpg',
   },
   {
     filename: 'iOS_Made_Treachery_Track.jpg',
@@ -799,8 +658,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Illustration', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Treachy-Track.jpg',
   },
   {
     filename: 'iOS_Made_A_Place_Beyond.jpg',
@@ -810,8 +667,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'FFA', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/247.jpg',
   },
   {
     filename: 'iOS_Made_Stumped.jpg',
@@ -821,8 +676,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Stumped.jpg',
   },
   {
     filename: 'iOS_Made_3_Amigos.jpg',
@@ -832,8 +685,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS', '3'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Three-Amigos-v3.jpg',
   },
   {
     filename: 'iOS_Made_Monolith.jpg',
@@ -843,8 +694,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Iphoto', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Monolith.jpg',
   },
   {
     filename: 'iOS_Made_Riser.jpg',
@@ -854,8 +703,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['FFA', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/061.jpg',
   },
   {
     filename: 'iOS_Made_F-Stop_Fitzgerald.jpg',
@@ -865,8 +712,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Glazed.jpg',
   },
   {
     filename: 'iOS_Made_Kairn.jpg',
@@ -876,8 +721,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/025-2.jpg',
   },
   {
     filename: 'iOS_Made_Discover.jpg',
@@ -887,8 +730,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Anaglyph', 'FFA', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/302.jpg',
   },
   {
     filename: 'iOS_Made_Journeymen.jpg',
@@ -898,8 +739,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['FFA', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/287.jpg',
   },
   {
     filename: 'iOS_Made_Vantawave.jpg',
@@ -909,8 +748,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/201.jpg',
   },
   {
     filename: 'iOS_Made_Jaguar_Shark.jpg',
@@ -920,8 +757,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Jaguar-Shark.jpg',
   },
   {
     filename: 'iOS_Made_Framed.jpg',
@@ -931,8 +766,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Four-Square-Beach.jpg',
   },
   {
     filename: 'iOS_Made_Warped.jpg',
@@ -942,8 +775,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Get-Bent.jpg',
   },
   {
     filename: 'iOS_Made_Dual_Spires.jpg',
@@ -953,8 +784,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/116.jpg',
   },
   {
     filename: 'iOS_Made_Unassuming.jpg',
@@ -964,8 +793,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Fog-Triangle.jpg',
   },
   {
     filename: 'iOS_Made_Line.jpg',
@@ -975,8 +802,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Glitch', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/035.jpg',
   },
   {
     filename: 'iOS_Made_Skypiercer.jpg',
@@ -986,8 +811,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Iphoto', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Skypiercer.jpg',
   },
   {
     filename: 'iOS_Made_Washed_Out.jpg',
@@ -997,8 +820,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Iphoto', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/cascades.jpg',
   },
   {
     filename: 'iOS_Made_Tre.jpg',
@@ -1008,8 +829,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Tree-Sq.jpg',
   },
   {
     filename: 'iOS_Made_Swan_Lake.jpg',
@@ -1019,8 +838,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Digital Collage', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/006.jpg',
   },
   {
     filename: 'iOS_Made_Best_Living_Communications.jpg',
@@ -1030,8 +847,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Comm1.jpg',
   },
   {
     filename: 'iOS_Made_Microcosm.jpg',
@@ -1048,8 +863,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
       'iOS',
     ],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/005-2.jpg',
   },
   {
     filename: 'iOS_Made_Play_Time.jpg',
@@ -1059,8 +872,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Digital Collage', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/0141.jpg',
   },
   {
     filename: 'iOS_Made_Natural_Idols.jpg',
@@ -1070,8 +881,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Digital Collage', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/021.jpg',
   },
   {
     filename: 'iOS_Made_Mothers_Day.jpg',
@@ -1081,8 +890,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/025.jpg',
   },
   {
     filename: 'iOS_Made_Pitch_Shift.jpg',
@@ -1092,8 +899,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Iphoto', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/276.jpg',
   },
   {
     filename: 'iOS_Made_Nutrient_Rich.jpg',
@@ -1103,8 +908,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Maine-Alex-Orange.jpg',
   },
   {
     filename: 'iOS_Made_Calvin_and_Hobbes.jpg',
@@ -1114,8 +917,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Digital Collage', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/011.jpg',
   },
   {
     filename: 'iOS_Made_Fragments_at_Blue_Hills.jpg',
@@ -1125,8 +926,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Frag-Shapes-at-BH.jpg',
   },
   {
     filename: 'iOS_Made_Mass_Ave.jpg',
@@ -1136,8 +935,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/357.jpg',
   },
   {
     filename: 'iOS_Made_Work_From_Home.jpg',
@@ -1147,8 +944,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Double Exposure', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/005.jpg',
   },
   {
     filename: 'iOS_Made_Coast_Wave.jpg',
@@ -1158,8 +953,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/037.jpg',
   },
   {
     filename: 'iOS_Made_Snowed.jpg',
@@ -1169,8 +962,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Iphoto', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Snowed.jpg',
   },
   {
     filename: 'iOS_Made_Mt._Washington_Deconstructed.jpg',
@@ -1180,8 +971,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Mount-Washington-deconstruct.jpg',
   },
   {
     filename: 'iOS_Made_Butter.jpg',
@@ -1191,8 +980,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Butter1.jpg',
   },
   {
     filename: 'iOS_Made_Wizards.jpg',
@@ -1202,8 +989,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/089.jpg',
   },
   {
     filename: 'iOS_Made_Tre_-_Anaglyph.jpg',
@@ -1213,8 +998,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Anaglyph', 'Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/050.jpg',
   },
   {
     filename: 'iOS_Made_RF_Album_Art_Maine_V1.jpg',
@@ -1224,8 +1007,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Rose-For-you-water-and-land1.jpg',
   },
   {
     filename: 'iOS_Made_For_the_Forest.jpg',
@@ -1235,8 +1016,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/blue-hills-bnw.jpg',
   },
   {
     filename: 'iOS_Made_Flooded.jpg',
@@ -1246,8 +1025,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Boston', 'Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/flooded-city.jpg',
   },
   {
     filename: 'iOS_Made_ETA.jpg',
@@ -1257,8 +1034,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/ETA.jpg',
   },
   {
     filename: 'iOS_Made_Digital_Collage_Challenge.jpg',
@@ -1268,8 +1043,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/133.jpg',
   },
   {
     filename: 'iOS_Made_Docked_Up.jpg',
@@ -1279,8 +1052,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Docked-Up.jpg',
   },
   {
     filename: 'iOS_Made_Dopular.jpg',
@@ -1290,8 +1061,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Photography Edit', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/dopular.jpg',
   },
   {
     filename: 'iOS_Made_Sailor_and_the_Sea.jpg',
@@ -1301,8 +1070,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Glitch', 'Mobile Art', 'iOS'],
     year: null,
-    imageUrl:
-      'https://www.joseconchello.com/wp-content/uploads/2015/10/Sailor-and-the-Sea.jpg',
   },
   {
     filename: 'iOS_Made_Acadian_Self_Reflextion.jpg',
@@ -1312,7 +1079,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Among_The_Ent.jpg',
@@ -1322,7 +1088,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Architect.jpg',
@@ -1332,7 +1097,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Arithmetricks.jpg',
@@ -1342,7 +1106,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Billy_Stoic.jpg',
@@ -1352,7 +1115,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Billy_Weird.jpg',
@@ -1362,7 +1124,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Blue.jpg',
@@ -1372,7 +1133,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Boston_Skyline.jpg',
@@ -1382,7 +1142,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_City_Slice.jpg',
@@ -1392,7 +1151,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Clear_The_Mind.jpg',
@@ -1402,7 +1160,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Comm.jpg',
@@ -1412,7 +1169,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Complex.jpg',
@@ -1422,7 +1178,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Dessert_Triangle.jpg',
@@ -1432,7 +1187,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Dog_3.jpg',
@@ -1442,7 +1196,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Flow.jpg',
@@ -1452,7 +1205,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_For_You.jpg',
@@ -1462,7 +1214,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Gnk_Blue.jpg',
@@ -1472,7 +1223,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Good_Morning.jpg',
@@ -1482,7 +1232,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Hazy.jpg',
@@ -1492,7 +1241,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Its_A_Warp.jpg',
@@ -1502,7 +1250,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Kali_Triangle.jpg',
@@ -1512,7 +1259,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Land_Locked.jpg',
@@ -1522,7 +1268,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Leaf_It_Alone.jpg',
@@ -1532,7 +1277,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Monoboarder.jpg',
@@ -1542,7 +1286,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Minimal_Branch.jpg',
@@ -1552,7 +1295,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Minimal_Lift.jpg',
@@ -1562,7 +1304,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Minimal_Winter_Tree.jpg',
@@ -1572,7 +1313,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Minimal_Over_Bh.jpg',
@@ -1582,7 +1322,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Motel_Wallpapered_Backwards.jpg',
@@ -1592,7 +1331,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Nature_Tri_And_3.jpg',
@@ -1602,7 +1340,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Novi_Rebekah.jpg',
@@ -1612,7 +1349,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Novi_Vert.jpg',
@@ -1622,7 +1358,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Orly.jpg',
@@ -1632,7 +1367,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Rose_Cave.jpg',
@@ -1642,7 +1376,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Rose_For_You_Water_And_Land.jpg',
@@ -1652,7 +1385,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Sail.jpg',
@@ -1662,7 +1394,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Self_Portait_Double_Exposure.jpg',
@@ -1672,7 +1403,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Starfoxx_1.jpg',
@@ -1682,7 +1412,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Steeple_Diamond.jpg',
@@ -1692,7 +1421,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Steeple_Moon.jpg',
@@ -1702,7 +1430,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Stormy_Nights.jpg',
@@ -1712,7 +1439,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Three_Amigos_V2.jpg',
@@ -1722,7 +1448,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Tricut.jpg',
@@ -1732,7 +1457,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Trinity.jpg',
@@ -1742,7 +1466,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Warped2.jpg',
@@ -1752,7 +1475,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Back.jpg',
@@ -1762,7 +1484,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Cropped_Logo.jpg',
@@ -1772,7 +1493,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Cropped_Logo.png',
@@ -1782,7 +1502,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Cyano_City.jpg',
@@ -1792,7 +1511,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Diagon_Alley.jpg',
@@ -1802,7 +1520,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Disapparate.jpg',
@@ -1812,7 +1529,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Forgotten_Heights.jpg',
@@ -1822,7 +1538,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Minimal_Waterfall.jpg',
@@ -1832,7 +1547,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Rose_Backyard.jpg',
@@ -1842,7 +1556,6 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Work_And_Home_Double_Exposure.jpg',
@@ -1852,13 +1565,12 @@ const ArtGalleryItems_iOS_Made: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
 ];
 
 const projectDir = 'iOS-Made';
 const baseRelativePath = `${R2_PROJECT_DIR_GALLERY}/${projectDir}/`;
-export const ArtGalleryMedia_iOS_Made: ImageMediaData[] =
+export const ArtGalleryMedia_iOS_Made: BaseImageData[] =
   convertPortfolioGalleryToImageData(
     ArtGalleryItems_iOS_Made,
     baseRelativePath
@@ -1898,7 +1610,6 @@ const processDecor: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
   {
     filename: 'iOS_Made_Minimal_Winter_Tree.jpg',
@@ -1908,7 +1619,6 @@ const processDecor: PortfolioGalleryItem[] = [
     categories: ['iOS Made'],
     tags: ['Mobile Art', 'iOS'],
     year: null,
-    imageUrl: '',
   },
 ];
 
@@ -1951,22 +1661,21 @@ const processEnd: PortfolioGalleryItem[] = [
 ];
 
 const processRelativePath = `clyzby-process/`;
-export const ProcessStartImages: ImageMediaData[] =
+export const ProcessStartImages: BaseImageData[] =
   convertPortfolioGalleryToImageData(processStart, processRelativePath);
 
-export const ProcessEndImages: ImageMediaData[] =
+export const ProcessEndImages: BaseImageData[] =
   convertPortfolioGalleryToImageData(processEnd, processRelativePath);
 
-export const ProcessDecorImages: [ImageMediaData, ImageMediaData] =
+export const ProcessDecorImages: [BaseImageData, BaseImageData] =
   convertPortfolioGalleryToImageData(processDecor, baseRelativePath) as [
-    ImageMediaData,
-    ImageMediaData
+    BaseImageData,
+    BaseImageData
   ];
 
-export const HighlightVideo: VideoMediaData = {
-  url: getVideoUrl(
-    'clyzby-process/Pares Mallis and Arni Cheatham Art 100 Boston.mp4'
-  ),
+export const HighlightVideo: BaseVideoData = {
+  relativePath:
+    'clyzby-process/Pares Mallis and Arni Cheatham Art 100 Boston.mp4',
   title: 'iOS Artist in the News',
   // thumbnail?: string;
   caption: `Featured on local TV discussing my innovative iOS art process - creating digital artwork entirely on iPhone apps and printing on glass due to lack of traditional studio space. Part of an affordable art exhibition supporting breast cancer research.`,
