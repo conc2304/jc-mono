@@ -20,6 +20,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { createDitherClass } from './dithering-class';
+import { useMediaProvider } from '../../context';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -32,6 +33,8 @@ export interface SculpturePortfolioProps {
 const SculptureHeader: React.FC<{ onMenuClick: () => void }> = ({
   onMenuClick,
 }) => {
+  const { generateImageSources } = useMediaProvider().provider;
+
   return (
     <AppBar
       position="fixed"
@@ -198,6 +201,8 @@ const DitherImageContainer: React.FC<{
   sculpture: Sculpture;
   containerRef: (el: HTMLDivElement | null) => void;
 }> = ({ sculpture, containerRef }) => {
+  const { generateImageSources } = useMediaProvider().provider;
+
   return (
     <Box
       ref={containerRef}
@@ -218,7 +223,9 @@ const DitherImageContainer: React.FC<{
     >
       {sculpture.images.length === 1 && (
         <img
-          src={sculpture.images[0]?.relativePath}
+          src={
+            generateImageSources(sculpture.images[0]?.relativePath, 'modal').src
+          }
           alt={sculpture.images[0]?.alt || sculpture.title}
         />
       )}
@@ -366,6 +373,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
   const ditherInstancesRef = useRef<any[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const { generateImageSources } = useMediaProvider().provider;
 
   useGSAP(
     () => {
@@ -422,10 +430,10 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
           top: '50vh',
           yPercent: -50,
           xPercent: -50,
-          fontSize: '15vw',
+          fontSize: '5vw',
         },
         {
-          top: '1.5rem',
+          top: '0.75rem',
           yPercent: 0,
           xPercent: -50,
           fontSize: '2rem',
@@ -452,7 +460,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
             top: '50vh',
             yPercent: -50,
             xPercent: -50,
-            fontSize: '15vw',
+            fontSize: '5vw',
             opacity: 1,
           },
           {
@@ -535,7 +543,9 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         );
 
         if (hasMultipleImages && imageContainer) {
-          const imageUrls = sculpture.images.map((img) => img.relativePath);
+          const imageUrls = sculpture.images.map(
+            (img) => generateImageSources(img.relativePath, 'gallery').src
+          );
 
           const ditherInstance = new DitherTransitionPlaylist(imageContainer, {
             images: imageUrls,
