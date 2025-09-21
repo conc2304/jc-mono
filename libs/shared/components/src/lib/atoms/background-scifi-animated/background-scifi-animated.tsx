@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, styled, keyframes } from '@mui/material';
+import { Box, keyframes } from '@mui/material';
 
 // Type definitions
 interface Particle {
@@ -29,22 +29,6 @@ interface SciFiBackgroundProps {
   enableScanlines?: boolean;
   enableGrid?: boolean;
   enableGradient?: boolean;
-}
-
-interface ParticleComponentProps {
-  particle: Particle;
-}
-
-interface ScanlineComponentProps {
-  startY: number;
-}
-
-interface DataStreamComponentProps {
-  stream: DataStreamType;
-}
-
-interface StreamCharProps {
-  index: number;
 }
 
 // Grid Pattern Component - Subtle background grid
@@ -133,22 +117,6 @@ const floatParticle = keyframes`
   }
 `;
 
-// Styled particle component
-const ParticleComponent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'particle',
-})<ParticleComponentProps>(({ particle, theme }) => ({
-  position: 'absolute',
-  borderRadius: '50%',
-  backgroundColor: theme.palette.getInvertedMode('info', true),
-  left: `${particle.x}%`,
-  top: `${particle.y}%`,
-  width: `${particle.size}px`,
-  height: `${particle.size}px`,
-  opacity: particle.opacity,
-  animation: `${floatParticle} ${particle.duration}s infinite linear`,
-  animationDelay: `${particle.delay}s`,
-}));
-
 // Floating Particles Component - Animated dots for depth
 const FloatingParticles: React.FC = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -161,7 +129,7 @@ const FloatingParticles: React.FC = () => {
           id: i,
           x: Math.random() * 100,
           y: Math.random() * 100,
-          size: Math.random() * (Math.random() < 0.25 ? 20 : 5) + 1, // 25 percent chance of larger particles
+          size: Math.random() * (Math.random() < 0.25 ? 20 : 5) + 1,
           opacity: Math.random() * 0.4 + 0.1,
           duration: Math.random() * 20 + 10,
           delay: Math.random() * 5,
@@ -184,7 +152,23 @@ const FloatingParticles: React.FC = () => {
       }}
     >
       {particles.map((particle: Particle) => (
-        <ParticleComponent key={particle.id} particle={particle} />
+        <Box
+          key={particle.id}
+          sx={{
+            position: 'absolute',
+            borderRadius: '50%',
+            bgcolor: 'info.main',
+            animation: `${floatParticle} ${particle.duration}s infinite linear`,
+          }}
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+            opacity: particle.opacity,
+            animationDelay: `${particle.delay}s`,
+          }}
+        />
       ))}
     </Box>
   );
@@ -208,21 +192,6 @@ const scanlineMove = keyframes`
   }
 `;
 
-// Styled scanline component
-const ScanlineComponent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'startY',
-})<ScanlineComponentProps>(({ startY, theme }) => ({
-  position: 'absolute',
-  width: '100%',
-  height: '1px',
-  background: `linear-gradient(to right, transparent, ${theme.palette.getInvertedMode(
-    'info'
-  )}, transparent)`,
-  opacity: 0.6,
-  top: startY,
-  animation: `${scanlineMove} 3s ease-in-out forwards`,
-}));
-
 // Scanline Effect Component - Sweeping horizontal lines
 const ScanlineEffect: React.FC = () => {
   const [scanlines, setScanlines] = useState<Scanline[]>([]);
@@ -234,7 +203,6 @@ const ScanlineEffect: React.FC = () => {
 
       setScanlines((prev: Scanline[]) => [...prev, { id, startY }]);
 
-      // Remove scanline after animation
       setTimeout(() => {
         setScanlines((prev: Scanline[]) =>
           prev.filter((line: Scanline) => line.id !== id)
@@ -242,10 +210,7 @@ const ScanlineEffect: React.FC = () => {
       }, 3000);
     };
 
-    // Create scanlines periodically
     const interval: NodeJS.Timeout = setInterval(createScanline, 8000);
-
-    // Create initial scanline
     const initialTimeout: NodeJS.Timeout = setTimeout(createScanline, 2000);
 
     return () => {
@@ -265,7 +230,21 @@ const ScanlineEffect: React.FC = () => {
       }}
     >
       {scanlines.map((scanline: Scanline) => (
-        <ScanlineComponent key={scanline.id} startY={scanline.startY} />
+        <Box
+          key={scanline.id}
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            height: '1px',
+            background: (theme) =>
+              `linear-gradient(to right, transparent, ${theme.palette.info.main}, transparent)`,
+            opacity: 0.6,
+            animation: `${scanlineMove} 3s ease-in-out forwards`,
+          }}
+          style={{
+            top: scanline.startY,
+          }}
+        />
       ))}
     </Box>
   );
@@ -277,26 +256,6 @@ const streamFall = keyframes`
     transform: translateY(calc(100vh + 100px));
   }
 `;
-
-// Styled stream component
-const DataStreamComponent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'stream',
-})<DataStreamComponentProps>(({ stream, theme }) => ({
-  position: 'absolute',
-  fontSize: '12px',
-  color: theme.palette.info.main,
-  opacity: 0.2,
-  fontFamily: 'monospace',
-  left: `${stream.x}%`,
-  top: '-100px',
-  animation: `${streamFall} 6s linear forwards`,
-}));
-
-// Styled stream character
-const StreamChar = styled(Box)<StreamCharProps>(({ index }) => ({
-  animationDelay: `${index * 0.1}s`,
-  opacity: 1 - index * 0.1,
-}));
 
 // Data Stream Effect Component - Flowing code-like elements
 const DataStreams: React.FC = () => {
@@ -338,20 +297,40 @@ const DataStreams: React.FC = () => {
       }}
     >
       {streams.map((stream: DataStreamType) => (
-        <DataStreamComponent key={stream.id} stream={stream}>
+        <Box
+          key={stream.id}
+          sx={{
+            position: 'absolute',
+            fontSize: '12px',
+            color: 'info.main',
+            opacity: 0.2,
+            fontFamily: 'monospace',
+            top: '-100px',
+            animation: `${streamFall} 6s linear forwards`,
+          }}
+          style={{
+            left: `${stream.x}%`,
+          }}
+        >
           {stream.chars.map((char: string, index: number) => (
-            <StreamChar key={index} index={index}>
+            <Box
+              key={index}
+              style={{
+                animationDelay: `${index * 0.1}s`,
+                opacity: 1 - index * 0.1,
+              }}
+            >
               {char}
-            </StreamChar>
+            </Box>
           ))}
-        </DataStreamComponent>
+        </Box>
       ))}
     </Box>
   );
 };
 
 // Combined Background Component
-const SciFiBackground: React.FC<SciFiBackgroundProps> = ({
+export const SciFiBackground: React.FC<SciFiBackgroundProps> = ({
   enableParticles = true,
   enableDataStreams = true,
   enableScanlines = true,
@@ -368,13 +347,3 @@ const SciFiBackground: React.FC<SciFiBackgroundProps> = ({
     </>
   );
 };
-
-export {
-  SciFiBackground,
-  CyberGrid,
-  GradientOverlay,
-  FloatingParticles,
-  DataStreams,
-  ScanlineEffect,
-};
-export type { SciFiBackgroundProps, Particle, Scanline, DataStreamType };

@@ -45,7 +45,7 @@ const SculptureHeader: React.FC<{ onMenuClick: () => void }> = ({
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Typography
-          variant="h1"
+          variant="display"
           className="header-logo"
           sx={{ fontSize: '2rem', position: 'fixed' }}
         >
@@ -168,7 +168,7 @@ const IntroSection: React.FC = () => {
           {speeds.map((speed, i) => (
             <Typography
               key={i}
-              variant="h1"
+              variant="display"
               className="sculpture-text"
               data-speed={speed}
               sx={{
@@ -385,7 +385,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         left: '50%',
         xPercent: -50,
         yPercent: -50,
-        fontSize: '15vw',
+        fontSize: '5vw',
         zIndex: 100,
       });
 
@@ -395,7 +395,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         left: '50%',
         xPercent: -50,
         yPercent: -50,
-        fontSize: '15vw',
+        fontSize: '5vw',
         zIndex: 99,
       });
 

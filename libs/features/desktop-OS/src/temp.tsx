@@ -1,327 +1,369 @@
-export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
-  sculptures,
-}) => {
-  const sectionsRef = useRef<(HTMLElement | null)[]>([]);
-  const imageContainersRef = useRef<(HTMLDivElement | null)[]>([]);
-  const ditherInstancesRef = useRef<any[]>([]);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const scrollerRef = useRef<HTMLDivElement>(null);
+import React, { useState, useEffect } from 'react';
+import { Box, keyframes } from '@mui/material';
 
-  useGSAP(
-    () => {
-      const DitherTransitionPlaylist = createDitherClass();
+// Type definitions
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  opacity: number;
+  duration: number;
+  delay: number;
+}
 
-      // Set the scroller for all ScrollTriggers
-      if (scrollerRef.current) {
-        ScrollTrigger.defaults({
-          scroller: scrollerRef.current,
-        });
-      }
+interface Scanline {
+  id: number;
+  startY: number;
+}
 
-      // Initial GSAP setup
-      gsap.set('.header-logo', {
-        position: 'fixed',
-        top: '50vh',
-        left: '50%',
-        xPercent: -50,
-        yPercent: -50,
-        fontSize: '15vw',
-        zIndex: 100,
-      });
+interface DataStreamType {
+  id: number;
+  x: number;
+  chars: string[];
+}
 
-      gsap.set('.sculpture-text', {
-        position: 'fixed',
-        top: '50vh',
-        left: '50%',
-        xPercent: -50,
-        yPercent: -50,
-        fontSize: '15vw',
-        zIndex: 99,
-      });
+interface SciFiBackgroundProps {
+  enableParticles?: boolean;
+  enableDataStreams?: boolean;
+  enableScanlines?: boolean;
+  enableGrid?: boolean;
+  enableGradient?: boolean;
+}
 
-      gsap.set('.menu-button', {
-        opacity: 0,
-      });
-
-      gsap.set('.sticky-header', {
-        borderBottomColor: 'rgba(255, 255, 255, 0)',
-      });
-
-      const logoTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.intro-section',
-          start: 'top top',
-          end: () => window.innerHeight * 1.2,
-          scrub: 0.6,
-        },
-      });
-
-      logoTimeline.fromTo(
-        '.header-logo',
-        {
-          top: '50vh',
-          yPercent: -50,
-          xPercent: -50,
-          fontSize: '15vw',
-        },
-        {
-          top: '1.5rem',
-          yPercent: 0,
-          xPercent: -50,
-          fontSize: '2rem',
-          duration: 0.8,
-        }
-      );
-
-      gsap.utils.toArray('.sculpture-text').forEach((text: any) => {
-        const speed = parseFloat(text.getAttribute('data-speed') || '1');
-        const delay = (1 - speed) * 0.4;
-
-        const textTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.intro-section',
-            start: 'top top',
-            end: () => window.innerHeight * 1.2,
-            scrub: 0.6,
-          },
-        });
-
-        textTimeline.fromTo(
-          text,
-          {
-            top: '50vh',
-            yPercent: -50,
-            xPercent: -50,
-            fontSize: '15vw',
-            opacity: 1,
-          },
-          {
-            top: '1.5rem',
-            yPercent: 0,
-            xPercent: -50,
-            fontSize: '2rem',
-            opacity: 0,
-            duration: 0.8,
-          },
-          delay
-        );
-      });
-
-      logoTimeline.fromTo(
-        '.menu-button',
-        {
-          opacity: 0,
-        },
-        {
-          opacity: 1,
-          duration: 0.1,
-        },
-        0.9
-      );
-
-      logoTimeline.fromTo(
-        '.sticky-header',
-        {
-          boxShadow: '0px 0px 10px rgba(0,0,0,0)',
-          borderBottomColor: 'rgba(255, 255, 255, 0)',
-        },
-        {
-          boxShadow: '0px 0px 10px rgba(0,0,0,0.5)',
-          borderBottomColor: 'rgba(255, 255, 255, 0.1)',
-          duration: 0.2,
-        },
-        0.9
-      );
-
-      sectionsRef.current.forEach((section, index) => {
-        if (!section) return;
-
-        const sculpture = sculptures[index];
-        const content = section.querySelectorAll('.parallax-content');
-        const imageContainer = imageContainersRef.current[index];
-        const hasMultipleImages = sculpture.images.length > 1;
-
-        gsap.fromTo(
-          content,
-          { y: 150, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.2,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top bottom',
-              end: 'top 20%',
-              scrub: 1.5,
-            },
-          }
-        );
-
-        gsap.fromTo(
-          imageContainer,
-          { y: 150, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top bottom',
-              end: 'top 20%',
-              scrub: 1.5,
-            },
-          }
-        );
-
-        if (hasMultipleImages && imageContainer) {
-          const imageUrls = sculpture.images.map((img) => img.relativePath);
-
-          const ditherInstance = new DitherTransitionPlaylist(imageContainer, {
-            images: imageUrls,
-            algorithm: 'floyd-steinberg',
-            maxPixelation: 16,
-            blendMode: 'normal',
-            autoActivate: false,
-          });
-
-          ditherInstancesRef.current[index] = ditherInstance;
-
-          ScrollTrigger.create({
-            trigger: section,
-            start: 'top top',
-            end: () =>
-              `+=${(sculpture.images.length - 1) * window.innerHeight}`,
-            pin: true,
-            scrub: 0.5,
-            onEnter: () => {
-              ditherInstance.activate();
-            },
-            onUpdate: (self) => {
-              if (ditherInstance && ditherInstance.state.isActive) {
-                ditherInstance.updateTransition(self.progress);
-              }
-            },
-            onLeave: () => {
-              ditherInstance.deactivate();
-            },
-            onEnterBack: () => {
-              ditherInstance.activate();
-            },
-            onLeaveBack: () => {
-              ditherInstance.deactivate();
-            },
-          });
-        }
-
-        const exitStart = hasMultipleImages
-          ? `+=${(sculpture.images.length - 1) * window.innerHeight}`
-          : 'bottom 80%';
-
-        gsap.fromTo(
-          content,
-          { y: 0, opacity: 1 },
-          {
-            y: -150,
-            opacity: 0,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: exitStart,
-              end: hasMultipleImages
-                ? `+=${window.innerHeight * 0.8}`
-                : 'bottom top',
-              scrub: 1.5,
-            },
-          }
-        );
-
-        gsap.fromTo(
-          imageContainer,
-          { y: 0, opacity: 1 },
-          {
-            y: -150,
-            opacity: 0,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: exitStart,
-              end: hasMultipleImages
-                ? `+=${window.innerHeight * 0.8}`
-                : 'bottom top',
-              scrub: 1.5,
-            },
-          }
-        );
-      });
-
-      // Cleanup
-      return () => {
-        ScrollTrigger.defaults({ scroller: window });
-        ditherInstancesRef.current.forEach((instance) => {
-          if (instance && instance.destroy) {
-            instance.destroy();
-          }
-        });
-        ditherInstancesRef.current = [];
-      };
-    },
-    {
-      scope: scrollerRef, // Changed from containerRef to scrollerRef
-      dependencies: [sculptures],
-      revertOnUpdate: true, // Add this to clean up on re-render
-    }
-  );
-
-  const handleNavClick = (index: number) => {
-    const section = sectionsRef.current[index];
-    if (section && scrollerRef.current) {
-      gsap.to(scrollerRef.current, {
-        scrollTo: { y: section, offsetY: 100 },
-        duration: 1,
-        ease: 'power2.inOut',
-      });
-      setMenuOpen(false);
-    }
-  };
-
+// Grid Pattern Component - Subtle background grid
+const CyberGrid: React.FC = () => {
   return (
     <Box
-      ref={scrollerRef}
       sx={{
-        background: '#0a0a0a',
-        color: '#ffffff',
-        height: '100vh',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        position: 'relative', // Important for fixed positioning to work
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 1,
+        width: '100%',
+        height: '100%',
+        color: 'info.main',
       }}
-      className="SculpturePortfolio--root"
     >
-      <SculptureHeader onMenuClick={() => setMenuOpen(true)} />
-
-      <NavigationMenu
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        sculptures={sculptures}
-        onNavigate={handleNavClick}
-      />
-
-      <IntroSection />
-
-      {sculptures.map((sculpture, index) => (
-        <SculptureSection
-          key={sculpture.id}
-          sculpture={sculpture}
-          index={index}
-          sectionRef={(el) => (sectionsRef.current[index] = el)}
-          imageContainerRef={(el) => (imageContainersRef.current[index] = el)}
-        />
-      ))}
-
-      <style>{`
-        /* ... your existing styles ... */
-      `}</style>
+      <svg
+        style={{
+          width: '100%',
+          height: '100%',
+          opacity: 0.1,
+          color: 'inherit',
+        }}
+      >
+        <defs>
+          <pattern
+            id="cyber-grid"
+            width="40"
+            height="40"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 40 0 L 0 0 0 40"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.5"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#cyber-grid)" />
+      </svg>
     </Box>
   );
 };
+
+// Gradient Overlay Component - Subtle radial gradient
+const GradientOverlay: React.FC = () => {
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 2,
+        width: '100%',
+        height: '100%',
+        background: `
+          radial-gradient(
+            ellipse at center,
+            rgba(6, 182, 212, 0.03) 0%,
+            rgba(15, 23, 42, 0.1) 50%,
+            rgba(2, 6, 23, 0.2) 100%
+          )
+        `,
+      }}
+    />
+  );
+};
+
+// Floating animation for particles
+const floatParticle = keyframes`
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px);
+  }
+  75% {
+    transform: translateY(-30px) translateX(15px);
+  }
+  100% {
+    transform: translateY(-40px) translateX(0px);
+  }
+`;
+
+// Floating Particles Component - Animated dots for depth
+const FloatingParticles: React.FC = () => {
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  useEffect(() => {
+    const generateParticles = (): void => {
+      const newParticles: Particle[] = [];
+      for (let i = 0; i < 30; i++) {
+        newParticles.push({
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: Math.random() * (Math.random() < 0.25 ? 20 : 5) + 1,
+          opacity: Math.random() * 0.4 + 0.1,
+          duration: Math.random() * 20 + 10,
+          delay: Math.random() * 5,
+        });
+      }
+      setParticles(newParticles);
+    };
+
+    generateParticles();
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        zIndex: 3,
+      }}
+    >
+      {particles.map((particle: Particle) => (
+        <Box
+          key={particle.id}
+          sx={{
+            position: 'absolute',
+            borderRadius: '50%',
+            bgcolor: 'info.main',
+            animation: `${floatParticle} ${particle.duration}s infinite linear`,
+          }}
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+            opacity: particle.opacity,
+            animationDelay: `${particle.delay}s`,
+          }}
+        />
+      ))}
+    </Box>
+  );
+};
+
+// Scanline animation
+const scanlineMove = keyframes`
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+`;
+
+// Scanline Effect Component - Sweeping horizontal lines
+const ScanlineEffect: React.FC = () => {
+  const [scanlines, setScanlines] = useState<Scanline[]>([]);
+
+  useEffect(() => {
+    const createScanline = (): void => {
+      const id: number = Date.now() + Math.random();
+      const startY: number = Math.random() * window.innerHeight;
+
+      setScanlines((prev: Scanline[]) => [...prev, { id, startY }]);
+
+      setTimeout(() => {
+        setScanlines((prev: Scanline[]) =>
+          prev.filter((line: Scanline) => line.id !== id)
+        );
+      }, 3000);
+    };
+
+    const interval: NodeJS.Timeout = setInterval(createScanline, 8000);
+    const initialTimeout: NodeJS.Timeout = setTimeout(createScanline, 2000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(initialTimeout);
+    };
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        zIndex: 5,
+      }}
+    >
+      {scanlines.map((scanline: Scanline) => (
+        <Box
+          key={scanline.id}
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            height: '1px',
+            background: (theme) =>
+              `linear-gradient(to right, transparent, ${theme.palette.info.main}, transparent)`,
+            opacity: 0.6,
+            animation: `${scanlineMove} 3s ease-in-out forwards`,
+          }}
+          style={{
+            top: scanline.startY,
+          }}
+        />
+      ))}
+    </Box>
+  );
+};
+
+// Stream falling animation
+const streamFall = keyframes`
+  to {
+    transform: translateY(calc(100vh + 100px));
+  }
+`;
+
+// Data Stream Effect Component - Flowing code-like elements
+const DataStreams: React.FC = () => {
+  const [streams, setStreams] = useState<DataStreamType[]>([]);
+
+  useEffect(() => {
+    const characters: string = '01アイウエオカキクケコサシスセソ';
+
+    const createStream = (): void => {
+      const id: number = Date.now() + Math.random();
+      const x: number = Math.random() * 100;
+      const chars: string[] = Array.from(
+        { length: 10 },
+        () => characters[Math.floor(Math.random() * characters.length)]
+      );
+
+      setStreams((prev: DataStreamType[]) => [...prev, { id, x, chars }]);
+
+      setTimeout(() => {
+        setStreams((prev: DataStreamType[]) =>
+          prev.filter((stream: DataStreamType) => stream.id !== id)
+        );
+      }, 6000);
+    };
+
+    const interval: NodeJS.Timeout = setInterval(createStream, 1200);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        zIndex: 4,
+      }}
+    >
+      {streams.map((stream: DataStreamType) => (
+        <Box
+          key={stream.id}
+          sx={{
+            position: 'absolute',
+            fontSize: '12px',
+            color: 'info.main',
+            opacity: 0.2,
+            fontFamily: 'monospace',
+            top: '-100px',
+            animation: `${streamFall} 6s linear forwards`,
+          }}
+          style={{
+            left: `${stream.x}%`,
+          }}
+        >
+          {stream.chars.map((char: string, index: number) => (
+            <Box
+              key={index}
+              style={{
+                animationDelay: `${index * 0.1}s`,
+                opacity: 1 - index * 0.1,
+              }}
+            >
+              {char}
+            </Box>
+          ))}
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+// Combined Background Component
+const SciFiBackground: React.FC<SciFiBackgroundProps> = ({
+  enableParticles = true,
+  enableDataStreams = true,
+  enableScanlines = true,
+  enableGrid = true,
+  enableGradient = true,
+}) => {
+  return (
+    <>
+      {enableGrid && <CyberGrid />}
+      {enableGradient && <GradientOverlay />}
+      {enableParticles && <FloatingParticles />}
+      {enableDataStreams && <DataStreams />}
+      {enableScanlines && <ScanlineEffect />}
+    </>
+  );
+};
+
+export default function App() {
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+      }}
+    >
+      <SciFiBackground />
+      <Box
+        sx={{ position: 'relative', zIndex: 10, p: 4, color: 'text.primary' }}
+      >
+        <h1>Optimized Sci-Fi Background</h1>
+        <p>Now with efficient styling - no CSS bloat!</p>
+      </Box>
+    </Box>
+  );
+}
