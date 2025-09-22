@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
 import { ImageContainer } from '../../../../atoms';
-import { ImageMediaData } from '../../../../organisms';
+import { ImageRenderAttributes } from '../../../../organisms';
 
 interface HeroSectionProps {
-  heroImage: ImageMediaData;
+  heroImage: ImageRenderAttributes;
   projectName: string;
   projectSubtitle?: string;
   description?: string;
@@ -18,7 +18,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const theme = useTheme();
 
-  const { relativePath, detailedCaption, ...imgAttributes } = heroImage;
+  const { src, sizes, alt } = heroImage;
   return (
     <Box sx={{ position: 'relative' }}>
       <Box
@@ -31,7 +31,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }}
       >
         <ImageContainer
-          {...imgAttributes}
+          src={src}
+          sizes={sizes}
+          alt={alt}
           lazy={false}
           showSkeletonDuration={1}
           className="hero-image"
@@ -66,29 +68,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }}
       >
         <Container maxWidth="xl" sx={{ mt: 24 }}>
-          <Typography
-            variant="display"
-            className="hero-title"
-            sx={{
-              fontWeight: 'bold',
-              mb: 1,
-              color: theme.palette.primary.main,
-              lineHeight: 1,
-
-              fontSize: '1.5rem',
-              '@container (min-width: 769px)': {
-                fontSize: '3.5rem',
-              },
-              '@container (min-width: 1200px)': {
-                fontSize: '5.5rem',
-              },
-            }}
+          <Box
+            sx={(theme) => ({
+              textShadow: `-0.5px 0.5px ${theme.palette.text.primary}`,
+            })}
           >
-            {projectName}
-          </Typography>
-          {projectSubtitle && (
             <Typography
-              variant="h3"
+              variant="display"
               className="hero-title"
               sx={{
                 fontWeight: 'bold',
@@ -96,18 +82,40 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 color: theme.palette.primary.main,
                 lineHeight: 1,
 
-                fontSize: '1.25rem',
+                fontSize: '1.5rem',
                 '@container (min-width: 769px)': {
-                  fontSize: '2.5rem',
+                  fontSize: '3.5rem',
                 },
                 '@container (min-width: 1200px)': {
-                  fontSize: '3.75rem',
+                  fontSize: '5.5rem',
                 },
               }}
             >
-              {projectSubtitle}
+              {projectName}
             </Typography>
-          )}
+            {projectSubtitle && (
+              <Typography
+                variant="h3"
+                className="hero-title"
+                sx={{
+                  fontWeight: 'bold',
+                  mb: 1,
+                  color: theme.palette.primary.main,
+                  lineHeight: 1,
+
+                  fontSize: '1.25rem',
+                  '@container (min-width: 769px)': {
+                    fontSize: '2.5rem',
+                  },
+                  '@container (min-width: 1200px)': {
+                    fontSize: '3.75rem',
+                  },
+                }}
+              >
+                {projectSubtitle}
+              </Typography>
+            )}
+          </Box>
           {description && (
             <Typography
               className="hero-description"

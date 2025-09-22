@@ -12,6 +12,7 @@ import { TileContentProps } from '../../molecules';
 import { ProjectData } from '../project';
 import { DiagonalLines, ImageContainer } from '../../atoms';
 import { Star } from '@mui/icons-material';
+import { useMediaProvider } from '../../context';
 
 export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
   memo(({ name, children, currentIndex = 0, isLarge, tileData }) => {
@@ -20,6 +21,8 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
     const isLg = useMediaQuery(theme.breakpoints.up('md'));
     const projects: ProjectData[] = tileData || [];
     const currentProject = projects[currentIndex];
+
+    const { generateImageSources } = useMediaProvider().provider;
 
     return (
       <Box
@@ -64,16 +67,23 @@ export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
                 }}
               >
                 {projects.map((project, index) => {
-                  if (!project.media?.thumbnail) return null;
+                  if (!project.media?.hero) return null;
 
-                  const { detailedCaption, ...imageProps } =
-                    project.media.thumbnail;
+                  const { relativePath, alt } = project.media.hero;
+
+                  const { src, srcSet, sizes } = generateImageSources(
+                    relativePath,
+                    'thumbnail'
+                  );
 
                   return (
                     <ImageContainer
                       key={`project-image-${index}`}
                       className="ProjectImageContainer--root"
-                      {...imageProps}
+                      src={src}
+                      srcSet={srcSet}
+                      sizes={sizes}
+                      alt={alt}
                       showSkeletonDuration={0}
                       lazy={false}
                       sx={{

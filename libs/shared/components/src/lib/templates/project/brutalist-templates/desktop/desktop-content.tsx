@@ -1,9 +1,8 @@
 import React from 'react';
-import { Container, Grid, Box } from '@mui/material';
-import { ProjectData, ProjectContent } from '../../types';
+import { Container, Grid } from '@mui/material';
+import { ProjectData } from '../../types';
 import { DesktopSidebar } from './desktop-sidebar';
 import { DesktopMainContent } from './desktop-main-content';
-
 
 interface TabData {
   key: string;
@@ -11,7 +10,7 @@ interface TabData {
 }
 
 interface DesktopContentProps {
-  data: ProjectData;
+  projectData: ProjectData;
   activeTab: string;
   onTabChange: (event: React.SyntheticEvent, newValue: string) => void;
   tabs: TabData[];
@@ -19,7 +18,7 @@ interface DesktopContentProps {
 }
 
 export const DesktopContent: React.FC<DesktopContentProps> = ({
-  data,
+  projectData,
   activeTab,
   onTabChange,
   tabs,
@@ -29,17 +28,15 @@ export const DesktopContent: React.FC<DesktopContentProps> = ({
     <Container maxWidth="xl" className="desktop-layout" sx={{ py: 4 }}>
       <Grid container spacing={4}>
         <Grid size={{ xs: 12, lg: 3 }}>
-          <DesktopSidebar data={data} />
+          <DesktopSidebar data={projectData} />
         </Grid>
         <Grid size={{ xs: 12, lg: 9 }}>
           <DesktopMainContent
-            data={data}
+            projectData={projectData}
             activeTab={activeTab}
             onTabChange={onTabChange}
             tabs={tabs}
             renderContent={renderContent}
-            videos={data.media?.videos}
-            screenshots={data.media?.screenshots}
           />
         </Grid>
       </Grid>

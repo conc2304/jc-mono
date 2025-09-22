@@ -69,19 +69,8 @@ export const gravityScavengerProject: ProjectData = {
   // =============================================================================
   media: {
     hero: {
-      ...getResponsiveImageSet(
-        'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.jpg'
-      ),
-      alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
-      caption: 'Advanced orbital mechanics with trajectory prediction system',
-      detailedCaption:
-        'Sophisticated physics demonstration showcasing the trajectory prediction system using calculus and trigonometry implementation, where players must strategically use gravitational forces to navigate orbital paths while collecting resources, demonstrating educational value of mathematical concepts applied to engaging interactive gameplay',
-    },
-    thumbnail: {
-      src: getImageUrl(
+      relativePath:
         'projects/gravity-scavenger/gravity-scavenger-gameplay-orbiting-with-pickups.jpg',
-        'thumbnail'
-      ),
       alt: 'Spaceship performing orbital maneuvers around planet with physics-based trajectory visualization and collectible items using advanced gravitational mechanics',
       caption: 'Advanced orbital mechanics with trajectory prediction system',
       detailedCaption:
@@ -154,16 +143,11 @@ export const gravityScavengerProject: ProjectData = {
         detailedCaption:
           'Professional game start screen showcasing polished visual design, comprehensive UI systems, and cohesive space-themed aesthetic that introduces players to the physics-based gameplay experience, demonstrating attention to user experience design and the educational game development approach combining academic rigor with engaging presentation',
       },
-    ].map(({ relativePath, ...mediaItem }) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(relativePath),
-      url: getImageUrl(relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/gravity-scavenger/Gravity%20Scavenger%20_%20GD50%20Final%20Project%20-%20Game%20Development_optimized.mp4'
-        ),
+        relativePath:
+          'projects/gravity-scavenger/Gravity%20Scavenger%20_%20GD50%20Final%20Project%20-%20Game%20Development_optimized.mp4',
         title: 'Gravity Scavenger Final Project Demo',
         type: 'demo',
         caption:

@@ -35,7 +35,7 @@ export const climateDataVizFileSystemItem: FileSystemItem<
       'team-project',
     ],
     favorite: true,
-    thumbnail: climateDataVizProject.media.thumbnail,
+    thumbnail: climateDataVizProject.media.hero,
     description:
       'Interactive climate impact visualization exploring temperature and weather correlations',
   },

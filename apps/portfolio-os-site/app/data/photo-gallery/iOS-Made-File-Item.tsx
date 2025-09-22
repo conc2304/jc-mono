@@ -53,7 +53,7 @@ export const iOSImageGallery: FileSystemItem<
       highlightVideo: HighlightVideo,
       lazy: true,
       showSkeletonDuration: 0,
-      rootMargin: '500px',
+      rootMargin: '800px',
       threshold: 0.05,
     },
   },

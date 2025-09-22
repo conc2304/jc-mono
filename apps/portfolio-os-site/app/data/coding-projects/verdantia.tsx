@@ -36,7 +36,7 @@ export const verdantiaFileSystemItem: FileSystemItem<
       'harvard',
     ],
     favorite: true,
-    thumbnail: verdantiaProject.media.thumbnail,
+    thumbnail: verdantiaProject.media.hero,
     description:
       'Unity city builder museum installation with real-time heat equation simulation and environmental education',
   },

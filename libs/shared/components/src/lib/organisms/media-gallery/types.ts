@@ -1,25 +1,54 @@
-interface ImageMediaData {
+interface BaseImageData {
+  relativePath: string;
+  alt: string;
+  caption?: string;
+  detailedCaption?: string;
+}
+interface BaseVideoData {
+  relativePath: string;
+  title?: string;
+  type?: 'demo' | 'process' | 'final' | 'inspiration';
+  thumbnail?: string;
+  caption?: string;
+  detailedCaption?: string;
+}
+
+interface ImageMediaSource {
+  src: string;
+  srcSet?: string;
+  sizes?: string;
+}
+
+interface ImageRenderAttributes {
   src: string;
   srcSet?: string;
   sizes?: string;
   alt: string;
   caption?: string;
-  detailedCaption?: string; // For longer captions in modal
+  detailedCaption?: string;
+  aspectRatio?: number;
 }
 
-interface VideoMediaData {
+interface VideoRenderAttributes {
   url: string;
   title?: string;
   type?: 'demo' | 'process' | 'final' | 'inspiration';
   thumbnail?: string;
   caption?: string;
-  detailedCaption?: string; // For longer captions in modal
+  detailedCaption?: string;
 }
 
 interface MediaItem {
   type: 'image' | 'video';
-  data: ImageMediaData | VideoMediaData;
+  data: ImageRenderAttributes | VideoRenderAttributes;
   index: number;
 }
 
-export type { ImageMediaData, VideoMediaData, MediaItem };
+export type {
+  BaseImageData,
+  BaseVideoData,
+  ImageRenderAttributes,
+  VideoRenderAttributes,
+  MediaItem,
+  ImageMediaSource,
+};

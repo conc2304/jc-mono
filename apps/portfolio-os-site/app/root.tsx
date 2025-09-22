@@ -11,6 +11,7 @@ import 'augmented-ui/augmented-ui.min.css';
 
 import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
 import { ThemedBgContainer } from './components/themed-bg-container';
+import { CloudflareMediaProvider, MediaProvider } from '@jc/ui-components';
 
 export const meta: MetaFunction = () => [
   // Basic meta tags
@@ -399,6 +400,8 @@ export const links: LinksFunction = () => [
   },
 ];
 
+const mediaProviderService = new CloudflareMediaProvider();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -418,16 +421,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <EnhancedThemeProvider
-          themes={enhancedThemes}
-          defaultThemeId="developer-terminal"
-          defaultColorMode="system"
-          themeStorageKey="clyzby-app-theme"
-          colorModeStorageKey="clyzby-app-color-mode"
-        >
-          <ThemedBgContainer />
-          {children}
-        </EnhancedThemeProvider>
+        <MediaProvider provider={mediaProviderService} defaultContext="gallery">
+          <EnhancedThemeProvider
+            themes={enhancedThemes}
+            defaultThemeId="developer-terminal"
+            defaultColorMode="system"
+            themeStorageKey="clyzby-app-theme"
+            colorModeStorageKey="clyzby-app-color-mode"
+          >
+            <ThemedBgContainer />
+            {children}
+          </EnhancedThemeProvider>
+        </MediaProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

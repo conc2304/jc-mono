@@ -5,15 +5,15 @@ import {
   Grid,
   Paper,
   CardContent,
-  Chip,
 } from '@mui/material';
 import { styled, useTheme, getContrastRatio } from '@mui/material/styles';
 import { ImageContainer } from '../../atoms';
-import { ImageMediaData, VideoMediaData } from '../../organisms';
 import { CSSProperties } from 'react';
 import { PlayArrow } from '@mui/icons-material';
 import { VideoPlayer } from '../../molecules';
 import { ensureContrast } from '@jc/utils';
+import { useMediaProvider } from '../../context';
+import { BaseVideoData, BaseImageData } from '../../organisms';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   background: `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default}, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
@@ -28,10 +28,10 @@ const SectionTitle = styled(Typography)(({ theme, borderColor }) => ({
 }));
 
 export interface ArtGalleryProcessProps {
-  processStartImages: ImageMediaData[];
-  processEndImages: ImageMediaData[];
-  decorImages: [ImageMediaData, ImageMediaData];
-  highlightVideo: VideoMediaData;
+  processStartImages: BaseImageData[];
+  processEndImages: BaseImageData[];
+  decorImages: [BaseImageData, BaseImageData];
+  highlightVideo: BaseVideoData;
 }
 
 const ArtGalleryProcess = ({
@@ -42,6 +42,9 @@ const ArtGalleryProcess = ({
 }: ArtGalleryProcessProps) => {
   const theme = useTheme();
 
+  const { generateImageSources, generateVideoUrl } =
+    useMediaProvider().provider;
+
   // Decor images are black on a white background, make the black background disappear in any mode with any background
   const imgBgRatio = getContrastRatio('#FFF', theme.palette.background.paper);
   const decorImageStyles: CSSProperties =
@@ -49,9 +52,11 @@ const ArtGalleryProcess = ({
       ? {
           filter: 'invert(1)',
           mixBlendMode: 'plus-lighter',
+          objectFit: 'contain',
         }
       : {
           mixBlendMode: 'multiply',
+          objectFit: 'contain',
         };
 
   return (
@@ -105,8 +110,16 @@ const ArtGalleryProcess = ({
                 >
                   <Grid container spacing={2} alignItems="flex-start" py={2}>
                     {processStartImages.map((imageData) => (
-                      <Grid size={{ xs: 3 }} key={imageData.src}>
-                        <ImageContainer {...imageData} height={'100px'} />
+                      <Grid size={{ xs: 3 }} key={imageData.alt}>
+                        <ImageContainer
+                          {...generateImageSources(
+                            imageData.relativePath,
+                            'thumbnail'
+                          )}
+                          skeletonSrc={imageData.relativePath}
+                          alt={imageData.alt}
+                          height={'100px'}
+                        />
                       </Grid>
                     ))}
                   </Grid>
@@ -143,8 +156,15 @@ const ArtGalleryProcess = ({
             <Grid size={{ xs: 12, md: 6 }}>
               <Grid container spacing={2}>
                 {processEndImages.map((imageData) => (
-                  <Grid size={{ xs: 6 }} key={imageData.src}>
-                    <ImageContainer {...imageData} />
+                  <Grid size={{ xs: 6 }} key={imageData.alt}>
+                    <ImageContainer
+                      {...generateImageSources(
+                        imageData.relativePath,
+                        'thumbnail'
+                      )}
+                      skeletonSrc={imageData.relativePath}
+                      alt={imageData.alt}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -196,7 +216,12 @@ const ArtGalleryProcess = ({
                   </Typography>
                 )}
                 <VideoPlayer
-                  video={video}
+                  video={{
+                    url: generateVideoUrl(video.relativePath),
+                    title: video.title,
+                    caption: video.caption,
+                    detailedCaption: video.detailedCaption,
+                  }}
                   sx={{
                     width: '100%',
                     height: '100%',
@@ -266,7 +291,11 @@ const ArtGalleryProcess = ({
           <Grid container spacing={6} alignItems="center">
             <Grid size={{ xs: 12, md: 6 }}>
               <ImageContainer
-                {...decorImages[0]}
+                {...generateImageSources(
+                  decorImages[0].relativePath,
+                  'gallery'
+                )}
+                alt={decorImages[0].alt}
                 sx={{
                   ...decorImageStyles,
                   height: { xs: '300px', md: '400px' },
@@ -358,7 +387,11 @@ const ArtGalleryProcess = ({
 
             <Grid size={{ xs: 12, md: 6 }}>
               <ImageContainer
-                {...decorImages[1]}
+                {...generateImageSources(
+                  decorImages[1].relativePath,
+                  'gallery'
+                )}
+                alt={decorImages[1].alt}
                 sx={{
                   ...decorImageStyles,
                   height: { xs: '300px', md: '400px' },

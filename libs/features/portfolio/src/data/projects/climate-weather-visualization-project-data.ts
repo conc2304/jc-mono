@@ -78,20 +78,8 @@ export const climateDataVizProject: ProjectData = {
   // =============================================================================
   media: {
     hero: {
-      ...getResponsiveImageSet(
-        'projects/climate-data-vis/climate-data-hero-exploration-page.jpg'
-      ),
-      alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
-      caption: 'Complete Planet Habitability application interface overview',
-      detailedCaption:
-        'Project hero showcase highlighting the comprehensive climate data visualization platform featuring integrated US heatmap, temporal analysis tools, comparative charts, and interactive controls, demonstrating the successful integration of React, TypeScript, and D3.js technologies for exploring complex climate science data and regional vulnerability assessment',
-    },
-
-    thumbnail: {
-      src: getImageUrl(
+      relativePath:
         'projects/climate-data-vis/climate-data-hero-exploration-page.jpg',
-        'thumbnail'
-      ),
       alt: 'Hero view of Planet Habitability climate data visualization application showing comprehensive interface with heatmaps, charts, and interactive controls',
       caption: 'Complete Planet Habitability application interface overview',
       detailedCaption:
@@ -158,16 +146,11 @@ export const climateDataVizProject: ProjectData = {
         detailedCaption:
           'Advanced comparative line chart system enabling side-by-side analysis of climate event data across multiple US states, featuring multi-series visualization, interactive legend controls, and dynamic data binding that updates based on user selections, supporting comprehensive regional comparison and vulnerability assessment for climate impact analysis',
       },
-    ].map(({ relativePath, ...mediaItem }) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(relativePath),
-      url: getImageUrl(relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/climate-data-vis/The Future of Climate and Severe Weather - Data Vis Final Video_optimized.mp4'
-        ),
+        relativePath:
+          'projects/climate-data-vis/The Future of Climate and Severe Weather - Data Vis Final Video_optimized.mp4',
         caption:
           'Complete project walkthrough of climate data visualization application',
         detailedCaption:

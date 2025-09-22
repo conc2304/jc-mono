@@ -1,5 +1,6 @@
 import { ProjectData } from '@jc/ui-components';
-import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
+
+const projectDir = 'projects/lightform/';
 
 export const lightformWebControllerProject: ProjectData = {
   // =============================================================================
@@ -92,18 +93,10 @@ export const lightformWebControllerProject: ProjectData = {
   media: {
     // Thumbnail/hero image
     hero: {
-      ...getResponsiveImageSet(
-        'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg'
-      ),
+      relativePath: 'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
       alt: 'Lightform LF2+ AR Projector - Primary Hardware',
-    },
-
-    thumbnail: {
-      src: getImageUrl(
-        'projects/lightform/lf2-upside-down-gradpink-1-800x450.jpg',
-        'thumbnail'
-      ),
-      alt: 'Lightform LF2+ AR Projector - Primary Hardware',
+      caption:
+        'The Lightform LF2+ AR projector that the web controller interfaces with',
     },
 
     screenshots: [
@@ -157,70 +150,63 @@ export const lightformWebControllerProject: ProjectData = {
         alt: 'Tutorial Article 1 - Getting Started',
         caption: 'Step-by-step tutorial showing initial device setup process',
       },
-    ].map((mediaItem) => ({
-      ...mediaItem,
-      ...getResponsiveImageSet(mediaItem.relativePath),
-      url: getImageUrl(mediaItem.relativePath, 'full'),
-    })),
+    ],
     videos: [
       {
-        url: getVideoUrl(
-          'projects/lightform/Desktop-View-Full-With-Errors-.mp4'
-        ),
+        relativePath: 'projects/lightform/Desktop-View-Full-With-Errors-.mp4',
         title: 'Desktop Application Demo with Error Handling',
         type: 'demo',
         caption:
           'Complete desktop application walkthrough including error state management',
       },
       {
-        url: getVideoUrl(
-          'projects/lightform/Skate Shop Mural Mapping - Houston.mp4'
-        ),
+        relativePath:
+          'projects/lightform/Skate Shop Mural Mapping - Houston.mp4',
         title: 'Real-World Projection Mapping Demo',
         type: 'demo',
         caption:
           'Live demonstration of projection mapping on a mural at a Houston skate shop',
       },
       {
-        url: getVideoUrl('projects/lightform/lightform-bgloop720.mp4'),
+        relativePath: 'projects/lightform/lightform-bgloop720.mp4',
         title: 'Lightform Background Demo Loop',
         type: 'demo',
         caption:
           'Ambient projection mapping demonstration showing dynamic visual effects',
       },
       {
-        url: getVideoUrl('projects/lightform/lf-article1_step1_v1.mp4'),
+        relativePath: 'projects/lightform/lf-article1_step1_v1.mp4',
         title: 'Tutorial: Getting Started - Step 1',
         type: 'process',
         caption: 'First step of the guided setup process for new users',
       },
       {
-        url: getVideoUrl('projects/lightform/lf-article1_step2_v1.mp4'),
+        relativePath: 'projects/lightform/lf-article1_step2_v1.mp4',
         title: 'Tutorial: Getting Started - Step 2',
         type: 'process',
         caption:
           'Second step covering device connection and initial calibration',
       },
       {
-        url: getVideoUrl('projects/lightform/lf-article1_step3_v1.mp4'),
+        relativePath: 'projects/lightform/lf-article1_step3_v1.mp4',
         title: 'Tutorial: Getting Started - Step 3',
         type: 'process',
         caption: 'Final setup step showing first projection and basic controls',
       },
       {
-        url: getVideoUrl('projects/lightform/lf-article2_step2_v1.mp4'),
+        relativePath: 'projects/lightform/lf-article2_step2_v1.mp4',
         title: 'Advanced Tutorial: Object Detection - Step 2',
         type: 'process',
         caption: 'Advanced object detection and tracking setup process',
       },
       {
-        url: getVideoUrl('projects/lightform/lf-article2_step3_v1.mp4'),
+        relativePath: 'projects/lightform/lf-article2_step3_v1.mp4',
         title: 'Advanced Tutorial: Object Detection - Step 3',
         type: 'process',
         caption: 'Fine-tuning object detection parameters for optimal tracking',
       },
       {
-        url: getVideoUrl('projects/lightform/lf-article3_step2_v1.mp4'),
+        relativePath: 'projects/lightform/lf-article3_step2_v1.mp4',
         title: 'Professional Tutorial: Complex Mappings - Step 2',
         type: 'process',
         caption: 'Creating complex multi-surface projection mappings',

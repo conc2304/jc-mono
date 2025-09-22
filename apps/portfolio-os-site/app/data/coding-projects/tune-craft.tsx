@@ -35,7 +35,7 @@ export const tunecraftFileSystemItem: FileSystemItem<
       'harvard',
     ],
     favorite: true,
-    thumbnail: tunecraftProject.media.thumbnail,
+    thumbnail: tunecraftProject.media.hero,
 
     description:
       '6D object tracking for real-time music control - computer vision meets interactive audio',

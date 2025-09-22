@@ -15,10 +15,10 @@ import {
   Fullscreen,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { ImageContainer, VideoMediaData } from '@jc/ui-components';
+import { ImageContainer, VideoRenderAttributes } from '@jc/ui-components';
 
 interface VideoPlayerProps {
-  video: VideoMediaData;
+  video: VideoRenderAttributes;
   sx?: any;
   autoPlay?: boolean;
   controls?: boolean;

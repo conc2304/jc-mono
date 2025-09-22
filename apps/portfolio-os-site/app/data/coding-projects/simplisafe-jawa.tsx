@@ -34,7 +34,7 @@ export const simplisafeJawaFileSystemItem: FileSystemItem<
       'simplisafe',
       'iot',
     ],
-    thumbnail: simplisafeJawaProject.media.thumbnail,
+    thumbnail: simplisafeJawaProject.media.hero,
     favorite: false,
     description:
       'SimpliSafe fulfillment system redesign - enterprise warehouse management with IoT device pairing',

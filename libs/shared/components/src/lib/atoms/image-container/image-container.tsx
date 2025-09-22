@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Error } from '@mui/icons-material';
-import { getImageUrl } from '@jc/utils';
+import { useMediaProvider } from '../../context';
 
 // Utility function to find the closest scrollable parent
 const findScrollableParent = (element: Element | null): Element | null => {
@@ -48,6 +48,7 @@ interface ImageContainerProps
   src: string;
   srcSet?: string;
   sizes?: string;
+  skeletonSrc?: string;
   fallbackSrc?: string;
   fallbackSrcSet?: string;
   alt?: string;
@@ -74,6 +75,7 @@ export const ImageContainer = ({
   src,
   srcSet,
   sizes,
+  skeletonSrc,
   fallbackSrc,
   fallbackSrcSet,
   alt = '',
@@ -96,6 +98,10 @@ export const ImageContainer = ({
   const [shouldLoad, setShouldLoad] = useState(!lazy);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    provider: { generateImageSources, generatePlaceholder },
+  } = useMediaProvider();
 
   // Intersection Observer hook
   const observerCallback = useCallback(
@@ -122,7 +128,9 @@ export const ImageContainer = ({
     [shouldLoad, src]
   );
 
-  const skeletonImageUrl = getImageUrl('textures/ui/static.jpg', 'thumbnail');
+  const skeletonImageUrl = skeletonSrc
+    ? generatePlaceholder(skeletonSrc)
+    : generateImageSources('textures/ui/static.jpg', 'thumbnail');
 
   useEffect(() => {
     if (!lazy) return;
@@ -205,7 +213,7 @@ export const ImageContainer = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: 'grey.200',
+        bgcolor: 'background.paper',
         ...sx,
         ...skeletonSx,
       }}
@@ -230,8 +238,9 @@ export const ImageContainer = ({
           height: '100%',
           backgroundSize: '100% 100%',
           backgroundPosition: 'center center',
-          opacity: 0.5,
-          mixBlendMode: 'overlay',
+          // opacity: 0.5,
+          // mixBlendMode: 'overlay',
+          border: '2px solid red',
         }}
       />
     </Box>
@@ -296,6 +305,7 @@ export const ImageContainer = ({
           opacity: imageState === 'loading' ? 0 : 1,
           transition: 'opacity 0.3s ease-in-out',
           objectFit: 'cover',
+          ...sx,
         }}
       />
       {imageState === 'loading' && !showSkeleton && (
