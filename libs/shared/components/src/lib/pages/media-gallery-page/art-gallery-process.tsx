@@ -42,12 +42,8 @@ const ArtGalleryProcess = ({
 }: ArtGalleryProcessProps) => {
   const theme = useTheme();
 
-  console.log(processEndImages);
-
   const { generateImageSources, generateVideoUrl } =
     useMediaProvider().provider;
-
-  console.log({ video });
 
   // Decor images are black on a white background, make the black background disappear in any mode with any background
   const imgBgRatio = getContrastRatio('#FFF', theme.palette.background.paper);
@@ -118,8 +114,9 @@ const ArtGalleryProcess = ({
                         <ImageContainer
                           {...generateImageSources(
                             imageData.relativePath,
-                            'gallery'
+                            'thumbnail'
                           )}
+                          skeletonSrc={imageData.relativePath}
                           alt={imageData.alt}
                           height={'100px'}
                         />
@@ -163,8 +160,9 @@ const ArtGalleryProcess = ({
                     <ImageContainer
                       {...generateImageSources(
                         imageData.relativePath,
-                        'gallery'
+                        'thumbnail'
                       )}
+                      skeletonSrc={imageData.relativePath}
                       alt={imageData.alt}
                     />
                   </Grid>

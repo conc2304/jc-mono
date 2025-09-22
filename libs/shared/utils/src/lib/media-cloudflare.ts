@@ -173,3 +173,21 @@ export function isImage(path: string): boolean {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
   return imageExtensions.some((ext) => path.toLowerCase().endsWith(ext));
 }
+
+/**
+ * Generate a low-quality blurred placeholder image
+ * Perfect for blur-up loading effect
+ */
+export function getPlaceholderImage(
+  path: string,
+  width: number = 50,
+  quality: number = 30,
+  blur: number = 10
+): string {
+  const fullR2Url = `${R2_CUSTOM_URL}/${path}`;
+  const options = `width=${width},quality=${quality},blur=${blur},format=auto,fit=scale-down`;
+  return `https://${CF_ZONE}/cdn-cgi/image/${options}/${fullR2Url}`;
+}
+export function getTinyPlaceholder(path: string): string {
+  return getPlaceholderImage(path, 20, 20, 15);
+}

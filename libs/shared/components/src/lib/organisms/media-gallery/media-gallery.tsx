@@ -240,6 +240,7 @@ export const MediaGallery = ({
       : { xs: 12, sm: 6, lg: 6 };
 
     if (type === 'image') {
+      const imageMedia = media as ImageRenderAttributes;
       return (
         <Grid
           className="MediaGallery--desktop-root"
@@ -270,10 +271,10 @@ export const MediaGallery = ({
               }}
             >
               <ImageContainer
-                src={(media as ImageRenderAttributes).src}
-                srcSet={(media as ImageRenderAttributes).srcSet}
-                sizes={(media as ImageRenderAttributes).sizes}
-                alt={(media as ImageRenderAttributes).alt}
+                src={imageMedia.src}
+                srcSet={imageMedia.srcSet}
+                sizes={imageMedia.sizes}
+                alt={imageMedia.alt}
                 sx={{
                   width: '100%',
                   height: '100%',
