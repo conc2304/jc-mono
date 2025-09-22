@@ -14,7 +14,12 @@ export interface MediaProviderType {
     context: MediaContextSize
   ): ImageMediaSource;
   generateVideoUrl(path: string): string;
-  generatePlaceholder(path: string): string;
+  generatePlaceholder(
+    path: string,
+    width?: number,
+    quality?: number,
+    blur?: number
+  ): string;
   isVideo(path: string): boolean;
   isImage(path: string): boolean;
 }

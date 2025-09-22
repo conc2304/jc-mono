@@ -27,20 +27,18 @@ interface DragRef {
   elementY: number;
   isDragging: boolean;
   lastUpdateTime: number;
-  currentX: number; // Track current mouse position
-  currentY: number; // Track current mouse position
+  currentX: number;
+  currentY: number;
 }
 
-// Window state to store previous dimensions before maximize/dock
 interface WindowPreviousState {
   x: number;
   y: number;
   width: number;
   height: number;
-  docked?: 'left' | 'right' | null; // Also store docked state
+  docked?: 'left' | 'right' | null;
 }
 
-// Extended WindowMetaData to include animation states and previous state
 interface AnimatedWindowMetaData extends WindowMetaData {
   isOpening?: boolean;
   isClosing?: boolean;
@@ -65,15 +63,12 @@ interface WindowState {
 }
 
 interface WindowActions {
-  // Window management
   openWindow: (fsId: string) => void;
   closeWindow: (windowId: string) => void;
   minimizeWindow: (windowId: string) => void;
   maximizeWindow: (windowId: string) => void;
   bringToFront: (windowId: string) => void;
   updateWindowTitle: (windowId: string, name: string, icon: ReactNode) => void;
-
-  // Window positioning/resizing
   updateWindow: (
     id: string,
     dimensions: { x: number; y: number; width: number; height: number }
@@ -82,8 +77,6 @@ interface WindowActions {
     e: React.MouseEvent<HTMLElement, MouseEvent>,
     windowId: string
   ) => void;
-
-  // Content replacement methods
   replaceWindowContent: (
     windowId: string,
     newContent: ReactNode,
@@ -94,18 +87,12 @@ interface WindowActions {
       metadata?: Record<string, any>;
     }
   ) => void;
-
-  // Animation callbacks
   onWindowAnimationComplete: (windowId: string) => void;
   onWindowCloseAnimationComplete: (windowId: string) => void;
-
-  // Icon management
   handleIconMouseDown: (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
     iconId: string
   ) => void;
-
-  // State setters (for internal use)
   setWindows: React.Dispatch<React.SetStateAction<AnimatedWindowMetaData[]>>;
   setDesktopItemPositions: React.Dispatch<
     React.SetStateAction<Record<string, ItemPosition>>
@@ -119,22 +106,24 @@ const clamp = (num: number, min: number, max: number) => {
   return Math.min(Math.max(num, min), max);
 };
 
-interface WindowContextValue extends WindowState, WindowActions {}
+interface WindowContextValue extends WindowState, WindowActions {
+  windowAnimationType: 'transform' | 'fade';
+}
 
-// Context
 const WindowContext = createContext<WindowContextValue | null>(null);
 
-// Provider
 export const WindowProvider: React.FC<{
   children: React.ReactNode;
   fileSystemItems: FileSystemItem[];
   navigationGroups?: NavigationGroup[];
   defaultDesktopItemPositions?: Record<string, ItemPosition>;
+  windowAnimationType?: 'transform' | 'fade';
 }> = ({
   children,
   fileSystemItems,
   defaultDesktopItemPositions = {},
   navigationGroups = [],
+  windowAnimationType = 'transform',
 }) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
@@ -147,24 +136,18 @@ export const WindowProvider: React.FC<{
   >(defaultDesktopItemPositions);
   const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
 
-  // Create navigation manager with provided groups
   const navigationManager = useMemo(() => {
     const manager = new FileSystemNavigationManager(fileSystemItems);
-
-    // Register all provided navigation groups
     navigationGroups.forEach((group) => {
       manager.registerNavigationGroup(group);
     });
-
     return manager;
   }, [fileSystemItems, navigationGroups]);
 
-  // Update navigation manager when fileSystemItems change
   useEffect(() => {
     navigationManager.updateFileSystemItems(fileSystemItems);
   }, [fileSystemItems, navigationManager]);
 
-  // Updated getWindowContent function to use the navigation manager
   const getWindowContent = useCallback(
     (
       fsItem: FileSystemItem,
@@ -180,7 +163,6 @@ export const WindowProvider: React.FC<{
       ) => void
     ): ReactNode => {
       if (fsItem.type === 'folder') {
-        // File Browser
         return (
           <FileManager
             windowId={windowId}
@@ -192,32 +174,27 @@ export const WindowProvider: React.FC<{
           />
         );
       } else if (fsItem.renderer) {
-        // File with renderer - check if it supports navigation
         if (
           fsItem.renderer.navigationGroup &&
           fsItem.renderer.shouldNavigate &&
           windowId &&
           replaceWindowContent
         ) {
-          // Use memoized navigation manager instead of creating a new one
           return navigationManager.renderNavigableFile(
             fsItem,
             windowId,
             replaceWindowContent
           );
         } else {
-          // Regular file rendering without navigation
           const { component: Component, props = {} } = fsItem.renderer;
           return <Component {...fsItem.fileData} {...(props as any)} />;
         }
       }
-
       return null;
     },
     [navigationManager]
   );
 
-  // Drag refs
   const windowDragRef = useRef<DragRef>({
     startX: 0,
     startY: 0,
@@ -240,22 +217,18 @@ export const WindowProvider: React.FC<{
     currentY: 0,
   });
 
-  // Animation timeouts ref to cleanup if needed
   const animationTimeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-  // Performance constants
-  const THROTTLE_MS = 16; // ~60fps
-  const ICON_THROTTLE_MS = 12; // Slightly faster for icons
-  const DOCK_THRESHOLD = 50; // Distance from edge to trigger docking
+  const THROTTLE_MS = 16;
+  const ICON_THROTTLE_MS = 12;
+  const DOCK_THRESHOLD = 50;
 
-  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       animationTimeouts.current.forEach((timeout) => clearTimeout(timeout));
     };
   }, []);
 
-  // Snap to grid utility
   const snapToGrid = useCallback((x: number, y: number) => {
     const gridSize = 20;
     return {
@@ -264,11 +237,9 @@ export const WindowProvider: React.FC<{
     };
   }, []);
 
-  // Helper function to get docked position
   const getDockPosition = useCallback((side: 'left' | 'right') => {
     const halfWidth = window.innerWidth / 2;
     const fullHeight = window.innerHeight;
-
     return {
       x: side === 'left' ? 0 : halfWidth,
       y: 0,
@@ -277,7 +248,6 @@ export const WindowProvider: React.FC<{
     };
   }, []);
 
-  // Helper function to detect docking zone
   const getDockZone = useCallback(
     (x: number, y: number): 'left' | 'right' | null => {
       if (x <= DOCK_THRESHOLD) return 'left';
@@ -287,7 +257,6 @@ export const WindowProvider: React.FC<{
     []
   );
 
-  // Animation callback handlers
   const onWindowAnimationComplete = useCallback((windowId: string) => {
     setWindows((prev) =>
       prev.map((window) =>
@@ -300,8 +269,6 @@ export const WindowProvider: React.FC<{
           : window
       )
     );
-
-    // Clear timeout if it exists
     const timeout = animationTimeouts.current.get(windowId);
     if (timeout) {
       clearTimeout(timeout);
@@ -311,8 +278,6 @@ export const WindowProvider: React.FC<{
 
   const onWindowCloseAnimationComplete = useCallback((windowId: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== windowId));
-
-    // Clear timeout if it exists
     const timeout = animationTimeouts.current.get(windowId);
     if (timeout) {
       clearTimeout(timeout);
@@ -320,7 +285,6 @@ export const WindowProvider: React.FC<{
     }
   }, []);
 
-  // Optimized icon drag handlers
   const handleIconMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, iconId: string) => {
       e.preventDefault();
@@ -333,10 +297,10 @@ export const WindowProvider: React.FC<{
         elementY: desktopItemPositions[iconId]?.y || 0,
         isDragging: true,
         lastUpdateTime: 0,
-        // currentX: undefined
+        currentX: e.clientX,
+        currentY: e.clientY,
       };
 
-      // Immediate visual feedback
       const iconElement = e.currentTarget;
       if (iconElement) {
         iconElement.style.willChange = 'transform';
@@ -382,7 +346,6 @@ export const WindowProvider: React.FC<{
           window.innerHeight - iconHeight
         );
 
-        // Direct DOM manipulation for smooth dragging
         const iconElement = document.querySelector(
           `[data-icon-id="${draggedIcon}"]`
         ) as HTMLElement;
@@ -405,7 +368,6 @@ export const WindowProvider: React.FC<{
 
     iconDragRef.current.isDragging = false;
 
-    // Get final position from transform and update state
     const iconElement = document.querySelector(
       `[data-icon-id="${draggedIcon}"]`
     ) as HTMLElement;
@@ -421,17 +383,14 @@ export const WindowProvider: React.FC<{
         const newX = iconDragRef.current.elementX + deltaX;
         const newY = iconDragRef.current.elementY + deltaY;
 
-        // Snap to grid
         const snappedPos = snapToGrid(newX, newY);
 
-        // Single state update with final position
         setDesktopItemPositions((prev) => ({
           ...prev,
           [draggedIcon]: snappedPos,
         }));
       }
 
-      // Reset styles
       iconElement.style.willChange = '';
       iconElement.style.transform = '';
       iconElement.style.zIndex = '';
@@ -440,7 +399,6 @@ export const WindowProvider: React.FC<{
     setDraggedIcon(null);
   }, [draggedIcon, snapToGrid]);
 
-  // Replace window content
   const replaceWindowContent = useCallback(
     (
       windowId: string,
@@ -468,7 +426,6 @@ export const WindowProvider: React.FC<{
     []
   );
 
-  // Window management functions
   const bringToFront = useCallback((windowId: string) => {
     setWindowZIndex((prevZIndex) => {
       const newZIndex = prevZIndex + 1;
@@ -493,10 +450,8 @@ export const WindowProvider: React.FC<{
       const fsItem = result.item;
       const id = `window-${itemId}`;
 
-      // Check if window already exists
       const currWindow = windows.find((window) => window.id === id);
       if (currWindow) {
-        // Window exists - restore if minimized and bring to front
         setWindows((prev) =>
           prev.map((window) =>
             window.id === id
@@ -506,14 +461,12 @@ export const WindowProvider: React.FC<{
                   zIndex: windowZIndex + 1,
                   isActive: true,
                   animationState: window.minimized ? 'opening' : 'normal',
-                  // Preserve current dimensions - they may have been updated while minimized
                 }
               : { ...window, isActive: false }
           )
         );
       } else {
-        // Create new window with content (potentially with navigation)
-        const maximizeWindow = true; // for now always maximize window
+        const maximizeWindow = true;
 
         const x = maximizeWindow ? 0 : 200 + windows.length * 30;
         const y = maximizeWindow ? 0 : 100 + windows.length * 30;
@@ -544,8 +497,8 @@ export const WindowProvider: React.FC<{
             fileSystemItems,
             (name: string, icon: ReactNode) =>
               updateWindowTitle(id, name, icon),
-            id, // Pass window ID
-            replaceWindowContent // Pass replace function for navigation
+            id,
+            replaceWindowContent
           ),
           isActive: true,
           isOpening: true,
@@ -579,7 +532,6 @@ export const WindowProvider: React.FC<{
 
   const closeWindow = useCallback(
     (windowId: string) => {
-      // Start closing animation
       setWindows((prev) =>
         prev.map((window) =>
           window.id === windowId
@@ -592,7 +544,6 @@ export const WindowProvider: React.FC<{
         )
       );
 
-      // Set timeout as fallback in case animation callback doesn't fire
       const timeout = setTimeout(() => {
         onWindowCloseAnimationComplete(windowId);
       }, 350);
@@ -624,7 +575,6 @@ export const WindowProvider: React.FC<{
       if (isRestoring) {
         setWindowZIndex(windowZIndex + 1);
 
-        // Reset animation state after minimize/restore animation
         const timeout = setTimeout(() => {
           setWindows((prev) =>
             prev.map((window) =>
@@ -653,13 +603,12 @@ export const WindowProvider: React.FC<{
           if (windowItem.id !== windowId) return windowItem;
 
           if (isMaximizing) {
-            // Store current state before maximizing (including docked state)
             const previousState: WindowPreviousState = {
               x: windowItem.x,
               y: windowItem.y,
               width: windowItem.width,
               height: windowItem.height,
-              docked: windowItem.docked, // Store docked state
+              docked: windowItem.docked,
             };
 
             return {
@@ -672,10 +621,9 @@ export const WindowProvider: React.FC<{
               zIndex: theme.zIndex.modal,
               animationState: 'maximizing',
               previousState,
-              docked: null, // Clear docked state when maximizing
+              docked: null,
             };
           } else {
-            // Restore to previous state
             const restoreState = windowItem.previousState || {
               x: !isXs ? 200 + windows.length * 30 : 0,
               y: !isXs ? 100 + windows.length * 30 : 0,
@@ -693,8 +641,8 @@ export const WindowProvider: React.FC<{
               height: restoreState.height,
               zIndex: windowZIndex + 1,
               animationState: 'maximizing',
-              previousState: undefined, // Clear previous state
-              docked: restoreState.docked, // Restore docked state
+              previousState: undefined,
+              docked: restoreState.docked,
             };
           }
         })
@@ -702,7 +650,6 @@ export const WindowProvider: React.FC<{
 
       if (!isMaximizing) setWindowZIndex(windowZIndex + 1);
 
-      // Reset animation state after maximize animation
       const timeout = setTimeout(() => {
         setWindows((prev) =>
           prev.map((window) =>
@@ -727,21 +674,17 @@ export const WindowProvider: React.FC<{
         prev.map((window) => {
           if (window.id !== id) return window;
 
-          // If window is maximized or docked, don't update dimensions directly
-          // but clear previousState since the underlying window has changed
           if (window.maximized || window.docked) {
             return {
               ...window,
-              previousState: undefined, // Clear previous state since window changed
+              previousState: undefined,
             };
           }
 
-          // Normal window update - clear previousState if it exists since the window
-          // has been moved/resized and future maximize should capture these new dimensions
           return {
             ...window,
             ...dimensions,
-            previousState: undefined, // Clear any existing previous state
+            previousState: undefined,
           };
         })
       );
@@ -768,14 +711,12 @@ export const WindowProvider: React.FC<{
     []
   );
 
-  // Optimized window drag handlers with docking support
   const handleWindowMouseDown = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>, windowId: string) => {
       e.preventDefault();
 
       if (e.button === 2) return;
 
-      // Don't allow dragging during animations
       const window = windows.find((w) => w.id === windowId);
       if (window?.animationState && window.animationState !== 'normal') return;
 
@@ -793,7 +734,6 @@ export const WindowProvider: React.FC<{
         currentY: e.clientY,
       };
 
-      // Immediate visual feedback
       const windowContainer = windowElement.closest(
         '[data-window-id]'
       ) as HTMLElement;
@@ -813,7 +753,6 @@ export const WindowProvider: React.FC<{
       if (e.button === 2) return;
       if (!windowDragRef.current.isDragging || !draggedWindow) return;
 
-      // Update current mouse position for dock detection
       windowDragRef.current.currentX = e.clientX;
       windowDragRef.current.currentY = e.clientY;
 
@@ -846,24 +785,20 @@ export const WindowProvider: React.FC<{
           window.innerHeight - titlebarHeight - overflowPadding
         );
 
-        // Check for dock zones using current mouse position
         const dockZone = getDockZone(e.clientX, e.clientY);
 
-        // Visual feedback for docking
         const windowElement = document.querySelector(
           `[data-window-id="${draggedWindow}"]`
         ) as HTMLElement;
 
         if (windowElement) {
           if (dockZone) {
-            // Show dock preview
             const dockPos = getDockPosition(dockZone);
             windowElement.style.transform = `translate(${
               dockPos.x - windowDragRef.current.elementX
             }px, ${dockPos.y - windowDragRef.current.elementY}px)`;
             windowElement.style.opacity = '0.7';
           } else {
-            // Normal drag
             const offsetX = newX - windowDragRef.current.elementX;
             const offsetY = newY - windowDragRef.current.elementY;
             windowElement.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
@@ -885,24 +820,20 @@ export const WindowProvider: React.FC<{
 
     windowDragRef.current.isDragging = false;
 
-    // Get final position from transform and update state
     const windowElement = document.querySelector(
       `[data-window-id="${draggedWindow}"]`
     ) as HTMLElement;
 
     if (windowElement) {
-      // Check if we should dock using the final mouse position
       const dockZone = getDockZone(
         windowDragRef.current.currentX,
         windowDragRef.current.currentY
       );
 
       if (dockZone) {
-        // Dock the window
         const dockPos = getDockPosition(dockZone);
         const currentWindow = windows.find((w) => w.id === draggedWindow);
 
-        // Store previous state before docking (if not already maximized/docked)
         const previousState =
           currentWindow && !currentWindow.maximized && !currentWindow.docked
             ? {
@@ -929,7 +860,6 @@ export const WindowProvider: React.FC<{
           )
         );
 
-        // Reset animation state after docking animation
         const timeout = setTimeout(() => {
           setWindows((prev) =>
             prev.map((window) =>
@@ -942,7 +872,6 @@ export const WindowProvider: React.FC<{
 
         animationTimeouts.current.set(`${draggedWindow}-dock`, timeout);
       } else {
-        // Normal position update
         const transform = windowElement.style.transform;
         const matches = transform.match(
           /translate\((-?\d+(?:\.\d+)?)px,\s*(-?\d+(?:\.\d+)?)px\)/
@@ -954,7 +883,6 @@ export const WindowProvider: React.FC<{
           const newX = windowDragRef.current.elementX + deltaX;
           const newY = windowDragRef.current.elementY + deltaY;
 
-          // Single state update with final position
           setWindows((prev) =>
             prev.map((window) =>
               window.id === draggedWindow
@@ -965,7 +893,6 @@ export const WindowProvider: React.FC<{
         }
       }
 
-      // Reset styles
       windowElement.style.willChange = '';
       windowElement.style.transform = '';
       windowElement.style.zIndex = '';
@@ -975,7 +902,6 @@ export const WindowProvider: React.FC<{
     setDraggedWindow(null);
   }, [draggedWindow, getDockZone, getDockPosition, windows]);
 
-  // Mouse event listeners with optimized handlers
   useEffect(() => {
     if (draggedIcon) {
       document.addEventListener('mousemove', handleOptimizedIconMouseMove, {
@@ -1009,15 +935,13 @@ export const WindowProvider: React.FC<{
   }, [draggedWindow, handleOptimizedWindowMouseMove, handleWindowMouseUp]);
 
   const contextValue: WindowContextValue = {
-    // State
     windows,
     draggedWindow,
     windowZIndex,
     desktopItemPositions,
     draggedIcon,
     fileSystemItems,
-
-    // Actions
+    windowAnimationType,
     openWindow,
     closeWindow,
     minimizeWindow,
@@ -1030,8 +954,6 @@ export const WindowProvider: React.FC<{
     onWindowAnimationComplete,
     onWindowCloseAnimationComplete,
     replaceWindowContent,
-
-    // State setters
     setWindows,
     setDesktopItemPositions,
     setDraggedWindow,
@@ -1046,7 +968,6 @@ export const WindowProvider: React.FC<{
   );
 };
 
-// Hook
 export const useWindowManager = () => {
   const context = useContext(WindowContext);
   if (!context) {
@@ -1055,7 +976,6 @@ export const useWindowManager = () => {
   return context;
 };
 
-// Updated convenience hooks
 export const useWindowActions = () => {
   const {
     openWindow,
@@ -1089,6 +1009,7 @@ export const useWindowState = () => {
     windowZIndex,
     desktopItemPositions,
     draggedIcon,
+    windowAnimationType,
   } = useWindowManager();
   return {
     windows,
@@ -1096,6 +1017,7 @@ export const useWindowState = () => {
     windowZIndex,
     desktopItemPositions,
     draggedIcon,
+    windowAnimationType,
   };
 };
 
@@ -1115,7 +1037,6 @@ export const useWindowContentActions = () => {
   return { replaceWindowContent };
 };
 
-// Utility function to render a file
 export function renderFile<TData = {}, TProps = {}>(
   file: FileSystemItem<TData, TProps>
 ): ReactNode | null {

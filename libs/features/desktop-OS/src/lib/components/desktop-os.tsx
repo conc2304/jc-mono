@@ -36,6 +36,7 @@ export const DesktopOS = ({
       fileSystemItems={fileSystem}
       defaultDesktopItemPositions={defaultDesktopItemPositions}
       navigationGroups={navigationGroups}
+      windowAnimationType="fade"
     >
       {/* {console.log('DesktopOS: WindowProvider children rendering')} */}
 

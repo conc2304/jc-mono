@@ -52,12 +52,14 @@ const ArtGalleryProcess = ({
       ? {
           filter: 'invert(1)',
           mixBlendMode: 'plus-lighter',
-          objectFit: 'contain',
+          // objectFit: 'contain',
         }
       : {
           mixBlendMode: 'multiply',
-          objectFit: 'contain',
+          // objectFit: 'contain',
         };
+  decorImageStyles.objectFit = 'contain';
+  decorImageStyles.backgroundColor = 'transparent';
 
   return (
     <StyledBox>
@@ -116,8 +118,9 @@ const ArtGalleryProcess = ({
                             imageData.relativePath,
                             'thumbnail'
                           )}
-                          skeletonSrc={imageData.relativePath}
                           alt={imageData.alt}
+                          skeletonSrc={imageData.relativePath}
+                          showSkeletonDuration={300}
                           height={'100px'}
                         />
                       </Grid>
@@ -162,8 +165,10 @@ const ArtGalleryProcess = ({
                         imageData.relativePath,
                         'thumbnail'
                       )}
-                      skeletonSrc={imageData.relativePath}
                       alt={imageData.alt}
+                      skeletonSrc={imageData.relativePath}
+                      showSkeletonDuration={300}
+                      minHeight={200}
                     />
                   </Grid>
                 ))}
@@ -188,7 +193,6 @@ const ArtGalleryProcess = ({
                   boxShadow: theme.shadows[8],
                 },
               }}
-              // onClick={() => handleMediaClick(mediaItem)}
             >
               <Box
                 sx={{
@@ -299,6 +303,9 @@ const ArtGalleryProcess = ({
                 sx={{
                   ...decorImageStyles,
                   height: { xs: '300px', md: '400px' },
+                }}
+                skeletonSx={{
+                  backgroundColor: 'transparent',
                 }}
               />
             </Grid>

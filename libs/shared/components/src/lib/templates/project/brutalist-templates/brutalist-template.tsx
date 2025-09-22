@@ -60,7 +60,8 @@ export const BrutalistTemplate: React.FC<
   portfolioProject;
   // const transformedMedia = useProjectMedia(portfolioProject);
 
-  const { generateImageSources } = useMediaProvider().provider;
+  const { generateImageSources, generatePlaceholder } =
+    useMediaProvider().provider;
 
   useEffect(() => {
     if (containerRef.current) {
@@ -146,6 +147,7 @@ export const BrutalistTemplate: React.FC<
 
       <HeroSection
         heroImage={heroImageData}
+        heroSkeletonSrc={projectData.media.hero.relativePath}
         projectName={projectData.projectName}
         description={projectData.basics?.description}
         projectSubtitle={projectData.projectSubtitle}

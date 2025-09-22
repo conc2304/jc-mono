@@ -1,6 +1,6 @@
 import type { MediaContextSize, MediaProviderType } from './types';
 import { ImageMediaSource } from '../../organisms';
-import { getContextualImage } from '@jc/utils';
+import { getContextualImage, getPlaceholderImage } from '@jc/utils';
 
 export class CloudflareMediaProvider implements MediaProviderType {
   name = 'cloudflare';
@@ -21,9 +21,14 @@ export class CloudflareMediaProvider implements MediaProviderType {
     return `https://media.clyzby.com/${path}`;
   }
 
-  generatePlaceholder(path: string): string {
+  generatePlaceholder(
+    path: string,
+    width: number = 50,
+    quality: number = 30,
+    blur: number = 6
+  ): string {
     // Get low-quality placeholder
-    return `https://clyzby.com/cdn-cgi/image/width=50,quality=50,blur=5,format=auto/https://media.clyzby.com/${path}`;
+    return getPlaceholderImage(path, width, quality, blur);
   }
 
   isVideo(path: string): boolean {

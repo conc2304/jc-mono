@@ -33,14 +33,18 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "../../../declaration-files/*.d.ts"
-, "src/lib/atoms/cyber-border-svg/ui-frame-border-2tsx"  ],
+    "../../../declaration-files/*.d.ts",
+    "src/lib/atoms/cyber-border-svg/ui-frame-border-2tsx"
+  ],
   "references": [
     {
-      "path": "../utils/tsconfig.lib.json"
+      "path": "../../features/portfolio/tsconfig.lib.json"
     },
     {
       "path": "../themes/tsconfig.lib.json"
+    },
+    {
+      "path": "../utils/tsconfig.lib.json"
     },
     {
       "path": "../file-system/tsconfig.lib.json"

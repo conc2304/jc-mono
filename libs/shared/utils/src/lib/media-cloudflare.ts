@@ -188,6 +188,7 @@ export function getPlaceholderImage(
   const options = `width=${width},quality=${quality},blur=${blur},format=auto,fit=scale-down`;
   return `https://${CF_ZONE}/cdn-cgi/image/${options}/${fullR2Url}`;
 }
+
 export function getTinyPlaceholder(path: string): string {
   return getPlaceholderImage(path, 20, 20, 15);
 }

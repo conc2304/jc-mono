@@ -5,6 +5,7 @@ import { ImageRenderAttributes } from '../../../../organisms';
 
 interface HeroSectionProps {
   heroImage: ImageRenderAttributes;
+  heroSkeletonSrc?: string;
   projectName: string;
   projectSubtitle?: string;
   description?: string;
@@ -15,6 +16,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   projectName,
   projectSubtitle,
   description,
+  heroSkeletonSrc,
 }) => {
   const theme = useTheme();
 
@@ -35,7 +37,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           sizes={sizes}
           alt={alt}
           lazy={false}
-          showSkeletonDuration={1}
+          showSkeletonDuration={300}
+          skeletonSrc={heroSkeletonSrc}
           className="hero-image"
           sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

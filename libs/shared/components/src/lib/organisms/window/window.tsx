@@ -65,7 +65,8 @@ export const Window = React.memo(
       onWindowAnimationComplete,
       onWindowCloseAnimationComplete,
       draggedWindow,
-      handleWindowMouseDown, // Use the context handler
+      handleWindowMouseDown,
+      windowAnimationType,
     } = useWindowManager();
 
     const theme = useTheme();
@@ -105,7 +106,6 @@ export const Window = React.memo(
         });
       };
 
-      // Debounce the resize handler to avoid too many updates
       let resizeTimeout: NodeJS.Timeout;
       const debouncedHandleScreenResize = () => {
         clearTimeout(resizeTimeout);
@@ -136,7 +136,6 @@ export const Window = React.memo(
         });
       };
 
-      // Debounce the resize handler to avoid too many updates
       let resizeTimeout: NodeJS.Timeout;
       const debouncedHandleScreenResize = () => {
         clearTimeout(resizeTimeout);
@@ -194,10 +193,43 @@ export const Window = React.memo(
       onWindowCloseAnimationComplete,
     ]);
 
-    // Get animation styles based on current state
+    // Get animation styles based on current state and animation type
     const getAnimationStyles = () => {
       const baseTransition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      const fadeTransition = 'opacity 0.3s ease-in-out';
 
+      // Use fade animations
+      if (windowAnimationType === 'fade') {
+        switch (animationState) {
+          case 'opening':
+            return {
+              opacity: 1,
+              transition: fadeTransition,
+            };
+          case 'closing':
+            return {
+              opacity: 0,
+              transition: fadeTransition,
+            };
+          case 'minimizing':
+            return {
+              opacity: 0,
+              transition: 'opacity 0.25s ease-in-out',
+            };
+          case 'maximizing':
+          case 'docking':
+            return {
+              transition: baseTransition,
+            };
+          default:
+            return {
+              opacity: 1,
+              transition: isDragging ? 'none' : undefined,
+            };
+        }
+      }
+
+      // Use transform animations (default)
       switch (animationState) {
         case 'opening':
           return {
@@ -230,7 +262,7 @@ export const Window = React.memo(
           return {
             transform: 'scale(1)',
             opacity: 1,
-            transition: isDragging ? 'none' : undefined, // Disable transitions during drag
+            transition: isDragging ? 'none' : undefined,
           };
       }
     };
@@ -238,7 +270,7 @@ export const Window = React.memo(
     // Handle resize start - disabled during animations and when docked/maximized
     const handleResizeStart = useCallback(
       (e: React.MouseEvent, direction: ResizeDirection) => {
-        if (e.button === 2) return; // ignore right click
+        if (e.button === 2) return;
         if (!resizable || maximized || docked || isAnimating) return;
 
         e.preventDefault();
@@ -274,7 +306,7 @@ export const Window = React.memo(
     // Handle resize move
     const handleResizeMove = useCallback(
       (e: MouseEvent) => {
-        if (e.button === 2) return; // ignore right click
+        if (e.button === 2) return;
         if (!resizeState.isResizing || !resizeState.direction || isAnimating)
           return;
 
@@ -291,7 +323,6 @@ export const Window = React.memo(
           maxWidth,
         });
 
-        // Ensure window doesn't go off-screen
         const newLeft = Math.max(0, Math.min(window.innerWidth - width, x));
         const newTop = Math.max(0, Math.min(window.innerHeight - height, y));
 
@@ -368,26 +399,28 @@ export const Window = React.memo(
 
     return (
       <>
-        {/* Keyframes CSS */}
-        <style>
-          {`
-          @keyframes windowOpen {
-            from {
-              transform: scale(0.8);
-              opacity: 0;
+        {/* Keyframes CSS - only needed for transform animations */}
+        {windowAnimationType === 'transform' && (
+          <style>
+            {`
+            @keyframes windowOpen {
+              from {
+                transform: scale(0.8);
+                opacity: 0;
+              }
+              to {
+                transform: scale(1);
+                opacity: 1;
+              }
             }
-            to {
-              transform: scale(1);
-              opacity: 1;
-            }
-          }
-        `}
-        </style>
+          `}
+          </style>
+        )}
 
         <Box
           ref={windowRef}
           className="Window--root"
-          data-window-id={id} // Required for drag system
+          data-window-id={id}
           sx={(theme) => ({
             position: 'absolute',
             background: 'transparent',
@@ -395,12 +428,11 @@ export const Window = React.memo(
             visibility: getVisibility(),
 
             pointerEvents: shouldDisableInteraction ? 'none' : 'auto',
-            // Performance optimizations
             willChange: isDragging ? 'transform' : 'auto',
             contain: 'layout style paint',
             height: maximized ? `calc(100% - 0.25rem)` : undefined,
 
-            // Apply animation styles
+            // Apply animation styles based on type
             ...getAnimationStyles(),
           })}
           style={{
@@ -457,18 +489,15 @@ export const Window = React.memo(
                 className="Window--content"
                 sx={{
                   height: '100%',
-                  // Disable pointer events on content during drag for better performance
                   pointerEvents: isDragging ? 'none' : 'auto',
                   overflow: 'hidden',
                   backdropFilter: 'blur(4px)',
                 }}
               >
-                {/* Only render content when not minimized or during minimize animation */}
                 {(!minimized || animationState === 'minimizing') &&
                   windowContent}
               </Box>
 
-              {/* Only show resize handles when conditions are met */}
               {shouldShowResizeHandles && (
                 <>
                   <ResizeHandlers

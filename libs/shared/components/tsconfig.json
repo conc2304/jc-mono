@@ -3,10 +3,13 @@
   "include": [],
   "references": [
     {
-      "path": "../utils"
+      "path": "../../features/portfolio"
     },
     {
       "path": "../themes"
+    },
+    {
+      "path": "../utils"
     },
     {
       "path": "../file-system"

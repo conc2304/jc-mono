@@ -232,15 +232,18 @@ export const ImageContainer = ({
         }}
       />
       <Box
+        className="Skeleton--src"
         sx={{
-          background: `url(${skeletonImageUrl})`,
+          background: `url('${skeletonImageUrl}')`,
           width: '100%',
           height: '100%',
           backgroundSize: '100% 100%',
           backgroundPosition: 'center center',
-          // opacity: 0.5,
-          // mixBlendMode: 'overlay',
-          border: '2px solid red',
+          opacity: 0.75,
+          mixBlendMode: 'multiply',
+          position: 'absolute',
+          top: 0,
+          left: 0,
         }}
       />
     </Box>
@@ -319,7 +322,8 @@ export const ImageContainer = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            bgcolor: 'grey.200',
+            // bgcolor: 'grey.200',
+            // background
           }}
         >
           <Skeleton
@@ -330,8 +334,8 @@ export const ImageContainer = ({
             sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
           />
           <Box
-            component="img"
-            alt="Loading"
+            // component="img"
+            // alt="Loading"
             sx={{
               backgroundImage: `url(${skeletonImageUrl})`,
               backgroundSize: '100% 100%',

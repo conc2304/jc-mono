@@ -27,7 +27,7 @@ import {
 import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton } from '../../atoms';
-import { getImageUrl } from '@jc/utils';
+import { getContextualImage, getImageUrl } from '@jc/utils';
 
 const textureImages = [
   'scratched-glass.jpg',
@@ -121,7 +121,8 @@ export const TileComponent = memo(
     );
 
     const bgTextureImgPath = useMemo(
-      () => getImageUrl(`textures/ui/${tileBackgroundImg}`, 'thumbnail'),
+      () =>
+        getContextualImage(`textures/ui/${tileBackgroundImg}`, 'thumbnail').src,
       [tileBackgroundImg]
     );
 
