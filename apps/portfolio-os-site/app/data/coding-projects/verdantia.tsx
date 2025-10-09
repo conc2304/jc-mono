@@ -1,11 +1,9 @@
 import {
-  ProjectData,
-  // ProjectTemplateProps,
-  // ProjectTemplate,
+  verdantiaProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
-} from '@jc/ui-components';
-import { verdantiaProject } from '@jc/portfolio';
+  ProjectData,
+} from '@jc/portfolio';
 import { Compost } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';

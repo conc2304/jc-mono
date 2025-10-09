@@ -1,4 +1,3 @@
-// Color Mode Switcher Component - Refactored
 import React from 'react';
 import {
   LightMode,
@@ -11,8 +10,7 @@ import {
   TransitionConfig,
   SpeedDialResponsive,
 } from '@jc/ui-components';
-import { ColorMode } from '../../types';
-import { useColorMode } from '../../context';
+import { ColorMode, useColorMode } from '@jc/themes';
 
 interface ColorModeSwitcherProps {
   direction?: 'row' | 'column';

@@ -1,5 +1,5 @@
 import { FileSystemItem } from '@jc/file-system';
-import { ThemeCustomizerPage } from '@jc/themes';
+import { ThemeCustomizerPage } from '@jc/theme-components';
 import { DefaultTileContent } from '@jc/ui-components';
 import { Settings } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';

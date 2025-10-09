@@ -1,11 +1,4 @@
-import { ImageMediaSource } from '../../organisms';
-
-export type MediaContextSize =
-  | 'thumbnail'
-  | 'gallery'
-  | 'hero'
-  | 'modal'
-  | 'full';
+import { ImageMediaSource, MediaContextSize } from '@jc/utils';
 
 export interface MediaProviderType {
   name: string;

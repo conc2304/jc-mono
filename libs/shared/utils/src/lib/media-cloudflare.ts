@@ -1,8 +1,15 @@
-import type {
-  ImageMediaData,
-  ImageMediaSource,
-  MediaContextSize,
-} from '@jc/ui-components';
+export type MediaContextSize =
+  | 'thumbnail'
+  | 'gallery'
+  | 'hero'
+  | 'modal'
+  | 'full';
+
+export interface ImageMediaSource {
+  src: string;
+  srcSet?: string;
+  sizes?: string;
+}
 
 // Cloudflare Images transformation utilities
 
@@ -86,31 +93,6 @@ export function getContextualImage(
     srcSet,
     sizes: config.sizes,
   };
-}
-
-/**
- * Batch generate contextual images for multiple contexts
- * Useful when you need the same image in different contexts
- */
-export function getMultiContextImage(
-  path: string,
-  alt: string,
-  contexts: MediaContextSize[],
-  caption?: string,
-  detailedCaption?: string
-): Record<MediaContextSize, ImageMediaData> {
-  const result = {} as Record<MediaContextSize, ImageMediaData>;
-
-  contexts.forEach((context) => {
-    result[context] = {
-      sources: [getContextualImage(path, context)],
-      alt,
-      caption,
-      detailedCaption,
-    };
-  });
-
-  return result;
 }
 
 /**

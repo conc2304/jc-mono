@@ -25,9 +25,8 @@ import {
   Monitor,
 } from 'lucide-react';
 
-import { useColorMode } from '../context/color-mode-context';
-import { EnhancedThemeOption, ColorMode } from '../types';
 import { Close } from '@mui/icons-material';
+import { ColorMode, EnhancedThemeOption, useColorMode } from '@jc/themes';
 
 // Styled components with theme-aware brutalist sci-fi aesthetic
 const MainPanel = styled(Box)(({ theme }) => ({

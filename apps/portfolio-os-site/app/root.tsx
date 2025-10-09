@@ -11,7 +11,11 @@ import 'augmented-ui/augmented-ui.min.css';
 
 import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
 import { ThemedBgContainer } from './components/themed-bg-container';
-import { CloudflareMediaProvider, MediaProvider } from '@jc/ui-components';
+import {
+  CloudflareMediaProvider,
+  LoadingFallback,
+  MediaProvider,
+} from '@jc/ui-components';
 
 export const meta: MetaFunction = () => [
   // Basic meta tags
@@ -437,6 +441,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+  );
+}
+
+export function HydrateFallback() {
+  return (
+    <div className="hydrate-fallback">
+      <LoadingFallback message="Loading Jose Conchello's Portfolio Site: " />
+    </div>
   );
 }
 

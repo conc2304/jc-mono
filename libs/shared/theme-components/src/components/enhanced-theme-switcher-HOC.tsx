@@ -1,4 +1,4 @@
-import { useEnhancedTheme } from '../context';
+import { useEnhancedTheme } from '@jc/themes';
 import { EnhancedThemeSwitcher } from './enhanced-theme-switcher';
 
 export const EnhancedThemeSwitcherWithTheme = () => {

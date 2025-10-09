@@ -1,11 +1,9 @@
 import {
-  ProjectData,
-  // ProjectTemplateProps,
-  // ProjectTemplate,
+  terrainifyProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
-} from '@jc/ui-components';
-import { terrainifyProject } from '@jc/portfolio';
+  ProjectData,
+} from '@jc/portfolio';
 import { Terrain } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';

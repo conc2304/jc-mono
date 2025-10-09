@@ -1,7 +1,6 @@
-import { Box, Tooltip } from '@mui/material';
-import { useColorMode, useEnhancedTheme } from '../../context';
-import { ColorMode } from '../../types';
+import { Box } from '@mui/material';
 import { ModeSwitcherButtonGroup } from '../mode-switcher-button-group';
+import { useColorMode, useEnhancedTheme } from '@jc/themes';
 
 export const MinimalThemeSwitcher = () => {
   const { themes, currentThemeId, changeTheme } = useEnhancedTheme();
@@ -77,9 +76,10 @@ export const MinimalThemeSwitcher = () => {
           const isSelected = themeDisplay.id === currentThemeId;
 
           const backgroundPaperLight =
-            themeDisplay.lightPalette.background.paper;
+            themeDisplay.lightPalette?.background.paper ?? '#F1F1F1';
           const colorsLight = getThemeColors(themeDisplay, 'light');
-          const backgroundPaperDark = themeDisplay.darkPalette.background.paper;
+          const backgroundPaperDark =
+            themeDisplay.darkPalette.background.paper || '#DDD';
           const colorsDark = getThemeColors(themeDisplay, 'dark');
 
           return (

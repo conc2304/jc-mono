@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+
 import { InsertionZone } from './insertion-zone';
 import { useResponsiveTileConfig } from './use-responsive-tile-config';
 import { ReactNode, useEffect, useRef, useState } from 'react';
@@ -16,7 +17,12 @@ import { useTilePlacement } from './use-tile-placement';
 import { BaseFileSystemItem } from '@jc/file-system';
 import { TileComponent } from './tile-component';
 import { RestartAlt, Shuffle } from '@mui/icons-material';
-import { ColorModeSwitcher, ColorModeSwitcherSpeedDial } from '@jc/themes';
+
+import {
+  ColorModeSwitcher,
+  ColorModeSwitcherSpeedDial,
+} from '@jc/theme-components';
+
 import { SciFiBackground } from '../../atoms/background-scifi-animated';
 
 export const TileGrid = ({

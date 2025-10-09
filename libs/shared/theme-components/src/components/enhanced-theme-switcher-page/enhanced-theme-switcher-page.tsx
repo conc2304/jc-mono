@@ -36,7 +36,6 @@ import {
 import {
   Palette as PaletteIcon,
   Monitor as MonitorIcon,
-  // Zap,
   Visibility,
   Save,
   RestartAlt,
@@ -44,10 +43,12 @@ import {
   Delete as DeleteIcon,
   FlashOn,
 } from '@mui/icons-material';
-import { useColorMode } from '../../context/color-mode-context';
-import { useEnhancedTheme } from '../../context';
-import { EnhancedThemeOption } from '../../types';
 import { ColorModeSwitcherSpeedDial } from '../color-mode-switcher-speed-dial';
+import {
+  EnhancedThemeOption,
+  useColorMode,
+  useEnhancedTheme,
+} from '@jc/themes';
 
 // Styled Components with Cyberpunk Aesthetic
 const CyberPaper = styled(Paper)(({ theme }) => ({
@@ -570,8 +571,6 @@ export const ThemeCustomizerPage: React.FC = () => {
       className="EnhancedThemeSwitcher--root"
       sx={{
         height: '100%',
-        // pb: 8,
-        // overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: 'background.default',

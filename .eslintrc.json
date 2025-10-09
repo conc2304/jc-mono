@@ -48,7 +48,7 @@
                 "position": "before"
               },
               {
-                "pattern": "@lths/**",
+                "pattern": "@jc/**",
                 "group": "internal",
                 "position": "before"
               },

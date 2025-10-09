@@ -6,6 +6,9 @@
       "path": "../../libs/shared/utils"
     },
     {
+      "path": "../../libs/shared/theme-components"
+    },
+    {
       "path": "../../libs/shared/file-system"
     },
     {

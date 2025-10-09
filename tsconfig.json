@@ -35,6 +35,9 @@
     },
     {
       "path": "./libs/shared/file-system"
+    },
+    {
+      "path": "./libs/shared/theme-components"
     }
   ]
 }

@@ -13,12 +13,6 @@ interface BaseVideoData {
   detailedCaption?: string;
 }
 
-interface ImageMediaSource {
-  src: string;
-  srcSet?: string;
-  sizes?: string;
-}
-
 interface ImageRenderAttributes {
   src: string;
   srcSet?: string;
@@ -50,5 +44,4 @@ export type {
   ImageRenderAttributes,
   VideoRenderAttributes,
   MediaItem,
-  ImageMediaSource,
 };

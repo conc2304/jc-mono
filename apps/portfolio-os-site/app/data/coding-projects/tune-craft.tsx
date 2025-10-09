@@ -1,11 +1,9 @@
 import {
-  ProjectData,
-  // ProjectTemplateProps,
-  // ProjectTemplate,
+  tunecraftProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
-} from '@jc/ui-components';
-import { tunecraftProject } from '@jc/portfolio';
+  ProjectData,
+} from '@jc/portfolio';
 import { MusicNote } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';

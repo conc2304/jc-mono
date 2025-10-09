@@ -1,12 +1,12 @@
 import { Box, Tooltip, Stack, Typography, useTheme } from '@mui/material';
 import { AugmentedButton } from '@jc/ui-components';
 
-import { ColorMode } from '../../types';
 import {
   DarkMode,
   LightMode,
   SettingsSystemDaydream,
 } from '@mui/icons-material';
+import { type ColorMode } from '@jc/themes';
 
 interface ModeSwitcherButtonGroupProps {
   mode: ColorMode;

@@ -37,6 +37,9 @@
   ],
   "references": [
     {
+      "path": "../../shared/theme-components/tsconfig.lib.json"
+    },
+    {
       "path": "../../shared/themes/tsconfig.lib.json"
     },
     {

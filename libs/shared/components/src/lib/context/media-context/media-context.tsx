@@ -1,5 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { MediaContextSize, MediaProviderType } from './types';
+import { MediaProviderType } from './types';
+import { MediaContextSize } from '@jc/utils';
 
 interface MediaContextType {
   provider: MediaProviderType;

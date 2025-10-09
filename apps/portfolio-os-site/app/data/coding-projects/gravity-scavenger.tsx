@@ -1,11 +1,9 @@
 import {
-  ProjectData,
-  // ProjectTemplateProps,
-  // ProjectTemplate,
+  gravityScavengerProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
-} from '@jc/ui-components';
-import { gravityScavengerProject } from '@jc/portfolio';
+  ProjectData,
+} from '@jc/portfolio';
 import { RocketLaunch } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';

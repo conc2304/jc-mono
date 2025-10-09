@@ -1,13 +1,12 @@
-import { Box, darken, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import { CSSProperties } from 'react';
 import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
 import { HorizontalCompass } from './digital-compass';
-import { MinimalThemeSwitcher } from '@jc/themes';
 import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
-import { useNavigate } from 'react-router-dom';
 import { getContextualImage } from '@jc/utils';
+import { MinimalThemeSwitcher } from '@jc/theme-components';
 
 export const DesktopPageNotFound404 = ({
   onHomeClick,

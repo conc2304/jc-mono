@@ -13,14 +13,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/lib/scripts/media-upload.js",
-    "src/lib/scripts/media-renamer.js",
-    "../components/src/lib/context/media-context/cloudflare-media-provider.ts"
   ],
-  "references": [
-    {
-      "path": "../components/tsconfig.lib.json"
-    }
-  ],
+  "references": [],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

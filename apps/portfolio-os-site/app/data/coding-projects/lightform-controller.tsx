@@ -1,11 +1,9 @@
 import {
-  ProjectData,
-  // ProjectTemplateProps,
-  // ProjectTemplate,
+  lightformWebControllerProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
-} from '@jc/ui-components';
-import { lightformWebControllerProject } from '@jc/portfolio';
+  ProjectData,
+} from '@jc/portfolio';
 import { MovieFilter } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';

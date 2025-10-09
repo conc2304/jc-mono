@@ -7,7 +7,6 @@
       "@nx/react/typings/cssmodule.d.ts",
       "@nx/react/typings/image.d.ts"
     ],
-    "lib": ["dom"],
     "rootDir": "src",
     "jsx": "react-jsx",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
@@ -35,5 +34,12 @@
     "src/**/*.tsx",
     "../../../declaration-files/*.d.ts"
   ],
-  "references": []
+  "references": [
+    {
+      "path": "../themes/tsconfig.lib.json"
+    },
+    {
+      "path": "../components/tsconfig.lib.json"
+    }
+  ]
 }

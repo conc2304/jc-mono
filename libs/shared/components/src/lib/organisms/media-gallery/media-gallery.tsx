@@ -12,7 +12,6 @@ import { PlayArrow } from '@mui/icons-material';
 import {
   ImageContainer,
   ImageLoadingProps,
-  MediaContextSize,
   useMediaProvider,
   VideoPlayer,
 } from '@jc/ui-components';
@@ -24,7 +23,7 @@ import {
   BaseVideoData,
 } from './types';
 import { MediaModal } from './components';
-import { ensureContrast } from '@jc/utils';
+import { ensureContrast, MediaContextSize } from '@jc/utils';
 
 export interface MediaGalleryProps extends ImageLoadingProps {
   images?: BaseImageData[];

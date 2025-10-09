@@ -1,6 +1,11 @@
-import type { MediaContextSize, MediaProviderType } from './types';
-import { ImageMediaSource } from '../../organisms';
-import { getContextualImage, getPlaceholderImage } from '@jc/utils';
+import { MediaProviderType } from './types';
+
+import {
+  getContextualImage,
+  getPlaceholderImage,
+  ImageMediaSource,
+  MediaContextSize,
+} from '@jc/utils';
 
 export class CloudflareMediaProvider implements MediaProviderType {
   name = 'cloudflare';

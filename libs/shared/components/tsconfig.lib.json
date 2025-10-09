@@ -37,6 +37,9 @@
   ],
   "references": [
     {
+      "path": "../theme-components/tsconfig.lib.json"
+    },
+    {
       "path": "../themes/tsconfig.lib.json"
     },
     {

@@ -1,4 +1,5 @@
-import { EnhancedThemeSwitcher, useEnhancedTheme } from '@jc/themes';
+import { useEnhancedTheme } from '@jc/themes';
+import { EnhancedThemeSwitcher } from '@jc/theme-components';
 
 export const PickerPanel = ({
   compact = false,

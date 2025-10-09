@@ -1,9 +1,6 @@
-import { Box, darken, Stack, Typography, useTheme } from '@mui/material';
-import { CSSProperties, ReactNode } from 'react';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
+import {  ReactNode } from 'react';
 import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
-import { HorizontalCompass } from './digital-compass';
-import { MinimalThemeSwitcher } from '@jc/themes';
-import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
 import { getContextualImage } from '@jc/utils';
