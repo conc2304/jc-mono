@@ -149,10 +149,12 @@ export const NavigationButtons = ({
             width: '100%',
             height: '100%',
             position: 'absolute',
-            backgroundImage: `url(${getContextualImage(
-              'textures/ui/scratched-glass-with-scuffs.jpg',
-              'full'
-            )})`,
+            backgroundImage: `url(${
+              getContextualImage(
+                'textures/ui/scratched-glass-with-scuffs.jpg',
+                'full'
+              ).src
+            })`,
             backgroundBlendMode: 'screen',
             opacity: 0.25,
             top: 0,

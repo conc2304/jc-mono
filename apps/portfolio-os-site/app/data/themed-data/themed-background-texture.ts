@@ -4,7 +4,7 @@ import { CSSProperties } from '@mui/material';
 // Themed character sets for text scrambling effects
 const path = (fileName: string) => {
   const relativePath = `textures/themed/${fileName}`;
-  const imgUrl = getContextualImage(relativePath, 'full');
+  const imgUrl = getContextualImage(relativePath, 'full').src;
   return imgUrl;
 };
 //

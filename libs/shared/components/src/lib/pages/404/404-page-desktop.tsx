@@ -131,10 +131,9 @@ export const DesktopPageNotFound404 = ({
         <Box
           // Upper Panel Background Texture
           sx={{
-            backgroundImage: `url(${getContextualImage(
-              'textures/ui/stone-texture.jpg',
-              'full'
-            )})`,
+            backgroundImage: `url(${
+              getContextualImage('textures/ui/stone-texture.jpg', 'full').src
+            })`,
             backgroundPosition: '0 0',
             position: 'absolute',
             top: 0,
@@ -343,10 +342,12 @@ export const DesktopPageNotFound404 = ({
           sx={{
             position: 'absolute',
             ...bgOverlayProps,
-            backgroundImage: `url(${getContextualImage(
-              'textures/ui/old-black-fabric-material.jpg',
-              'full'
-            )})`,
+            backgroundImage: `url(${
+              getContextualImage(
+                'textures/ui/old-black-fabric-material.jpg',
+                'full'
+              ).src
+            })`,
 
             backgroundPosition: '0 0%',
             backgroundSize: '100%',
@@ -382,10 +383,12 @@ export const DesktopPageNotFound404 = ({
             className="bottom-inner-left-bg--bg-overlay"
             sx={(theme) => ({
               ...bgOverlayProps,
-              backgroundImage: `url(${getContextualImage(
-                'textures/ui/grunge-dirty-concrete-texture-background.jpg',
-                'full'
-              )})`,
+              backgroundImage: `url(${
+                getContextualImage(
+                  'textures/ui/grunge-dirty-concrete-texture-background.jpg',
+                  'full'
+                ).src
+              })`,
               opacity: 0.5,
               backgroundSize: 'cover',
               mixBlendMode: 'overlay',
@@ -414,10 +417,12 @@ export const DesktopPageNotFound404 = ({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url(${getContextualImage(
-                'textures/ui/scratched-glass-with-scuffs.jpg',
-                'full'
-              )})`,
+              backgroundImage: `url(${
+                getContextualImage(
+                  'textures/ui/scratched-glass-with-scuffs.jpg',
+                  'full'
+                ).src
+              })`,
               backgroundBlendMode: 'screen',
               opacity: 0.25,
               top: 0,

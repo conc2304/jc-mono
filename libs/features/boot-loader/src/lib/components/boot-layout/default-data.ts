@@ -24,7 +24,7 @@ export const DefaultProgressMessages = {
 };
 
 export const defaultGif = {
-  url: getContextualImage('gifs/ambient-vintage-clouds.gif', 'full'),
+  url: getContextualImage('gifs/ambient-vintage-clouds.gif', 'full').src,
   backgroundPositionY: 'center',
 };
 

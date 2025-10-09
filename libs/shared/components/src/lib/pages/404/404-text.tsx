@@ -34,10 +34,12 @@ export const Text404 = () => {
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url(${getContextualImage(
-                'textures/ui/scratched-glass-with-scuffs.jpg',
-                'full'
-              )})`,
+              backgroundImage: `url(${
+                getContextualImage(
+                  'textures/ui/scratched-glass-with-scuffs.jpg',
+                  'full'
+                ).src
+              })`,
               backgroundBlendMode: 'screen',
               backgroundSize: 'cover',
               opacity: 0.15,
@@ -107,10 +109,12 @@ export const Text404 = () => {
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url(${getContextualImage(
-                'textures/ui/scratched-glass-with-scuffs.jpg',
-                'full'
-              )})`,
+              backgroundImage: `url(${
+                getContextualImage(
+                  'textures/ui/scratched-glass-with-scuffs.jpg',
+                  'full'
+                ).src
+              })`,
               backgroundBlendMode: 'screen',
               backgroundSize: 'cover',
               opacity: 0.15,
@@ -118,7 +122,6 @@ export const Text404 = () => {
               left: 0,
               right: 0,
               zIndex: -1,
-              // transform: 'scale(-1)',
             }}
           />
           <Typography variant="h2">PAGE NOT FOUND</Typography>

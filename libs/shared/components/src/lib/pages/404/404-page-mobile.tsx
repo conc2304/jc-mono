@@ -41,10 +41,12 @@ export const MobilePageNotFound404 = ({
         width: '100%',
         padding: 2,
         bgcolor: theme.palette.background.paper,
-        backgroundImage: `url(${getContextualImage(
-          'textures/ui/old-black-fabric-material.jpg',
-          'full'
-        )})`,
+        backgroundImage: `url(${
+          getContextualImage(
+            'textures/ui/old-black-fabric-material.jpg',
+            'full'
+          ).src
+        })`,
         backgroundPosition: '0% 0%',
         backgroundSize: '100%',
         justifyContent: 'space-between',
