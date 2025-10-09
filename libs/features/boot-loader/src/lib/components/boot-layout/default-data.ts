@@ -1,11 +1,7 @@
-import { easeQuadInOut, easeSinInOut } from 'd3';
+import { easeSinInOut } from 'd3';
 import { BootMessage } from '../../types';
-import { AnimatedRadarChartProps } from '../radar-chart-widget/animated-radar';
-import { darken, lighten, Theme } from '@mui/material';
-import { remap } from '../utils';
-import { RadarChartProps } from '../radar-chart-widget/radar-chart-widget';
 import { FormatDataFn } from '../radar-chart-widget';
-import { getImageUrl } from '@jc/utils';
+import { getContextualImage } from '@jc/utils';
 
 export const defaultScrambleCharacterSet =
   '!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -28,7 +24,7 @@ export const DefaultProgressMessages = {
 };
 
 export const defaultGif = {
-  url: getImageUrl('gifs/ambient-vintage-clouds.gif', 'full'),
+  url: getContextualImage('gifs/ambient-vintage-clouds.gif', 'full'),
   backgroundPositionY: 'center',
 };
 

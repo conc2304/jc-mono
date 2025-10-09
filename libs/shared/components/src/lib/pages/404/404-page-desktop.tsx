@@ -7,7 +7,7 @@ import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
 import { useNavigate } from 'react-router-dom';
-import { getImageUrl } from '@jc/utils';
+import { getContextualImage } from '@jc/utils';
 
 export const DesktopPageNotFound404 = ({
   onHomeClick,
@@ -131,7 +131,7 @@ export const DesktopPageNotFound404 = ({
         <Box
           // Upper Panel Background Texture
           sx={{
-            backgroundImage: `url(${getImageUrl(
+            backgroundImage: `url(${getContextualImage(
               'textures/ui/stone-texture.jpg',
               'full'
             )})`,
@@ -343,7 +343,7 @@ export const DesktopPageNotFound404 = ({
           sx={{
             position: 'absolute',
             ...bgOverlayProps,
-            backgroundImage: `url(${getImageUrl(
+            backgroundImage: `url(${getContextualImage(
               'textures/ui/old-black-fabric-material.jpg',
               'full'
             )})`,
@@ -382,7 +382,7 @@ export const DesktopPageNotFound404 = ({
             className="bottom-inner-left-bg--bg-overlay"
             sx={(theme) => ({
               ...bgOverlayProps,
-              backgroundImage: `url(${getImageUrl(
+              backgroundImage: `url(${getContextualImage(
                 'textures/ui/grunge-dirty-concrete-texture-background.jpg',
                 'full'
               )})`,
@@ -414,7 +414,7 @@ export const DesktopPageNotFound404 = ({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              backgroundImage: `url(${getImageUrl(
+              backgroundImage: `url(${getContextualImage(
                 'textures/ui/scratched-glass-with-scuffs.jpg',
                 'full'
               )})`,

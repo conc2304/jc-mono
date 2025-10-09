@@ -6,7 +6,7 @@ import { MinimalThemeSwitcher } from '@jc/themes';
 import { Text404 } from './404-text';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
-import { getImageUrl } from '@jc/utils';
+import { getContextualImage } from '@jc/utils';
 
 export const MobilePageNotFound404 = ({
   onHomeClick,
@@ -41,7 +41,7 @@ export const MobilePageNotFound404 = ({
         width: '100%',
         padding: 2,
         bgcolor: theme.palette.background.paper,
-        backgroundImage: `url(${getImageUrl(
+        backgroundImage: `url(${getContextualImage(
           'textures/ui/old-black-fabric-material.jpg',
           'full'
         )})`,

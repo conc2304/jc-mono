@@ -1,10 +1,10 @@
-import { getImageUrl } from '@jc/utils';
+import { getContextualImage } from '@jc/utils';
 import { CSSProperties } from '@mui/material';
 
 // Themed character sets for text scrambling effects
 const path = (fileName: string) => {
   const relativePath = `textures/themed/${fileName}`;
-  const imgUrl = getImageUrl(relativePath, 'full');
+  const imgUrl = getContextualImage(relativePath, 'full');
   return imgUrl;
 };
 //
