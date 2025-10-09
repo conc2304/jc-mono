@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
   Chip,
   Grid,
   Paper,
-  Skeleton,
   Link,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ProjectData from './types';
-import { AugmentedButton } from '../../atoms';
+import { AugmentedButton } from '@jc/ui-components';
 
 export interface ProjectTemplateProps {
   hasNavigation: boolean;

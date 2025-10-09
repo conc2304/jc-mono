@@ -1,2 +1,1 @@
 export * from './404';
-export * from './media-gallery-page';

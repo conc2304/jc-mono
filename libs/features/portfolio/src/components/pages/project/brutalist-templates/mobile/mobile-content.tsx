@@ -5,8 +5,7 @@ import { ProjectData, ProjectContent } from '../../types';
 import { MobileTabContent } from './mobile-tab-content';
 import { MobileProjectDetails } from './mobile-project-details';
 import { MobileTechnologies } from './mobile-technologies';
-import { MediaGallery } from '../../../../organisms';
-import { simplePriorityVideoSort } from '../../../../molecules';
+import { MediaGallery, simplePriorityVideoSort } from '@jc/ui-components';
 
 interface MobileContentProps {
   activeTab: string;

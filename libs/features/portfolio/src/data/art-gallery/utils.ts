@@ -1,6 +1,5 @@
-import { BaseImageData, ImageMediaData } from '@jc/ui-components';
+import { BaseImageData } from '@jc/ui-components';
 import { PortfolioGalleryItem } from './iOS-made-media';
-import { getResponsiveImageSet } from '@jc/utils';
 
 /**
  * Converts portfolio data to ImageMediaData format
@@ -58,7 +57,7 @@ export function convertPortfolioGalleryToImageData(
 export function filterByCategory(
   portfolioData: PortfolioGalleryItem[],
   category: string
-): ImageMediaData[] {
+): BaseImageData[] {
   const filteredPortfolioData = portfolioData.filter(
     (item) => item.categories && item.categories.includes(category)
   );
@@ -72,7 +71,7 @@ export function filterByCategory(
 export function filterByTag(
   portfolioData: PortfolioGalleryItem[],
   tag: string
-): ImageMediaData[] {
+): BaseImageData[] {
   const filteredPortfolioData = portfolioData.filter(
     (item) => item.tags && item.tags.includes(tag)
   );
@@ -86,7 +85,7 @@ export function filterByTag(
 export function filterByYear(
   portfolioData: PortfolioGalleryItem[],
   year: number
-): ImageMediaData[] {
+): BaseImageData[] {
   const filteredPortfolioData = portfolioData.filter(
     (item) => item.year === year
   );

@@ -1,9 +1,9 @@
-import { MediaItem, VideoMediaData } from '../../organisms';
+import { MediaItem, type VideoRenderAttributes } from '../../organisms';
 
 export const simplePriorityVideoSort = (a: MediaItem, b: MediaItem): number => {
   const getPriority = (item: MediaItem): number => {
     if (item.type === 'video') {
-      const video = item.data as VideoMediaData;
+      const video = item.data as VideoRenderAttributes;
       switch (video.type) {
         case 'demo':
           return 1;

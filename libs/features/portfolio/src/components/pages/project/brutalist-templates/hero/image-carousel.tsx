@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, alpha, useTheme } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { AugmentedIconButton } from '../../../../atoms';
+import { AugmentedIconButton } from '@jc/ui-components';
 
 interface Screenshot {
   url: string;

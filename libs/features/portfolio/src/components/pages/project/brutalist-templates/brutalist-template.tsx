@@ -9,9 +9,11 @@ import { HeroSection } from './hero/hero-section';
 import { MobileContent } from './mobile/mobile-content';
 import { DesktopContent } from './desktop/desktop-content';
 import { NavigationContext } from '@jc/file-system';
-import { MarkdownRenderer } from '../../../molecules/markdown-renderer';
-import { useMediaProvider } from '../../../context';
-import { ImageRenderAttributes } from '../../../organisms';
+import {
+  ImageRenderAttributes,
+  MarkdownRenderer,
+  useMediaProvider,
+} from '@jc/ui-components';
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   height: '100%',

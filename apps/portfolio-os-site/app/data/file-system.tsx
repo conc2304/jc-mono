@@ -7,9 +7,8 @@ import { BaseFileSystemItem } from '@jc/file-system';
 
 import { SettingsFileSystem } from './settings-files';
 import { iOSImageGallery } from './photo-gallery/iOS-Made-File-Item';
-import { ProjectsTileContent } from '@jc/ui-components';
 import { sculpturePortfolioFileSystemItem } from './sculpture/sculpture-file-item';
-import { sculpturesData } from '@jc/portfolio';
+import { ProjectsTileContent, sculpturesData } from '@jc/portfolio';
 
 const fontSize = '80px';
 

@@ -7,12 +7,15 @@ import {
   Stack,
   useMediaQuery,
 } from '@mui/material';
-import { ContentContainer } from '../../molecules/live-tile/styled-components';
-import { TileContentProps } from '../../molecules';
-import { ProjectData } from '../project';
-import { DiagonalLines, ImageContainer } from '../../atoms';
 import { Star } from '@mui/icons-material';
-import { useMediaProvider } from '../../context';
+import {
+  ContentContainer,
+  DiagonalLines,
+  ImageContainer,
+  TileContentProps,
+  useMediaProvider,
+} from '@jc/ui-components';
+import { ProjectData } from '../pages/project';
 
 export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
   memo(({ name, children, currentIndex = 0, isLarge, tileData }) => {

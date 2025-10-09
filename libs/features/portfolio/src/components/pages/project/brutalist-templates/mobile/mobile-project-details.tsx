@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Grid,
-  Paper,
-  Typography,
-  Box,
-  Link,
-  alpha,
-  useTheme,
-} from '@mui/material';
+import { Grid, Paper, Typography, Box, Link, useTheme } from '@mui/material';
 import { ProjectData } from '../../types';
 import { GitHub, Preview } from '@mui/icons-material';
 

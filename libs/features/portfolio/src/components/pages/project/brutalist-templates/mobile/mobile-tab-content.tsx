@@ -1,6 +1,5 @@
-// components/Mobile/MobileTabContent.tsx
 import React from 'react';
-import { Paper, Typography, alpha, useTheme } from '@mui/material';
+import { Paper, Typography, useTheme } from '@mui/material';
 
 interface MobileTabContentProps {
   activeTab: string;

@@ -3,9 +3,6 @@
   "include": [],
   "references": [
     {
-      "path": "../../features/portfolio"
-    },
-    {
       "path": "../themes"
     },
     {

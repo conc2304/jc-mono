@@ -1,17 +1,14 @@
 import { FileSystemItem } from '@jc/file-system';
 import {
   ArtGalleryMedia_iOS_Made,
+  ArtGalleryProcessProps,
   HighlightVideo,
+  MediaGalleryPage,
   ProcessDecorImages,
   ProcessEndImages,
   ProcessStartImages,
 } from '@jc/portfolio';
-import {
-  ArtGalleryProcessProps,
-  DefaultTileContent,
-  MediaGalleryPage,
-  MediaGalleryProps,
-} from '@jc/ui-components';
+import { DefaultTileContent, MediaGalleryProps } from '@jc/ui-components';
 import { Image } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 

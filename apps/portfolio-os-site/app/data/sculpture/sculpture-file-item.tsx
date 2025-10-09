@@ -1,10 +1,11 @@
 import { FileSystemItem } from '@jc/file-system';
-import { Sculpture, sculpturesData } from '@jc/portfolio';
 import {
-  DefaultTileContent,
+  Sculpture,
   SculpturePortfolio,
   SculpturePortfolioProps,
-} from '@jc/ui-components';
+  sculpturesData,
+} from '@jc/portfolio';
+import { DefaultTileContent } from '@jc/ui-components';
 import { GiStakeHammer } from 'react-icons/gi';
 import { v4 as uuidv4 } from 'uuid';
 

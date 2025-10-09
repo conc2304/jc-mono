@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -14,16 +14,25 @@ import {
   useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Sculpture } from '@jc/portfolio';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { createDitherClass } from './dithering-class';
-import { useMediaProvider } from '../../context';
+import { BaseImageData, useMediaProvider } from '@jc/ui-components';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+interface Sculpture {
+  id: number;
+  title: string;
+  subtitle?: string;
+  date: string;
+  materials: string;
+  images: BaseImageData[];
+  description: string;
+}
 
 export interface SculpturePortfolioProps {
   sculptures: Sculpture[];
@@ -82,12 +91,14 @@ const NavigationMenu: React.FC<{
       anchor="right"
       open={open}
       onClose={onClose}
-      PaperProps={{
-        sx: {
-          width: { xs: '100%', sm: 400 },
-          background: 'rgba(15, 15, 15, 0.98)',
-          backdropFilter: 'blur(20px)',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+      slotProps={{
+        paper: {
+          sx: {
+            width: { xs: '100%', sm: 400 },
+            background: 'rgba(15, 15, 15, 0.98)',
+            backdropFilter: 'blur(20px)',
+            borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+          },
         },
       }}
     >

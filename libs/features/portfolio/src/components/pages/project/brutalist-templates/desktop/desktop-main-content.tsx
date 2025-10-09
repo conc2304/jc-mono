@@ -1,9 +1,7 @@
 import React from 'react';
 import { Box, Tabs, Tab, Typography, useTheme } from '@mui/material';
 import { ProjectData, ProjectContent } from '../../types';
-import { MediaGallery } from '../../../../organisms';
-import { simplePriorityVideoSort } from '../../../../molecules';
-import { useProjectMedia } from '../../../../hooks/project-media';
+import { MediaGallery, simplePriorityVideoSort } from '@jc/ui-components';
 
 interface TabData {
   key: string;

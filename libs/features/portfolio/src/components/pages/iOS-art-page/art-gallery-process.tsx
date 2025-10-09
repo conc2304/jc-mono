@@ -7,13 +7,16 @@ import {
   CardContent,
 } from '@mui/material';
 import { styled, useTheme, getContrastRatio } from '@mui/material/styles';
-import { ImageContainer } from '../../atoms';
 import { CSSProperties } from 'react';
 import { PlayArrow } from '@mui/icons-material';
-import { VideoPlayer } from '../../molecules';
 import { ensureContrast } from '@jc/utils';
-import { useMediaProvider } from '../../context';
-import { BaseVideoData, BaseImageData } from '../../organisms';
+import {
+  BaseImageData,
+  BaseVideoData,
+  ImageContainer,
+  useMediaProvider,
+  VideoPlayer,
+} from '@jc/ui-components';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   background: `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default}, ${theme.palette.background.default}, ${theme.palette.background.paper})`,

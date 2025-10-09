@@ -1,6 +1,6 @@
 import { Box, Container, Paper, Typography, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
-import { MediaGallery, MediaGalleryProps } from '../../organisms';
+import { MediaGallery, MediaGalleryProps } from '@jc/ui-components';
 import ArtGalleryProcess, {
   ArtGalleryProcessProps,
 } from './art-gallery-process';

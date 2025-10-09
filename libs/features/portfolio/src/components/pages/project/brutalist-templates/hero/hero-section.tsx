@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
-import { ImageContainer } from '../../../../atoms';
-import { ImageRenderAttributes } from '../../../../organisms';
+import { ImageContainer, ImageRenderAttributes } from '@jc/ui-components';
 
 interface HeroSectionProps {
   heroImage: ImageRenderAttributes;
