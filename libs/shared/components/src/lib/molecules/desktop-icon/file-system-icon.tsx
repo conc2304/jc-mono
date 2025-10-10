@@ -63,15 +63,31 @@ export const FileSystemIcon = ({
           },
         })}
       >
-        <Box sx={{ position: 'absolute', top: 5, left: 5 }}>{tagContent}</Box>
-        {icon}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 5,
+            left: 5,
+          }}
+        >
+          {tagContent}
+        </Box>
+        <Box
+          sx={(theme) => ({
+            '& svg': {
+              fill: !isActive ? 'currentcolor' : theme.palette.primary.main,
+            },
+          })}
+        >
+          {icon}
+        </Box>
       </Box>
       <Box
         className="FileSystemIcon--text"
         sx={(theme) => ({
           position: 'relative',
           width: `calc(${theme.mixins.desktopIcon.width} * 1.5)`,
-
+          mt: 1,
           alignItems: 'center',
           justifyContent: 'center',
           background: !isActive
@@ -85,9 +101,9 @@ export const FileSystemIcon = ({
       >
         <Typography
           variant="body2"
-          color={!isActive ? 'textPrimary' : 'textDisabled'}
           sx={{
-            mt: 0.25,
+            color: !isActive ? 'textPrimary' : 'primary.main',
+            my: 0.25,
             textAlign: 'center',
             p: 0.125,
             display: '-webkit-box',
