@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -14,11 +14,12 @@ import {
   useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { createDitherClass } from './dithering-class';
 import { BaseImageData, useMediaProvider } from '@jc/ui-components';
 
 // Register GSAP plugins
@@ -42,8 +43,6 @@ export interface SculpturePortfolioProps {
 const SculptureHeader: React.FC<{ onMenuClick: () => void }> = ({
   onMenuClick,
 }) => {
-  const { generateImageSources } = useMediaProvider().provider;
-
   return (
     <AppBar
       position="fixed"
@@ -107,7 +106,7 @@ const NavigationMenu: React.FC<{
           variant="h6"
           sx={{
             mb: 4,
-            color: 'rgba(255, 255, 255, 0.5)',
+            color: 'rgba(255, 255, 255, 0.9)',
             textTransform: 'uppercase',
             letterSpacing: '0.2em',
             fontWeight: 700,
@@ -135,13 +134,19 @@ const NavigationMenu: React.FC<{
                 <Typography
                   sx={{
                     fontSize: '1rem',
-                    color: 'rgba(255, 255, 255, 0.4)',
+                    color: 'rgba(255, 255, 255, 0.8)',
                     fontWeight: 500,
                   }}
                 >
                   {String(index + 1).padStart(2, '0')}
                 </Typography>
-                <Typography sx={{ fontSize: '1.5rem', fontWeight: 300 }}>
+                <Typography
+                  sx={{
+                    fontSize: '1.5rem',
+                    fontWeight: 300,
+                    color: 'rgba(255, 255, 255, 0.6)',
+                  }}
+                >
                   {sculpture.title}
                 </Typography>
               </ListItemButton>
@@ -154,13 +159,15 @@ const NavigationMenu: React.FC<{
 };
 
 // Intro Section Component
-const IntroSection: React.FC = () => {
+const IntroSection: React.FC<{ containerHeight: number }> = ({
+  containerHeight,
+}) => {
   const speeds = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7];
 
   return (
     <Box
       className="intro-section"
-      sx={{ minHeight: '150vh', position: 'relative' }}
+      sx={{ height: containerHeight, position: 'relative' }}
     >
       <Box
         className="intro-heading"
@@ -169,7 +176,7 @@ const IntroSection: React.FC = () => {
           top: 0,
           left: 0,
           width: '100%',
-          height: '100vh',
+          height: containerHeight,
           textAlign: 'center',
           zIndex: 99,
           pointerEvents: 'none',
@@ -207,38 +214,132 @@ const IntroSection: React.FC = () => {
   );
 };
 
-// Image Container Component
-const DitherImageContainer: React.FC<{
+// Image Carousel Component
+const ImageCarousel: React.FC<{
   sculpture: Sculpture;
-  containerRef: (el: HTMLDivElement | null) => void;
-}> = ({ sculpture, containerRef }) => {
+}> = ({ sculpture }) => {
   const { generateImageSources } = useMediaProvider().provider;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? sculpture.images.length - 1 : prev - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) =>
+      prev === sculpture.images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const showControls = sculpture.images.length > 1;
 
   return (
     <Box
-      ref={containerRef}
-      className="image-container parallax-image"
+      className="image-container"
       sx={{
         position: 'relative',
         width: '100%',
-        height: { xs: '50vh', md: '70vh' },
+        height: { xs: 300, md: 500 },
         overflow: 'hidden',
         borderRadius: 1,
-        '& img': {
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: 'block',
-        },
       }}
     >
-      {sculpture.images.length === 1 && (
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <img
           src={
-            generateImageSources(sculpture.images[0]?.relativePath, 'modal').src
+            generateImageSources(
+              sculpture.images[currentIndex].relativePath,
+              'modal'
+            ).src
           }
-          alt={sculpture.images[0]?.alt || sculpture.title}
+          alt={
+            sculpture.images[currentIndex].alt ||
+            `${sculpture.title} - Image ${currentIndex + 1}`
+          }
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            display: 'block',
+          }}
         />
+      </Box>
+
+      {showControls && (
+        <>
+          <IconButton
+            onClick={handlePrev}
+            sx={{
+              position: 'absolute',
+              left: 8,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              },
+            }}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+
+          <IconButton
+            onClick={handleNext}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              },
+            }}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 16,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: 1,
+            }}
+          >
+            {sculpture.images.map((_, index) => (
+              <Box
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor:
+                    index === currentIndex
+                      ? 'white'
+                      : 'rgba(255, 255, 255, 0.4)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+              />
+            ))}
+          </Box>
+        </>
       )}
     </Box>
   );
@@ -330,8 +431,8 @@ const SculptureSection: React.FC<{
   sculpture: Sculpture;
   index: number;
   sectionRef: (el: HTMLElement | null) => void;
-  imageContainerRef: (el: HTMLDivElement | null) => void;
-}> = ({ sculpture, index, sectionRef, imageContainerRef }) => {
+  containerHeight: number;
+}> = ({ sculpture, index, sectionRef, containerHeight }) => {
   const isEven = index % 2 === 0;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -342,7 +443,7 @@ const SculptureSection: React.FC<{
       className="sculpture-section"
       component="section"
       sx={{
-        minHeight: '100vh',
+        height: containerHeight,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -361,10 +462,7 @@ const SculptureSection: React.FC<{
           }}
         >
           <Box sx={{ order: isMobile ? 1 : isEven ? 1 : 2 }}>
-            <DitherImageContainer
-              sculpture={sculpture}
-              containerRef={imageContainerRef}
-            />
+            <ImageCarousel sculpture={sculpture} />
           </Box>
           <Box sx={{ order: isMobile ? 2 : isEven ? 2 : 1 }}>
             <SculptureDetails sculpture={sculpture} />
@@ -380,16 +478,27 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
   sculptures,
 }) => {
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
-  const imageContainersRef = useRef<(HTMLDivElement | null)[]>([]);
-  const ditherInstancesRef = useRef<any[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const { generateImageSources } = useMediaProvider().provider;
+  const [containerHeight, setContainerHeight] = useState(800);
+
+  // Measure container height
+  useEffect(() => {
+    if (scrollerRef.current) {
+      const updateHeight = () => {
+        setContainerHeight(scrollerRef.current?.clientHeight || 800);
+      };
+      updateHeight();
+
+      const resizeObserver = new ResizeObserver(updateHeight);
+      resizeObserver.observe(scrollerRef.current);
+
+      return () => resizeObserver.disconnect();
+    }
+  }, []);
 
   useGSAP(
     () => {
-      const DitherTransitionPlaylist = createDitherClass();
-
       // Set the scroller for all ScrollTriggers
       if (scrollerRef.current) {
         ScrollTrigger.defaults({
@@ -397,24 +506,26 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         });
       }
 
+      const fontSize = Math.min(containerHeight * 0.08, 80);
+
       // Initial GSAP setup
       gsap.set('.header-logo', {
         position: 'fixed',
-        top: '50vh',
+        top: containerHeight / 2,
         left: '50%',
         xPercent: -50,
         yPercent: -50,
-        fontSize: '5vw',
+        fontSize: fontSize,
         zIndex: 100,
       });
 
       gsap.set('.sculpture-text', {
         position: 'fixed',
-        top: '50vh',
+        top: containerHeight / 2,
         left: '50%',
         xPercent: -50,
         yPercent: -50,
-        fontSize: '5vw',
+        fontSize: fontSize,
         zIndex: 99,
       });
 
@@ -430,7 +541,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         scrollTrigger: {
           trigger: '.intro-section',
           start: 'top top',
-          end: () => window.innerHeight * 1.2,
+          end: () => containerHeight * 1.2,
           scrub: 0.6,
         },
       });
@@ -438,10 +549,10 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
       logoTimeline.fromTo(
         '.header-logo',
         {
-          top: '50vh',
+          top: containerHeight / 2,
           yPercent: -50,
           xPercent: -50,
-          fontSize: '5vw',
+          fontSize: fontSize,
         },
         {
           top: '0.75rem',
@@ -460,7 +571,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
           scrollTrigger: {
             trigger: '.intro-section',
             start: 'top top',
-            end: () => window.innerHeight * 1.2,
+            end: () => containerHeight * 1.2,
             scrub: 0.6,
           },
         });
@@ -468,10 +579,10 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         textTimeline.fromTo(
           text,
           {
-            top: '50vh',
+            top: containerHeight / 2,
             yPercent: -50,
             xPercent: -50,
-            fontSize: '5vw',
+            fontSize: fontSize,
             opacity: 1,
           },
           {
@@ -512,13 +623,11 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         0.9
       );
 
-      sectionsRef.current.forEach((section, index) => {
+      sectionsRef.current.forEach((section) => {
         if (!section) return;
 
-        const sculpture = sculptures[index];
         const content = section.querySelectorAll('.parallax-content');
-        const imageContainer = imageContainersRef.current[index];
-        const hasMultipleImages = sculpture.images.length > 1;
+        const imageContainer = section.querySelector('.image-container');
 
         gsap.fromTo(
           content,
@@ -530,8 +639,8 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
             ease: 'none',
             scrollTrigger: {
               trigger: section,
-              start: 'top bottom',
-              end: 'top 20%',
+              start: 'top 60%', // Changed from 'top bottom' - triggers when section top hits 60% from top
+              end: 'top 30%', // Changed from 'top 20%' - completes when section top hits 30% from top
               scrub: 1.5,
             },
           }
@@ -546,58 +655,12 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
             ease: 'none',
             scrollTrigger: {
               trigger: section,
-              start: 'top bottom',
-              end: 'top 20%',
+              start: 'top 60%', // Match with content
+              end: 'top 30%', // Match with content
               scrub: 1.5,
             },
           }
         );
-
-        if (hasMultipleImages && imageContainer) {
-          const imageUrls = sculpture.images.map(
-            (img) => generateImageSources(img.relativePath, 'gallery').src
-          );
-
-          const ditherInstance = new DitherTransitionPlaylist(imageContainer, {
-            images: imageUrls,
-            algorithm: 'floyd-steinberg',
-            maxPixelation: 16,
-            blendMode: 'normal',
-            autoActivate: false,
-          });
-
-          ditherInstancesRef.current[index] = ditherInstance;
-
-          ScrollTrigger.create({
-            trigger: section,
-            start: 'top top',
-            end: () =>
-              `+=${(sculpture.images.length - 1) * window.innerHeight}`,
-            pin: true,
-            scrub: 0.5,
-            onEnter: () => {
-              ditherInstance.activate();
-            },
-            onUpdate: (self) => {
-              if (ditherInstance && ditherInstance.state.isActive) {
-                ditherInstance.updateTransition(self.progress);
-              }
-            },
-            onLeave: () => {
-              ditherInstance.deactivate();
-            },
-            onEnterBack: () => {
-              ditherInstance.activate();
-            },
-            onLeaveBack: () => {
-              ditherInstance.deactivate();
-            },
-          });
-        }
-
-        const exitStart = hasMultipleImages
-          ? `+=${(sculpture.images.length - 1) * window.innerHeight}`
-          : 'bottom 80%';
 
         gsap.fromTo(
           content,
@@ -608,10 +671,8 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
             ease: 'none',
             scrollTrigger: {
               trigger: section,
-              start: exitStart,
-              end: hasMultipleImages
-                ? `+=${window.innerHeight * 0.8}`
-                : 'bottom top',
+              start: 'bottom 70%', // Changed from 'bottom 80%' - triggers when section bottom hits 70% from top
+              end: 'bottom 40%', // Changed from 'bottom top' - completes when section bottom hits 40% from top
               scrub: 1.5,
             },
           }
@@ -626,10 +687,8 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
             ease: 'none',
             scrollTrigger: {
               trigger: section,
-              start: exitStart,
-              end: hasMultipleImages
-                ? `+=${window.innerHeight * 0.8}`
-                : 'bottom top',
+              start: 'bottom 80%',
+              end: 'bottom top',
               scrub: 1.5,
             },
           }
@@ -639,18 +698,12 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
       // Cleanup
       return () => {
         ScrollTrigger.defaults({ scroller: window });
-        ditherInstancesRef.current.forEach((instance) => {
-          if (instance && instance.destroy) {
-            instance.destroy();
-          }
-        });
-        ditherInstancesRef.current = [];
       };
     },
     {
-      scope: scrollerRef, // Changed from containerRef to scrollerRef
-      dependencies: [sculptures],
-      revertOnUpdate: true, // Add this to clean up on re-render
+      scope: scrollerRef,
+      dependencies: [sculptures, containerHeight],
+      revertOnUpdate: true,
     }
   );
 
@@ -672,10 +725,11 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
       sx={{
         background: '#0a0a0a',
         color: '#ffffff',
-        height: '100vh',
+        height: '100%',
+        maxHeight: '100%',
         overflowY: 'auto',
         overflowX: 'hidden',
-        position: 'relative', // Important for fixed positioning to work
+        position: 'relative',
       }}
       className="SculpturePortfolio--root"
     >
@@ -688,62 +742,17 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         onNavigate={handleNavClick}
       />
 
-      <IntroSection />
+      <IntroSection containerHeight={containerHeight} />
 
       {sculptures.map((sculpture, index) => (
         <SculptureSection
-          key={sculpture.id}
+          key={`${sculpture.id}-section_${index}`}
           sculpture={sculpture}
           index={index}
           sectionRef={(el) => (sectionsRef.current[index] = el)}
-          imageContainerRef={(el) => (imageContainersRef.current[index] = el)}
+          containerHeight={containerHeight}
         />
       ))}
-
-      <style>{`
-          .dither-playlist-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-          }
-
-          .dither-canvas-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            image-rendering: pixelated;
-            transition: opacity 0.3s ease;
-            will-change: opacity;
-            border-radius: 8px;
-          }
-
-          .dither-progress-dots {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-          }
-
-          .dither-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-          }
-
-          .dither-dot.active {
-            background: rgba(255, 255, 255, 0.9);
-            transform: scale(1.5);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-          }
-        `}</style>
     </Box>
   );
 };

@@ -63,7 +63,7 @@ export const sculpturesData: Sculpture[] = [
         caption: 'White Alabaster Sculpture of Square Hole - Front View',
       },
       {
-        relativePath: path('square-hole-1.jpg'),
+        relativePath: path('Square-Peg-Profile.jpg'),
         alt: 'White Alabaster Sculpture of Square Hole - Side View',
         caption: 'White Alabaster Sculpture of Square Hole - Side View',
       },
@@ -84,7 +84,7 @@ export const sculpturesData: Sculpture[] = [
           'White Alabaster Sculpture of Belly Love - Close Up Quarter View',
       },
       {
-        relativePath: path('belly-button.jpg'),
+        relativePath: path('belly-button2-cropped.jpg'),
         alt: 'White Alabaster Sculpture of Belly Love - Front View',
         caption: 'White Alabaster Sculpture of Belly Love - Front  View',
       },

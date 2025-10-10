@@ -39,7 +39,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
   resumeFile,
   iOSImageGallery,
   SettingsFileSystem,
-  // sculpturePortfolioFileSystemItem,
+  sculpturePortfolioFileSystemItem,
 ];
 
 export const FileSystem = setFileSystemHierarchy(unMappedFileSystem);

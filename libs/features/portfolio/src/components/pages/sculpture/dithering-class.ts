@@ -1,4 +1,3 @@
-// Dither Class (unchanged from original)
 export function createDitherClass() {
   return class DitherTransitionPlaylist {
     container: any;
@@ -70,6 +69,7 @@ export function createDitherClass() {
       const imagePromises = this.options.images.map((src: string) => {
         return new Promise((resolve, reject) => {
           const img = new Image();
+          img.crossOrigin = 'anonymous';
           img.onload = () => resolve(img);
           img.onerror = reject;
           img.src = src;
