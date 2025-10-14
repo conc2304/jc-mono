@@ -46,7 +46,7 @@ const TypographyTheme = (
     },
     h1: {
       fontFamily: secondary,
-      fontWeight: 600, // Bold for primary headings
+      fontWeight: 600,
       fontSize: '2.375rem',
       lineHeight: 1.21,
     },
@@ -63,16 +63,12 @@ const TypographyTheme = (
       lineHeight: 1.33,
     },
     h4: {
-      // fontFamily: secondary,
-      // fontWeight: 400,
       fontFamily: primary,
       fontWeight: 600,
       fontSize: '1.25rem',
       lineHeight: 1.39,
     },
     h5: {
-      // fontFamily: secondary,
-      // fontWeight: 400,
       fontFamily: primary,
       fontWeight: 500,
       fontSize: '1rem',
@@ -81,7 +77,6 @@ const TypographyTheme = (
     h6: {
       fontFamily: primary,
       fontWeight: 600,
-      // fontWeight: 700,
       fontSize: '0.895rem',
       lineHeight: 1.52,
     },

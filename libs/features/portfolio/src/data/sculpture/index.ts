@@ -11,46 +11,11 @@ export interface Sculpture {
   description: string;
 }
 
-// const directoryPath = 'portfolio-media/gallery/sculpture'
-
 const projectDir = 'sculpture';
 const baseRelativePath = `${R2_PROJECT_DIR_GALLERY}/${projectDir}`;
 const path = (filename: string) => `${baseRelativePath}/${filename}`;
 
 export const sculpturesData: Sculpture[] = [
-  {
-    id: 1,
-    title: 'Hoodie Scarves',
-    subtitle:
-      'Burning Man Edition with Audio Reactive LEDs and City Chic Edition in Tweed',
-    date: 'Summer 2019',
-    materials:
-      'Wool, Faux Fur, Faux Leather, (BM edition – Batting, Sequin, Arduino Nano, NeoPixel Strip)',
-    images: [
-      {
-        relativePath: path('hoodie-scarf-wool.jpeg'),
-        alt: 'Light Grey Wool and White Faux Fur Hooded Scarf',
-        caption: 'Light Grey Wool and White Faux Fur Hooded Scarf',
-      },
-      {
-        relativePath: path('hoodie-scarf-red-blue.jpg'),
-        alt: 'Hooded Scarf with internal LED lights in Red and Blue',
-        caption: 'Hooded Scarf with internal LED lights in Red and Blue',
-      },
-      {
-        relativePath: path('hooded-scarf-blue-light.jpg'),
-        alt: 'Hooded Scarf with internal LED lights in blue',
-        caption: 'Hooded Scarf with internal LED lights in blue',
-      },
-      {
-        relativePath: path('hoodie-scarf-vid.gif'),
-        alt: 'Video loop of hooded scarf with animated LED sequences',
-        caption: 'Video loop of hooded scarf with animated LED sequences',
-      },
-    ],
-    description:
-      'I grew up in a household where, for years, my mom would sew my Halloween costumes using a sewing machine her mother gave her. For years I had been obsessed and inspired with sleeveless clothing with hoods. With my first trip to Burning Man approaching, I was determined to make my own hoody scarf truly unique. I not only wanted to be seen in the darkness of the desert, but I also wanted my hood to interact with noisy world it was about to be placed into.',
-  },
   {
     id: 2,
     title: 'Square Peg',
@@ -229,5 +194,38 @@ export const sculpturesData: Sculpture[] = [
     ],
     description:
       'Part of a college assignment through the University of Oklahoma’s sculpture department, where students were given a random word to sculpt using plaster as a reductive medium. They say that “jealousy is in the eyes of the beholder”, with that in mind I strove to create a shape of wanting and reaching , with the two arms pulling for each other. With jealousy we tend to want what we can’t have or maybe even are not supposed to have. I wanted to play with this idea by having the pupil of the play the role of a treasure that Indiana Jones would be seen taking and running away with. Something in the middle to want to covet at all cost.',
+  },
+  {
+    id: 1,
+    title: 'Hoodie Scarves',
+    subtitle:
+      'Burning Man Edition with Audio Reactive LEDs and City Chic Edition in Tweed',
+    date: 'Summer 2019',
+    materials:
+      'Wool, Faux Fur, Faux Leather, (BM edition – Batting, Sequin, Arduino Nano, NeoPixel Strip)',
+    images: [
+      {
+        relativePath: path('hoodie-scarf-wool.jpeg'),
+        alt: 'Light Grey Wool and White Faux Fur Hooded Scarf',
+        caption: 'Light Grey Wool and White Faux Fur Hooded Scarf',
+      },
+      {
+        relativePath: path('hoodie-scarf-red-blue.jpg'),
+        alt: 'Hooded Scarf with internal LED lights in Red and Blue',
+        caption: 'Hooded Scarf with internal LED lights in Red and Blue',
+      },
+      {
+        relativePath: path('hooded-scarf-blue-light.jpg'),
+        alt: 'Hooded Scarf with internal LED lights in blue',
+        caption: 'Hooded Scarf with internal LED lights in blue',
+      },
+      {
+        relativePath: path('hoodie-scarf-vid.gif'),
+        alt: 'Video loop of hooded scarf with animated LED sequences',
+        caption: 'Video loop of hooded scarf with animated LED sequences',
+      },
+    ],
+    description:
+      'I grew up in a household where, for years, my mom would sew my Halloween costumes using a sewing machine her mother gave her. For years I had been obsessed and inspired with sleeveless clothing with hoods. With my first trip to Burning Man approaching, I was determined to make my own hoody scarf truly unique. I not only wanted to be seen in the darkness of the desert, but I also wanted my hood to interact with noisy world it was about to be placed into.',
   },
 ];

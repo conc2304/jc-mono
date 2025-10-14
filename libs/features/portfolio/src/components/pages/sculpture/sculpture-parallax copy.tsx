@@ -9,25 +9,18 @@ import {
   ListItemButton,
   Typography,
   Box,
-  Button,
+  Container,
+  useMediaQuery,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { BaseImageData, useMediaProvider } from '@jc/ui-components';
-import { useMediaQuery } from '@mui/system';
-import { Close } from '@mui/icons-material';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -97,12 +90,6 @@ const NavigationMenu: React.FC<{
       anchor="right"
       open={open}
       onClose={onClose}
-      variant="temporary"
-      ModalProps={{
-        keepMounted: false,
-        container: document.querySelector('.SculpturePortfolio--root'),
-        style: { position: 'absolute' },
-      }}
       slotProps={{
         paper: {
           sx: {
@@ -110,40 +97,23 @@ const NavigationMenu: React.FC<{
             background: 'rgba(15, 15, 15, 0.98)',
             backdropFilter: 'blur(20px)',
             borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
-            position: 'absolute',
           },
         },
       }}
     >
       <Box sx={{ p: 4, pt: 10 }}>
-        <Box
+        <Typography
+          variant="h6"
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
             mb: 4,
+            color: 'rgba(255, 255, 255, 0.9)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.2em',
+            fontWeight: 700,
           }}
         >
-          <Typography
-            variant="h6"
-            sx={{
-              color: 'rgba(255, 255, 255, 0.9)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.2em',
-              fontWeight: 700,
-            }}
-          >
-            Sculptures
-          </Typography>
-          <IconButton
-            onClick={onClose}
-            sx={{
-              color: 'white',
-            }}
-          >
-            <ChevronRightIcon />
-          </IconButton>
-        </Box>
+          Sculptures
+        </Typography>
         <List>
           {sculptures.map((sculpture, index) => (
             <ListItem key={sculpture.id} disablePadding>
@@ -271,8 +241,9 @@ const ImageCarousel: React.FC<{
       sx={{
         position: 'relative',
         width: '100%',
-        height: '100%',
+        height: { xs: 300, md: 500 },
         overflow: 'hidden',
+        borderRadius: 1,
       }}
     >
       <Box
@@ -378,210 +349,79 @@ const ImageCarousel: React.FC<{
 const SculptureDetails: React.FC<{ sculpture: Sculpture }> = ({
   sculpture,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [modalOpen, setModalOpen] = useState(false);
-
   return (
-    <>
-      <Box
+    <Box sx={{ p: 2 }}>
+      <Typography
+        variant="h2"
+        className="parallax-content sculpture-title"
         sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'auto',
-          justifyContent: 'center',
+          fontSize: { xs: '2.5rem', md: '3.5rem' },
+          mb: 2,
+          lineHeight: 1.1,
+        }}
+      >
+        {sculpture.title}
+      </Typography>
+
+      {sculpture.subtitle && (
+        <Typography
+          variant="h3"
+          className="parallax-content sculpture-subtitle"
+          sx={{
+            fontSize: '1.75rem',
+            fontWeight: 300,
+            mb: 3,
+            color: '#999',
+            fontStyle: 'italic',
+          }}
+        >
+          {sculpture.subtitle}
+        </Typography>
+      )}
+
+      <Box
+        className="parallax-content sculpture-meta"
+        sx={{
+          mb: 3,
+          pb: 3,
+          borderBottom: '1px solid #333',
         }}
       >
         <Typography
-          variant="h2"
-          className="sculpture-title"
           sx={{
-            fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' },
-            mb: 1,
-            lineHeight: 1.1,
-            fontWeight: 600,
-            flexShrink: 0,
+            my: 0.5,
+            fontSize: '0.95rem',
+            color: '#fff',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
           }}
         >
-          {sculpture.title}
+          {sculpture.date}
         </Typography>
-
-        {sculpture.subtitle && (
-          <Typography
-            variant="h3"
-            className="sculpture-subtitle"
-            sx={{
-              fontSize: { xs: '1rem', sm: '1.25rem' },
-              fontWeight: 300,
-              mb: 2,
-              color: '#999',
-              fontStyle: 'italic',
-              flexShrink: 0,
-            }}
-          >
-            {sculpture.subtitle}
-          </Typography>
-        )}
-
-        <Box
-          className="sculpture-meta"
+        <Typography
           sx={{
-            mb: 2,
-            pb: 2,
-            borderBottom: '1px solid #333',
-            flexShrink: 0,
+            my: 0.5,
+            fontSize: '0.95rem',
+            color: '#aaa',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
           }}
         >
-          <Typography
-            sx={{
-              my: 0.5,
-              fontSize: { xs: '0.75rem', sm: '0.85rem' },
-              color: '#fff',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
-          >
-            {sculpture.date}
-          </Typography>
-          <Typography
-            sx={{
-              my: 0.5,
-              fontSize: { xs: '0.75rem', sm: '0.85rem' },
-              color: '#aaa',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
-          >
-            {sculpture.materials}
-          </Typography>
-        </Box>
-
-        {isMobile ? (
-          <Button
-            onClick={() => setModalOpen(true)}
-            sx={{
-              color: 'white',
-              textTransform: 'none',
-              fontSize: '0.95rem',
-              justifyContent: 'flex-start',
-              p: 0,
-              '&:hover': {
-                backgroundColor: 'transparent',
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            Read Description
-          </Button>
-        ) : (
-          <Box
-            className="sculpture-description"
-            sx={{
-              overflow: 'auto',
-              flexShrink: 0,
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: { xs: '0.95rem', sm: '1rem' },
-                lineHeight: 1.6,
-                color: '#ccc',
-                fontWeight: 300,
-              }}
-            >
-              {sculpture.description}
-            </Typography>
-          </Box>
-        )}
+          {sculpture.materials}
+        </Typography>
       </Box>
 
-      <Dialog
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            background: '#1a1a1a',
-            color: 'white',
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography variant="h6">Description</Typography>
-          <IconButton
-            onClick={() => setModalOpen(false)}
-            sx={{ color: 'white' }}
-          >
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Typography
-            sx={{
-              fontSize: '1rem',
-              lineHeight: 1.6,
-              color: '#ccc',
-              fontWeight: 300,
-            }}
-          >
-            {sculpture.description}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setModalOpen(false)} sx={{ color: 'white' }}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-};
-
-// Navigation Arrow Component
-const NavigationArrow: React.FC<{
-  direction: 'up' | 'down';
-  onClick: () => void;
-  disabled?: boolean;
-}> = ({ direction, onClick, disabled }) => {
-  return (
-    <Box
-      sx={{
-        position: 'absolute',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        [direction === 'up' ? 'top' : 'bottom']: 8,
-        zIndex: 10,
-      }}
-    >
-      <IconButton
-        onClick={onClick}
-        disabled={disabled}
+      <Typography
+        className="parallax-content sculpture-description"
         sx={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          },
-          '&.Mui-disabled': {
-            opacity: 0.3,
-            color: 'white',
-          },
+          fontSize: '1.1rem',
+          lineHeight: 1.8,
+          color: '#ccc',
+          fontWeight: 300,
         }}
       >
-        {direction === 'up' ? (
-          <KeyboardArrowUpIcon />
-        ) : (
-          <KeyboardArrowDownIcon />
-        )}
-      </IconButton>
+        {sculpture.description}
+      </Typography>
     </Box>
   );
 };
@@ -592,21 +432,10 @@ const SculptureSection: React.FC<{
   index: number;
   sectionRef: (el: HTMLElement | null) => void;
   containerHeight: number;
-  onNavigateUp: () => void;
-  onNavigateDown: () => void;
-  isFirst: boolean;
-  isLast: boolean;
-}> = ({
-  sculpture,
-  index,
-  sectionRef,
-  containerHeight,
-  onNavigateUp,
-  onNavigateDown,
-  isFirst,
-  isLast,
-}) => {
+}> = ({ sculpture, index, sectionRef, containerHeight }) => {
   const isEven = index % 2 === 0;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box
@@ -615,63 +444,31 @@ const SculptureSection: React.FC<{
       component="section"
       sx={{
         height: containerHeight,
-        width: '100%',
-        position: 'relative',
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: { xs: 2, md: 4 },
+        position: 'relative',
       }}
     >
-      <NavigationArrow
-        direction="up"
-        onClick={onNavigateUp}
-        disabled={isFirst}
-      />
-
-      <Box
-        sx={{
-          flex: 1,
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-          gridTemplateRows: { xs: 'minmax(0, 50%) minmax(0, 50%)', md: '1fr' },
-          overflow: 'hidden',
-          pt: 8,
-          pb: 6,
-          gap: { xs: 2, md: 3 },
-          px: { xs: 2, md: 4 },
-        }}
-      >
+      <Container maxWidth="lg">
         <Box
+          className={`section-content ${isEven ? 'image-left' : 'image-right'}`}
           sx={{
-            minHeight: 0,
-            order: { xs: 1, md: isEven ? 1 : 2 },
-            display: 'flex',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+            gap: { xs: 2, md: 4 },
             alignItems: 'center',
-            overflow: 'hidden',
           }}
         >
-          <ImageCarousel sculpture={sculpture} />
+          <Box sx={{ order: isMobile ? 1 : isEven ? 1 : 2 }}>
+            <ImageCarousel sculpture={sculpture} />
+          </Box>
+          <Box sx={{ order: isMobile ? 2 : isEven ? 2 : 1 }}>
+            <SculptureDetails sculpture={sculpture} />
+          </Box>
         </Box>
-
-        <Box
-          sx={{
-            minHeight: 0,
-            order: { xs: 2, md: isEven ? 2 : 1 },
-            py: { xs: 1, md: 2 },
-            px: { xs: 0.5, md: 0 },
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          }}
-        >
-          <SculptureDetails sculpture={sculpture} />
-        </Box>
-      </Box>
-
-      <NavigationArrow
-        direction="down"
-        onClick={onNavigateDown}
-        disabled={isLast}
-      />
+      </Container>
     </Box>
   );
 };
@@ -684,9 +481,8 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [containerHeight, setContainerHeight] = useState(800);
-  const [appBarHeight, setAppBarHeight] = useState(64);
 
-  // Measure container height and app bar height
+  // Measure container height
   useEffect(() => {
     if (scrollerRef.current) {
       const updateHeight = () => {
@@ -701,22 +497,6 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
     }
   }, []);
 
-  // Measure app bar height
-  useEffect(() => {
-    const appBar = document.querySelector('.sticky-header');
-    if (appBar) {
-      const updateAppBarHeight = () => {
-        setAppBarHeight(appBar.clientHeight);
-      };
-      updateAppBarHeight();
-
-      const resizeObserver = new ResizeObserver(updateAppBarHeight);
-      resizeObserver.observe(appBar);
-
-      return () => resizeObserver.disconnect();
-    }
-  }, []);
-
   useGSAP(
     () => {
       // Set the scroller for all ScrollTriggers
@@ -726,7 +506,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         });
       }
 
-      const fontSize = Math.min(containerHeight * 0.06, 80);
+      const fontSize = Math.min(containerHeight * 0.08, 80);
 
       // Initial GSAP setup
       gsap.set('.header-logo', {
@@ -843,6 +623,78 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
         0.9
       );
 
+      sectionsRef.current.forEach((section) => {
+        if (!section) return;
+
+        const content = section.querySelectorAll('.parallax-content');
+        const imageContainer = section.querySelector('.image-container');
+
+        gsap.fromTo(
+          content,
+          { y: 150, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.2,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 60%', // Changed from 'top bottom' - triggers when section top hits 60% from top
+              end: 'top 30%', // Changed from 'top 20%' - completes when section top hits 30% from top
+              scrub: 1.5,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          imageContainer,
+          { y: 150, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 60%', // Match with content
+              end: 'top 30%', // Match with content
+              scrub: 1.5,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          content,
+          { y: 0, opacity: 1 },
+          {
+            y: -150,
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'bottom 70%', // Changed from 'bottom 80%' - triggers when section bottom hits 70% from top
+              end: 'bottom 40%', // Changed from 'bottom top' - completes when section bottom hits 40% from top
+              scrub: 1.5,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          imageContainer,
+          { y: 0, opacity: 1 },
+          {
+            y: -150,
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'bottom 80%',
+              end: 'bottom top',
+              scrub: 1.5,
+            },
+          }
+        );
+      });
+
       // Cleanup
       return () => {
         ScrollTrigger.defaults({ scroller: window });
@@ -859,22 +711,11 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
     const section = sectionsRef.current[index];
     if (section && scrollerRef.current) {
       gsap.to(scrollerRef.current, {
-        scrollTo: { y: section, offsetY: 0 },
+        scrollTo: { y: section, offsetY: 100 },
         duration: 1,
         ease: 'power2.inOut',
       });
       setMenuOpen(false);
-    }
-  };
-
-  const scrollToSection = (index: number) => {
-    const section = sectionsRef.current[index];
-    if (section && scrollerRef.current) {
-      gsap.to(scrollerRef.current, {
-        scrollTo: { y: section, offsetY: 0 },
-        duration: 0.8,
-        ease: 'power2.inOut',
-      });
     }
   };
 
@@ -909,17 +750,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
           sculpture={sculpture}
           index={index}
           sectionRef={(el) => (sectionsRef.current[index] = el)}
-          containerHeight={containerHeight - appBarHeight}
-          onNavigateUp={() => {
-            if (index === 0) {
-              scrollerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-              scrollToSection(index - 1);
-            }
-          }}
-          onNavigateDown={() => scrollToSection(index + 1)}
-          isFirst={index === 0}
-          isLast={index === sculptures.length - 1}
+          containerHeight={containerHeight}
         />
       ))}
     </Box>
