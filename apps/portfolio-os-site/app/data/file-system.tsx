@@ -1,4 +1,4 @@
-import { Folder } from 'lucide-react'; // TODO replace with other icon library
+import { Folder, ListMusic } from 'lucide-react'; // TODO replace with other icon library
 import { v4 as uuidv4 } from 'uuid';
 import { resumeFile } from './resume-file';
 import { allPortfolioProjectFiles } from './project-files';
@@ -8,7 +8,9 @@ import { BaseFileSystemItem } from '@jc/file-system';
 import { SettingsFileSystem } from './settings-files';
 import { iOSImageGallery } from './photo-gallery/iOS-Made-File-Item';
 import { sculpturePortfolioFileSystemItem } from './sculpture/sculpture-file-item';
-import { ProjectsTileContent, sculpturesData } from '@jc/portfolio';
+import { ProjectsTileContent } from '@jc/portfolio';
+import { DefaultTileContent } from '@jc/ui-components';
+import { vjSetsPortfolioFileSystemItem } from './vj-sets/vj-sets-file-item';
 
 const fontSize = '80px';
 
@@ -40,6 +42,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
   iOSImageGallery,
   SettingsFileSystem,
   sculpturePortfolioFileSystemItem,
+  vjSetsPortfolioFileSystemItem,
 ];
 
 export const FileSystem = setFileSystemHierarchy(unMappedFileSystem);
