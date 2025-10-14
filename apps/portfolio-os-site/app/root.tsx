@@ -15,6 +15,7 @@ import {
   CloudflareMediaProvider,
   LoadingFallback,
   MediaProvider,
+  ErrorBoundary,
 } from '@jc/ui-components';
 
 export const meta: MetaFunction = () => [
@@ -425,18 +426,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <MediaProvider provider={mediaProviderService} defaultContext="gallery">
-          <EnhancedThemeProvider
-            themes={enhancedThemes}
-            defaultThemeId="developer-terminal"
-            defaultColorMode="system"
-            themeStorageKey="clyzby-app-theme"
-            colorModeStorageKey="clyzby-app-color-mode"
-          >
-            <ThemedBgContainer />
-            {children}
-          </EnhancedThemeProvider>
-        </MediaProvider>
+        <EnhancedThemeProvider
+          themes={enhancedThemes}
+          defaultThemeId="developer-terminal"
+          defaultColorMode="system"
+          themeStorageKey="clyzby-app-theme"
+          colorModeStorageKey="clyzby-app-color-mode"
+        >
+          <ErrorBoundary>
+            <MediaProvider
+              provider={mediaProviderService}
+              defaultContext="gallery"
+            >
+              <ThemedBgContainer />
+              {children}
+            </MediaProvider>
+          </ErrorBoundary>
+        </EnhancedThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
