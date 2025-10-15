@@ -14,9 +14,9 @@ export const SculptIcon = ({
       className={`sculpt-icon ${className}`}
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
       {...props}
     >

@@ -9,7 +9,10 @@ import { FileTextIcon } from 'lucide-react'; // TODO replace with other icon lib
 import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';
 
-export const resumeFile: FileSystemItem<Resume, ResumeComponentProps> = {
+export const ResumeFileSystemItem: FileSystemItem<
+  Resume,
+  ResumeComponentProps
+> = {
   id: uuidv4(),
   name: 'Resume',
   icon: <FileTextIcon />,

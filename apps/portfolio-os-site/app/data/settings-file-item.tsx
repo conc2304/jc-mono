@@ -4,7 +4,7 @@ import { DefaultTileContent } from '@jc/ui-components';
 import { Settings } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
-export const SettingsFileSystem: FileSystemItem<{}, {}> = {
+export const SettingsFileSystemItem: FileSystemItem<{}, {}> = {
   id: uuidv4(),
   name: 'Settings',
   type: 'Color Picker',

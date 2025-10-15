@@ -1,7 +1,7 @@
 import { DesktopOS } from '@jc/desktop-OS';
 import { ContactInfoWidget } from '@jc/portfolio';
 import { FileSystem } from '../data/file-system';
-import { PROJECT_NAVIGATION_GROUP } from '../data/project-files';
+import { PROJECT_NAVIGATION_GROUP } from '../data/coding-projects/project-files';
 
 const DesktopSystem = () => {
   return (

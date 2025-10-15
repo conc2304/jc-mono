@@ -55,7 +55,6 @@ const CyberFormControl = styled(FormControl)(({ theme }) => ({
     },
   },
   '& .MuiOutlinedInput-root': {
-    // border: `2px solid ${theme.palette.divider}`,
     borderRadius: 0,
     backgroundColor: 'transparent',
     fontFamily: 'monospace',
@@ -303,7 +302,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
 
     if (compactToggle) {
       return (
-        <Stack direction="row" spacing={0.5}>
+        <Stack direction="row" spacing={0}>
           {modeButtons.map(
             ({ mode: btnMode, icon, label, component: ButtonComponent }) => (
               <Tooltip key={btnMode} title={`${label} mode`}>
@@ -337,7 +336,7 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
         >
           Color Mode
         </Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={0}>
           {modeButtons.map(
             ({ mode: btnMode, icon, label, component: ButtonComponent }) => (
               <Tooltip key={btnMode} title={`${label} mode`}>

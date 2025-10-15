@@ -12,7 +12,7 @@ import { DefaultTileContent, MediaGalleryProps } from '@jc/ui-components';
 import { Image } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
-export const iOSImageGallery: FileSystemItem<
+export const iOSImageGalleryFileSystemItem: FileSystemItem<
   void,
   MediaGalleryProps & ArtGalleryProcessProps
 > = {

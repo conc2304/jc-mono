@@ -9,7 +9,7 @@ import { DefaultTileContent } from '@jc/ui-components';
 import { v4 as uuidv4 } from 'uuid';
 import { SculptIcon } from './sculpture-icon';
 
-export const sculpturePortfolioFileSystemItem: FileSystemItem<
+export const SculpturePortfolioFileSystemItem: FileSystemItem<
   Sculpture[],
   SculpturePortfolioProps
 > = {

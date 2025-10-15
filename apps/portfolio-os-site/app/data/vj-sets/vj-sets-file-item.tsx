@@ -4,11 +4,10 @@ import {
   YouTubePlaylistPlayer,
 } from '@jc/portfolio';
 import { DefaultTileContent } from '@jc/ui-components';
-import { ListMusic } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { FaceMeltIcon } from './face-melt-icon';
 
-export const vjSetsPortfolioFileSystemItem: FileSystemItem<
+export const VJSetsPortfolioFileSystemItem: FileSystemItem<
   void,
   YouTubePlaylistPlayerProps
 > = {

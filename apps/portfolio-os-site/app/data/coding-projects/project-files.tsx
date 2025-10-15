@@ -9,13 +9,9 @@ import {
   tunecraftFileSystemItem,
   verdantiaFileSystemItem,
   vyzbyFileSystemItem,
-} from './coding-projects';
-import { NAVIGATION_GROUPS } from './constants';
-import {
-  BrutalistTemplateProps,
-  ProjectData,
-  BrutalistTemplate,
-} from '@jc/portfolio';
+} from '.';
+import { NAVIGATION_GROUPS } from '../constants';
+import { BrutalistTemplateProps, ProjectData } from '@jc/portfolio';
 
 export const allPortfolioProjectFiles: FileSystemItem<
   ProjectData,

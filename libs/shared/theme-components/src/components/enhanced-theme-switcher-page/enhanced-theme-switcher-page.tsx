@@ -1,5 +1,5 @@
 // TODO Refactor into smaller components
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Container,
@@ -248,6 +248,8 @@ export const ThemeCustomizerPage: React.FC = () => {
       ? currentTheme.darkPalette
       : currentTheme.lightPalette
     : {};
+
+  const scrollContainer = useRef<HTMLDivElement>(null);
 
   const handleColorChange = (colorKey: string, value: string) => {
     setCustomColors((prev) => ({
@@ -600,11 +602,11 @@ export const ThemeCustomizerPage: React.FC = () => {
                 THEME_CONTROL_CENTER
               </CyberTypography>
               <Typography variant="caption" color="success">
-                Advanced theme management & customization
+                Advanced theme management & customizations
               </Typography>
             </Box>
           </Box>
-          <ColorModeSwitcherSpeedDial />
+          <ColorModeSwitcherSpeedDial spacing={0} />
         </Toolbar>
       </AppBar>
 
@@ -612,6 +614,7 @@ export const ThemeCustomizerPage: React.FC = () => {
       <Container
         className="EnhancedThemeSwitcher--main-content"
         maxWidth="xl"
+        ref={scrollContainer}
         sx={{ pt: 4, height: '100%', overflowY: 'auto', flexGrow: 1 }}
       >
         <Grid container spacing={4}>
@@ -781,7 +784,15 @@ export const ThemeCustomizerPage: React.FC = () => {
                     <CyberButton
                       fullWidth
                       variant={isCustomizing ? 'contained' : 'outlined'}
-                      onClick={() => setIsCustomizing(!isCustomizing)}
+                      onClick={() => {
+                        setIsCustomizing(!isCustomizing);
+                        if (scrollContainer.current) {
+                          scrollContainer.current.scrollTo({
+                            top: 0,
+                            behavior: 'smooth',
+                          });
+                        }
+                      }}
                       sx={{
                         borderColor: 'warning.main',
                         color: isCustomizing
