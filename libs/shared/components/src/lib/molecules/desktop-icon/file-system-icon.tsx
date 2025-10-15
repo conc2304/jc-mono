@@ -75,7 +75,8 @@ export const FileSystemIcon = ({
         <Box
           sx={(theme) => ({
             '& svg': {
-              fill: !isActive ? 'currentcolor' : theme.palette.primary.main,
+              color: !isActive ? 'currentcolor' : theme.palette.primary.main,
+              // stroke: 'red',
             },
           })}
         >
@@ -114,7 +115,6 @@ export const FileSystemIcon = ({
             wordBreak: 'break-word',
           }}
         >
-          {/* {tagContent} */}
           {name}
         </Typography>
       </Box>

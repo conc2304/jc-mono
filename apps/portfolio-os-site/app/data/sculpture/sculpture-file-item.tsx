@@ -6,8 +6,8 @@ import {
   sculpturesData,
 } from '@jc/portfolio';
 import { DefaultTileContent } from '@jc/ui-components';
-import { GiStakeHammer } from 'react-icons/gi';
 import { v4 as uuidv4 } from 'uuid';
+import { SculptIcon } from './sculpture-icon';
 
 export const sculpturePortfolioFileSystemItem: FileSystemItem<
   Sculpture[],
@@ -15,7 +15,7 @@ export const sculpturePortfolioFileSystemItem: FileSystemItem<
 > = {
   id: uuidv4(),
   name: 'Sculpture',
-  icon: <GiStakeHammer />,
+  icon: <SculptIcon width={24} height={24} />,
   type: 'file',
   size: sculpturesData.reduce(
     (total, sculpture) => total + sculpture.images.length * 2000000,

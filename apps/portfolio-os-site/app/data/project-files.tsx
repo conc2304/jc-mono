@@ -1,10 +1,3 @@
-import {
-  ProjectData,
-  // ProjectTemplateProps,
-  // ProjectTemplate,
-  BrutalistTemplateProps,
-} from '@jc/ui-components';
-
 import { createNavigationGroup, FileSystemItem } from '@jc/file-system';
 import {
   atomicVisualizerFileSystemItem,
@@ -18,6 +11,11 @@ import {
   vyzbyFileSystemItem,
 } from './coding-projects';
 import { NAVIGATION_GROUPS } from './constants';
+import {
+  BrutalistTemplateProps,
+  ProjectData,
+  BrutalistTemplate,
+} from '@jc/portfolio';
 
 export const allPortfolioProjectFiles: FileSystemItem<
   ProjectData,
@@ -32,15 +30,19 @@ export const allPortfolioProjectFiles: FileSystemItem<
   atomicVisualizerFileSystemItem,
   terrainifyFileSystemItem,
   simplisafeJawaFileSystemItem,
-].map((projectFileItem) => ({
-  ...projectFileItem,
+].map(
+  (projectFileItem): FileSystemItem<ProjectData, BrutalistTemplateProps> => ({
+    ...projectFileItem,
 
-  renderer: {
-    ...projectFileItem.renderer,
-    navigationGroup: NAVIGATION_GROUPS.Projects,
-    shouldNavigate: true,
-  },
-}));
+    renderer: projectFileItem.renderer
+      ? {
+          ...projectFileItem.renderer,
+          navigationGroup: NAVIGATION_GROUPS.Projects,
+          shouldNavigate: true,
+        }
+      : undefined,
+  })
+);
 
 export const PROJECT_NAVIGATION_GROUP = createNavigationGroup(
   NAVIGATION_GROUPS.Projects,

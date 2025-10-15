@@ -6,25 +6,31 @@ import {
 import { DefaultTileContent } from '@jc/ui-components';
 import { ListMusic } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
+import { FaceMeltIcon } from './face-melt-icon';
 
 export const vjSetsPortfolioFileSystemItem: FileSystemItem<
   void,
   YouTubePlaylistPlayerProps
 > = {
   id: uuidv4(),
-  icon: <ListMusic />,
-  name: 'VJ sets',
+  icon: <FaceMeltIcon width={24} height={24} />,
+  name: 'VJ Sets',
   type: 'file',
-  size: 3475620347650287,
-  mimeType: 'interactive/sculpture-portfolio',
+  size: 347562,
+  mimeType: 'interactive/vj-sets',
   dateModified: new Date('2025-10-10'),
   dateCreated: new Date('2020-10-20'),
   path: '',
   metadata: {
     tags: ['art', 'visuals', 'creative-technology', 'vj sets', 'raves', 'edm'],
     favorite: false,
-    description: 'Interactive sculpture portfolio',
-    // thumbnail: // TODO
+    description:
+      'Collection of videos of concerts and raves where I have run live visuals.',
+    thumbnail: {
+      relativePath: 'vj-media/vj-playlist-thumbnail.jpg',
+      caption: 'Live VJ Set at Burning Man for Robot Heart Art Car',
+      alt: 'Live VJ Set at Burning Man for Robot Heart Art Car',
+    },
   },
   tileRenderer: {
     component: DefaultTileContent,
