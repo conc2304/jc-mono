@@ -3,6 +3,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { IconsView, ListView, DetailsView } from './views';
 import { FileSystemContext, useWindowActions } from '../../context';
 import { BaseFileSystemItem } from '@jc/file-system';
+import { HolographicCardView } from './views/holographic-card-view';
 // import { useFileSystemItem } from '../../hooks/use-file-list-item';
 
 export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
@@ -93,6 +94,16 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
         items={items}
         handlers={handlers}
         viewConfig={{ touchAction: 'manipulation', threshold: 8 }} // Grid-specific config
+      />
+    );
+  }
+
+  if (context?.viewMode === 'cards') {
+    return (
+      <HolographicCardView
+        items={items}
+        handlers={handlers}
+        viewConfig={{ touchAction: 'manipulation', threshold: 8 }}
       />
     );
   }
