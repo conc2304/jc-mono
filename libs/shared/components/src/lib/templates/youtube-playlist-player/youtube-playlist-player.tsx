@@ -36,6 +36,7 @@ export const YouTubePlaylistPlayer = ({
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [shouldAutoplay, setShouldAutoplay] = useState(false);
 
   const API_KEY = apiKey;
 
@@ -65,6 +66,7 @@ export const YouTubePlaylistPlayer = ({
 
   const handleVideoClick = (index: number) => {
     setCurrentVideoIndex(index);
+    setShouldAutoplay(true);
   };
 
   if (loading) {
@@ -131,7 +133,7 @@ export const YouTubePlaylistPlayer = ({
                 height: '100%',
                 border: 'none',
               }}
-              src={`https://www.youtube.com/embed/${videoId}`}
+              src={`https://www.youtube.com/embed/${videoId}${shouldAutoplay ? '?autoplay=1' : ''}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
