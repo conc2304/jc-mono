@@ -2,10 +2,12 @@ import { useContext, useState } from 'react';
 import {
   Box,
   ButtonGroup,
+  capitalize,
   Divider,
   IconButton,
   Menu,
   MenuItem,
+  Tooltip,
 } from '@mui/material';
 import {
   ArrowUpDown,
@@ -44,14 +46,20 @@ export const ViewControls = () => {
     >
       <ButtonGroup size="small">
         {Object.entries(viewModeIcons).map(([mode, icon]) => (
-          <IconButton
+          <Tooltip
             key={mode}
-            size="small"
-            color={context?.viewMode === mode ? 'primary' : 'default'}
-            onClick={() => context?.setViewMode(mode as ViewMode)}
+            title={`${capitalize(mode)} View`}
+            placement="bottom"
           >
-            {icon}
-          </IconButton>
+            <IconButton
+              key={mode}
+              size="small"
+              color={context?.viewMode === mode ? 'primary' : 'default'}
+              onClick={() => context?.setViewMode(mode as ViewMode)}
+            >
+              {icon}
+            </IconButton>
+          </Tooltip>
         ))}
       </ButtonGroup>
 

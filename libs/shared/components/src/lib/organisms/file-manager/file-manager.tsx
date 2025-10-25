@@ -42,7 +42,7 @@ export const FileManager = ({
   const [previewCollapsed, setPreviewCollapsed] = useState(!hasPreviewPanel);
   const [currentPath, setCurrentPath] = useState(initialPath);
 
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [sortBy, setSortBy] = useState<SortBy>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [draggedItems, setDraggedItems] = useState<string[]>([]);
