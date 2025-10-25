@@ -97,7 +97,8 @@ export const YouTubePlaylistPlayer = ({
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         gap: 2,
-        minHeight: { xs: 'auto', md: '100vh' },
+        minHeight: { xs: 'auto', md: '100%' },
+        maxHeight: '100%',
         p: { xs: 1, sm: 2 },
       }}
     >
@@ -169,7 +170,7 @@ export const YouTubePlaylistPlayer = ({
         elevation={3}
         sx={{
           width: { xs: '100%', md: 400 },
-          maxHeight: { xs: '400px', md: 'auto' },
+          maxHeight: '100%',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',

@@ -1,9 +1,9 @@
 import { FileSystemItem } from '@jc/file-system';
 import {
+  DefaultTileContent,
   YouTubePlaylistPlayerProps,
   YouTubePlaylistPlayer,
-} from '@jc/portfolio';
-import { DefaultTileContent } from '@jc/ui-components';
+} from '@jc/ui-components';
 import { v4 as uuidv4 } from 'uuid';
 import { FaceMeltIcon } from './face-melt-icon';
 
