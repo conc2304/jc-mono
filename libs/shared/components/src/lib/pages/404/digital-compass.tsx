@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, ReactNode } from 'react';
-import {
-  Box,
-  Typography,
-  Slider,
-  Paper,
-  Container,
-  BoxProps,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { Property } from 'csstype';
 

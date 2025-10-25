@@ -61,6 +61,10 @@ export default defineConfig(() => ({
             return 'project-data';
           }
 
+          // if (id.includes('404')) {
+          //   return '404-page';
+          // }
+
           // if (id.includes('libs/shared')) return 'shared-lib';
 
           // Skip externalized modules (React, React-DOM, etc.)

@@ -27,7 +27,7 @@ import {
 import { Folder } from 'lucide-react';
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { AugmentedButton } from '../../atoms';
-import { getContextualImage, getImageUrl } from '@jc/utils';
+import { getContextualImage } from '@jc/utils';
 
 const textureImages = [
   'scratched-glass.jpg',

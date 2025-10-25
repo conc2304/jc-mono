@@ -297,14 +297,6 @@ export const structuredData = {
 };
 
 export const links: LinksFunction = () => [
-  // Font preconnects
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
-    crossOrigin: 'anonymous',
-  },
-
   // Favicon links (multiple sizes for best compatibility)
   {
     rel: 'icon',
