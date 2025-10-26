@@ -1,8 +1,8 @@
 import { DefaultTileContent } from '@jc/ui-components';
 import {
-  Resume,
   ResumeComponentProps,
   ResumeData,
+  ResumeFields,
   ResumeTemplate,
 } from '@jc/portfolio';
 import { FileTextIcon } from 'lucide-react'; // TODO replace with other icon library
@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FileSystemItem } from '@jc/file-system';
 
 export const ResumeFileSystemItem: FileSystemItem<
-  Resume,
+  ResumeFields,
   ResumeComponentProps
 > = {
   id: uuidv4(),
@@ -28,6 +28,10 @@ export const ResumeFileSystemItem: FileSystemItem<
     tags: ['work', 'important'],
     favorite: true,
     description: 'Professional resume',
+    thumbnail: {
+      relativePath: 'ui-images/resume-thumbnail.jpg',
+      alt: 'Abstract and modern glass-effect icon representing professional experience, full-stack development, and creative technology. The image features layers of translucent geometric shapes and glowing icons related to web development and creative tech, including symbols for React, Node.js, code brackets, 3D modeling, and design tools, subtly arranged over a dark, technical background.',
+    },
   },
   tileRenderer: {
     component: DefaultTileContent,

@@ -1,6 +1,6 @@
-import { Resume } from '@jc/ui-components';
+import type { ResumeFields as ResumeDataType } from '../components';
 
-export const ResumeData: Resume = {
+export const ResumeData: ResumeDataType = {
   contactInfo: {
     name: 'Jose Conchello',
     location: 'Oakland, CA',

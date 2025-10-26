@@ -17,6 +17,8 @@ export const ProjectsFileSystemItem: FileSystemItem<{}, {}> = {
     tags: [],
     favorite: true,
     thumbnail: allPortfolioProjectFiles[0].fileData?.media.hero,
+    description:
+      'A collection of professional and personal projects spanning from web development to creative technology.',
   },
   children: [...allPortfolioProjectFiles],
   tileRenderer: {

@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { Resume } from './types';
+import { ResumeFields } from './types';
 import {
   ResumeHeader,
   TechnicalSkillsSection,
@@ -25,7 +25,7 @@ export interface ResumeComponentProps {
 export const ResumeTemplate = ({
   variant,
   ...resumeData
-}: ResumeComponentProps & Resume) => {
+}: ResumeComponentProps & ResumeFields) => {
   const {
     contactInfo,
     title,

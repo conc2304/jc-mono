@@ -30,7 +30,8 @@ export const iOSImageGalleryFileSystemItem: FileSystemItem<
     tags: [],
     favorite: true,
     thumbnail: ArtGalleryMedia_iOS_Made[0],
-    description: 'Photos and stuff I guess...',
+    description:
+      'A collection of digital media that was made exclusively on my iPhone using iOS apps.',
   },
   fileData: undefined,
   tileRenderer: {

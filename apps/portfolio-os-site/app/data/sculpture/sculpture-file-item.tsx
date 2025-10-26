@@ -22,7 +22,7 @@ export const SculpturePortfolioFileSystemItem: FileSystemItem<
     0
   ), // Approximate size based on image count
   mimeType: 'interactive/sculpture-portfolio',
-  dateModified: new Date(), // Most recent sculpture date
+  dateModified: new Date('2025-09-22'),
   dateCreated: new Date(
     Math.min(
       ...sculpturesData.map((s) =>
@@ -34,8 +34,9 @@ export const SculpturePortfolioFileSystemItem: FileSystemItem<
   metadata: {
     tags: ['art', 'sculpture', 'portfolio', 'interactive', 'gsap'],
     favorite: false,
-    description: 'Interactive sculpture portfolio',
-    thumbnail: sculpturesData[0]?.images[0], // First image as thumbnail
+    description:
+      'Interactive sculpture portfolio feature works in stone and other mediums.',
+    thumbnail: sculpturesData[0]?.images[0],
     customProperties: {
       sculptureCount: sculpturesData.length,
       totalImages: sculpturesData.reduce(

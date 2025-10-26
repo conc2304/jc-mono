@@ -41,7 +41,7 @@ export interface Education {
   capstoneProject?: string;
 }
 
-export interface Resume {
+export interface ResumeFields {
   contactInfo: ContactInfo;
   title: string;
   summary: string;
