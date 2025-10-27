@@ -9,13 +9,12 @@ import {
 } from '@mui/material';
 import { Star } from '@mui/icons-material';
 import {
-  ContentContainer,
   DiagonalLines,
   ImageContainer,
-  TileContentProps,
   useMediaProvider,
 } from '@jc/ui-components';
 import { ProjectData } from '../pages/project';
+import { ContentContainer, TileContentProps } from '@jc/file-system';
 
 export const ProjectsTileContent: React.FC<TileContentProps<ProjectData[]>> =
   memo(({ name, children, currentIndex = 0, isLarge, tileData }) => {

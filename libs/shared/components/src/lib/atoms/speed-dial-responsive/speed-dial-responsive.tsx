@@ -1,14 +1,17 @@
 import React, { ReactNode, useState } from 'react';
 import { useTheme, useMediaQuery, Breakpoint } from '@mui/material';
+
 import {
   AugmentedButtonGroup,
   AugmentedButtonGroupProps,
   ButtonGroupItem,
+} from '../button-group';
+import {
   RadialSpeedDial,
   RadialSpeedDialProps,
   SpeedDialAction,
   TransitionConfig,
-} from '@jc/ui-components';
+} from '../radial-speed-dial';
 
 interface ResponsiveAction {
   key: string;

@@ -1,4 +1,5 @@
 import { styled, Box, alpha, lighten, darken } from '@mui/material';
+
 import { TileSize } from '../../organisms/tile-grid/types';
 
 export const TileContainer = styled(Box, {
@@ -6,7 +7,6 @@ export const TileContainer = styled(Box, {
     !['effectiveIsDragging', 'size', 'tileColor'].includes(prop as string),
 })<{
   effectiveIsDragging: boolean;
-  // gradient: { from: string; to: string };
   size: TileSize;
   tileColor: string;
 }>(({ theme, effectiveIsDragging, tileColor, size }) => {

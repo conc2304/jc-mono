@@ -3,6 +3,12 @@
   "include": [],
   "references": [
     {
+      "path": "../theme-components"
+    },
+    {
+      "path": "../utils"
+    },
+    {
       "path": "../components"
     },
     {

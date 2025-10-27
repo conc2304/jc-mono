@@ -8,11 +8,6 @@ import {
   useState,
   useCallback,
 } from 'react';
-import { Star } from '@mui/icons-material';
-
-import { useWindowActions } from '../../context';
-import { TileRenderer } from '@jc/file-system';
-import { DefaultTileContent } from '../../molecules/live-tile/default-tile-content';
 import {
   alpha,
   useTheme,
@@ -20,14 +15,15 @@ import {
   Typography,
   PaletteOptionName,
 } from '@mui/material';
-import {
-  IconContainer,
-  TileContainer,
-} from '../../molecules/live-tile/styled-components';
+import { Star } from '@mui/icons-material';
 import { Folder } from 'lucide-react';
-import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
-import { AugmentedButton } from '../../atoms';
+
 import { getContextualImage } from '@jc/utils';
+
+import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
+import { AugmentedButton, useWindowActions } from '@jc/ui-components';
+import { DefaultTileContent, IconContainer, TileContainer } from '../live-tile';
+import { TileRenderer } from '../../types';
 
 const textureImages = [
   'scratched-glass.jpg',

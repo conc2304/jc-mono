@@ -1,5 +1,5 @@
+import { useRef, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import React, { useRef, useEffect, useState } from 'react';
 
 export const ProgressBar = ({
   progress = 0,
@@ -20,9 +20,9 @@ export const ProgressBar = ({
   gridPattern = true,
   className = '',
 }) => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(progress);
-  const animationRef = useRef(null);
+  const animationRef = useRef<number>(null);
 
   // Update progress ref when prop changes
   useEffect(() => {
@@ -41,7 +41,8 @@ export const ProgressBar = ({
         : progressRef.current;
 
       // Update progress fill
-      const progressFill = container.querySelector('.progress-fill');
+      const progressFill: HTMLElement | null =
+        container.querySelector('.progress-fill');
       if (progressFill) {
         progressFill.style.width = `${currentProgress}%`;
 
@@ -56,7 +57,8 @@ export const ProgressBar = ({
       }
 
       // Update border glow
-      const mainContainer = container.querySelector('.main-container');
+      const mainContainer: HTMLElement | null =
+        container.querySelector('.main-container');
       if (mainContainer && pulseEffect) {
         const glowIntensity = currentProgress / 100;
         const pulseGlow = Math.sin(Date.now() * 0.004) * 0.3 + 0.7;
@@ -70,11 +72,12 @@ export const ProgressBar = ({
 
       // Update energy lines
       if (energyLines) {
-        const lines = container.querySelectorAll('.energy-line');
+        const lines: NodeListOf<HTMLElement> =
+          container.querySelectorAll('.energy-line');
         lines.forEach((line, index) => {
           const delay = index * 0.3;
           const flow = Math.sin(Date.now() * 0.005 + delay) * 0.5 + 0.5;
-          line.style.opacity = 0.2 + flow * 0.6;
+          line.style.opacity = (0.2 + flow * 0.6).toString();
           line.style.transform = `translateX(${flow * 100 - 50}%)`;
         });
       }
@@ -96,7 +99,8 @@ export const ProgressBar = ({
   // Update static progress when not indeterminate
   useEffect(() => {
     if (!indeterminate && containerRef.current) {
-      const progressFill = containerRef.current.querySelector('.progress-fill');
+      const progressFill: HTMLElement | null =
+        containerRef.current.querySelector('.progress-fill');
       if (progressFill) {
         progressFill.style.width = `${progress}%`;
 

@@ -9,16 +9,17 @@ import React, {
   useMemo,
 } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { remToPixels } from '@jc/themes';
 
-import { FileManager } from '../organisms/file-manager';
-import { WindowMetaData, ItemPosition } from '../types';
-import { findFileSystemItemByIdWithPath } from '../utils';
 import {
   FileSystemItem,
   FileSystemNavigationManager,
   NavigationGroup,
 } from '@jc/file-system';
+import { remToPixels } from '@jc/themes';
+
+import { FileManager } from '../organisms/file-manager';
+import { WindowMetaData, ItemPosition } from '../types';
+import { findFileSystemItemByIdWithPath } from '../utils';
 
 interface DragRef {
   startX: number;
@@ -1037,7 +1038,7 @@ export const useWindowContentActions = () => {
   return { replaceWindowContent };
 };
 
-export function renderFile<TData = {}, TProps = {}>(
+export function renderFile<TData = object, TProps = object>(
   file: FileSystemItem<TData, TProps>
 ): ReactNode | null {
   if (!file.fileData || !file.renderer) {

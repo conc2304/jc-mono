@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
-import { FileSystemItem, NavigationContext } from './types';
+
 import {
   getFileSystemItemByIdRecursive,
   searchFileSystemRecursive,
 } from './utils';
+import { FileSystemItem, NavigationContext } from './types';
 
 // Navigation group configuration
 export interface NavigationGroup {

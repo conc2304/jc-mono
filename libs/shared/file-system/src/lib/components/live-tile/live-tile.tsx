@@ -1,20 +1,23 @@
-import { cloneElement, isValidElement, memo, useEffect, useState } from 'react';
 import {
-  alpha,
-  Box,
-  darken,
-  lighten,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { useIconDrag, useWindowActions } from '../../context';
-import { IconContainer, TileContainer } from './styled-components';
-import { TileRenderer } from '@jc/file-system';
-import { DefaultTileContent } from './default-tile-content';
-import { ChevronRight, Folder } from 'lucide-react';
+  cloneElement,
+  CSSProperties,
+  isValidElement,
+  memo,
+  SVGProps,
+  useEffect,
+  useState,
+} from 'react';
+import { alpha, Box, Typography, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
+import { ChevronRight, Folder, LucideIcon } from 'lucide-react';
 
-export interface TileContentProps<TData = {}> {
+import { TileRenderer } from '@jc/file-system';
+
+import { DefaultTileContent } from './default-tile-content';
+import { IconContainer, TileContainer } from './styled-components';
+import { useIconDrag, useWindowActions } from '@jc/ui-components';
+
+export interface TileContentProps<TData = object> {
   name: string;
   icon?: React.ReactNode;
   type?: string;
@@ -34,7 +37,7 @@ export interface TileContentProps<TData = {}> {
   totalItems?: number;
 }
 
-interface LiveTileProps<TData = {}, TProps = {}> {
+interface LiveTileProps<TData = object, TProps = object> {
   id: string;
   position: { x: number; y: number };
   isDragging?: boolean;
@@ -115,21 +118,14 @@ export const LiveTile = memo<LiveTileProps>(
         className="LiveTile--root"
         data-icon-id={id}
         effectiveIsDragging={effectiveIsDragging}
-        gradient={{
-          from: alpha(
-            theme.palette.mode === 'dark'
-              ? lighten(config.color, 1)
-              : darken(config.color, 1),
-            1
-          ),
-          to: alpha(config.color, 0),
-        }}
         sx={{
           left: isSm ? undefined : position.x,
           top: isSm ? undefined : position.y,
           zIndex: effectiveIsDragging ? 10000 : 1,
           position: isSm ? 'relative' : undefined,
         }}
+        size={config.size}
+        tileColor={config.color}
         onMouseDown={(e) => handleIconMouseDown(e, id)}
         onDoubleClick={() => openWindow(id)}
         onTouchEnd={() => openWindow(id)}
@@ -163,10 +159,16 @@ export const LiveTile = memo<LiveTileProps>(
               <Box display="flex" alignItems="center" gap={1}>
                 <IconContainer isLarge={isLg}>
                   {isValidElement(icon) ? (
-                    cloneElement(icon as React.ReactElement, {
-                      size: isLg ? 24 : 20,
-                      style: { color: theme.palette.common.white },
-                    })
+                    cloneElement(
+                      icon as React.ReactElement<{
+                        size: number;
+                        style: CSSProperties;
+                      }>,
+                      {
+                        style: { color: theme.palette.common.white },
+                        size: isLg ? 24 : 20,
+                      }
+                    )
                   ) : (
                     <Folder
                       size={isLg ? 24 : 20}

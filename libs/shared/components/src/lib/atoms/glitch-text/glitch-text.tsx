@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, ReactNode } from 'react';
-import { gsap } from 'gsap';
 import { Typography, TypographyProps } from '@mui/material';
+import { gsap } from 'gsap';
 
 interface GlitchTextProps extends TypographyProps {
   children: ReactNode;
@@ -72,13 +72,7 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
       const glitchChars =
         '█▓▒░▀▄▌▐│┤┐└┴┬├─┼╔╗╚╝║═╬◄►▲▼!@#$%^&*()_+-=[]{}|;:,.<>?~`';
-      const alienFonts = [
-        // 'Wingdings',
-        // 'Webdings',
-        'Symbol',
-        // 'Zapf Dingbats',
-        'Glyphz',
-      ];
+      const alienFonts = ['Symbol', 'Glyphz'];
 
       const getIntensitySettings = (): IntensitySettings => {
         const settings: Record<string, IntensitySettings> = {
@@ -273,18 +267,19 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
       // New scramble effect for mouse leave
       const performScrambleLeave = (): void => {
-        // First, interrupt any ongoing glitch animation
-        if (
-          isGlitching.current &&
-          container &&
-          (container as any)._glitchTimeline
-        ) {
-          (container as any)._glitchTimeline.kill();
-          isGlitching.current = false;
-          // Clean up any existing layers
-          const existingLayers = container.querySelectorAll('.glitch-layer');
-          existingLayers.forEach((layer) => layer.remove());
-        }
+        // TODO investigate if we need this
+        // // First, interrupt any ongoing glitch animation
+        // if (
+        //   isGlitching.current &&
+        //   container &&
+        //   (container)._glitchTimeline
+        // ) {
+        //   (container as any)._glitchTimeline.kill();
+        //   isGlitching.current = false;
+        //   // Clean up any existing layers
+        //   const existingLayers = container.querySelectorAll('.glitch-layer');
+        //   existingLayers.forEach((layer) => layer.remove());
+        // }
 
         if (isScrambling.current) return;
         isScrambling.current = true;

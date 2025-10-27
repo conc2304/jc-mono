@@ -1,4 +1,5 @@
-import React, { CSSProperties, useEffect, useRef } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useRef } from 'react';
+
 import { fragmentShaderSource } from './fragment-shader';
 import { vertexShaderSource } from './vertex-shader';
 
@@ -72,14 +73,14 @@ export const GradientShader = ({
   };
 
   // Convert colors array to flat RGB array
-  const colorsToRgbArray = (colorArray: string[]): number[] => {
+  const colorsToRgbArray = useCallback((colorArray: string[]): number[] => {
     const rgbArray: number[] = [];
     colorArray.forEach((color) => {
       const [r, g, b] = hexToRgb(color);
       rgbArray.push(r, g, b);
     });
     return rgbArray;
-  };
+  }, []);
 
   // Create shader function
   const createShader = (
@@ -297,7 +298,7 @@ export const GradientShader = ({
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
-  }, [internalWidth, internalHeight, colors, angle, scale]);
+  }, [internalWidth, internalHeight, colors, angle, scale, colorsToRgbArray]);
 
   // Animation loop for scrolling
   const animate = React.useCallback(

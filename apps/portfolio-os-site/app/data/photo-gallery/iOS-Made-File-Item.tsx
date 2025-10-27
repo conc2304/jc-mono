@@ -1,4 +1,7 @@
-import { FileSystemItem } from '@jc/file-system';
+import { Image } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
 import {
   ArtGalleryMedia_iOS_Made,
   ArtGalleryProcessProps,
@@ -8,9 +11,7 @@ import {
   ProcessEndImages,
   ProcessStartImages,
 } from '@jc/portfolio';
-import { DefaultTileContent, MediaGalleryProps } from '@jc/ui-components';
-import { Image } from 'lucide-react';
-import { v4 as uuidv4 } from 'uuid';
+import { MediaGalleryProps } from '@jc/ui-components';
 
 export const iOSImageGalleryFileSystemItem: FileSystemItem<
   void,

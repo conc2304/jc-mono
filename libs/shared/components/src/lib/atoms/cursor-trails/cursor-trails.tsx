@@ -6,7 +6,6 @@ import React, {
   useMemo,
   CSSProperties,
 } from 'react';
-
 import { Property } from 'csstype';
 
 // TypeScript interfaces for internal data structures
@@ -207,7 +206,7 @@ export const CursorTrail = ({
   // Performance optimizations
   const screenDimensionsRef = useRef<ScreenDimensions>({ width: 0, height: 0 });
   const lastFrameTimeRef = useRef<number>(0);
-  const TARGET_FPS: number = 60;
+  const TARGET_FPS = 60;
   const FRAME_INTERVAL: number = 1000 / TARGET_FPS;
 
   // Memoized container styles
@@ -388,6 +387,7 @@ export const CursorTrail = ({
       returnDuration,
       returnDurationVariation,
       initializeTrailCursor,
+      FRAME_INTERVAL,
     ]
   );
 
@@ -734,6 +734,8 @@ export const CursorTrail = ({
     pulseSpeed,
     pulseMaxRadius,
     pulseFalloff,
+    FRAME_INTERVAL,
+    floorHeight,
   ]);
 
   useEffect(() => {
@@ -754,7 +756,13 @@ export const CursorTrail = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [throttledMouseMove, handleMouseLeave, animateTrail, handleMouseClick]);
+  }, [
+    throttledMouseMove,
+    handleMouseLeave,
+    animateTrail,
+    handleMouseClick,
+    updateScreenDimensions,
+  ]);
 
   // Memoized cursor renderer
   const renderCursor = useCallback(

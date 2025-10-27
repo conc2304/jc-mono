@@ -170,7 +170,7 @@ const AugmentedButtonGroup: React.FC<AugmentedButtonGroupProps> = ({
                 const getColorFromPalette = (colorPath: string): string => {
                   const pathParts = colorPath.split('.');
                   if (pathParts.length === 2) {
-                    const [palette, shade] = pathParts;
+                    const [palette] = pathParts;
                     const paletteColor =
                       theme.palette[palette as keyof typeof theme.palette];
                     if (
@@ -178,7 +178,7 @@ const AugmentedButtonGroup: React.FC<AugmentedButtonGroupProps> = ({
                       typeof paletteColor === 'object' &&
                       'main' in paletteColor
                     ) {
-                      return (paletteColor as any).main;
+                      return paletteColor.main;
                     }
                   }
                   return theme.palette.warning.main; // fallback

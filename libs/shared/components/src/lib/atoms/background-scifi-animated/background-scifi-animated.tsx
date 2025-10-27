@@ -262,7 +262,7 @@ const DataStreams: React.FC = () => {
   const [streams, setStreams] = useState<DataStreamType[]>([]);
 
   useEffect(() => {
-    const characters: string = '01アイウエオカキクケコサシスセソ';
+    const characters = '01アイウエオカキクケコサシスセソ';
 
     const createStream = (): void => {
       const id: number = Date.now() + Math.random();

@@ -1,7 +1,9 @@
 import { ComponentType, ReactNode } from 'react';
-import { BaseImageData, TileContentProps } from '@jc/ui-components';
-import { Property } from 'csstype';
 import { PaletteOptionName } from '@mui/material/styles';
+import { Property } from 'csstype';
+
+import { BaseImageData } from '@jc/ui-components';
+import { TileContentProps } from './components';
 
 export interface BaseFileSystemItem {
   id: string;
@@ -46,7 +48,7 @@ export interface NavigationContext {
 }
 
 // Renderer configuration
-export interface FileRenderer<TData = {}, TProps = {}> {
+export interface FileRenderer<TData = object, TProps = object> {
   component: ComponentType<TData & TProps & NavigationContext>;
   props?: TProps;
   navigationGroup?: string; // ID of the navigation group this file belongs to
@@ -54,7 +56,7 @@ export interface FileRenderer<TData = {}, TProps = {}> {
 }
 
 // Generic FileSystemItem
-export interface FileSystemItem<TData = {}, TProps = {}>
+export interface FileSystemItem<TData = object, TProps = object>
   extends BaseFileSystemItem {
   // File-specific data (only for files, not folders)
   fileData?: TData;
@@ -71,12 +73,12 @@ export interface TileConfig {
   updateInterval?: number; // ms for content rotation
 }
 
-export interface TileRenderer<TData = {}, TProps = {}> {
-  component: React.ComponentType<TileContentProps<TData> & TProps>;
+export interface TileRenderer<TData = object, TProps = object> {
+  component: ComponentType<TileContentProps<TData> & TProps>;
   props?: TProps;
   config: TileConfig;
 }
-export interface DesktopTile<TData = {}, TProps = {}> {
+export interface DesktopTile<TData = object, TProps = object> {
   tileRenderer?: TileRenderer<TData, TProps>;
   tileData?: TData;
 }

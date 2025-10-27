@@ -1,13 +1,13 @@
-import { DefaultTileContent } from '@jc/ui-components';
+import { FileTextIcon } from 'lucide-react'; // TODO replace with other icon library
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
 import {
   ResumeComponentProps,
   ResumeData,
   ResumeFields,
   ResumeTemplate,
 } from '@jc/portfolio';
-import { FileTextIcon } from 'lucide-react'; // TODO replace with other icon library
-import { v4 as uuidv4 } from 'uuid';
-import { FileSystemItem } from '@jc/file-system';
 
 export const ResumeFileSystemItem: FileSystemItem<
   ResumeFields,

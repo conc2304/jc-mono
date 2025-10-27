@@ -1,12 +1,13 @@
-import { FileSystemItem } from '@jc/file-system';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
 import {
   Sculpture,
   SculpturePortfolio,
   SculpturePortfolioProps,
   sculpturesData,
 } from '@jc/portfolio';
-import { DefaultTileContent } from '@jc/ui-components';
-import { v4 as uuidv4 } from 'uuid';
+
 import { SculptIcon } from './sculpture-icon';
 
 export const SculpturePortfolioFileSystemItem: FileSystemItem<

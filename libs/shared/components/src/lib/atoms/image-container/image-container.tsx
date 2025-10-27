@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Skeleton, Typography, BoxProps, SxProps } from '@mui/material';
 import { Error } from '@mui/icons-material';
+
 import { useMediaProvider } from '../../context';
 
 // Utility function to find the closest scrollable parent
@@ -94,7 +95,7 @@ export const ImageContainer = ({
   const [currentSrc, setCurrentSrc] = useState(lazy ? '' : src);
   const [currentSrcSet, setCurrentSrcSet] = useState(lazy ? '' : srcSet);
   const [showSkeleton, setShowSkeleton] = useState(true);
-  const [isIntersecting, setIsIntersecting] = useState(!lazy);
+  const [, setIsIntersecting] = useState(!lazy);
   const [shouldLoad, setShouldLoad] = useState(!lazy);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -125,7 +126,7 @@ export const ImageContainer = ({
         setShouldLoad(true);
       }
     },
-    [shouldLoad, src]
+    [shouldLoad, src, debug]
   );
 
   const skeletonImageUrl = skeletonSrc
@@ -171,7 +172,7 @@ export const ImageContainer = ({
     return () => {
       observer.unobserve(element);
     };
-  }, [lazy, observerCallback, rootMargin, threshold, scrollRoot]);
+  }, [lazy, observerCallback, rootMargin, threshold, scrollRoot, debug]);
 
   // Handle image source updates
   useEffect(() => {

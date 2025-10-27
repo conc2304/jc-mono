@@ -1,11 +1,11 @@
-import { MediaProviderType } from './types';
-
 import {
   getContextualImage,
   getPlaceholderImage,
   ImageMediaSource,
   MediaContextSize,
 } from '@jc/utils';
+
+import { MediaProviderType } from './types';
 
 export class CloudflareMediaProvider implements MediaProviderType {
   name = 'cloudflare';
@@ -28,9 +28,9 @@ export class CloudflareMediaProvider implements MediaProviderType {
 
   generatePlaceholder(
     path: string,
-    width: number = 50,
-    quality: number = 30,
-    blur: number = 6
+    width = 50,
+    quality = 30,
+    blur = 6
   ): string {
     // Get low-quality placeholder
     return getPlaceholderImage(path, width, quality, blur);

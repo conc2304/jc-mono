@@ -1,7 +1,6 @@
 export * from './breadcrumb-navigation';
 export * from './desktop-icon';
 export * from './file-list-view';
-export * from './live-tile';
 export * from './markdown-renderer';
 export * from './overflow-chip-container';
 export * from './preview-panel';

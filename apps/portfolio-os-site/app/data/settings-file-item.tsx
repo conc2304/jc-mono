@@ -1,10 +1,10 @@
-import { FileSystemItem } from '@jc/file-system';
-import { ThemeCustomizerPage } from '@jc/theme-components';
-import { DefaultTileContent } from '@jc/ui-components';
 import { PaletteIcon } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
-export const SettingsFileSystemItem: FileSystemItem<{}, {}> = {
+import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
+import { ThemeCustomizerPage } from '@jc/theme-components';
+
+export const SettingsFileSystemItem: FileSystemItem<object, object> = {
   id: uuidv4(),
   name: 'Theme Picker',
   type: 'Site Color Themes',

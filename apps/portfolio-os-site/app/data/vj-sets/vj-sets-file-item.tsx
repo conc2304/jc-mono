@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { FileSystemItem } from '@jc/file-system';
+import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
 import {
-  DefaultTileContent,
   YouTubePlaylistPlayerProps,
   YouTubePlaylistPlayer,
 } from '@jc/ui-components';

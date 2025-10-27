@@ -23,7 +23,7 @@ import {
   ColorModeSwitcherSpeedDial,
 } from '@jc/theme-components';
 
-import { SciFiBackground } from '../../atoms/background-scifi-animated';
+import { SciFiBackground } from '@jc/ui-components';
 
 export const TileGrid = ({
   gridTiles = [],

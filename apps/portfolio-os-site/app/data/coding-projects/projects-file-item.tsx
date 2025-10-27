@@ -1,11 +1,12 @@
-import { FileSystemItem } from '@jc/file-system';
 import { Folder } from 'lucide-react'; // TODO replace with other icon library
 import { v4 as uuidv4 } from 'uuid';
 
+import { FileSystemItem } from '@jc/file-system';
 import { ProjectsTileContent } from '@jc/portfolio';
+
 import { allPortfolioProjectFiles } from './project-files';
 
-export const ProjectsFileSystemItem: FileSystemItem<{}, {}> = {
+export const ProjectsFileSystemItem: FileSystemItem<object, object> = {
   id: uuidv4(),
   icon: <Folder />,
   name: 'Projects',

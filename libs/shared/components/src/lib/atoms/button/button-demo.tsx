@@ -17,10 +17,9 @@ import {
   Typography,
   capitalize,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import { OverridableStringUnion } from '@mui/types';
 import { Property } from 'csstype';
-import { RewindIcon, SaveAllIcon, SaveIcon, StarIcon } from 'lucide-react';
+import { RewindIcon, SaveAllIcon, StarIcon } from 'lucide-react';
 
 import { AugmentedButton as Button } from './button';
 import { AugmentedIconButton as IconButton } from '../button-icon/button-icon';
