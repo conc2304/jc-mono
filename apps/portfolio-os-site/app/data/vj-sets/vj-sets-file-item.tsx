@@ -1,10 +1,12 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { FileSystemItem } from '@jc/file-system';
 import {
   DefaultTileContent,
   YouTubePlaylistPlayerProps,
   YouTubePlaylistPlayer,
 } from '@jc/ui-components';
-import { v4 as uuidv4 } from 'uuid';
+
 import { FaceMeltIcon } from './face-melt-icon';
 
 export const VJSetsPortfolioFileSystemItem: FileSystemItem<
