@@ -3,19 +3,18 @@ import {
   CSSProperties,
   isValidElement,
   memo,
-  SVGProps,
   useEffect,
   useState,
 } from 'react';
 import { alpha, Box, Typography, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
-import { ChevronRight, Folder, LucideIcon } from 'lucide-react';
+import { ChevronRight, Folder } from 'lucide-react';
 
-import { TileRenderer } from '@jc/file-system';
+import { useIconDrag, useWindowActions } from '@jc/ui-components';
 
 import { DefaultTileContent } from './default-tile-content';
 import { IconContainer, TileContainer } from './styled-components';
-import { useIconDrag, useWindowActions } from '@jc/ui-components';
+import { TileRenderer } from '../../types';
 
 export interface TileContentProps<TData = object> {
   name: string;

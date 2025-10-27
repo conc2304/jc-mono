@@ -1,4 +1,5 @@
-import { alpha, Box, useTheme } from '@mui/material';
+import { alpha, Box } from '@mui/material';
+
 import { InsertionSide, InsertionZone as InsertionZoneType } from './types';
 
 interface InsertionZoneProps {
@@ -14,7 +15,6 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
   onDrop,
   onHover,
 }) => {
-  const theme = useTheme;
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
@@ -58,14 +58,9 @@ export const InsertionZone: React.FC<InsertionZoneProps> = ({
               )}`,
             }
           : {
-              // backgroundColor: theme.palette.getInvertedMode('secondary'),
               backgroundColor: 'blue',
               '&:hover': {
                 backgroundColor: 'orange',
-                // backgroundColor: alpha(
-                //   theme.palette.getInvertedMode('secondary', true),
-                //   0.7
-                // ),
               },
             }),
       })}

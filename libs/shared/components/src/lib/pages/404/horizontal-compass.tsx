@@ -1,7 +1,12 @@
-import React, { useState, useEffect, useRef, ReactNode } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+  useCallback,
+} from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { Property } from 'csstype';
 
 // Type definitions
 interface Cardinal {
@@ -9,7 +14,7 @@ interface Cardinal {
   degree: number;
 }
 
-interface MinorTick {
+interface MinorTickConfig {
   degree: number;
 }
 
@@ -31,11 +36,6 @@ interface CardinalComponentProps {
   position: number;
 }
 
-interface MinorTickS {
-  top?: Property.Top;
-  bottom?: Property.Bottom;
-}
-
 interface HorizontalCompassProps {
   customCenterMarker?: ReactNode;
   customCardinalComponent?: React.ComponentType<CardinalComponentProps>;
@@ -54,7 +54,7 @@ interface StyledComponentProps {
 const minCompassHeight = 20;
 
 // Styled components
-const CompassContainer = styled(Box)<{}>(({ theme }) => ({
+const CompassContainer = styled(Box)<object>(() => ({
   position: 'relative',
   width: '100%',
   height: '100%',
@@ -62,7 +62,7 @@ const CompassContainer = styled(Box)<{}>(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-const GridLine = styled(Box)<{}>({
+const GridLine = styled(Box)<object>({
   flex: 1,
   borderLeft: '1px solid #374151', // gray-700
   '&:first-of-type': {
@@ -70,13 +70,13 @@ const GridLine = styled(Box)<{}>({
   },
 });
 
-const GridContainer = styled(Box)<{}>({
+const GridContainer = styled(Box)<object>({
   position: 'absolute',
   inset: 0,
   display: 'flex',
 });
 
-const CardinalContainer = styled(Box)<{}>({
+const CardinalContainer = styled(Box)<object>({
   position: 'absolute',
   transform: 'translateX(-50%)',
   display: 'flex',
@@ -84,14 +84,14 @@ const CardinalContainer = styled(Box)<{}>({
   alignItems: 'center',
 });
 
-const CardinalName = styled(Typography)<{}>({
+const CardinalName = styled(Typography)<object>({
   fontSize: '0.75rem',
   fontWeight: 'bold',
   color: '#22d3ee', // cyan-400
   marginTop: '0.25rem',
 });
 
-const CardinalDegree = styled(Typography)<{}>({
+const CardinalDegree = styled(Typography)<object>({
   fontSize: '0.75rem',
   color: '#9ca3af', // gray-400
 });
@@ -109,7 +109,7 @@ const MinorTick = styled(Box)<StyledComponentProps>(({ compassHeight }) => ({
   height: compassHeight ? Math.max(compassHeight * 0.125, 8) : 8, // 12.5% of compass height, min 8px
 }));
 
-const CenterMarkerContainer = styled(Box)<{}>({
+const CenterMarkerContainer = styled(Box)<object>({
   position: 'absolute',
   left: '50%',
   top: '50%',
@@ -119,7 +119,7 @@ const CenterMarkerContainer = styled(Box)<{}>({
   alignItems: 'center',
 });
 
-const DefaultCenterLine = styled(Box)<{}>({
+const DefaultCenterLine = styled(Box)<object>({
   width: '2px',
   height: '100%',
   backgroundColor: '#ef4444', // red-500
@@ -141,7 +141,7 @@ const DefaultCenterDiamond = styled(Box)<StyledComponentProps>(
   }
 );
 
-const DegreeDisplay = styled(Typography)<{}>({
+const DegreeDisplay = styled(Typography)<object>({
   position: 'absolute',
   bottom: '0.25rem',
   left: '50%',
@@ -164,8 +164,6 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
 }) => {
   const [mouseX, setMouseX] = useState<number>(0);
   const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
-  const [minorTicksCount, setMinorTicksCount] =
-    useState<number>(minorTickCount);
   const [compassDimensions, setCompassDimensions] = useState<CompassDimensions>(
     {
       width: 384,
@@ -188,17 +186,17 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
   ];
 
   // Generate minor tick positions
-  const generateMinorTicks = (): MinorTick[] => {
-    const minorTicks: MinorTick[] = [];
+  const generateMinorTicks = (): MinorTickConfig[] => {
+    const minorTicks: MinorTickConfig[] = [];
     const degreesPerMajorTick = 45;
-    const degreesPerMinorTick = degreesPerMajorTick / (minorTicksCount + 1);
+    const degreesPerMinorTick = degreesPerMajorTick / (minorTickCount + 1);
 
     for (
       let majorDegree = 0;
       majorDegree < 360;
       majorDegree += degreesPerMajorTick
     ) {
-      for (let i = 1; i <= minorTicksCount; i++) {
+      for (let i = 1; i <= minorTickCount; i++) {
         const minorDegree = majorDegree + i * degreesPerMinorTick;
         minorTicks.push({ degree: minorDegree % 360 });
       }
@@ -207,7 +205,7 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
   };
 
   // Update compass dimensions
-  const updateCompassDimensions = (): void => {
+  const updateCompassDimensions = useCallback((): void => {
     if (compassRef.current) {
       const rect = compassRef.current.getBoundingClientRect();
       const newDimensions = {
@@ -220,7 +218,7 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
         setIsInitialized(true);
       }
     }
-  };
+  }, [isInitialized]);
 
   // Default Cardinal Component
   const DefaultCardinalComponent: React.FC<CardinalComponentProps> = ({
@@ -262,7 +260,7 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [updateCompassDimensions]);
 
   // Update compass dimensions when component mounts or dimensions change
   useEffect(() => {
@@ -272,14 +270,14 @@ export const HorizontalCompass: React.FC<HorizontalCompassProps> = ({
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [width, height]);
+  }, [width, height, updateCompassDimensions]);
 
   // Additional effect to handle initial mounting and ensure dimensions are captured
   useEffect(() => {
     if (compassRef.current && !isInitialized) {
       updateCompassDimensions();
     }
-  }, [isInitialized]);
+  }, [isInitialized, updateCompassDimensions]);
 
   // Convert mouse X position to degrees (0-360)
   const currentDegree: number = (mouseX / screenWidth) * 360;
