@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { Box, TableCell, TableRow } from '@mui/material';
+import { Star } from '@mui/icons-material';
 
 import { FileListItemProps } from './types';
 import { FileSystemContext } from '../../../context';
-import { Star } from '@mui/icons-material';
-import { useFileSystemItem } from '../../../hooks/use-file-list-item';
+import { useFileSystemItem } from '../../../hooks';
 
 export const DetailsViewItem = ({
   item,

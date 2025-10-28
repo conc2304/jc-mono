@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useMediaQuery, useTheme } from '@mui/material';
+
 import { TILE_CONFIG } from './tile-config';
 import { WindowSize, Breakpoint } from './types';
-import { useMediaQuery, useTheme } from '@mui/material';
 
 export const useResponsiveTileConfig = () => {
   const theme = useTheme();

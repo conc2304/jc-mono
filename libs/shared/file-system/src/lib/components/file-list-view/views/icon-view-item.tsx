@@ -1,11 +1,14 @@
 import { useContext } from 'react';
 import { Box, Grid } from '@mui/material';
+import { Star } from '@mui/icons-material';
+
+import { FileSystemIcon } from '@jc/ui-components';
 
 import { FileListItemProps } from './types';
+// import { FileSystemContext } from '../../../../../../components/src/lib/context';
+// import { FileSystemIcon } from '../../../../../../components/src/lib/molecules/desktop-icon';
 import { FileSystemContext } from '../../../context';
-import { FileSystemIcon } from '../../desktop-icon';
-import { Star } from '@mui/icons-material';
-import { useFileSystemItem } from '../../../hooks/use-file-list-item';
+import { useFileSystemItem } from '../../../hooks/use-file-list-item/use-file-list-item';
 
 export const IconViewItem = ({
   item,

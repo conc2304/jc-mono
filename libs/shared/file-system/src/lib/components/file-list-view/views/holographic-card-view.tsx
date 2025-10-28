@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 
-import { FileListViewProps } from './types';
 import { HolographicCardViewItem } from './holographic-card-view-item';
+import { FileListViewProps } from './types';
 
 export const HolographicCardView = ({
   items,

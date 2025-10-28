@@ -1,9 +1,13 @@
 import { createContext } from 'react';
 
-import { BaseFileSystemItem } from '@jc/file-system';
+import {
+  ScrollAwareClickConfig,
+  ViewMode,
+  SortBy,
+  SortOrder,
+} from '@jc/ui-components';
 
-import { ScrollAwareClickConfig } from '../hooks';
-import { SortBy, SortOrder, ViewMode } from '../types';
+import { BaseFileSystemItem } from '../../types';
 
 export const FileSystemContext = createContext<{
   fs: BaseFileSystemItem[];

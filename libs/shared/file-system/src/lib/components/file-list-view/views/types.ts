@@ -1,5 +1,6 @@
-import { BaseFileSystemItem } from '@jc/file-system';
-import { ScrollAwareClickConfig } from '../../../hooks';
+import { ScrollAwareClickConfig } from '@jc/ui-components';
+
+import { BaseFileSystemItem } from '../../../types';
 
 interface FileListHandlers {
   onItemClick: (item: BaseFileSystemItem, e: React.MouseEvent) => void;

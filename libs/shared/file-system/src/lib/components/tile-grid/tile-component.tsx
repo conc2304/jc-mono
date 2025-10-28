@@ -18,12 +18,13 @@ import {
 import { Star } from '@mui/icons-material';
 import { Folder } from 'lucide-react';
 
+import { AugmentedButton } from '@jc/ui-components';
 import { getContextualImage } from '@jc/utils';
 
 import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
-import { AugmentedButton, useWindowActions } from '@jc/ui-components';
-import { DefaultTileContent, IconContainer, TileContainer } from '../live-tile';
+import { useWindowActions } from '../../context';
 import { TileRenderer } from '../../types';
+import { DefaultTileContent, IconContainer, TileContainer } from '../live-tile';
 
 const textureImages = [
   'scratched-glass.jpg',

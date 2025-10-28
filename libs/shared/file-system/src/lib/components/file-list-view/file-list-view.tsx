@@ -1,10 +1,10 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 
 import { IconsView, ListView, DetailsView } from './views';
-import { FileSystemContext, useWindowActions } from '../../context';
-import { BaseFileSystemItem } from '@jc/file-system';
 import { HolographicCardView } from './views/holographic-card-view';
-// import { useFileSystemItem } from '../../hooks/use-file-list-item';
+import { FileSystemContext } from '../../context/file-system-context/file-system-context';
+import { useWindowActions } from '../../context/window-context/window-context';
+import { BaseFileSystemItem } from '../../types';
 
 export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
   const context = useContext(FileSystemContext);
@@ -30,7 +30,7 @@ export const FileListView = ({ items }: { items: BaseFileSystemItem[] }) => {
         openWindow(item.id);
       }
     },
-    [context]
+    [context, openWindow]
   );
 
   const handleDragStart = useCallback(

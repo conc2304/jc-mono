@@ -5,12 +5,10 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { FileSystemContext } from '../context';
-import {
-  ScrollAwareClickConfig,
-  useScrollAwareClick,
-} from './use-scroll-aware-click';
-import { BaseFileSystemItem } from '@jc/file-system';
+
+import { ScrollAwareClickConfig, useScrollAwareClick } from '@jc/ui-components';
+
+import { BaseFileSystemItem } from '../../types';
 
 export const useFileSystemItem = (
   item: BaseFileSystemItem,

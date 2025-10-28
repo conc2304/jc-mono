@@ -1,3 +1,4 @@
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Container,
@@ -8,22 +9,20 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-
-import { InsertionZone } from './insertion-zone';
-import { useResponsiveTileConfig } from './use-responsive-tile-config';
-import { ReactNode, useEffect, useRef, useState } from 'react';
-import { DragState, InsertionSide, Tile } from './types';
-import { useTilePlacement } from './use-tile-placement';
-import { BaseFileSystemItem } from '@jc/file-system';
-import { TileComponent } from './tile-component';
 import { RestartAlt, Shuffle } from '@mui/icons-material';
 
 import {
   ColorModeSwitcher,
   ColorModeSwitcherSpeedDial,
 } from '@jc/theme-components';
-
 import { SciFiBackground } from '@jc/ui-components';
+
+import { InsertionZone } from './insertion-zone';
+import { TileComponent } from './tile-component';
+import { DragState, InsertionSide, Tile } from './types';
+import { useResponsiveTileConfig } from './use-responsive-tile-config';
+import { useTilePlacement } from './use-tile-placement';
+import { BaseFileSystemItem } from '../../types';
 
 export const TileGrid = ({
   gridTiles = [],

@@ -1,18 +1,22 @@
 import { ReactNode, useCallback, useState } from 'react';
 import { Box, useTheme } from '@mui/material';
+import { useMediaQuery } from '@mui/system';
 import { Computer } from 'lucide-react';
 
-import { FileSystemContext, useWindowContentActions } from '../../context';
 import {
   BreadcrumbNavigation,
-  FileListView,
   QuickAccessPanel,
-} from '../../molecules';
-import { ViewControls } from '../../molecules/file-view-controls';
-import { PreviewPanel } from '../../molecules/preview-panel';
-import { SortBy, SortOrder, ViewMode } from '../../types';
-import { BaseFileSystemItem, useFileSystemManager } from '@jc/file-system';
-import { useMediaQuery } from '@mui/system';
+  SortBy,
+  SortOrder,
+  ViewMode,
+} from '@jc/ui-components';
+
+import { FileSystemContext, useWindowContentActions } from '../../context';
+import { BaseFileSystemItem } from '../../types';
+import { useFileSystemManager } from '../../use-file-system-manager';
+import { FileListView } from '../file-list-view';
+import { ViewControls } from '../file-view-controls';
+import { PreviewPanel } from '../preview-panel';
 
 interface FileManagerProps {
   windowId?: string;

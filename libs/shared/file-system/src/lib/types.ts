@@ -3,6 +3,7 @@ import { PaletteOptionName } from '@mui/material/styles';
 import { Property } from 'csstype';
 
 import { BaseImageData } from '@jc/ui-components';
+
 import { TileContentProps } from './components';
 
 export interface BaseFileSystemItem {

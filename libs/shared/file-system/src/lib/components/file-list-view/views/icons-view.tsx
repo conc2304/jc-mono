@@ -1,23 +1,23 @@
-import { List } from '@mui/material';
+import { Grid } from '@mui/material';
 
+import { IconViewItem } from './icon-view-item';
 import { FileListViewProps } from './types';
-import { ListViewItem } from './list-view-item';
 
-export const ListView = ({
+export const IconsView = ({
   items,
   handlers,
   viewConfig,
 }: FileListViewProps) => {
   return (
-    <List className="FileListView--root">
+    <Grid container spacing={2} sx={{ p: 2 }}>
       {items.map((item) => (
-        <ListViewItem
+        <IconViewItem
           key={item.id}
           item={item}
           handlers={handlers}
           viewConfig={viewConfig}
         />
       ))}
-    </List>
+    </Grid>
   );
 };

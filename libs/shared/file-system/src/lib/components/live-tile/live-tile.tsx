@@ -10,10 +10,11 @@ import { alpha, Box, Typography, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
 import { ChevronRight, Folder } from 'lucide-react';
 
-import { useIconDrag, useWindowActions } from '@jc/ui-components';
+import { BaseImageData } from '@jc/ui-components';
 
 import { DefaultTileContent } from './default-tile-content';
 import { IconContainer, TileContainer } from './styled-components';
+import { useIconDrag, useWindowActions } from '../../context';
 import { TileRenderer } from '../../types';
 
 export interface TileContentProps<TData = object> {
@@ -26,7 +27,7 @@ export interface TileContentProps<TData = object> {
     tags?: string[];
     favorite?: boolean;
     description?: string;
-    thumbnail?: any;
+    thumbnail?: BaseImageData;
   };
   dateModified?: Date;
   size?: number;

@@ -1,4 +1,4 @@
-import { BaseFileSystemItem } from '@jc/file-system';
+import { BaseFileSystemItem } from '../../types';
 
 export type InsertionSide =
   | 'top'

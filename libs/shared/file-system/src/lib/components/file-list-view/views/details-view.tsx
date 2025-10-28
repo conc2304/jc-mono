@@ -6,9 +6,8 @@ import {
   TableRow,
 } from '@mui/material';
 
-import { FileListViewProps } from './types';
-
 import { DetailsViewItem } from './details-view-item';
+import { FileListViewProps } from './types';
 
 export const DetailsView = ({
   items,

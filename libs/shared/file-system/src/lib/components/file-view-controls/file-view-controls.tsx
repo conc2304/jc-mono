@@ -17,8 +17,9 @@ import {
   PanelBottom,
 } from 'lucide-react';
 
+import { SortBy, ViewMode } from '@jc/ui-components';
+
 import { FileSystemContext } from '../../context';
-import { SortBy, ViewMode } from '../../types';
 
 export const ViewControls = () => {
   const context = useContext(FileSystemContext);

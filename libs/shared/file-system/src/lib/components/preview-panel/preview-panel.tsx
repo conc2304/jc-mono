@@ -1,9 +1,9 @@
 import { Box, Chip, Divider, IconButton, Typography } from '@mui/material';
 import { ChevronDown, ChevronLeft, Info } from 'lucide-react';
 
-import { FileSystemItem } from '@jc/file-system';
-import { ImageContainer } from '../../atoms';
-import { useMediaProvider } from '../../context';
+import { ImageContainer, useMediaProvider } from '@jc/ui-components';
+
+import { FileSystemItem } from '../../types';
 
 interface PreviewPanelProps {
   collapsed: boolean;
@@ -60,7 +60,7 @@ export const PreviewPanel = ({
         ) : (
           <Box sx={{ p: 2, height: '100%', overflow: 'auto' }}>
             <Box sx={{ textAlign: 'center', mb: 2 }}>
-              {!!selectedItem.metadata.thumbnail ? (
+              {selectedItem.metadata.thumbnail ? (
                 <ImageContainer
                   lazy={false}
                   showSkeletonDuration={0}

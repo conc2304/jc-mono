@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
+import { useTheme } from '@mui/material';
+
 import {
   InsertionZone,
   PlacedTile,
   ResponsiveBreakpointConfig,
-  Tile,
   TileConfig,
   TilePlacementResult,
 } from './types';
-import { BaseFileSystemItem } from '@jc/file-system';
-import { useTheme } from '@mui/material';
+import { BaseFileSystemItem } from '../../types';
 
 export const useTilePlacement = (
   tileItems: BaseFileSystemItem[],
@@ -179,8 +179,8 @@ export const useTilePlacement = (
       placedTiles.push(tileData);
 
       // Create insertion zones around each tile (4 sides)
-      const zoneOffset: number = 8;
-      const zoneThickness: number = 4;
+      const zoneOffset = 8;
+      const zoneThickness = 4;
 
       // For full-width tiles, only show top and bottom insertion zones
       if (tileConfig.gridWidth >= 999) {

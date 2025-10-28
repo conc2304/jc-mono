@@ -10,16 +10,16 @@ import React, {
 } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 
+import { remToPixels } from '@jc/themes';
+import { ItemPosition, WindowMetaData } from '@jc/ui-components';
+
+import { FileManager } from '../../components';
 import {
-  FileSystemItem,
   FileSystemNavigationManager,
   NavigationGroup,
-} from '@jc/file-system';
-import { remToPixels } from '@jc/themes';
-
-import { FileManager } from '../organisms/file-manager';
-import { WindowMetaData, ItemPosition } from '../types';
-import { findFileSystemItemByIdWithPath } from '../utils';
+} from '../../navigation-manager';
+import { FileSystemItem } from '../../types';
+import { findFileSystemItemByIdWithPath } from '../../utils';
 
 interface DragRef {
   startX: number;
@@ -85,7 +85,7 @@ interface WindowActions {
     newIcon: ReactNode,
     options?: {
       addToHistory?: boolean;
-      metadata?: Record<string, any>;
+      metadata?: Record<string, unknown>;
     }
   ) => void;
   onWindowAnimationComplete: (windowId: string) => void;
@@ -160,7 +160,7 @@ export const WindowProvider: React.FC<{
         content: ReactNode,
         title: string,
         icon: ReactNode,
-        options?: any
+        options?: object
       ) => void
     ): ReactNode => {
       if (fsItem.type === 'folder') {
@@ -188,7 +188,7 @@ export const WindowProvider: React.FC<{
           );
         } else {
           const { component: Component, props = {} } = fsItem.renderer;
-          return <Component {...fsItem.fileData} {...(props as any)} />;
+          return <Component {...fsItem.fileData} {...props} />;
         }
       }
       return null;
@@ -408,7 +408,7 @@ export const WindowProvider: React.FC<{
       newIcon: ReactNode,
       options: {
         addToHistory?: boolean;
-        metadata?: Record<string, any>;
+        metadata?: Record<string, unknown>;
       } = {}
     ) => {
       setWindows((prev) =>
@@ -528,6 +528,7 @@ export const WindowProvider: React.FC<{
       onWindowAnimationComplete,
       replaceWindowContent,
       getWindowContent,
+      updateWindowTitle,
     ]
   );
 

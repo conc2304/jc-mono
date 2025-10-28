@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
   alpha,
   ListItem,
@@ -7,12 +8,13 @@ import {
   useTheme,
 } from '@mui/material';
 import { Star } from '@mui/icons-material';
-import { OverflowChipContainer } from '../../overflow-chip-container';
+
+import { OverflowChipContainer } from '@jc/ui-components';
 import { ensureContrast } from '@jc/utils';
-import { useFileSystemItem } from '../../../hooks/use-file-list-item';
-import { useContext } from 'react';
-import { FileSystemContext } from '../../../context';
+
 import { FileListItemProps } from './types';
+import { FileSystemContext } from '../../../context';
+import { useFileSystemItem } from '../../../hooks/use-file-list-item/use-file-list-item';
 
 export const ListViewItem = ({
   item,
