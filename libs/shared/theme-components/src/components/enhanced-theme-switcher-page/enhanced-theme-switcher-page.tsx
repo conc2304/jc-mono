@@ -43,12 +43,14 @@ import {
   Delete as DeleteIcon,
   FlashOn,
 } from '@mui/icons-material';
-import { ColorModeSwitcherSpeedDial } from '../color-mode-switcher-speed-dial';
+
 import {
   EnhancedThemeOption,
   useColorMode,
   useEnhancedTheme,
 } from '@jc/themes';
+
+import { ColorModeSwitcherSpeedDial } from '../color-mode-switcher-speed-dial';
 
 // Styled Components with Cyberpunk Aesthetic
 const CyberPaper = styled(Paper)(({ theme }) => ({
@@ -86,26 +88,6 @@ const CyberButton = styled(Button)(({ theme }) => ({
     boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
   },
 }));
-
-const ModeButton = styled(IconButton)<{ isActive?: boolean }>(
-  ({ theme, isActive = false }) => ({
-    border: `2px solid ${
-      isActive ? theme.palette.warning.main : theme.palette.divider
-    }`,
-    backgroundColor: isActive
-      ? alpha(theme.palette.warning.main, 0.2)
-      : 'transparent',
-    color: isActive ? theme.palette.warning.main : theme.palette.text.secondary,
-    borderRadius: 0,
-    padding: '12px',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.warning.main, 0.1),
-      borderColor: theme.palette.warning.main,
-      transform: 'scale(1.05)',
-    },
-  })
-);
 
 const CyberTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
@@ -149,7 +131,7 @@ const CyberSelect = styled(Select)(({ theme }) => ({
   },
 }));
 
-const CyberTypography = styled(Typography)(({ theme }) => ({
+const CyberTypography = styled(Typography)(() => ({
   fontWeight: 'bold',
   letterSpacing: '2px',
   textTransform: 'uppercase',
@@ -213,7 +195,7 @@ export const ThemeCustomizerPage: React.FC = () => {
     isHydrated,
   } = useEnhancedTheme();
 
-  const { mode, setMode, resolvedMode, systemMode } = useColorMode();
+  const { mode, resolvedMode, systemMode } = useColorMode();
 
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -256,10 +238,6 @@ export const ThemeCustomizerPage: React.FC = () => {
       ...prev,
       [colorKey]: value,
     }));
-  };
-
-  const handleModeChange = (newMode: typeof mode) => {
-    setMode(newMode);
   };
 
   const handleThemeChange = (themeId: string) => {

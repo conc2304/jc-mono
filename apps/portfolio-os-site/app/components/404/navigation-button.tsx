@@ -6,7 +6,7 @@ import { useMediaQuery } from '@mui/system';
 import { ensureContrast, getContextualImage } from '@jc/utils';
 
 import { HomeTextBox } from './home-text-box';
-import { DiagonalLines } from '../../atoms';
+import { DiagonalLines } from '../../../../../libs/shared/components/src/lib/atoms';
 
 // Keyframe animations
 const floatAnimation = keyframes`

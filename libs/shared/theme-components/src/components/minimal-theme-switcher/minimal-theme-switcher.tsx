@@ -1,21 +1,28 @@
-import { Box } from '@mui/material';
+import { Box, SimplePaletteColorOptions } from '@mui/material';
+
+import {
+  EnhancedThemeOption,
+  useColorMode,
+  useEnhancedTheme,
+} from '@jc/themes';
+
 import { ModeSwitcherButtonGroup } from '../mode-switcher-button-group';
-import { useColorMode, useEnhancedTheme } from '@jc/themes';
 
 export const MinimalThemeSwitcher = () => {
   const { themes, currentThemeId, changeTheme } = useEnhancedTheme();
   const { mode, setMode, resolvedMode, systemMode } = useColorMode();
 
-  const getThemeColors = (theme: any, currentMode: string) => {
+  const getThemeColors = (theme: EnhancedThemeOption, currentMode: string) => {
     const palette =
       currentMode === 'dark' ? theme.darkPalette : theme.lightPalette;
+
     return [
-      palette.primary?.main,
-      palette.secondary?.main,
-      palette.error?.main,
-      palette.warning?.main,
-      palette.info?.main,
-      palette.success?.main,
+      (palette.primary as SimplePaletteColorOptions).main,
+      (palette.secondary as SimplePaletteColorOptions).main,
+      (palette.error as SimplePaletteColorOptions).main,
+      (palette.warning as SimplePaletteColorOptions).main,
+      (palette.info as SimplePaletteColorOptions).main,
+      (palette.success as SimplePaletteColorOptions).main,
     ];
   };
 
@@ -76,10 +83,10 @@ export const MinimalThemeSwitcher = () => {
           const isSelected = themeDisplay.id === currentThemeId;
 
           const backgroundPaperLight =
-            themeDisplay.lightPalette?.background.paper ?? '#F1F1F1';
+            themeDisplay.lightPalette?.background?.paper ?? '#F1F1F1';
           const colorsLight = getThemeColors(themeDisplay, 'light');
           const backgroundPaperDark =
-            themeDisplay.darkPalette.background.paper || '#DDD';
+            themeDisplay.darkPalette?.background?.paper ?? '#DDD';
           const colorsDark = getThemeColors(themeDisplay, 'dark');
 
           return (
@@ -104,13 +111,19 @@ export const MinimalThemeSwitcher = () => {
                 {
                   bg: backgroundPaperLight,
                   colors: colorsLight,
-                  mode: 'light',
+                  mode: 'light' as const,
                 },
-                { bg: backgroundPaperDark, colors: colorsDark, mode: 'dark' },
+                {
+                  bg: backgroundPaperDark,
+                  colors: colorsDark,
+                  mode: 'dark' as const,
+                },
               ].map(({ bg, colors, mode }, i) => (
                 <Box
-                  key={`${bg}-${colors.primary}-${mode}`}
-                  onClick={() => handleThemeSelect(themeDisplay.id, mode)}
+                  key={`${bg}-${colors[i].toString()}-${mode}`}
+                  onClick={() =>
+                    handleThemeSelect(themeDisplay.id, mode as 'light' | 'dark')
+                  }
                   sx={{
                     width: '50%',
                     height: 32,

@@ -5,7 +5,7 @@ import { getContextualImage } from '@jc/utils';
 
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
-import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
+import { DiagonalLines } from '../../../../../libs/shared/components/src/lib/atoms/diagonal-lines/diagonal-lines';
 
 export const MobilePageNotFound404 = ({
   onHomeClick,

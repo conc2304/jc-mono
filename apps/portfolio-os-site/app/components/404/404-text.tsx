@@ -2,7 +2,10 @@ import { Box, Typography, alpha } from '@mui/material';
 
 import { ensureContrast, getContextualImage } from '@jc/utils';
 
-import { GlitchText, ScrambleText } from '../../atoms';
+import {
+  GlitchText,
+  ScrambleText,
+} from '../../../../../libs/shared/components/src/lib/atoms';
 
 export const Text404 = () => {
   return (

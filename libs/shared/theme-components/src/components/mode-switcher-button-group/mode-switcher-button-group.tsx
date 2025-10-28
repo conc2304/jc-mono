@@ -1,12 +1,12 @@
 import { Box, Tooltip, Stack, Typography, useTheme } from '@mui/material';
-import { AugmentedButton } from '@jc/ui-components';
-
 import {
   DarkMode,
   LightMode,
   SettingsSystemDaydream,
 } from '@mui/icons-material';
+
 import { type ColorMode } from '@jc/themes';
+import { AugmentedButton } from '@jc/ui-components';
 
 interface ModeSwitcherButtonGroupProps {
   mode: ColorMode;
@@ -61,7 +61,7 @@ export const ModeSwitcherButtonGroup = ({
               color={mode === btnMode ? 'primary' : 'secondary'}
               onClick={() => onModeChange && onModeChange(btnMode)}
               shape={getButtonGroupShape(i, arr.length)}
-              sx={(theme) => ({
+              sx={() => ({
                 flex: 1,
               })}
             >
@@ -99,7 +99,7 @@ export const ModeSwitcherButtonGroup = ({
               color={mode === btnMode ? 'success' : 'secondary'}
               onClick={() => onModeChange && onModeChange(btnMode)}
               shape={getButtonGroupShape(i, arr.length)}
-              sx={(theme) => ({
+              sx={() => ({
                 flex: 1,
               })}
             >

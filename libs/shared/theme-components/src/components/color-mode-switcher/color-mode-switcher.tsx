@@ -1,6 +1,7 @@
 import { DarkMode, LightMode, SettingsBrightness } from '@mui/icons-material';
-import { AugmentedButtonGroup, ButtonGroupItem } from '@jc/ui-components';
+
 import { useColorMode } from '@jc/themes';
+import { AugmentedButtonGroup, ButtonGroupItem } from '@jc/ui-components';
 
 export const ColorModeSwitcher = () => {
   const { mode, setMode, resolvedMode } = useColorMode();

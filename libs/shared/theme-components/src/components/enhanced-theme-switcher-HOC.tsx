@@ -1,4 +1,5 @@
 import { useEnhancedTheme } from '@jc/themes';
+
 import { EnhancedThemeSwitcher } from './enhanced-theme-switcher';
 
 export const EnhancedThemeSwitcherWithTheme = () => {
@@ -8,7 +9,7 @@ export const EnhancedThemeSwitcherWithTheme = () => {
     <EnhancedThemeSwitcher
       themes={themes}
       selectedThemeId={currentThemeId}
-      onThemeChange={(themeId, theme) => changeTheme(themeId)}
+      onThemeChange={(themeId, _theme) => changeTheme(themeId)}
       showModeToggle={true}
       compact={false}
     />

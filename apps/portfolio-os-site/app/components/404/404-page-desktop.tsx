@@ -2,13 +2,13 @@ import { CSSProperties } from 'react';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
 import { MinimalThemeSwitcher } from '@jc/theme-components';
+import { DiagonalLines } from '@jc/ui-components';
 import { getContextualImage } from '@jc/utils';
 
 import { Text404 } from './404-text';
 import { HorizontalCompass } from './horizontal-compass';
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
-import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
 
 export const DesktopPageNotFound404 = ({
   onHomeClick,
@@ -70,7 +70,7 @@ export const DesktopPageNotFound404 = ({
             transform: 'translateY(-50%)',
             bgcolor: 'info.main',
           }}
-          customCardinalComponent={({ name, degree, position }) => (
+          customCardinalComponent={({ name, degree: _degree, position }) => (
             <Stack
               sx={{
                 position: 'absolute',
@@ -382,7 +382,7 @@ export const DesktopPageNotFound404 = ({
         >
           <Box
             className="bottom-inner-left-bg--bg-overlay"
-            sx={(theme) => ({
+            sx={() => ({
               ...bgOverlayProps,
               backgroundImage: `url(${
                 getContextualImage(

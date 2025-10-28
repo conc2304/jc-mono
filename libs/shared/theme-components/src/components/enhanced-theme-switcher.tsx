@@ -5,7 +5,6 @@ import {
   Select,
   MenuItem,
   Box,
-  Chip,
   IconButton,
   Tooltip,
   Stack,
@@ -16,6 +15,7 @@ import {
   alpha,
   useTheme,
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import {
   PaletteIcon,
   SunIcon as LightMode,
@@ -25,11 +25,10 @@ import {
   Monitor,
 } from 'lucide-react';
 
-import { Close } from '@mui/icons-material';
 import { ColorMode, EnhancedThemeOption, useColorMode } from '@jc/themes';
 
 // Styled components with theme-aware brutalist sci-fi aesthetic
-const MainPanel = styled(Box)(({ theme }) => ({
+const MainPanel = styled(Box)(() => ({
   borderRadius: 0,
   position: 'relative',
   overflow: 'hidden',
@@ -179,36 +178,6 @@ const SystemModeButton = styled(IconButton)<{ isActive?: boolean }>(
   })
 );
 
-const CyberChip = styled(Chip)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.primary.main, 0.2),
-  color: theme.palette.primary.main,
-  border: `1px solid ${theme.palette.primary.main}`,
-  borderRadius: 0,
-  fontFamily: 'monospace',
-  fontSize: '10px',
-  fontWeight: 'bold',
-  letterSpacing: '1px',
-  textTransform: 'uppercase',
-  '&.MuiChip-colorPrimary': {
-    backgroundColor: alpha(theme.palette.warning.main, 0.2),
-    color: theme.palette.warning.main,
-    borderColor: theme.palette.warning.main,
-  },
-  '&.MuiChip-colorWarning': {
-    backgroundColor: alpha(theme.palette.error.main, 0.2),
-    color: theme.palette.error.main,
-    borderColor: theme.palette.error.main,
-  },
-}));
-
-const StatusIndicator = styled(Box)<{ delay?: number }>(({ delay = 0 }) => ({
-  width: '8px',
-  height: '8px',
-  borderRadius: '50%',
-  animation: 'pulse 2s infinite',
-  animationDelay: `${delay}s`,
-}));
-
 const ColorSwatch = styled(Box)<{ color: string }>(({ color, theme }) => ({
   width: '12px',
   height: '12px',
@@ -233,13 +202,17 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
   selectedThemeId,
   onThemeChange,
   showModeToggle = true,
-  compact = false,
   compactToggle = false,
   compactMenu = false,
   onClose,
 }) => {
   const theme = useTheme();
-  const { mode, setMode, resolvedMode, systemMode } = useColorMode();
+  const {
+    mode,
+    setMode,
+    resolvedMode,
+    systemMode: _systemMode,
+  } = useColorMode();
 
   const handleThemeChange = (event: SelectChangeEvent<string>) => {
     const themeId = event.target.value;
@@ -490,22 +463,6 @@ export const EnhancedThemeSwitcher: React.FC<EnhancedThemeSwitcherProps> = ({
                 </Typography>
               </Box>
             </Stack>
-            {/* <Stack direction="row" spacing={1} alignItems="center">
-              <PaletteIcon size={16} color={theme.palette.secondary.main} />
-              <Stack direction="row" spacing={0.5}>
-                <StatusIndicator
-                  sx={{ backgroundColor: theme.palette.success.main }}
-                />
-                <StatusIndicator
-                  sx={{ backgroundColor: theme.palette.warning.main }}
-                  delay={0.5}
-                />
-                <StatusIndicator
-                  sx={{ backgroundColor: theme.palette.error.main }}
-                  delay={1}
-                />
-              </Stack>
-            </Stack> */}
             {onClose && <Close onClick={onClose} />}
           </Stack>
         </Box>

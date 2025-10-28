@@ -5,12 +5,13 @@ import {
   SettingsBrightness,
   Brightness4,
 } from '@mui/icons-material';
+
+import { ColorMode, useColorMode } from '@jc/themes';
 import {
   ResponsiveAction,
   TransitionConfig,
   SpeedDialResponsive,
 } from '@jc/ui-components';
-import { ColorMode, useColorMode } from '@jc/themes';
 
 interface ColorModeSwitcherProps {
   direction?: 'row' | 'column';

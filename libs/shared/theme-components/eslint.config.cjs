@@ -1,9 +1,9 @@
 const nx = require('@nx/eslint-plugin');
-const baseConfig = require('../../../.eslintrc.json');
+const baseConfig = require('../../../eslint.base.config.mjs').default;
 
 module.exports = [
-  ...baseConfig,
   ...nx.configs['flat/react'],
+  ...baseConfig,
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     // Override or add rules here
