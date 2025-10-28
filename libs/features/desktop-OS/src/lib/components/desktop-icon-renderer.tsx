@@ -1,8 +1,9 @@
-import { DesktopIcon, useWindowManager } from '@jc/ui-components';
+import { DesktopIcon, useWindowManager } from '@jc/file-system';
 import { memo, useMemo } from 'react';
 
 export const DesktopIconRenderer = memo(() => {
-  const { iconPositions, fileSystemItems, draggedIcon } = useWindowManager();
+  const { desktopItemPositions, fileSystemItems, draggedIcon } =
+    useWindowManager();
 
   const desktopIcons = useMemo(() => {
     return fileSystemItems.filter((item) => !item.parentId);
@@ -11,7 +12,7 @@ export const DesktopIconRenderer = memo(() => {
   return (
     <>
       {desktopIcons.map((icon) => {
-        const position = iconPositions[icon.id] || { x: 0, y: 0 };
+        const position = desktopItemPositions[icon.id] || { x: 0, y: 0 };
         return (
           <DesktopIcon
             key={icon.id}

@@ -1,6 +1,5 @@
 // Desktop OS Utilities
-import { ItemPosition } from '@jc/ui-components';
-import { FileSystemItem } from '@jc/file-system';
+import { FileSystemItem, ItemPosition } from '@jc/file-system';
 
 export const snapToGrid = (x: number, y: number, gridSize = 20) => {
   return {

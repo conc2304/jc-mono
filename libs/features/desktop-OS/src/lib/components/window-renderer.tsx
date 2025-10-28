@@ -1,4 +1,4 @@
-import { useWindowManager, Window } from '@jc/ui-components';
+import { useWindowManager, Window } from '@jc/file-system';
 import { memo } from 'react';
 
 export const WindowRenderer = memo(() => {

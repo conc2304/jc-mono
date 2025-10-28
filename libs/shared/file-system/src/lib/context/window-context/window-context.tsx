@@ -19,11 +19,6 @@ import {
   FileSystemNavigationManager,
   NavigationGroup,
 } from '../navigation-context';
-// import { findFileSystemItemByIdWithPath } from '../../utils';
-// import {
-//   FileSystemNavigationManager,
-//   type NavigationGroup,
-// } from '../navigation-context';
 
 interface DragRef {
   startX: number;

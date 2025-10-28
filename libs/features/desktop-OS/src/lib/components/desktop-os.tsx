@@ -1,7 +1,10 @@
 import { ReactNode } from 'react';
-import { WindowProvider } from '@jc/ui-components';
 
-import { BaseFileSystemItem, NavigationGroup } from '@jc/file-system';
+import {
+  BaseFileSystemItem,
+  NavigationGroup,
+  WindowProvider,
+} from '@jc/file-system';
 import { DesktopContent } from './desktop-content';
 
 type DesktopOSProps = {
@@ -16,7 +19,6 @@ export const DesktopOS = ({
   navigationGroups = [],
   footer,
 }: DesktopOSProps) => {
-
   return (
     <WindowProvider
       fileSystemItems={fileSystem}
