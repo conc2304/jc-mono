@@ -1,7 +1,7 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Button, Typography, Container } from '@mui/material';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import HomeIcon from '@mui/icons-material/Home';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 interface Props {
   children: ReactNode;

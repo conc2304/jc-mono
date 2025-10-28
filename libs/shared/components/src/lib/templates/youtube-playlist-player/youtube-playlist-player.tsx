@@ -15,6 +15,7 @@ import {
   Alert,
   useTheme,
 } from '@mui/material';
+
 import {
   YouTubePlaylistItem,
   YouTubePlaylistItemsResponse,
@@ -133,7 +134,9 @@ export const YouTubePlaylistPlayer = ({
                 height: '100%',
                 border: 'none',
               }}
-              src={`https://www.youtube.com/embed/${videoId}${shouldAutoplay ? '?autoplay=1' : ''}`}
+              src={`https://www.youtube.com/embed/${videoId}${
+                shouldAutoplay ? '?autoplay=1' : ''
+              }`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />

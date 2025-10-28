@@ -1,5 +1,4 @@
-import { TileGrid } from '@jc/file-system';
-import { useWindowManager, Window } from '@jc/ui-components';
+import { TileGrid, useWindowManager, Window } from '@jc/file-system';
 import { Box } from '@mui/system';
 import { ReactNode, useMemo } from 'react';
 

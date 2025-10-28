@@ -1,10 +1,14 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Property } from 'csstype';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 
-import { AugmentedIconButton, AugmentedIconButtonProps } from '../../atoms';
-import { useWindowActions } from '../../context';
+import {
+  AugmentedIconButton,
+  AugmentedIconButtonProps,
+} from '@jc/ui-components';
 import { ensureContrast } from '@jc/utils';
-import { Property } from 'csstype';
+
+import { useWindowActions } from '../../context';
 
 type WindowControlProps = {
   id: string;

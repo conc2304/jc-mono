@@ -9,12 +9,10 @@ import {
   Chip,
 } from '@mui/material';
 import { PlayArrow } from '@mui/icons-material';
-import {
-  ImageContainer,
-  ImageLoadingProps,
-  useMediaProvider,
-  VideoPlayer,
-} from '@jc/ui-components';
+
+import { ensureContrast, MediaContextSize } from '@jc/utils';
+
+import { MediaModal } from './components';
 import {
   MediaItem,
   ImageRenderAttributes,
@@ -22,8 +20,9 @@ import {
   BaseImageData,
   BaseVideoData,
 } from './types';
-import { MediaModal } from './components';
-import { ensureContrast, MediaContextSize } from '@jc/utils';
+import { ImageContainer, ImageLoadingProps } from '../../atoms';
+import { useMediaProvider } from '../../context';
+import { VideoPlayer } from '../../molecules';
 
 export interface MediaGalleryProps extends ImageLoadingProps {
   images?: BaseImageData[];

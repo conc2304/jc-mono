@@ -7,12 +7,6 @@ import { ImageContainer, useMediaProvider } from '@jc/ui-components';
 import { FileListItemProps } from './types';
 import { FileSystemContext } from '../../../context';
 import { useFileSystemItem } from '../../../hooks';
-// import {
-// FileSystemContext,
-// useMediaProvider,
-// } from '../../../../../../components/src/lib/context';
-// import { useFileSystemItem } from '../../../hooks/use-file-list-item/use-file-list-item';
-// import { ImageContainer } from '../../../../../../components/src/lib/atoms';
 
 export const HolographicCardViewItem = ({
   item,

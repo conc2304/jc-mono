@@ -1,5 +1,6 @@
-import { ensureContrast } from '@jc/utils';
 import { Box, Stack, Typography, styled } from '@mui/material';
+
+import { ensureContrast } from '@jc/utils';
 
 const TextBox = styled(Box)(({ theme }) => ({
   containerType: 'size',

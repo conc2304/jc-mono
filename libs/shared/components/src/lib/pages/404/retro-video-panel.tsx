@@ -1,4 +1,5 @@
 import { darken, useTheme } from '@mui/material';
+
 import { GifPlayer } from '../../organisms';
 
 export const RetroVideoPanel = () => {

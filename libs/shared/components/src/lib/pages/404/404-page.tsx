@@ -1,7 +1,8 @@
 import { useMediaQuery, useTheme } from '@mui/material';
-import { MobilePageNotFound404 } from './404-page-mobile';
-import { DesktopPageNotFound404 } from './404-page-desktop';
 import { useNavigate } from 'react-router-dom';
+
+import { DesktopPageNotFound404 } from './404-page-desktop';
+import { MobilePageNotFound404 } from './404-page-mobile';
 
 export const PageNotFound404 = () => {
   const theme = useTheme();

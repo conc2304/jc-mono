@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
 import { alpha, Box, darken, Typography, useTheme } from '@mui/material';
 
+import { ensureContrast } from '@jc/utils';
+
 import { useWindowManager } from '../../context';
 import { WindowControls } from '../window-controls';
-import { ensureContrast } from '@jc/utils';
 
 type WindowTitleBarProps = {
   isActive?: boolean;

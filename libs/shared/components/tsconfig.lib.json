@@ -33,20 +33,17 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "../../../declaration-files/*.d.ts"
-, "../file-system/src/lib/context/file-system-context/file-system-context.tsx", "../file-system/src/lib/context/window-context/window-context.tsx", "../file-system/src/lib/hooks/use-file-list-item/use-file-list-item.tsx"  ],
+    "../../../declaration-files/*.d.ts",
+    "../file-system/src/lib/context/file-system-context/file-system-context.tsx",
+    "../file-system/src/lib/context/window-context/window-context.tsx",
+    "../file-system/src/lib/hooks/use-file-list-item/use-file-list-item.tsx"
+  ],
   "references": [
     {
       "path": "../theme-components/tsconfig.lib.json"
     },
     {
-      "path": "../themes/tsconfig.lib.json"
-    },
-    {
       "path": "../utils/tsconfig.lib.json"
-    },
-    {
-      "path": "../file-system/tsconfig.lib.json"
     }
   ]
 }

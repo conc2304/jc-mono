@@ -15,7 +15,11 @@ import {
   Fullscreen,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { ImageContainer, VideoRenderAttributes } from '@jc/ui-components';
+
+import { ImageContainer } from '../../atoms';
+import { VideoRenderAttributes } from '../../organisms';
+
+// import { ImageContainer, VideoRenderAttributes } from '@jc/ui-components';
 
 interface VideoPlayerProps {
   video: VideoRenderAttributes;

@@ -1,8 +1,8 @@
-import { alpha, Box, Divider, Typography } from '@mui/material';
+import { alpha, Box, Typography } from '@mui/material';
 
-import { AugmentedButton } from '../../atoms';
+import { AugmentedButton, NotificationCenter } from '@jc/ui-components';
+
 import { useWindowActions, useWindowManager } from '../../context';
-import { NotificationCenter } from '../notification-center';
 
 export const TaskBar = () => {
   const { windows } = useWindowManager();

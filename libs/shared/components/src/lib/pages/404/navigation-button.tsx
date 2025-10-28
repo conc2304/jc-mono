@@ -1,10 +1,12 @@
-import { Box, Stack, useTheme, keyframes } from '@mui/material';
-import { DiagonalLines } from '../../atoms';
-import { HomeFilled } from '@mui/icons-material';
-import { ensureContrast, getContextualImage } from '@jc/utils';
 import { useState } from 'react';
+import { Box, Stack, useTheme, keyframes } from '@mui/material';
+import { HomeFilled } from '@mui/icons-material';
 import { useMediaQuery } from '@mui/system';
+
+import { ensureContrast, getContextualImage } from '@jc/utils';
+
 import { HomeTextBox } from './home-text-box';
+import { DiagonalLines } from '../../atoms';
 
 // Keyframe animations
 const floatAnimation = keyframes`

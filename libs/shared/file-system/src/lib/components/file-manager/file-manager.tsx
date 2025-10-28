@@ -3,20 +3,16 @@ import { Box, useTheme } from '@mui/material';
 import { useMediaQuery } from '@mui/system';
 import { Computer } from 'lucide-react';
 
-import {
-  BreadcrumbNavigation,
-  QuickAccessPanel,
-  SortBy,
-  SortOrder,
-  ViewMode,
-} from '@jc/ui-components';
+import { SortBy, SortOrder, ViewMode } from '@jc/ui-components';
 
 import { FileSystemContext, useWindowContentActions } from '../../context';
 import { BaseFileSystemItem } from '../../types';
 import { useFileSystemManager } from '../../use-file-system-manager';
+import { BreadcrumbNavigation } from '../breadcrumb-navigation';
 import { FileListView } from '../file-list-view';
 import { ViewControls } from '../file-view-controls';
 import { PreviewPanel } from '../preview-panel';
+import { QuickAccessPanel } from '../quick-access-panel';
 
 interface FileManagerProps {
   windowId?: string;

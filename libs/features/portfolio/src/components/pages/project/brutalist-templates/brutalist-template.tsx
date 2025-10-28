@@ -59,11 +59,7 @@ export const BrutalistTemplate: React.FC<
     null
   );
 
-  portfolioProject;
-  // const transformedMedia = useProjectMedia(portfolioProject);
-
-  const { generateImageSources, generatePlaceholder } =
-    useMediaProvider().provider;
+  const { generateImageSources } = useMediaProvider().provider;
 
   useEffect(() => {
     if (containerRef.current) {

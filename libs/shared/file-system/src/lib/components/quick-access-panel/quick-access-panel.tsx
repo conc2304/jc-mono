@@ -10,18 +10,19 @@ import {
 } from '@mui/material';
 import { ChevronDown, ChevronRight, List } from 'lucide-react';
 
-// import { quickAccessItems } from './mockData';
-
 import { FileSystemContext } from '../../context';
+import { FileSystemItem } from '../../types';
 
-const quickAccessItems = [];
 interface QuickAccessPanelProps {
   collapsed: boolean;
   onToggle: () => void;
+  quickAccessItems?: FileSystemItem[];
 }
+
 export const QuickAccessPanel = ({
   collapsed,
   onToggle,
+  quickAccessItems,
 }: QuickAccessPanelProps) => {
   const context = useContext(FileSystemContext);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([
@@ -35,6 +36,8 @@ export const QuickAccessPanel = ({
         : [...prev, category]
     );
   };
+
+  if (!quickAccessItems || quickAccessItems.length === 0) return <></>;
 
   return (
     <Box

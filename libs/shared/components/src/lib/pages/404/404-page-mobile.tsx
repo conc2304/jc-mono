@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
-import {  ReactNode } from 'react';
-import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
+
+import { getContextualImage } from '@jc/utils';
+
 import { NavigationButtons } from './navigation-button';
 import { RetroVideoPanel } from './retro-video-panel';
-import { getContextualImage } from '@jc/utils';
+import { DiagonalLines } from '../../atoms/diagonal-lines/diagonal-lines';
 
 export const MobilePageNotFound404 = ({
   onHomeClick,

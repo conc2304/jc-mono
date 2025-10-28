@@ -16,8 +16,8 @@ import {
 } from './resize-handle';
 import { getCursorForDirection, getResizeDimensions } from './utils';
 import { useWindowManager } from '../../context';
-import { WindowTitleBar } from '../../molecules';
 import { WindowMetaData } from '../../types';
+import { WindowTitleBar } from '../window-title-bar';
 
 // Extended interface with animation properties and docking
 interface WindowProps extends WindowMetaData {

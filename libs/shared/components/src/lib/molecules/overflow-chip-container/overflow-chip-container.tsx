@@ -1,6 +1,7 @@
 import { useState, useLayoutEffect, useRef } from 'react';
 import { Box, Chip, lighten, Tooltip, useTheme } from '@mui/material';
 import { Property } from 'csstype';
+
 import { ensureContrast } from '@jc/utils';
 interface OverflowChipContainerProps {
   tags?: string[];

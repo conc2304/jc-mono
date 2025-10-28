@@ -83,3 +83,49 @@ export interface DesktopTile<TData = object, TProps = object> {
   tileRenderer?: TileRenderer<TData, TProps>;
   tileData?: TData;
 }
+
+export interface DesktopItemMetaData {
+  id: string;
+  name: string;
+  icon: ReactNode;
+}
+
+export interface ItemPosition {
+  x: number;
+  y: number;
+}
+
+export interface WindowMetaData {
+  id: string;
+  title: string;
+  icon: ReactNode;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  zIndex: number;
+  minimized: boolean;
+  maximized: boolean;
+  windowContent: ReactNode;
+  isActive: boolean;
+
+  // Animation Props
+  isOpening?: boolean;
+  isClosing?: boolean;
+  animationState?:
+    | 'normal'
+    | 'opening'
+    | 'closing'
+    | 'minimizing'
+    | 'maximizing'
+    | 'docking';
+}
+
+export interface QuickAccessItem {
+  id: string;
+  name: string;
+  icon: ReactNode;
+  path: string;
+  type: 'folder' | 'application';
+  category?: string;
+}

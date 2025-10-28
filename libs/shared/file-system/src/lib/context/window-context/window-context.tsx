@@ -11,15 +11,19 @@ import React, {
 import { useMediaQuery, useTheme } from '@mui/material';
 
 import { remToPixels } from '@jc/themes';
-import { ItemPosition, WindowMetaData } from '@jc/ui-components';
 
 import { FileManager } from '../../components';
+import { FileSystemItem, ItemPosition, WindowMetaData } from '../../types';
+import { findFileSystemItemByIdWithPath } from '../../utils';
 import {
   FileSystemNavigationManager,
   NavigationGroup,
-} from '../../navigation-manager';
-import { FileSystemItem } from '../../types';
-import { findFileSystemItemByIdWithPath } from '../../utils';
+} from '../navigation-context';
+// import { findFileSystemItemByIdWithPath } from '../../utils';
+// import {
+//   FileSystemNavigationManager,
+//   type NavigationGroup,
+// } from '../navigation-context';
 
 interface DragRef {
   startX: number;
@@ -528,7 +532,6 @@ export const WindowProvider: React.FC<{
       onWindowAnimationComplete,
       replaceWindowContent,
       getWindowContent,
-      updateWindowTitle,
     ]
   );
 
