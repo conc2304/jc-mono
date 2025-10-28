@@ -6,6 +6,7 @@ import {
   CircularProgress,
   useTheme,
   Fade,
+  SxProps,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -19,11 +20,9 @@ import {
 import { ImageContainer } from '../../atoms';
 import { VideoRenderAttributes } from '../../organisms';
 
-// import { ImageContainer, VideoRenderAttributes } from '@jc/ui-components';
-
 interface VideoPlayerProps {
   video: VideoRenderAttributes;
-  sx?: any;
+  sx?: SxProps;
   autoPlay?: boolean;
   controls?: boolean;
   muted?: boolean;
@@ -60,7 +59,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [showControls, setShowControls] = useState(false);
   const [showThumbnail, setShowThumbnail] = useState(!!video.thumbnail);
   const [shouldLoad, setShouldLoad] = useState(!lazy);
-  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [_isIntersecting, setIsIntersecting] = useState(false);
   const [showPlayOverlay, setShowPlayOverlay] = useState(true);
 
   // Intersection Observer for lazy loading

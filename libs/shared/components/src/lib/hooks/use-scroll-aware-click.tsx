@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, CSSProperties } from 'react';
+import { useState, useCallback, useRef, CSSProperties, useMemo } from 'react';
 
 // Configuration interface for the hook
 export interface ScrollAwareClickConfig {
@@ -85,7 +85,10 @@ export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
   onClick?: (e: React.MouseEvent<T>) => void,
   config: ScrollAwareClickConfig = {}
 ): ScrollAwareClickReturn<T> => {
-  const mergedConfig = { ...DEFAULT_CONFIG, ...config };
+  const mergedConfig = useMemo(
+    () => ({ ...DEFAULT_CONFIG, ...config }),
+    [config]
+  );
 
   // State management
   const [moved, setMoved] = useState(false);
@@ -97,19 +100,8 @@ export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
   const mouseDown = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout>(null);
 
-  // Debug logging utility
-  const log = useCallback(
-    (...args: any[]) => {
-      if (mergedConfig.debug) {
-        console.log('[ScrollAwareClick]', ...args);
-      }
-    },
-    [mergedConfig.debug]
-  );
-
   // Reset function to clear all state
   const reset = useCallback(() => {
-    log('Resetting state');
     setMoved(false);
     setIsScrolling(false);
     setMoveDistance({ x: 0, y: 0 });
@@ -119,28 +111,23 @@ export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
-  }, [log]);
+  }, []);
 
   // Touch start handler
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent<T>) => {
-      const touch = e.touches[0];
-      if (!touch) return;
+  const handleTouchStart = useCallback((e: React.TouchEvent<T>) => {
+    const touch = e.touches[0];
+    if (!touch) return;
 
-      touchStart.current = {
-        x: touch.pageX,
-        y: touch.pageY,
-        timestamp: Date.now(),
-      };
+    touchStart.current = {
+      x: touch.pageX,
+      y: touch.pageY,
+      timestamp: Date.now(),
+    };
 
-      setMoved(false);
-      setIsScrolling(false);
-      setMoveDistance({ x: 0, y: 0 });
-
-      log('Touch start:', touchStart.current);
-    },
-    [log]
-  );
+    setMoved(false);
+    setIsScrolling(false);
+    setMoveDistance({ x: 0, y: 0 });
+  }, []);
 
   // Touch move handler
   const handleTouchMove = useCallback(
@@ -165,21 +152,14 @@ export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
       if (shouldConsiderMoved) {
         setMoved(true);
         setIsScrolling(true);
-        log('Movement detected:', {
-          moveX,
-          moveY,
-          threshold: mergedConfig.threshold,
-        });
       }
     },
-    [mergedConfig.threshold, mergedConfig.allowClickCondition, log]
+    [mergedConfig]
   );
 
   // Touch end handler
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent<T>) => {
-      log('Touch end, moved:', moved);
-
       // Set a timeout to reset scrolling state after touch ends
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
@@ -187,33 +167,20 @@ export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
 
       scrollTimeoutRef.current = setTimeout(() => {
         setIsScrolling(false);
-        log('Scrolling state cleared');
       }, 100);
     },
-    [moved, log]
+    [moved]
   );
 
   // Mouse down handler (for desktop compatibility)
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<T>) => {
-      mouseDown.current = true;
-      log('Mouse down');
-    },
-    [log]
-  );
+  const handleMouseDown = useCallback((e: React.MouseEvent<T>) => {
+    mouseDown.current = true;
+  }, []);
 
   // Click handler
   const handleClick = useCallback(
     (e: React.MouseEvent<T>) => {
       const shouldPreventClick = moved || isScrolling;
-
-      log('Click event:', {
-        moved,
-        isScrolling,
-        shouldPreventClick,
-        moveDistance,
-      });
-
       if (shouldPreventClick) {
         if (mergedConfig.preventDefault) {
           e.preventDefault();
@@ -222,28 +189,25 @@ export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
           e.stopPropagation();
         }
 
-        log('Click prevented');
         return false;
       }
 
       // Call the original onClick handler
       if (onClick) {
-        log('Executing click handler');
         onClick(e);
       }
 
       // Reset state after successful click
       setTimeout(reset, 50);
+      return true;
     },
     [
       moved,
       isScrolling,
-      moveDistance,
-      mergedConfig.preventDefault,
-      mergedConfig.stopPropagation,
+      // moveDistance,
+      mergedConfig,
       onClick,
       reset,
-      log,
     ]
   );
 

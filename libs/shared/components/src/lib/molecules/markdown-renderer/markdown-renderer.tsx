@@ -16,7 +16,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
   // Custom renderers for markdown elements using MUI Typography
   const markdownRenderers = {
     // Paragraphs
-    p: ({ children }: any) => (
+    p: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         variant="body1"
         sx={{
@@ -30,7 +30,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
     ),
 
     // Headings
-    h1: ({ children }: any) => (
+    h1: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         variant="h4"
         sx={{
@@ -44,7 +44,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
       </Typography>
     ),
 
-    h2: ({ children }: any) => (
+    h2: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         variant="h5"
         sx={{
@@ -58,7 +58,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
       </Typography>
     ),
 
-    h3: ({ children }: any) => (
+    h3: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         variant="h6"
         sx={{
@@ -73,7 +73,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
     ),
 
     // Lists
-    ul: ({ children }: any) => (
+    ul: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="ul"
         sx={{
@@ -86,7 +86,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
       </Typography>
     ),
 
-    ol: ({ children }: any) => (
+    ol: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="ol"
         sx={{
@@ -99,7 +99,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
       </Typography>
     ),
 
-    li: ({ children }: any) => (
+    li: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="li"
         variant="body1"
@@ -114,7 +114,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
     ),
 
     // Emphasis
-    strong: ({ children }: any) => (
+    strong: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="strong"
         sx={{
@@ -126,7 +126,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
       </Typography>
     ),
 
-    em: ({ children }: any) => (
+    em: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="em"
         sx={{
@@ -139,7 +139,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
     ),
 
     // Code
-    code: ({ children }: any) => (
+    code: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="code"
         sx={{
@@ -156,7 +156,7 @@ export const MarkdownRenderer: React.FC<MarkdownTypographyProps> = ({
     ),
 
     // Blockquotes
-    blockquote: ({ children }: any) => (
+    blockquote: ({ children }: { children?: React.ReactNode }) => (
       <Typography
         component="blockquote"
         sx={{

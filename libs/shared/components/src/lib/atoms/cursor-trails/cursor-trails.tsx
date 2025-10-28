@@ -86,7 +86,7 @@ export interface CursorTrailConfig {
   followDamping?: number;
   trailSpacing?: number;
 
-  // Energy pulse settings (NEW)
+  // Energy pulse settings
   pulseForce?: number;
   pulseSpeed?: number;
   pulseMaxRadius?: number;
@@ -201,7 +201,7 @@ export const CursorTrail = ({
   const lastPositionsRef = useRef<TrailCursor[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const currentMousePosRef = useRef<MousePosition>({ x: 0, y: 0 });
-  const activePulsesRef = useRef<EnergyPulse[]>([]); // NEW: Track active energy pulses
+  const activePulsesRef = useRef<EnergyPulse[]>([]); // Track active energy pulses
 
   // Performance optimizations
   const screenDimensionsRef = useRef<ScreenDimensions>({ width: 0, height: 0 });
@@ -238,9 +238,9 @@ export const CursorTrail = ({
       width: window.innerWidth,
       height: window.innerHeight - floorHeight,
     };
-  }, []);
+  }, [floorHeight]);
 
-  // NEW: Initialize trail cursors with physics properties
+  // Initialize trail cursors with physics properties
   const initializeTrailCursor = useCallback(
     (position: Partial<TrailCursor>, targetIndex: number): TrailCursor => {
       return {
@@ -257,7 +257,7 @@ export const CursorTrail = ({
     []
   );
 
-  // NEW: Handle mouse click for energy pulse
+  // Handle mouse click for energy pulse
   const handleMouseClick = useCallback((e: MouseEvent) => {
     const now = performance.now();
     const pulseOrigin: MousePosition = { x: e.clientX, y: e.clientY };
@@ -327,21 +327,28 @@ export const CursorTrail = ({
               : returningCursorsRef.current;
 
           returningCursorsRef.current = cursorsToReturn.map(
-            (cursor, index): ReturningCursor => ({
-              ...cursor,
-              startX: cursor.x,
-              startY:
-                cursor.settled && (cursor as FallingCursor).flopY !== undefined
-                  ? ((cursor as FallingCursor).groundY || cursor.y) +
-                    (cursor as FallingCursor).flopY!
-                  : cursor.y,
-              targetX: newPosition.x!,
-              targetY: newPosition.y!,
-              returnStartTime: now + index * returnStagger,
-              returnDuration: returnDuration + index * returnDurationVariation,
-              settled: false,
-              rotation: 0,
-            })
+            (cursor, index): ReturningCursor => {
+              const fallingCursor = cursor as FallingCursor;
+              const flopY = fallingCursor.flopY ?? 0;
+              const startY =
+                cursor.settled && fallingCursor.flopY !== undefined
+                  ? (fallingCursor.groundY || cursor.y) + flopY
+                  : cursor.y;
+              const targetX = newPosition.x ?? 0;
+              const targetY = newPosition.y ?? 0;
+
+              return {
+                ...cursor,
+                startX: cursor.x,
+                startY,
+                targetX,
+                targetY,
+                returnStartTime: now + index * returnStagger,
+                returnDuration: returnDuration + index * returnDurationVariation,
+                settled: false,
+                rotation: 0,
+              };
+            }
           );
 
           fallingCursorsRef.current = [];
@@ -349,13 +356,15 @@ export const CursorTrail = ({
 
         // Update target for returning cursors
         if (isReturning) {
+          const targetX = newPosition.x ?? 0;
+          const targetY = newPosition.y ?? 0;
           returningCursorsRef.current.forEach((cursor) => {
-            cursor.targetX = newPosition.x!;
-            cursor.targetY = newPosition.y!;
+            cursor.targetX = targetX;
+            cursor.targetY = targetY;
           });
         }
       } else {
-        // Normal trail mode - NEW: Initialize cursors with following behavior
+        // Normal trail mode - Initialize cursors with following behavior
         if (trailRef.current.length === 0) {
           // First cursor
           trailRef.current = [initializeTrailCursor(newPosition, -1)]; // -1 means follow mouse directly
@@ -370,8 +379,8 @@ export const CursorTrail = ({
 
         // Update the first cursor's target to current mouse position
         if (trailRef.current.length > 0) {
-          trailRef.current[0].followX = newPosition.x!;
-          trailRef.current[0].followY = newPosition.y!;
+          trailRef.current[0].followX = newPosition.x ?? 0;
+          trailRef.current[0].followY = newPosition.y ?? 0;
         }
       }
 
@@ -744,14 +753,14 @@ export const CursorTrail = ({
 
     document.addEventListener('mousemove', throttledMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('click', handleMouseClick); // NEW: Add click listener
+    document.addEventListener('click', handleMouseClick);
     animationRef.current = requestAnimationFrame(animateTrail);
 
     return () => {
       window.removeEventListener('resize', updateScreenDimensions);
       document.removeEventListener('mousemove', throttledMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('click', handleMouseClick); // NEW: Remove click listener
+      document.removeEventListener('click', handleMouseClick);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }

@@ -108,6 +108,7 @@ export default [
       rules: {
         ...config.rules,
         'no-unused-vars': 'off',
+        'react-hooks/exhaustive-deps': 'off',
         '@typescript-eslint/no-unused-vars': [
           'error',
           {

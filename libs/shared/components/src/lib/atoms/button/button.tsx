@@ -74,33 +74,23 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
 export const AugmentedButton = React.forwardRef<
   HTMLButtonElement,
   AugmentedButtonProps
->(
-  (
-    { shape = 'buttonClipped', animateClick = false, children, ...props },
-    ref
-  ) => {
-    const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;
+>(({ shape = 'buttonClipped', children, ...props }, ref) => {
+  const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;
 
-    let shapeAttributes = getShapeData({ shape, hasBorder: borderWidth > 0 });
+  let shapeAttributes = getShapeData({ shape, hasBorder: borderWidth > 0 });
 
-    if (!shapeAttributes) {
-      console.warn(
-        `Unknown shape: ${shape}. Using default 'buttonClipped' shape.`
-      );
-      shapeAttributes = SHAPE_MAPPINGS.buttonClipped;
-    }
-
-    return (
-      <StyledButton
-        ref={ref}
-        // borderSize={borderWidth}
-        {...shapeAttributes}
-        {...props}
-      >
-        {children}
-      </StyledButton>
+  if (!shapeAttributes) {
+    console.warn(
+      `Unknown shape: ${shape}. Using default 'buttonClipped' shape.`
     );
+    shapeAttributes = SHAPE_MAPPINGS.buttonClipped;
   }
-);
+
+  return (
+    <StyledButton ref={ref} {...shapeAttributes} {...props}>
+      {children}
+    </StyledButton>
+  );
+});
 
 AugmentedButton.displayName = 'AugmentedButton';

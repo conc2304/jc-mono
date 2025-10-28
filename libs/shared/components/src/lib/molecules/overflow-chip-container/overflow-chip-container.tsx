@@ -19,20 +19,10 @@ export const OverflowChipContainer = ({
   const [hiddenTags, setHiddenTags] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
-  const selectedTextPrimary = ensureContrast(
-    theme.palette.primary.main,
-    bgColor
-  ).color;
 
   const selectedTextSecondary = ensureContrast(
     theme.palette.text.secondary,
     bgColor
-  ).color;
-
-  const selectedIconColor = ensureContrast(
-    theme.palette.primary.main,
-    bgColor,
-    5
   ).color;
 
   useLayoutEffect(() => {

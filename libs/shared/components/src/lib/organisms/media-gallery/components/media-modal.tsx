@@ -14,8 +14,6 @@ import {
 } from '@mui/material';
 import { Close, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 
-// import { VideoPlayer } from '@jc/ui-components';
-
 import { VideoPlayer } from '../../../molecules';
 import {
   MediaItem,
