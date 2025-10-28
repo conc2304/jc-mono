@@ -1,9 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const filter = (
-  array: any[],
-  props: string[],
+export const filter = <T extends Record<string, unknown>>(
+  array: T[],
+  props: (keyof T)[],
   search: string
-): any[] => {
+): T[] => {
   if (
     !props ||
     props.length === 0 ||
@@ -14,9 +13,10 @@ export const filter = (
   )
     return array;
   return array?.filter((item) =>
-    props.some((prop) =>
-      item[prop]?.toLowerCase().includes(search.toLowerCase())
-    )
+    props.some((prop) => {
+      const value = item[prop];
+      return typeof value === 'string' && value.toLowerCase().includes(search.toLowerCase());
+    })
   );
 };
 

@@ -43,7 +43,6 @@ class HARAnalyzer {
     entries.forEach((entry) => {
       const request = entry.request;
       const response = entry.response;
-      const timings = entry.timings;
 
       // Calculate total size
       const responseSize = response.content.size || 0;

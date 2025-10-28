@@ -51,7 +51,7 @@ class BundleAnalyzer {
     this.calculateModuleSizes(); // Ensure module sizes are calculated
 
     const largeModules = Object.entries(this.moduleSizes)
-      .filter(([_, size]) => size > sizeThresholdKb * 1024)
+      .filter(([, size]) => size > sizeThresholdKb * 1024)
       .map(([moduleName, moduleSize]) => ({
         name: moduleName,
         sizeKb: moduleSize / 1024,

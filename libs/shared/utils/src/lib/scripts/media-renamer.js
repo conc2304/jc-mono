@@ -2,13 +2,11 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+
 import { portfolioData } from './portfolio-data_ORIG.js';
 
 console.log('Media Renamer Top');
 // ES module equivalent of __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * Clean filename for file system compatibility

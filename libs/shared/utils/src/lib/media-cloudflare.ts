@@ -63,11 +63,7 @@ const CF_ZONE = 'clyzby.com';
  * Generate optimized image URL using Cloudflare Images transformations
  * Based on: https://developers.cloudflare.com/images/transform-images/transform-via-url/
  */
-export function getImageUrl(
-  path: string,
-  width: number,
-  quality: number = 85
-): string {
+export function getImageUrl(path: string, width: number, quality = 85): string {
   const fullR2Url = `${R2_CUSTOM_URL}/${path}`;
   const options = `width=${width},quality=${quality},format=auto,fit=scale-down`;
   return `https://${CF_ZONE}/cdn-cgi/image/${options}/${fullR2Url}`;
@@ -162,9 +158,9 @@ export function isImage(path: string): boolean {
  */
 export function getPlaceholderImage(
   path: string,
-  width: number = 50,
-  quality: number = 30,
-  blur: number = 10
+  width = 50,
+  quality = 30,
+  blur = 10
 ): string {
   const fullR2Url = `${R2_CUSTOM_URL}/${path}`;
   const options = `width=${width},quality=${quality},blur=${blur},format=auto,fit=scale-down`;

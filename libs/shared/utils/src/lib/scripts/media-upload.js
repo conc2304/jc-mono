@@ -1,9 +1,8 @@
-// upload-media.js - Quick upload script to get your 700MB to R2
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
+
 dotenv.config();
 
 // Debug environment variables
@@ -12,8 +11,6 @@ console.log('R2_ACCOUNT_ID:', process.env.R2_ACCOUNT_ID || 'MISSING');
 console.log('R2_ACCESS_KEY_ID:', process.env.R2_ACCESS_KEY_ID || 'MISSING');
 console.log('R2_BUCKET_NAME:', process.env.R2_BUCKET_NAME || 'MISSING');
 console.log('Current working directory:', process.cwd());
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configure R2 with AWS SDK v3
 const r2 = new S3Client({

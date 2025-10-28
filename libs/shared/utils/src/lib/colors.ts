@@ -1,5 +1,5 @@
-import { Property } from 'csstype';
 import { lighten, darken, getContrastRatio } from '@mui/material';
+import { Property } from 'csstype';
 
 export const ensureContrast = (
   foregroundColor: Property.Color,
@@ -25,7 +25,7 @@ export const ensureContrast = (
 
     let adjustedColor = foregroundColor;
     let bestContrast = initialContrast;
-    let step = 0.1;
+    const step = 0.1;
 
     // Try to adjust the color to meet contrast requirements
     for (let i = 1; i <= 10; i++) {
@@ -67,8 +67,8 @@ export const ensureContrast = (
       wasAdjusted: true,
     };
   } catch (error) {
-    console.error('Error in ensureContrast:', error);
     return {
+      error,
       color: foregroundColor,
       contrastRatio: 1,
       wasAdjusted: false,
