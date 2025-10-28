@@ -156,7 +156,7 @@ export function mixWithNeutral(
   mixRatio = 0.3 // 0-1, how much neutral to mix in
 ): string {
   const [h1, s1, l1] = hexToHsl(color);
-  const [h2, s2, l2] = hexToHsl(neutralColor);
+  const [_, s2, l2] = hexToHsl(neutralColor);
 
   // Mix the colors
   const mixedH = h1; // Keep original hue
@@ -218,7 +218,7 @@ export const colorMutingExamples = {
 
   // Muted versions for inactive windows
   getMutedColors() {
-    const muted: Record<string, any> = {};
+    const muted: Record<string, object> = {};
 
     Object.entries(this.active).forEach(([key, color]) => {
       muted[key] = {

@@ -1,7 +1,7 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
+
 import { reactRouter } from '@react-router/dev/vite';
-import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
 import { analyzer } from 'vite-bundle-analyzer';
 
 export default defineConfig(() => ({
@@ -35,10 +35,10 @@ export default defineConfig(() => ({
     process.env.ANALYZE === 'true' &&
       analyzer({
         analyzerMode: 'json', // Outputs JSON report
-        fileName: './dist/bundle-report.json',
+        fileName: './bundle-report.json',
       }),
   ],
-  // Uncomment this if you are using workers.
+  // Uncomment this when using workers.
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },

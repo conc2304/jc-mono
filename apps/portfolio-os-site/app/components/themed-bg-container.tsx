@@ -1,7 +1,9 @@
-import { BackgroundOverlay } from '@jc/ui-components';
-import { getThemedBgTexture } from '../data/themed-data/themed-background-texture';
-import { useColorMode, useEnhancedTheme } from '@jc/themes';
 import { Box } from '@mui/material';
+
+import { useColorMode, useEnhancedTheme } from '@jc/themes';
+import { BackgroundOverlay } from '@jc/ui-components';
+
+import { getThemedBgTexture } from '../data/themed-data/themed-background-texture';
 
 export const ThemedBgContainer = () => {
   const { currentThemeId } = useEnhancedTheme();

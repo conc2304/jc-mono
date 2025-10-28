@@ -1,7 +1,7 @@
-import { Components, alpha } from '@mui/material/styles';
-import { fontFaces } from './baseline-font';
-
 import { Theme } from '@mui/material';
+import { Components, alpha } from '@mui/material/styles';
+
+import { fontFaces } from './baseline-font';
 
 export default function BaselineCSS(theme: Theme): Components {
   return {

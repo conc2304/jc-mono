@@ -1,5 +1,6 @@
-import { getContextualImage } from '@jc/utils';
 import { CSSProperties } from '@mui/material';
+
+import { getContextualImage } from '@jc/utils';
 
 // Themed character sets for text scrambling effects
 const path = (fileName: string) => {

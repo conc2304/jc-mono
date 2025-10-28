@@ -24,13 +24,6 @@ export default [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
-      // 'react/jsx-no-useless-fragment': [
-      //   'warn',
-      //   {
-      //     allowExpressions: true,
-      //   },
-      // ],
-      // 'react-hooks/exhaustive-deps': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {
@@ -118,46 +111,15 @@ export default [
         '@typescript-eslint/no-unused-vars': [
           'error',
           {
+            args: 'all',
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all',
+            caughtErrorsIgnorePattern: '^_',
+            destructuredArrayIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
             ignoreRestSiblings: true,
-            destructuredArrayIgnorePattern: '[A-Z]',
-            caughtErrors: 'none',
           },
         ],
-        // '@typescript-eslint/ban-types': [
-        //   'error',
-        //   {
-        //     types: {
-        //       '{}': {
-        //         message:
-        //           "If you want a type meaning 'any object', you probably want `Record<string, unknown>` instead. If you want a type meaning 'any value', you probably want `unknown` instead. If you want a type meaning 'empty object', you probably want `Record<string, never>` instead.",
-        //         fixWith: 'Record<string, unknown>',
-        //       },
-        //       String: {
-        //         message: 'Use string instead',
-        //         fixWith: 'string',
-        //       },
-        //       Number: {
-        //         message: 'Use number instead',
-        //         fixWith: 'number',
-        //       },
-        //       Boolean: {
-        //         message: 'Use boolean instead',
-        //         fixWith: 'boolean',
-        //       },
-        //       Function: {
-        //         message:
-        //           'The Function type accepts any function-like value. It provides no type safety when calling the function, which can be a common source of bugs. It also accepts things like class declarations, which will throw at runtime as they will not be called with new. For a function that takes no args and returns nothing use: `()=> void`',
-        //         fixWith: '(...args: unknown) => unknown',
-        //       },
-        //       any: {
-        //         message:
-        //           '`unknown` is recommended over `any` because it provides safer typing \u2014 you have to use type assertion or narrow to a specific type if you want to perform operations on unknown.',
-        //         fixWith: 'unknown',
-        //       },
-        //     },
-        //     extendDefaults: true,
-        //   },
-        // ],
         'no-undef': 'error',
       },
     })),

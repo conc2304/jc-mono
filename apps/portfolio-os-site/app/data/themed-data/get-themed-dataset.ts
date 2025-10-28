@@ -1,4 +1,5 @@
 import { BootMessage } from '@jc/boot-loader';
+
 import { getThemedBgTexture } from './themed-background-texture';
 import { DefaultBootMessage, ThemedBootMessages } from './themed-boot-messages';
 import { getThemedGifUrl } from './themed-gif';

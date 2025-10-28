@@ -7,7 +7,7 @@ export default function ButtonIcon(theme: Theme): Components {
         // size: 'medium',
       },
       styleOverrides: {
-        root: ({ ownerState: { color, size, animateClick = false } }) => {
+        root: ({ ownerState: { color, size, _animateClick = false } }) => {
           const colorTheme =
             !!color && color !== 'inherit' && color !== 'default'
               ? color
