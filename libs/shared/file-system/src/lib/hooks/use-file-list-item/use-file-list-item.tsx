@@ -8,6 +8,7 @@ import {
 
 import { ScrollAwareClickConfig, useScrollAwareClick } from '@jc/ui-components';
 
+import { FileSystemContext } from '../../context';
 import { BaseFileSystemItem } from '../../types';
 
 export const useFileSystemItem = (
