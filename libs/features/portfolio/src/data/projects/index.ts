@@ -2,6 +2,7 @@ export * from './3d-atomic-visualizer-project-data';
 export * from './climate-weather-visualization-project-data';
 export * from './gravity-scavenger-project-data';
 export * from './lightform-project-data';
+export * from './solar-thermal-system-project-data';
 export * from './simplisafe-jawa-project-data';
 export * from './terrainify-project-data';
 export * from './tunecraft-project-data';

@@ -1,4 +1,6 @@
 import { createNavigationGroup, FileSystemItem } from '@jc/file-system';
+import { BrutalistTemplateProps, ProjectData } from '@jc/portfolio';
+
 import {
   atomicVisualizerFileSystemItem,
   climateDataVizFileSystemItem,
@@ -11,7 +13,7 @@ import {
   vyzbyFileSystemItem,
 } from '.';
 import { NAVIGATION_GROUPS } from '../constants';
-import { BrutalistTemplateProps, ProjectData } from '@jc/portfolio';
+import { solarThermalFileSystemItem } from './solar-thermal-system';
 
 export const allPortfolioProjectFiles: FileSystemItem<
   ProjectData,
@@ -23,6 +25,7 @@ export const allPortfolioProjectFiles: FileSystemItem<
   verdantiaFileSystemItem,
   tunecraftFileSystemItem,
   vyzbyFileSystemItem,
+  solarThermalFileSystemItem,
   atomicVisualizerFileSystemItem,
   terrainifyFileSystemItem,
   simplisafeJawaFileSystemItem,

@@ -14,9 +14,9 @@ export const FaceMeltIcon = ({
       className={`avatar-icon ${className}`}
       fill="none"
       stroke="currentColor"
-      stroke-width="0"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="0"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
       {...props}
     >
