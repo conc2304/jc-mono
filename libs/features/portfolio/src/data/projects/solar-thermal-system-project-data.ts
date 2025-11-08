@@ -36,7 +36,6 @@ export const solarThermalSimulationProject: ProjectData = {
       'Three.js',
       'React Three Fiber',
       '@react-three/drei',
-      '@react-three/postprocessing',
 
       // Visualization & UI
       'D3.js',
@@ -47,19 +46,12 @@ export const solarThermalSimulationProject: ProjectData = {
       'Jest',
       'Testing Library',
       'Storybook',
-      'ESLint',
-      'Prettier',
-
-      // Additional
-      'Lucide React',
-      'Perlin Noise',
-      'React Helmet',
     ],
     timeline: {
       duration: 'ongoing',
     },
     myRole:
-      'Full-stack developer - Architecture, physics engine implementation, 3D visualization, UI/UX design',
+      'Frontend developer - Architecture, physics engine implementation, 3D visualization, UI/UX design',
   },
 
   // Media assets
