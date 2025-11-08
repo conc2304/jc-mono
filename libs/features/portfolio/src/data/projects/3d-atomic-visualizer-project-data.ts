@@ -1,7 +1,5 @@
-import { ProjectData } from '@jc/ui-components';
-import { getImageUrl, getResponsiveImageSet, getVideoUrl } from '@jc/utils';
+import { ProjectData } from '../../components';
 
-const projectDir = 'projects/3d-atomic-visualizer/';
 export const atomicVisualizerProject: ProjectData = {
   // =============================================================================
   // CORE PROJECT INFORMATION

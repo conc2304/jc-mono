@@ -7,3 +7,5 @@ export * from './terrainify';
 export * from './tune-craft';
 export * from './verdantia';
 export * from './vyzby';
+export * from './3d-animation';
+export * from './solar-thermal-system';

@@ -1,3 +1,4 @@
+export * from './3d-animation-project-data';
 export * from './3d-atomic-visualizer-project-data';
 export * from './climate-weather-visualization-project-data';
 export * from './gravity-scavenger-project-data';

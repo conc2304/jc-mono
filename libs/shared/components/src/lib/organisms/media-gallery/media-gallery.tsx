@@ -241,7 +241,7 @@ export const MediaGallery = ({
       const imageMedia = media as ImageRenderAttributes;
       return (
         <Grid
-          className="MediaGallery--desktop-root"
+          className="MediaGallery-Image-desktop-root"
           size={gridSize}
           key={`image-${index}`}
         >
@@ -316,7 +316,11 @@ export const MediaGallery = ({
       const video = { ...(media as VideoRenderAttributes) };
 
       return (
-        <Grid size={gridSize} key={`video-${index}`}>
+        <Grid
+          size={gridSize}
+          key={`video-${index}`}
+          className="MediaGallery-Video-desktop-root"
+        >
           <Paper
             sx={{
               overflow: 'hidden',
@@ -350,6 +354,7 @@ export const MediaGallery = ({
               />
               {/* Click overlay with play icon */}
               <Box
+                className="VideoPlayButton"
                 sx={{
                   position: 'absolute',
                   top: 0,

@@ -2,7 +2,7 @@
 // CORE INTERFACES (MVP - Essential for getting projects live)
 // =============================================================================
 
-import { BaseImageData, BaseVideoData } from '../../organisms';
+import { BaseImageData, BaseVideoData } from '@jc/ui-components';
 
 interface ProjectCore {
   id: string; // unique identifier for routing/linking

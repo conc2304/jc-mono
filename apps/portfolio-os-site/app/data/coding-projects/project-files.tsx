@@ -11,9 +11,10 @@ import {
   tunecraftFileSystemItem,
   verdantiaFileSystemItem,
   vyzbyFileSystemItem,
+  solarThermalFileSystemItem,
+  dgmdE45AnimationFileSystemItem,
 } from '.';
 import { NAVIGATION_GROUPS } from '../constants';
-import { solarThermalFileSystemItem } from './solar-thermal-system';
 
 export const allPortfolioProjectFiles: FileSystemItem<
   ProjectData,
@@ -28,6 +29,7 @@ export const allPortfolioProjectFiles: FileSystemItem<
   solarThermalFileSystemItem,
   atomicVisualizerFileSystemItem,
   terrainifyFileSystemItem,
+  dgmdE45AnimationFileSystemItem,
   simplisafeJawaFileSystemItem,
 ].map(
   (projectFileItem): FileSystemItem<ProjectData, BrutalistTemplateProps> => ({

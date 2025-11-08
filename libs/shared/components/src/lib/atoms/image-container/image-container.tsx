@@ -253,6 +253,7 @@ export const ImageContainer = ({
   // Error fallback component
   const ErrorFallback = () => (
     <Box
+      classname="ErrorFallback--root"
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -294,7 +295,12 @@ export const ImageContainer = ({
 
   // Show actual image (may still be loading but skeleton time is over)
   return (
-    <Box ref={containerRef} sx={{ position: 'relative', ...sx }} {...props}>
+    <Box
+      ref={containerRef}
+      sx={{ position: 'relative', ...sx }}
+      {...props}
+      className="ImageContainer--root"
+    >
       <Box
         component="img"
         src={currentSrc}
@@ -323,8 +329,6 @@ export const ImageContainer = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            // bgcolor: 'grey.200',
-            // background
           }}
         >
           <Skeleton
@@ -335,8 +339,6 @@ export const ImageContainer = ({
             sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
           />
           <Box
-            // component="img"
-            // alt="Loading"
             sx={{
               backgroundImage: `url(${skeletonImageUrl})`,
               backgroundSize: '100% 100%',
