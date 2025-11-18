@@ -38,6 +38,9 @@
     },
     {
       "path": "./libs/shared/theme-components"
+    },
+    {
+      "path": "./libs/features/led-controller"
     }
   ]
 }

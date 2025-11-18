@@ -3,6 +3,7 @@ export * from './background-scifi-animated';
 export * from './button-group';
 export * from './button-icon';
 export * from './button';
+export * from './color-swatch';
 export * from './cursor-trails';
 export * from './diagonal-lines';
 export * from './glitch-text';

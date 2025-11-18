@@ -3,22 +3,25 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/shared/utils"
-    },
-    {
-      "path": "../../libs/shared/theme-components"
-    },
-    {
       "path": "../../libs/shared/file-system"
-    },
-    {
-      "path": "../../libs/shared/components"
     },
     {
       "path": "../../libs/features/portfolio"
     },
     {
       "path": "../../libs/features/desktop-OS"
+    },
+    {
+      "path": "../../libs/features/led-controller"
+    },
+    {
+      "path": "../../libs/shared/utils"
+    },
+    {
+      "path": "../../libs/shared/components"
+    },
+    {
+      "path": "../../libs/shared/theme-components"
     },
     {
       "path": "../../libs/shared/themes"
