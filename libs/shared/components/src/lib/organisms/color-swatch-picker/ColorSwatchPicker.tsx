@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
-import { Box, Paper, Typography, useTheme } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, useTheme } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 
-import { ColorInput, hexToRgb, rgbToHsv } from '@jc/utils';
+import { ColorInput } from '@jc/utils';
 import { AugmentedButton, AugmentedIconButton, ColorSwatch } from '../../atoms';
 import { CustomColorModal } from '../custom-color-modal/CustomColorModal';
 
@@ -11,6 +11,7 @@ interface ColorSwatchPickerProps {
   onColorChange?: (color: string) => void;
   savedColors: string[];
   setSavedColors: (colors: string[]) => void;
+  activeColor?: string;
 }
 
 export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
@@ -18,11 +19,9 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   onColorChange,
   savedColors,
   setSavedColors,
+  activeColor,
 }) => {
   const theme = useTheme();
-  const [activeColor, setActiveColor] = useState<string>(
-    colors[0] || '#000000'
-  );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [customColor, setCustomColor] = useState<string>('#ff0000');
   const [colorInput, setColorInput] = useState<ColorInput>({
@@ -36,20 +35,12 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   });
 
   const handleColorSelect = (color: string): void => {
-    setActiveColor(color);
     if (onColorChange) onColorChange(color);
   };
 
   const handleRemoveSavedColor = (colorToRemove: string): void => {
     setSavedColors(savedColors.filter((c) => c !== colorToRemove));
   };
-
-  // Calculate RGB and HSV values from the active color
-  const colorValues = useMemo(() => {
-    const rgb = hexToRgb(activeColor);
-    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
-    return { rgb, hsv };
-  }, [activeColor]);
 
   return (
     <Box sx={{ width: '100%', maxWidth: 672, mx: 'auto', p: 2 }}>
@@ -135,68 +126,6 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
           />
         ))}
       </Box>
-
-      {/* Active Color Display */}
-      <Paper
-        data-augmented-ui="border tr-clip tl-clip"
-        sx={(theme) => ({
-          mt: 2,
-          p: 2,
-          backgroundColor: 'background.default',
-          '--aug-border-all': '2px',
-          '--aug-border-bg': theme.palette.info.main,
-          '--aug-tr': theme.spacing(1),
-          '--aug-tl': theme.spacing(1),
-        })}
-      >
-        <Typography
-          variant="body2"
-          fontWeight={600}
-          color="text.primary"
-          sx={{ mb: 1 }}
-        >
-          Active Color
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box
-            data-augmented-ui="border tr-clip tl-clip br-clip bl-clip"
-            sx={{
-              width: 64,
-              height: 64,
-              '--aug-tl': theme.spacing(1),
-              '--aug-tr': theme.spacing(1),
-              '--aug-bl': theme.spacing(1),
-              '--aug-br': theme.spacing(1),
-              '--aug-border-all': '2px',
-              '--aug-border-bg': theme.palette.info.main,
-              // border: `2px solid ${theme.palette.action.active}`,
-              backgroundColor: activeColor,
-            }}
-          />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: 0.5,
-              justifyContent: 'space-between',
-              flexGrow: 1,
-              flexShrink: 0,
-            }}
-          >
-            <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
-              <b>HEX:</b> {activeColor.toUpperCase()}
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
-              <b>RGB</b>: {colorValues.rgb.r}, {colorValues.rgb.g},{' '}
-              {colorValues.rgb.b}
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
-              <b>HSV</b>: {colorValues.hsv.h}°, {colorValues.hsv.s}%,{' '}
-              {colorValues.hsv.v}%
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
 
       {/* Custom Color Modal */}
       <CustomColorModal

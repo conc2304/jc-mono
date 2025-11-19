@@ -18,7 +18,6 @@ export const ColorSwatch = ({
         component="button"
         className="ColorSwatch--root"
         variant="contained"
-        data-color={color}
         onClick={() => onColorSelect(color)}
         color="inherit"
         sx={(theme) => ({
