@@ -250,8 +250,6 @@ export const ColorPickerPage = ({ onUpdate }: ColorPickerPageProps) => {
                   stops={patternGradient?.stops}
                   width="100%"
                   height={80}
-                  animate={patternConfig.speed > 0}
-                  speed={patternConfig.speed}
                 />
               </Box>
               <Typography variant="body2" color="text.primary">

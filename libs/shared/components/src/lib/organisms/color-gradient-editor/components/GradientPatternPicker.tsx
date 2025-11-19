@@ -140,7 +140,6 @@ export const GradientPatternPicker: React.FC<GradientPatternPickerProps> = ({
                   stops={gradient}
                   width="100%"
                   height={60}
-                  animate={false}
                 />
               </Paper>
             </Tooltip>
@@ -211,8 +210,6 @@ export const GradientPatternPicker: React.FC<GradientPatternPickerProps> = ({
             stops={gradient}
             width="100%"
             height={100}
-            animate={config.speed > 0}
-            speed={config.speed}
           />
         </Paper>
       </Box>

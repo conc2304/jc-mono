@@ -9,21 +9,11 @@ interface GradientPatternVisualizerProps {
   stops?: ColorStop[];
   width?: Property.Width;
   height?: number;
-  animate?: boolean;
-  speed?: number; // 0-100
 }
 
 export const GradientPatternVisualizer: React.FC<
   GradientPatternVisualizerProps
-> = ({
-  type,
-  interpolation,
-  stops,
-  width = 120,
-  height = 48,
-  animate = false,
-  speed = 0,
-}) => {
+> = ({ type, interpolation, stops, width = 120, height = 48 }) => {
   // Use provided stops or default to black and white
   const gradientStops = useMemo(() => {
     if (stops && stops.length > 0) {
@@ -74,6 +64,7 @@ export const GradientPatternVisualizer: React.FC<
         return `linear-gradient(to bottom, ${gradientString})`;
       case 'horizontal':
         return `linear-gradient(to right, ${gradientString})`;
+      // TODO - Investigate if this matches TD
       case 'circular':
         // Circular gradient using conic-gradient
         return `conic-gradient(from 0deg, ${gradientString}, ${sortedStops[0].color})`;
@@ -84,86 +75,15 @@ export const GradientPatternVisualizer: React.FC<
     }
   }, [type, interpolation, gradientStops]);
 
-  // Calculate animation duration based on speed (0 = no animation, 100 = fastest)
-  const animationDuration = useMemo(() => {
-    if (!animate || speed === 0) return 'none';
-    // Speed 100 = 2s, Speed 1 = 20s, logarithmic scale
-    const duration = 20 - (speed / 100) * 18;
-    return `${duration}s`;
-  }, [animate, speed]);
-
-  // Animation keyframes based on pattern type
-  const getAnimationName = () => {
-    if (!animate || speed === 0) return undefined;
-    switch (type) {
-      case 'circular':
-        return 'rotate-gradient';
-      case 'vertical':
-        return 'slide-vertical';
-      case 'horizontal':
-        return 'slide-horizontal';
-      case 'radial':
-        return 'pulse-radial';
-      default:
-        return undefined;
-    }
-  };
-
   return (
-    <>
-      <style>
-        {`
-          @keyframes rotate-gradient {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
-            }
-          }
-
-          @keyframes slide-vertical {
-            0% {
-              background-position: 0% 0%;
-            }
-            100% {
-              background-position: 0% 100%;
-            }
-          }
-
-          @keyframes slide-horizontal {
-            0% {
-              background-position: 0% 0%;
-            }
-            100% {
-              background-position: 100% 0%;
-            }
-          }
-
-          @keyframes pulse-radial {
-            0%, 100% {
-              background-size: 100% 100%;
-            }
-            50% {
-              background-size: 150% 150%;
-            }
-          }
-        `}
-      </style>
-      <Box
-        sx={{
-          width,
-          height,
-          background: generateGradientCSS,
-          // backgroundSize: type === 'circular' ? 'cover' : '200% 200%',
-          backgroundPosition: type === 'radial' ? 'center center' : undefined,
-          animation:
-            animate && speed > 0
-              ? `${getAnimationName()} ${animationDuration} linear infinite`
-              : 'none',
-          overflow: 'hidden',
-        }}
-      />
-    </>
+    <Box
+      sx={{
+        width,
+        height,
+        background: generateGradientCSS,
+        backgroundPosition: type === 'radial' ? 'center center' : undefined,
+        overflow: 'hidden',
+      }}
+    />
   );
 };

@@ -233,7 +233,6 @@ export const GradientPatternSelector: React.FC<
                   stops={selectedGradient?.stops}
                   width="100%"
                   height={48}
-                  animate={false}
                 />
               </Paper>
             </Tooltip>
@@ -452,6 +451,7 @@ export const GradientPatternSelector: React.FC<
             <Typography variant="caption" color="text.secondary">
               Animation Speed
             </Typography>
+
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               <Typography
                 variant="caption"
@@ -483,11 +483,6 @@ export const GradientPatternSelector: React.FC<
               { value: 100, label: '100' },
             ]}
             valueLabelDisplay="auto"
-            sx={{
-              '& .MuiSlider-markLabel': {
-                fontSize: '0.65rem',
-              },
-            }}
           />
         </Box>
 
@@ -513,8 +508,6 @@ export const GradientPatternSelector: React.FC<
               stops={selectedGradient?.stops}
               width="100%"
               height={80}
-              animate={speed > 0}
-              speed={speed}
             />
           </Box>
         </Box>
