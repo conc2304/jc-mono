@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
-import { ColorStop, GradientData } from './ColorGradientEditor';
+import { Box } from '@mui/material';
+import { GradientData } from './ColorGradientEditor';
 import {
   PatternTypeSelector,
   GradientSwatchPicker,
@@ -12,6 +12,7 @@ import {
   GradientPatternType,
   InterpolationMode,
   GradientPatternConfig,
+  ColorStop,
 } from './types';
 
 interface GradientPatternSelectorProps {

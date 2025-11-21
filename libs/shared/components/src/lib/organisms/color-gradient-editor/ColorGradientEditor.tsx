@@ -7,7 +7,7 @@ import {
 } from './hooks/useGradientStops';
 import { GradientBar } from './components/GradientBar';
 import { ColorStopControls } from './components/ColorStopControls';
-import { RGB } from '@jc/utils';
+import { ColorStop } from './types';
 
 export interface GradientData {
   stops: ColorStop[];

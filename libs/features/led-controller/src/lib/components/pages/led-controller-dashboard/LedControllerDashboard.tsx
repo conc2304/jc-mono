@@ -1,0 +1,254 @@
+import { useState } from 'react';
+import { Box, Container, Typography } from '@mui/material';
+
+import {
+  ColorSwatchPicker,
+  GradientPatternSelector,
+  type Gradient,
+  type GradientPatternConfig,
+} from '@jc/ui-components';
+import { ActiveDisplayState } from './ActiveDisplayState';
+import { hexToRgb } from '@jc/utils';
+
+interface LedControllerDashboardProps {
+  onUpdateSolidColor: (color: string) => void;
+  onUpdateGradientPattern: ({
+    colorStops,
+    type,
+    speed,
+    interpolation,
+  }: GradientApiRequestBody) => void;
+}
+
+type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
+type GradientApiRequestBody = GradientPatternConfig & {
+  colorStops: Array<{ position: number; r: number; g: number; b: number }>;
+};
+
+const defaultColors = [
+  '#ffffff',
+  '#ff0000',
+  '#ff8900',
+  '#fbff00',
+  '#5CFF00',
+  '#006d5b',
+  '#00FFB8',
+  '#00B8FF',
+  '#002eff',
+  '#5900ff',
+  '#e600ff',
+  '#ff008c',
+];
+
+const defaultGradients: Gradient[] = [
+  {
+    id: 'sunset',
+    stops: [
+      { id: 1, color: '#FF0080', position: 0 },
+      { id: 2, color: '#FF8C00', position: 50 },
+      { id: 3, color: '#FFD700', position: 100 },
+    ],
+  },
+  {
+    id: 'ocean',
+    stops: [
+      { id: 1, color: '#00FFFF', position: 0 },
+      { id: 2, color: '#0080FF', position: 50 },
+      { id: 3, color: '#0000FF', position: 100 },
+    ],
+  },
+  {
+    id: 'forest',
+    stops: [
+      { id: 1, color: '#00FF00', position: 0 },
+      { id: 2, color: '#00FF80', position: 50 },
+      { id: 3, color: '#00FFFF', position: 100 },
+    ],
+  },
+  {
+    id: 'fire-streak',
+    stops: [
+      { id: 1, color: '#000000', position: (100 / 6) * 0 },
+      { id: 2, color: '#FF0000', position: (100 / 6) * 1 },
+      { id: 1, color: '#000000', position: (100 / 6) * 2 },
+      { id: 3, color: '#FF8000', position: (100 / 6) * 3 },
+      { id: 1, color: '#000000', position: (100 / 6) * 4 },
+      { id: 4, color: '#FFFF00', position: (100 / 6) * 5 },
+      { id: 5, color: '#000000', position: (100 / 6) * 6 },
+    ],
+  },
+  {
+    id: 'purple-haze',
+    stops: [
+      { id: 1, color: '#8000FF', position: 0 },
+      { id: 2, color: '#FF00FF', position: 100 },
+    ],
+  },
+  {
+    id: 'rainbow',
+    stops: [
+      { id: 1, color: '#FF0000', position: 0 },
+      { id: 2, color: '#FFFF00', position: 25 },
+      { id: 3, color: '#00FF00', position: 50 },
+      { id: 4, color: '#00FFFF', position: 75 },
+      { id: 5, color: '#0000FF', position: 100 },
+    ],
+  },
+  {
+    id: 'neon-pink',
+    stops: [
+      { id: 1, color: '#FF0080', position: 0 },
+      { id: 2, color: '#FF00FF', position: 100 },
+    ],
+  },
+  {
+    id: 'electric',
+    stops: [
+      { id: 1, color: '#00FFFF', position: 0 },
+      { id: 2, color: '#FF00FF', position: 50 },
+      { id: 3, color: '#FFFF00', position: 100 },
+    ],
+  },
+];
+
+export const LedControllerDashboard = ({
+  onUpdateSolidColor,
+  onUpdateGradientPattern,
+}: LedControllerDashboardProps) => {
+  const [savedColors, setSavedColors] = useState<string[]>([]);
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('solid-color');
+  const [activeColor, setActiveColor] = useState<string | null>(null);
+  const [patternGradient, setPatternGradient] = useState<Gradient | null>(null);
+  const [patternConfig, setPatternConfig] =
+    useState<GradientPatternConfig | null>(null);
+  const [brightness, setBrightness] = useState<number>(100);
+  const [systemOn, setSystemOn] = useState<boolean>(true);
+
+  // Mode handlers
+  // Modes are mutually exclusive - setting one unsets the others
+  const handleColorSelect = (color: string) => {
+    console.log('Selected color:', color);
+    unsetActiveModes();
+
+    setActiveColor(color);
+    setDisplayMode('solid-color');
+    onUpdateSolidColor(color);
+  };
+
+  const handlePatternConfigChange = (
+    config: GradientPatternConfig,
+    gradient: Gradient | null
+  ): void => {
+    if (gradient === null) return;
+
+    console.log('Pattern config changed:', config, gradient);
+
+    const colorStopsForApi = gradient.stops.map((stop) => {
+      const rgb = hexToRgb(stop.color);
+      return { position: stop.position, r: rgb.r, g: rgb.g, b: rgb.b };
+    });
+
+    unsetActiveModes();
+
+    setPatternConfig(config);
+    setPatternGradient(gradient);
+    setDisplayMode('pattern');
+
+    // Flip after setting state
+    // Pattern types are flipped in TouchDesigner API for "radial" vs "circular"
+    let patternType = config.type;
+    if (patternType === 'circular') {
+      patternType = 'radial';
+    } else if (patternType === 'radial') {
+      patternType = 'circular';
+    }
+
+    onUpdateGradientPattern({
+      colorStops: colorStopsForApi,
+      type: patternType,
+      speed: config.speed,
+      interpolation: config.interpolation,
+    });
+  };
+
+  // Generate handlers for brightness and system toggle
+  const handleBrightnessChange = (value: number) => {
+    // TODO - Send brightness update to LED controller
+    setBrightness(value);
+  };
+
+  const handleSystemToggle = (isOn: boolean) => {
+    // TODO - Send system on/off update to LED controller
+    setSystemOn(isOn);
+  };
+
+  const unsetActiveModes = () => {
+    setActiveColor(null);
+    setPatternConfig(null);
+    setPatternGradient(null);
+    setDisplayMode('solid-color');
+  };
+
+  const handleAddSavedColor = (colors: string[]) => {
+    setSavedColors(colors);
+    // TODO - Persist the save colors
+  };
+
+  return (
+    <Box
+      sx={{
+        height: '100%',
+        overflowY: 'scroll',
+        bg: 'background.paper',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="md">
+        {/* Active Display State - Shows what's currently active */}
+        <ActiveDisplayState
+          displayMode={displayMode}
+          activeColor={activeColor}
+          patternConfig={patternConfig}
+          patternGradient={patternGradient}
+          brightness={brightness}
+          onBrightnessChange={handleBrightnessChange}
+          systemOn={systemOn}
+          onSystemToggle={handleSystemToggle}
+        />
+
+        {/* Solid Color Section */}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ mb: 2 }}
+          textAlign={'center'}
+        >
+          Solid Colors
+        </Typography>
+        <ColorSwatchPicker
+          colors={defaultColors}
+          savedColors={savedColors}
+          setSavedColors={handleAddSavedColor}
+          onColorChange={handleColorSelect}
+          activeColor={displayMode === 'solid-color' ? activeColor : null}
+        />
+
+        {/* Gradient & Pattern Section */}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ mb: 2, mt: 4 }}
+          textAlign={'center'}
+        >
+          Gradient Patterns
+        </Typography>
+        <GradientPatternSelector
+          gradients={defaultGradients}
+          onPatternConfigChange={handlePatternConfigChange}
+          activeGradient={patternGradient}
+          activePatternConfig={patternConfig}
+        />
+      </Container>
+    </Box>
+  );
+};

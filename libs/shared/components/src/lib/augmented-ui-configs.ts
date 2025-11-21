@@ -99,13 +99,16 @@ export const SHAPE_MAPPINGS: ShapeMapping = {
 export const getShapeData = ({
   shape,
   hasBorder,
+  hasInlay = false,
 }: {
   shape: keyof typeof SHAPE_MAPPINGS;
   hasBorder: boolean;
+  hasInlay?: boolean;
 }) => {
   const { ...shapeAttributes } = SHAPE_MAPPINGS[shape];
   const borderValue = hasBorder ? 'border' : '';
-  shapeAttributes['data-augmented-ui'] += ` ${borderValue}`;
+  const inlayValue = hasInlay ? 'inlay' : '';
+  shapeAttributes['data-augmented-ui'] += ` ${borderValue}` + ` ${inlayValue}`;
 
   return shapeAttributes;
 };

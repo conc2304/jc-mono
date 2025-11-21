@@ -9,6 +9,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { OverridableStringUnion } from '@mui/types';
 
 import { getShapeData, SHAPE_MAPPINGS } from '../../augmented-ui-configs';
+import { Property } from 'csstype';
 
 const borderMap: Record<
   OverridableStringUnion<
@@ -24,6 +25,8 @@ const borderMap: Record<
 interface AugmentedButtonProps extends ButtonProps {
   shape?: keyof typeof SHAPE_MAPPINGS;
   animateClick?: boolean;
+  inlayBg?: Property.Background;
+  inlayOffset?: Property.Width;
 }
 const augmentationSizeMap = {
   small: 0.5,
@@ -34,7 +37,7 @@ const augmentationSizeMap = {
 
 // Base styled button that will receive the augmented-ui attributes
 const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
-  ({ theme, color, variant, disabled, size }) => {
+  ({ theme, color, variant, disabled, size, inlayBg, inlayOffset }) => {
     const colorTheme = color && color !== 'inherit' ? color : undefined;
     const componentColor = theme.palette[colorTheme || 'primary'];
     const auSize = augmentationSizeMap[size ?? 'default'];
@@ -48,10 +51,14 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
       !disabled ? 0.5 : 0.1
     )}, ${alpha(componentColor.main, !disabled ? 0.7 : 0.2)})`;
     const styleHover = `${gradientStyle}, ${urlStyle}`;
+    const inlayOffsetValue =
+      inlayBg && inlayOffset ? (!inlayOffset ? '3px' : inlayOffset) : undefined;
 
     return {
       // Apply augmented-ui specific styles
       '&[data-augmented-ui]': {
+        // background: inlayBg ? 'transparent' : undefined,
+
         '--aug-border-all': borderWidth > 0 ? borderWidth + 'px' : undefined, // size
         '--aug-border-bg': gradientStyle, // style
 
@@ -59,6 +66,9 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
         '--aug-tr': theme.spacing(auSize),
         '--aug-bl': theme.spacing(auSize),
         '--aug-br': theme.spacing(auSize),
+
+        '--aug-inlay-bg': inlayBg || undefined,
+        '--aug-inlay-all': inlayOffsetValue,
       },
 
       '&[data-augmented-ui]:hover': {
@@ -76,8 +86,13 @@ export const AugmentedButton = React.forwardRef<
   AugmentedButtonProps
 >(({ shape = 'buttonClipped', children, ...props }, ref) => {
   const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;
+  const hasInlay = Boolean(props.inlayBg);
 
-  let shapeAttributes = getShapeData({ shape, hasBorder: borderWidth > 0 });
+  let shapeAttributes = getShapeData({
+    shape,
+    hasBorder: borderWidth > 0,
+    hasInlay,
+  });
 
   if (!shapeAttributes) {
     console.warn(
