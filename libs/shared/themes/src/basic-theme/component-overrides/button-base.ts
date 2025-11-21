@@ -104,24 +104,29 @@ export default function ButtonBase(theme: Theme): Components {
               transform: 'translateY(-2px)',
             },
 
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: '-100%',
-              width: '100%',
-              height: '100%',
-              background: `linear-gradient(90deg, transparent, ${
-                shouldUseColorStyling && paletteColor
-                  ? paletteColor.light
-                  : 'inherit'
-              }, transparent)`,
-              transition: 'left 0.5s',
-            },
+            // if Inlay is present do not use hover effect
+            ...(ownerState.inlayBg
+              ? {}
+              : {
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: '-100%',
+                    width: '100%',
+                    height: '100%',
+                    background: `linear-gradient(90deg, transparent, ${
+                      shouldUseColorStyling && paletteColor
+                        ? paletteColor.light
+                        : 'inherit'
+                    }, transparent)`,
+                    transition: 'left 0.5s',
+                  },
 
-            '&:hover::before': {
-              left: '100%',
-            },
+                  '&:hover::before': {
+                    left: '100%',
+                  },
+                }),
 
             '&::after': {
               content: '""',

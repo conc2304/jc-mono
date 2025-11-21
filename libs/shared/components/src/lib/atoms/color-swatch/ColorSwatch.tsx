@@ -47,16 +47,18 @@ export const ColorSwatch = ({
         className="ColorSwatch--root"
         variant="contained"
         onClick={handleClick}
-        color="inherit"
+        color="secondary"
+        inlayBg={background}
+        inlayOffset={'4px'}
         sx={(theme) => ({
-          minWidth: dimensions.width,
           width: dimensions.width,
           height: dimensions.height,
           p: 0,
+          transition: 'all 0.2s ease-in-out',
 
+          // Override augmented-ui button styles
           '&.ColorSwatch--root': {
-            background: background,
-            backgroundColor: background,
+            background: 'unset !important',
 
             '--aug-border-bg': isActive
               ? theme.palette.primary.main
@@ -65,8 +67,11 @@ export const ColorSwatch = ({
 
             '&:hover': {
               '--aug-border-all': '4px',
-              '--aug-border-bg': theme.palette.secondary.main,
-              background: background,
+              '--aug-border-bg': !isActive
+                ? undefined
+                : theme.palette.secondary.main,
+              width: `calc(${dimensions.width} + 14px)`, // (4px + 3px) * 2 to keep the center of swatch the same size ish
+              height: `calc(${dimensions.height} + 14px)`,
             },
           },
         })}
