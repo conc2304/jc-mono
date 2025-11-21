@@ -113,15 +113,34 @@ export const getLuminance = (color: Property.Color) => {
 };
 
 // Convert hex to RGB
-export const hexToRgb = (hex: string): RGB => {
+export const hexToRgb = (
+  hex: string,
+  normalize = true,
+  roundToNearestDecimal = 2
+): RGB => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : { r: 0, g: 0, b: 0 };
+
+  if (!result) {
+    return { r: 0, g: 0, b: 0 };
+  }
+
+  const roundValue = (value: number): number => {
+    if (roundToNearestDecimal !== undefined && roundToNearestDecimal >= 0) {
+      const multiplier = Math.pow(10, roundToNearestDecimal);
+      return Math.round(value * multiplier) / multiplier;
+    }
+    return value;
+  };
+
+  const r = parseInt(result[1], 16);
+  const g = parseInt(result[2], 16);
+  const b = parseInt(result[3], 16);
+
+  return {
+    r: roundValue(!normalize ? r : r / 255),
+    g: roundValue(!normalize ? g : g / 255),
+    b: roundValue(!normalize ? b : b / 255),
+  };
 };
 
 // Convert RGB to hex

@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 
 import { ColorInput } from '@jc/utils';
-import { AugmentedButton, AugmentedIconButton, ColorSwatch } from '../../atoms';
+import { AugmentedButton } from '../../atoms';
 import { CustomColorModal } from '../custom-color-modal/CustomColorModal';
+import { SwatchPicker, SwatchItem } from '../swatch-picker';
 
 interface ColorSwatchPickerProps {
   colors?: string[];
   onColorChange?: (color: string) => void;
   savedColors: string[];
   setSavedColors: (colors: string[]) => void;
-  activeColor?: string;
+  activeColor?: string | null;
 }
 
 export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
@@ -34,98 +35,67 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
     v: 100,
   });
 
-  const handleColorSelect = (color: string): void => {
-    if (onColorChange) onColorChange(color);
+  // Convert colors to SwatchItem format
+  const colorItems: SwatchItem<string>[] = colors.map((color) => ({
+    id: color,
+    value: color,
+    display: color,
+    isGradient: false,
+  }));
+
+  const savedColorItems: SwatchItem<string>[] = savedColors.map((color) => ({
+    id: color,
+    value: color,
+    display: color,
+    isGradient: false,
+  }));
+
+  const activeColorItem: SwatchItem<string> | null = activeColor
+    ? {
+        id: activeColor,
+        value: activeColor,
+        display: activeColor,
+        isGradient: false,
+      }
+    : null;
+
+  const handleColorSelect = (item: SwatchItem<string>): void => {
+    if (onColorChange) onColorChange(item.value);
   };
 
-  const handleRemoveSavedColor = (colorToRemove: string): void => {
-    setSavedColors(savedColors.filter((c) => c !== colorToRemove));
+  const handleRemoveSavedColor = (colorId: string): void => {
+    setSavedColors(savedColors.filter((c) => c !== colorId));
   };
+
+  const customButton = (
+    <AugmentedButton
+      onClick={() => setIsModalOpen(true)}
+      color="primary"
+      variant="outlined"
+      sx={{
+        width: 64,
+        height: 64,
+        p: 0,
+      }}
+    >
+      <AddIcon sx={{ color: theme.palette.text.secondary, fontSize: 32 }} />
+    </AugmentedButton>
+  );
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 672, mx: 'auto', p: 2 }}>
-      {/* Saved Colors Section */}
-      {savedColors.length > 0 && (
-        <Box sx={{ mb: 2 }}>
-          <Typography
-            variant="body2"
-            fontWeight={600}
-            color="text.primary"
-            sx={{ mb: 1 }}
-          >
-            Saved Colors
-          </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {savedColors.map((color: string, index: number) => (
-              <Box
-                key={index}
-                sx={{
-                  position: 'relative',
-                  '&:hover .remove-btn': { opacity: 1 },
-                }}
-              >
-                <ColorSwatch
-                  key={color + index}
-                  color={color}
-                  onColorSelect={() => handleColorSelect(color)}
-                  isActive={activeColor === color}
-                />
-
-                <AugmentedIconButton
-                  className="remove-btn"
-                  size="small"
-                  onClick={() => handleRemoveSavedColor(color)}
-                  sx={{
-                    position: 'absolute',
-                    top: -4,
-                    right: -4,
-                    width: 20,
-                    height: 20,
-                    backgroundColor: theme.palette.error.main,
-                    color: theme.palette.error.contrastText,
-                    opacity: 0,
-                    transition: 'opacity 0.2s',
-                    fontSize: '1rem',
-                    '&:hover': {
-                      backgroundColor: theme.palette.error.dark,
-                    },
-                  }}
-                >
-                  ×
-                </AugmentedIconButton>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      )}
-
-      {/* Color Swatches */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-        {/* Custom Color Button */}
-        <AugmentedButton
-          onClick={() => setIsModalOpen(true)}
-          color="secondary"
-          variant="outlined"
-          sx={{
-            minWidth: 64,
-            width: 64,
-            height: 64,
-            p: 0,
-          }}
-        >
-          <AddIcon sx={{ color: theme.palette.text.secondary, fontSize: 32 }} />
-        </AugmentedButton>
-
-        {/* Color Swatches */}
-        {colors.map((color: string, index: number) => (
-          <ColorSwatch
-            onColorSelect={handleColorSelect}
-            color={color}
-            isActive={color === activeColor}
-            key={color + index}
-          />
-        ))}
-      </Box>
+    <Box sx={{ width: '100%', mx: 'auto', p: 2 }}>
+      <SwatchPicker
+        title="Solid Colors"
+        items={colorItems}
+        savedItems={savedColorItems}
+        savedItemsTitle="Saved Colors"
+        activeItem={activeColorItem}
+        onItemSelect={handleColorSelect}
+        onRemoveSavedItem={handleRemoveSavedColor}
+        customButton={customButton}
+        size="medium"
+        gridColumns={{ xs: 3, sm: 4, md: 6, lg: 8 }}
+      />
 
       {/* Custom Color Modal */}
       <CustomColorModal

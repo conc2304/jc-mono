@@ -9,7 +9,11 @@ export interface Gradient {
   stops: ColorStop[];
 }
 
-export type GradientPatternType = 'vertical' | 'horizontal' | 'circular' | 'radial';
+export type GradientPatternType =
+  | 'vertical'
+  | 'horizontal'
+  | 'circular'
+  | 'radial';
 export type InterpolationMode = 'linear' | 'step';
 
 export interface GradientPattern {

@@ -50,11 +50,11 @@ const patternTypes: Array<{
   },
 ];
 
-export const GradientPatternPicker: React.FC<GradientPatternPickerProps> = ({
+export const GradientPatternPicker = ({
   gradient,
   config,
   onConfigChange,
-}) => {
+}: GradientPatternPickerProps) => {
   const theme = useTheme();
 
   const handleTypeChange = (

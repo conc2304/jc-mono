@@ -45,3 +45,16 @@ export const findClosestNumber = (
 export const clamp = (num: number, min: number, max: number) => {
   return Math.min(Math.max(num, min), max);
 };
+
+export const remapNumber = (
+  value: number,
+  fromMin: number,
+  fromMax: number,
+  toMin: number,
+  toMax: number
+) => {
+  const fromRange = fromMax - fromMin;
+  const toRange = toMax - toMin;
+  const scaledValue = (value - fromMin) / fromRange;
+  return toMin + scaledValue * toRange;
+};

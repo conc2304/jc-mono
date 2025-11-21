@@ -1,1 +1,1 @@
-export * from './color-picker';
+export * from './led-controller-dashboard';

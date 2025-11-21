@@ -3,7 +3,7 @@ import { LoadingFallback } from '@jc/ui-components';
 
 import { lazy, Suspense } from 'react';
 
-const ColorPickerPage = lazy(() => import('../components/LedController'));
+const LedControllerPage = lazy(() => import('../components/LedControllerPage'));
 
 function LedControllerRoute() {
   return (
@@ -13,7 +13,7 @@ function LedControllerRoute() {
           <LoadingFallback message="Loading LED Controller Experience." />
         }
       >
-        <ColorPickerPage />
+        <LedControllerPage />
       </Suspense>
     </Box>
   );
