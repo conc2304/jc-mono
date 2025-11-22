@@ -10,11 +10,8 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import {
-  ColorGradientEditor,
-  ColorStop,
-  GradientData,
-} from './ColorGradientEditor';
+import { ColorGradientEditor, GradientData } from './ColorGradientEditor';
+import { ColorStop } from './types';
 import { AugmentedButton } from '../../atoms';
 
 interface Gradient {

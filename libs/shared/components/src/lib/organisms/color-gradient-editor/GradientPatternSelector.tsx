@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { GradientData } from './ColorGradientEditor';
-import {
-  PatternTypeSelector,
-  GradientSwatchPicker,
-  PatternConfiguration,
-  CustomGradientEditorModal,
-} from './components';
+import { PatternTypeSelector } from '../../molecules/pattern-type-selector';
+import { GradientSwatchPicker } from '../../molecules/gradient-swatch-picker';
+import { PatternConfiguration } from '../../molecules/pattern-configuration';
+import { CustomGradientEditorModal } from '../../molecules/custom-gradient-editor-modal';
 import {
   Gradient,
   GradientPatternType,

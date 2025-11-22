@@ -5,8 +5,8 @@ import {
   useGradientStops,
   ColorStop as ColorStopType,
 } from './hooks/useGradientStops';
-import { GradientBar } from './components/GradientBar';
-import { ColorStopControls } from './components/ColorStopControls';
+import { GradientBar } from '../../atoms/gradient-bar';
+import { ColorStopControls } from '../../atoms/color-stop-controls';
 import { ColorStop } from './types';
 
 export interface GradientData {
