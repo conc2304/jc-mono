@@ -1,0 +1,1 @@
+export { GradientSwatchPicker } from './GradientSwatchPicker';
