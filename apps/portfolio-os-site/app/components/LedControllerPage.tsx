@@ -17,7 +17,7 @@ import {
 import { useState } from 'react';
 
 const LedController = () => {
-  const tdServerApi = 'http://192.168.4.44:9980';
+  const tdServerApi = 'https://192.168.4.44:9980';
   const apiPath = '/api/v1';
 
   const theme = useTheme();

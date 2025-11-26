@@ -70,11 +70,11 @@ const defaultGradients: Gradient[] = [
     stops: [
       { id: 1, color: '#000000', position: (100 / 6) * 0 },
       { id: 2, color: '#FF0000', position: (100 / 6) * 1 },
-      { id: 1, color: '#000000', position: (100 / 6) * 2 },
-      { id: 3, color: '#FF8000', position: (100 / 6) * 3 },
-      { id: 1, color: '#000000', position: (100 / 6) * 4 },
-      { id: 4, color: '#FFFF00', position: (100 / 6) * 5 },
-      { id: 5, color: '#000000', position: (100 / 6) * 6 },
+      { id: 3, color: '#000000', position: (100 / 6) * 2 },
+      { id: 4, color: '#FF8000', position: (100 / 6) * 3 },
+      { id: 5, color: '#000000', position: (100 / 6) * 4 },
+      { id: 6, color: '#FFFF00', position: (100 / 6) * 5 },
+      { id: 7, color: '#000000', position: (100 / 6) * 6 },
     ],
   },
   {
@@ -87,11 +87,12 @@ const defaultGradients: Gradient[] = [
   {
     id: 'rainbow',
     stops: [
-      { id: 1, color: '#FF0000', position: 0 },
-      { id: 2, color: '#FFFF00', position: 25 },
-      { id: 3, color: '#00FF00', position: 50 },
-      { id: 4, color: '#00FFFF', position: 75 },
-      { id: 5, color: '#0000FF', position: 100 },
+      { id: 1, color: '#FF0000', position: (100 / 5) * 0 },
+      { id: 2, color: '#FFFF00', position: (100 / 5) * 1 },
+      { id: 3, color: '#00FF00', position: (100 / 5) * 2 },
+      { id: 4, color: '#00FFFF', position: (100 / 5) * 3 },
+      { id: 5, color: '#0000FF', position: (100 / 5) * 4 },
+      { id: 6, color: '#FF0000', position: (100 / 5) * 5 },
     ],
   },
   {
