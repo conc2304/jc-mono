@@ -3,6 +3,7 @@ import {
   FormControlLabel,
   Paper,
   Slider,
+  Stack,
   Switch,
   Typography,
   useTheme,
@@ -14,6 +15,7 @@ import {
   type GradientPatternConfig,
 } from '@jc/ui-components';
 import { hexToRgb, remapNumber, rgbToHsv } from '@jc/utils';
+import { BrightnessHigh, BrightnessLow } from '@mui/icons-material';
 
 type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
 
@@ -174,44 +176,24 @@ export const ActiveDisplayState = ({
 
       {/* Brightness Controller */}
       <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            // mb: 1,
-          }}
+        <Stack
+          spacing={2}
+          direction="row"
+          sx={{ alignItems: 'center', my: 1, width: '100%' }}
         >
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            id="brightness-slider"
-          >
-            Brightness
-          </Typography>
+          <BrightnessLow />
           <Slider
             value={brightness}
             onChange={handleBrightnessChange}
             min={0}
             max={100}
             step={1}
+            aria-label="LED Brightness"
             valueLabelDisplay="auto"
-            sx={{ mx: 8 }}
             aria-labelledby="brightness-slider"
           />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={systemOn}
-                color={systemOn ? 'primary' : 'secondary'}
-                onChange={handleSystemToggle}
-                size="medium"
-              />
-            }
-            label={systemOn ? 'System On' : 'System Off'}
-          />
-        </Box>
+          <BrightnessHigh />
+        </Stack>
       </Box>
     </Paper>
   );

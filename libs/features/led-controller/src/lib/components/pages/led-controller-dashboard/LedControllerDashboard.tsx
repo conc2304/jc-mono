@@ -26,6 +26,7 @@ type GradientApiRequestBody = GradientPatternConfig & {
 };
 
 const defaultColors = [
+  '#000000',
   '#ffffff',
   '#ff0000',
   '#ff8900',
