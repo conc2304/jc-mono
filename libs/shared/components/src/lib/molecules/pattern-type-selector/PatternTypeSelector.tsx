@@ -64,6 +64,9 @@ export const PatternTypeSelector = ({
                 py: 1,
                 borderRadius: 'unset',
                 cursor: 'pointer',
+                '--aug-tr-extend1': '4px',
+                '--aug-tl-extend2': '4px',
+
                 '--aug-border-all': '2px',
                 '--aug-border-bg':
                   selectedPatternType === pattern.type

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Button, Stack } from '@mui/material';
+import { Save as SaveIcon } from '@mui/icons-material';
 
 import {
   ColorSwatchPicker,
@@ -9,6 +10,13 @@ import {
 } from '@jc/ui-components';
 import { ActiveDisplayState } from './ActiveDisplayState';
 import { hexToRgb } from '@jc/utils';
+import { SceneBank } from '../../organisms/scene-bank';
+import { SaveSceneDialog } from '../../organisms/save-scene-dialog';
+import {
+  usePersistentColors,
+  usePersistentGradients,
+  usePersistentScenes,
+} from '../../../hooks/usePersistentStorage';
 
 interface LedControllerDashboardProps {
   onUpdateSolidColor: (color: string) => void;
@@ -117,7 +125,13 @@ export const LedControllerDashboard = ({
   onUpdateSolidColor,
   onUpdateGradientPattern,
 }: LedControllerDashboardProps) => {
-  const [savedColors, setSavedColors] = useState<string[]>([]);
+  // Persistent storage hooks
+  const { savedColors, setSavedColors } = usePersistentColors();
+  const { savedGradients, addGradient, removeGradient } =
+    usePersistentGradients();
+  const { scenes, addScene, updateScene, removeScene } = usePersistentScenes();
+
+  // UI state
   const [displayMode, setDisplayMode] = useState<DisplayMode>('solid-color');
   const [activeColor, setActiveColor] = useState<string | null>(null);
   const [patternGradient, setPatternGradient] = useState<Gradient | null>(null);
@@ -125,6 +139,7 @@ export const LedControllerDashboard = ({
     useState<GradientPatternConfig | null>(null);
   const [brightness, setBrightness] = useState<number>(100);
   const [systemOn, setSystemOn] = useState<boolean>(true);
+  const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
 
   // Mode handlers
   // Modes are mutually exclusive - setting one unsets the others
@@ -193,8 +208,48 @@ export const LedControllerDashboard = ({
 
   const handleAddSavedColor = (colors: string[]) => {
     setSavedColors(colors);
-    // TODO - Persist the save colors
   };
+
+  // Scene management handlers
+  const handleSaveScene = (name: string, description?: string) => {
+    if (displayMode === 'solid-color' && activeColor) {
+      addScene({
+        name,
+        description,
+        type: 'solid-color',
+        color: activeColor,
+      });
+    } else if (
+      displayMode === 'pattern' &&
+      patternGradient &&
+      patternConfig
+    ) {
+      addScene({
+        name,
+        description,
+        type: 'gradient-pattern',
+        gradient: patternGradient,
+        patternConfig,
+      });
+    }
+  };
+
+  const handlePlayScene = (scene: typeof scenes[0]) => {
+    if (scene.type === 'solid-color' && scene.color) {
+      handleColorSelect(scene.color);
+    } else if (
+      scene.type === 'gradient-pattern' &&
+      scene.gradient &&
+      scene.patternConfig
+    ) {
+      handlePatternConfigChange(scene.patternConfig, scene.gradient);
+    }
+  };
+
+  const canSaveScene = !!(
+    (displayMode === 'solid-color' && activeColor) ||
+    (displayMode === 'pattern' && patternGradient && patternConfig)
+  );
 
   return (
     <Box
@@ -217,6 +272,25 @@ export const LedControllerDashboard = ({
           systemOn={systemOn}
           onSystemToggle={handleSystemToggle}
         />
+
+        {/* Save Current State as Scene */}
+        <Box sx={{ mb: 4, textAlign: 'center' }}>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<SaveIcon />}
+            onClick={() => setSaveSceneDialogOpen(true)}
+            disabled={!canSaveScene}
+            size="large"
+          >
+            Save as Scene
+          </Button>
+          {!canSaveScene && (
+            <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
+              Select a color or pattern to save as a scene
+            </Typography>
+          )}
+        </Box>
 
         {/* Solid Color Section */}
         <Typography
@@ -245,10 +319,37 @@ export const LedControllerDashboard = ({
           Gradient Patterns
         </Typography>
         <GradientPatternSelector
-          gradients={defaultGradients}
+          gradients={[...defaultGradients, ...savedGradients]}
           onPatternConfigChange={handlePatternConfigChange}
           activeGradient={patternGradient}
           activePatternConfig={patternConfig}
+        />
+
+        {/* Scene Bank Section */}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ mb: 2, mt: 6 }}
+          textAlign={'center'}
+        >
+          Saved Scenes
+        </Typography>
+        <SceneBank
+          scenes={scenes}
+          onPlayScene={handlePlayScene}
+          onDeleteScene={removeScene}
+          onUpdateScene={updateScene}
+        />
+
+        {/* Save Scene Dialog */}
+        <SaveSceneDialog
+          open={saveSceneDialogOpen}
+          onClose={() => setSaveSceneDialogOpen(false)}
+          onSave={handleSaveScene}
+          sceneType={displayMode === 'solid-color' ? 'solid-color' : 'gradient-pattern'}
+          color={activeColor}
+          gradient={patternGradient}
+          patternConfig={patternConfig}
         />
       </Container>
     </Box>
