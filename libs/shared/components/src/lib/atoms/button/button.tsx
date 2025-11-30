@@ -36,7 +36,10 @@ const augmentationSizeMap = {
 };
 
 // Base styled button that will receive the augmented-ui attributes
-const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
+const StyledButton = styled(MuiButton, {
+  shouldForwardProp: (prop) =>
+    !['shape', , 'inlayOffset'].includes(prop as string),
+})<AugmentedButtonProps>(
   ({ theme, color, variant, disabled, size, inlayBg, inlayOffset }) => {
     const colorTheme = color && color !== 'inherit' ? color : undefined;
     const componentColor = theme.palette[colorTheme || 'primary'];
@@ -57,7 +60,7 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
     return {
       // Apply augmented-ui specific styles
       '&[data-augmented-ui]': {
-        // background: inlayBg ? 'transparent' : undefined,
+        background: inlayBg ? 'red' : undefined,
 
         '--aug-border-all': borderWidth > 0 ? borderWidth + 'px' : undefined, // size
         '--aug-border-bg': gradientStyle, // style
@@ -84,28 +87,39 @@ const StyledButton = styled(MuiButton)<AugmentedButtonProps>(
 export const AugmentedButton = React.forwardRef<
   HTMLButtonElement,
   AugmentedButtonProps
->(({ shape = 'buttonClipped', children, ...props }, ref) => {
-  const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;
-  const hasInlay = Boolean(props.inlayBg);
+>(
+  (
+    { shape = 'buttonClipped', inlayBg, inlayOffset, children, ...props },
+    ref
+  ) => {
+    const borderWidth = borderMap[props?.variant ?? 'text'] ?? 0;
+    const hasInlay = Boolean(inlayBg);
 
-  let shapeAttributes = getShapeData({
-    shape,
-    hasBorder: borderWidth > 0,
-    hasInlay,
-  });
+    let shapeAttributes = getShapeData({
+      shape,
+      hasBorder: borderWidth > 0,
+      hasInlay,
+    });
 
-  if (!shapeAttributes) {
-    console.warn(
-      `Unknown shape: ${shape}. Using default 'buttonClipped' shape.`
+    if (!shapeAttributes) {
+      console.warn(
+        `Unknown shape: ${shape}. Using default 'buttonClipped' shape.`
+      );
+      shapeAttributes = SHAPE_MAPPINGS.buttonClipped;
+    }
+
+    return (
+      <StyledButton
+        ref={ref}
+        inlayBg={inlayBg}
+        inlayOffset={inlayOffset}
+        {...shapeAttributes}
+        {...props}
+      >
+        {children}
+      </StyledButton>
     );
-    shapeAttributes = SHAPE_MAPPINGS.buttonClipped;
   }
-
-  return (
-    <StyledButton ref={ref} {...shapeAttributes} {...props}>
-      {children}
-    </StyledButton>
-  );
-});
+);
 
 AugmentedButton.displayName = 'AugmentedButton';

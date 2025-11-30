@@ -39,20 +39,14 @@ export default function ButtonBase(theme: Theme): Components {
           );
           const actionDisabledText = alpha(theme.palette.common.black, 0.38);
 
-          //  commented out ones are other good options
           const bgImgMap = {
             primary:
               'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NmZ6bmU5eXExMDc4YmI5Y2xib2pvaDdqZGR3aDh5MWNrYzRta2puNyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/d1E2diIb2cktChLW/giphy.webp',
-            // 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3YwZ3R1cDRubnN3aDd6a251Z3RzeWo4OHY0d3Rjamh4Mjd6bTd6YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XWwYUsbW57BrGomT98/giphy.gif',
             secondary:
               'https://media1.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Z3plNTlndWJwNHhsaXlrdDlsNGF0MWczMWtvemJtczBwZ3ZkbG90MSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/QAmzAMUA4rOIkG0Rdv/giphy.webp',
-            // 'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3d3VwaDQxNnNvYnZ4amNoZXMxZDZtcnVxMmdwZ29wYnRmM2s3dW03dyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8Uu7Bt2vShW3g6uqLY/giphy.webp',
-            // 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGdrcXBjaWl6NTM2bjB3M3Y4cHo4aHAyZTE0eTJ6bnR1d3JodmQ2NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/u7CzwBdITKleMOhUK9/giphy.webp',
             error:
               'https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MDFheWc4ZG8xcngwcmt2MTNsaWxwcnh6bXFhdWo4OWsyNTFuenVlNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LmNy9OYM7hni2iHKeO/giphy.webp',
-            // 'https://media2.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bDMzM3ZiaXV2Z3A5Z2JtdHF5dW5zcW01cm1veXU3dGQ5Z2p3ZXBxYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/zhmIHStBa2ezu/200.webp',
             info: 'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dTdyMWptZHAzaXQ5aDIwMWF6bXpic21rdGp6MWZveG5xNTE0dHg4ZSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/7FrOU9tPbgAZtxV5mb/giphy.webp',
-            // 'https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cWNnNm41dGg5aTRwbG5weGRibHBoeDZqbHlrMjFlbmM1OW9pZTQ0biZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/11UhXwm8Ipd9C/giphy.webp',
             warning:
               'https://media0.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3a2k0aTRwa2h5cHNqaDNoOHJkejNmeHNndXE1ZDV0NnIxbnhyZGJlaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EwyHisjzUbkTj2FPgB/giphy.webp',
             success:

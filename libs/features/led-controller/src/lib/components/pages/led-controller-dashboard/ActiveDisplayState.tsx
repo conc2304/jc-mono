@@ -26,8 +26,6 @@ interface ActiveDisplayStateProps {
   patternGradient: Gradient | null;
   brightness: number;
   onBrightnessChange: (value: number) => void;
-  systemOn: boolean;
-  onSystemToggle: (isOn: boolean) => void;
 }
 
 export const ActiveDisplayState = ({
@@ -37,8 +35,6 @@ export const ActiveDisplayState = ({
   patternGradient,
   brightness,
   onBrightnessChange,
-  systemOn,
-  onSystemToggle,
 }: ActiveDisplayStateProps) => {
   const theme = useTheme();
 
@@ -60,10 +56,6 @@ export const ActiveDisplayState = ({
     }
   };
 
-  const handleSystemToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onSystemToggle(event.target.checked);
-  };
-
   return (
     <Paper
       data-augmented-ui="border tr-clip tl-clip"
@@ -71,7 +63,7 @@ export const ActiveDisplayState = ({
         mb: 4,
         p: 2,
         br: 0,
-        backgroundColor: 'background.default',
+        backgroundColor: theme.palette.background.default,
         '--aug-border-all': '2px',
         '--aug-border-bg': theme.palette.info.main,
         '--aug-tr': theme.spacing(1),

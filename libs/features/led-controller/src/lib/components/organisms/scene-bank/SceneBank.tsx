@@ -93,7 +93,7 @@ export const SceneBank = ({
     <>
       <Grid container spacing={2}>
         {scenes.map((scene) => (
-          <Grid item xs={12} sm={6} md={4} key={scene.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={scene.id}>
             <Card
               data-augmented-ui="border tr-clip tl-clip"
               sx={(theme) => ({

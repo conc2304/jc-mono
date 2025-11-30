@@ -55,11 +55,9 @@ const ArtGalleryProcess = ({
       ? {
           filter: 'invert(1)',
           mixBlendMode: 'plus-lighter',
-          // objectFit: 'contain',
         }
       : {
           mixBlendMode: 'multiply',
-          // objectFit: 'contain',
         };
   decorImageStyles.objectFit = 'contain';
   decorImageStyles.backgroundColor = 'transparent';

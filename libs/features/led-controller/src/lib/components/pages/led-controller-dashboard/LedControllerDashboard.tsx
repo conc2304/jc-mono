@@ -219,11 +219,7 @@ export const LedControllerDashboard = ({
         type: 'solid-color',
         color: activeColor,
       });
-    } else if (
-      displayMode === 'pattern' &&
-      patternGradient &&
-      patternConfig
-    ) {
+    } else if (displayMode === 'pattern' && patternGradient && patternConfig) {
       addScene({
         name,
         description,
@@ -234,7 +230,7 @@ export const LedControllerDashboard = ({
     }
   };
 
-  const handlePlayScene = (scene: typeof scenes[0]) => {
+  const handlePlayScene = (scene: (typeof scenes)[0]) => {
     if (scene.type === 'solid-color' && scene.color) {
       handleColorSelect(scene.color);
     } else if (
@@ -269,8 +265,6 @@ export const LedControllerDashboard = ({
           patternGradient={patternGradient}
           brightness={brightness}
           onBrightnessChange={handleBrightnessChange}
-          systemOn={systemOn}
-          onSystemToggle={handleSystemToggle}
         />
 
         {/* Save Current State as Scene */}
@@ -286,7 +280,12 @@ export const LedControllerDashboard = ({
             Save as Scene
           </Button>
           {!canSaveScene && (
-            <Typography variant="caption" display="block" sx={{ mt: 1 }} color="text.secondary">
+            <Typography
+              variant="caption"
+              display="block"
+              sx={{ mt: 1 }}
+              color="text.secondary"
+            >
               Select a color or pattern to save as a scene
             </Typography>
           )}
@@ -346,7 +345,9 @@ export const LedControllerDashboard = ({
           open={saveSceneDialogOpen}
           onClose={() => setSaveSceneDialogOpen(false)}
           onSave={handleSaveScene}
-          sceneType={displayMode === 'solid-color' ? 'solid-color' : 'gradient-pattern'}
+          sceneType={
+            displayMode === 'solid-color' ? 'solid-color' : 'gradient-pattern'
+          }
           color={activeColor}
           gradient={patternGradient}
           patternConfig={patternConfig}

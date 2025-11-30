@@ -2,12 +2,13 @@ import { LedControllerDashboard } from '@jc/led-controller';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
 import { hexToRgb } from '@jc/utils';
-import { Close, HomeFilled, Palette } from '@mui/icons-material';
+import { Close, HomeFilled, Palette as PaletteIcon } from '@mui/icons-material';
 import {
   AppBar,
   Box,
   Dialog,
   DialogTitle,
+  getContrastRatio,
   Toolbar,
   Tooltip,
   Typography,
@@ -40,7 +41,7 @@ const LedController = () => {
 
     const { r, g, b } = hexToRgb(color);
 
-    const response = await fetch(`${tdServerApi}${apiPath}/color`, {
+    await fetch(`${tdServerApi}${apiPath}/color`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ const LedController = () => {
       interpolation
     );
 
-    const response = await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
+    await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,6 +77,38 @@ const LedController = () => {
       body: JSON.stringify({ colorStops, type, speed, interpolation }),
     });
   };
+
+  const appBarBtnColor =
+    // Find the semantic color that has sufficient contrast with the app bar background
+    [
+      ...([
+        'primary',
+        'secondary',
+        'info',
+        'success',
+        'warning',
+        'error',
+      ] as const),
+    ].sort((a, b) => {
+      const paletteA = theme.palette[a as keyof typeof theme.palette];
+      const paletteB = theme.palette[b as keyof typeof theme.palette];
+
+      const contrastA =
+        typeof paletteA === 'object' && 'main' in paletteA
+          ? getContrastRatio(
+              paletteA.main,
+              theme.palette.getInvertedMode('secondary', true)
+            )
+          : 0;
+      const contrastB =
+        typeof paletteB === 'object' && 'main' in paletteB
+          ? getContrastRatio(
+              paletteB.main,
+              theme.palette.getInvertedMode('secondary', true)
+            )
+          : 0;
+      return contrastB - contrastA;
+    })[0];
 
   return (
     <Box
@@ -87,7 +120,7 @@ const LedController = () => {
       }}
     >
       {/* App Bar / Title Bar */}
-      <AppBar enableColorOnDark position="static" color="primary">
+      <AppBar enableColorOnDark position="static" color="secondary">
         <Toolbar
           variant={'dense'}
           sx={{ display: 'flex', justifyContent: 'space-between' }}
@@ -97,7 +130,7 @@ const LedController = () => {
             <Tooltip title="Home">
               <AugmentedButton
                 href="/home"
-                color="secondary"
+                color={appBarBtnColor}
                 variant={appBarBtnSize === 'large' ? 'outlined' : 'text'}
                 size={appBarBtnSize}
                 shape="gamingButton"
@@ -118,17 +151,17 @@ const LedController = () => {
           </Typography>
 
           {/* Theme Selector Dialog Opener */}
-          <Box>
+          <Box color={appBarBtnColor}>
             <Tooltip title="Theme Selector">
               <AugmentedButton
                 onClick={() => setIsModalOpen(!isModalOpen)}
-                color="secondary"
+                color={appBarBtnColor}
                 variant={appBarBtnSize === 'large' ? 'outlined' : 'text'}
                 size={appBarBtnSize}
                 shape="gamingButton"
                 sx={{}}
               >
-                <Palette />
+                <PaletteIcon color="inherit" />
               </AugmentedButton>
             </Tooltip>
           </Box>
