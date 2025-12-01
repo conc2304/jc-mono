@@ -57,15 +57,14 @@ export const ActiveDisplayState = ({
   };
 
   return (
-    <Paper
+    <Box
       data-augmented-ui="border tr-clip tl-clip"
       sx={(theme) => ({
         mb: 4,
         p: 2,
         br: 0,
-        bgcolor: 'red',
-        // bgcolor: 'background.paper',
-        // backgroundColor: theme.palette.background.paper,
+        bgcolor: 'background.paper',
+        backgroundColor: theme.palette.background.paper,
         '--aug-border-all': '2px',
         '--aug-border-bg': theme.palette.info.main,
         '--aug-tr': theme.spacing(1),
@@ -76,7 +75,7 @@ export const ActiveDisplayState = ({
         variant="body2"
         fontWeight={600}
         color="text.primary"
-        sx={{ mb: 1 }}
+        sx={{ mb: 1, color: 'text.primary' }}
       >
         Active Display Mode: {isNothingActive && 'Nothing Active'}
         {displayMode === 'solid-color' && !isNothingActive && 'Solid Color'}
@@ -163,7 +162,11 @@ export const ActiveDisplayState = ({
       )}
 
       {isNothingActive && (
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ color: 'text.secondary' }}
+        >
           Select a color or gradient pattern to get started
         </Typography>
       )}
@@ -189,6 +192,6 @@ export const ActiveDisplayState = ({
           <BrightnessHigh />
         </Stack>
       </Box>
-    </Paper>
+    </Box>
   );
 };
