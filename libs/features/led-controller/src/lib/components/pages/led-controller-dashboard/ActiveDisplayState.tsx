@@ -1,13 +1,4 @@
-import {
-  Box,
-  FormControlLabel,
-  Paper,
-  Slider,
-  Stack,
-  Switch,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, Slider, Stack, Typography, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import {
   GradientPatternVisualizer,
