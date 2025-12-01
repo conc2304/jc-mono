@@ -38,7 +38,7 @@ const augmentationSizeMap = {
 // Base styled button that will receive the augmented-ui attributes
 const StyledButton = styled(MuiButton, {
   shouldForwardProp: (prop) =>
-    !['shape', , 'inlayOffset'].includes(prop as string),
+    !['shape', , 'inlayOffset', 'inlayBg'].includes(prop as string),
 })<AugmentedButtonProps>(
   ({ theme, color, variant, disabled, size, inlayBg, inlayOffset }) => {
     console.log(
@@ -82,6 +82,32 @@ const StyledButton = styled(MuiButton, {
       '&[data-augmented-ui]:hover': {
         '--aug-border-bg': styleHover,
       },
+
+      // if Inlay is present do not use hover effect
+      ...(inlayBg
+        ? {}
+        : {
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: '-100%',
+              width: '100%',
+              height: '100%',
+              background: `linear-gradient(90deg, transparent, ${
+                (color &&
+                  color !== 'inherit' &&
+                  theme.palette[color as Exclude<typeof color, 'inherit'>]
+                    ?.light) ||
+                'inherit'
+              }, transparent)`,
+              transition: 'left 0.5s',
+            },
+
+            '&:hover::before': {
+              left: '100%',
+            },
+          }),
 
       position: 'relative',
     };
