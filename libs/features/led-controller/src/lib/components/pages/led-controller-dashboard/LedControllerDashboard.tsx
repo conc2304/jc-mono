@@ -128,9 +128,9 @@ export const LedControllerDashboard = ({
   const theme = useTheme();
 
   console.log(
-    'Current theme in LED DASHBOARD: ',
+    'Current theme in LED Controller DAshboard ',
     theme.palette.background.paper,
-    theme.palette
+    theme.palette.text.primary
   );
 
   // Persistent storage hooks

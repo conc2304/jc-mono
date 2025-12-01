@@ -26,8 +26,11 @@ const LedController = () => {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
 
-  console.log('Current theme in LED PAGE', theme);
-
+  console.log(
+    'Current theme in LED PAGE ',
+    theme.palette.background.paper,
+    theme.palette.text.primary
+  );
   const appBarBtnSize = isXs
     ? 'small'
     : isSm

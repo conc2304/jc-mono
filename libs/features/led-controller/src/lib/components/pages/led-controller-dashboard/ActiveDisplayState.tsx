@@ -47,7 +47,11 @@ export const ActiveDisplayState = ({
     }
   };
 
-  console.log(theme.palette.background.paper);
+  console.log(
+    'Active Display State theme: ',
+    theme.palette.background.paper,
+    theme.palette.text.primary
+  );
 
   return (
     <Box
