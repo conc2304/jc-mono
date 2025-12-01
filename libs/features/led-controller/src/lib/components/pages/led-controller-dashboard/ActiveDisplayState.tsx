@@ -56,6 +56,8 @@ export const ActiveDisplayState = ({
     }
   };
 
+  console.log(theme.palette.background.paper);
+
   return (
     <Box
       data-augmented-ui="border tr-clip tl-clip"

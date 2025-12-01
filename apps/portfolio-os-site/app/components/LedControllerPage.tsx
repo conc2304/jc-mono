@@ -134,7 +134,6 @@ const LedController = () => {
                 variant={appBarBtnSize === 'large' ? 'outlined' : 'text'}
                 size={appBarBtnSize}
                 shape="gamingButton"
-                sx={{}}
               >
                 <HomeFilled />
               </AugmentedButton>
