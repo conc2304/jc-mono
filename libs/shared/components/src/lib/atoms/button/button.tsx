@@ -41,6 +41,11 @@ const StyledButton = styled(MuiButton, {
     !['shape', , 'inlayOffset'].includes(prop as string),
 })<AugmentedButtonProps>(
   ({ theme, color, variant, disabled, size, inlayBg, inlayOffset }) => {
+    console.log(
+      'StyledButton theme: ',
+      theme.palette.background.paper,
+      theme.palette.text.primary
+    );
     const colorTheme = color && color !== 'inherit' ? color : undefined;
     const componentColor = theme.palette[colorTheme || 'primary'];
     const auSize = augmentationSizeMap[size ?? 'default'];
