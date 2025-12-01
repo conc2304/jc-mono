@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Container, Typography, Button, Stack } from '@mui/material';
+import { Box, Container, Typography, Button, useTheme } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 
 import {
@@ -125,6 +125,14 @@ export const LedControllerDashboard = ({
   onUpdateSolidColor,
   onUpdateGradientPattern,
 }: LedControllerDashboardProps) => {
+  const theme = useTheme();
+
+  console.log(
+    'Current theme in LED DASHBOARD: ',
+    theme.palette.background.paper,
+    theme.palette
+  );
+
   // Persistent storage hooks
   const { savedColors, setSavedColors } = usePersistentColors();
   const { savedGradients, addGradient, removeGradient } =
@@ -252,7 +260,6 @@ export const LedControllerDashboard = ({
       sx={{
         height: '100%',
         overflowY: 'scroll',
-        bg: 'background.paper',
         py: 4,
       }}
     >
