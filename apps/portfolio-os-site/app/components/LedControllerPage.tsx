@@ -196,6 +196,12 @@ const LedController = () => {
         brightness={100}
         onBrightnessChange={() => {}}
       />
+      <AugmentedButton color="primary" variant="outlined">
+        Test
+      </AugmentedButton>
+      <AugmentedButton color="secondary" variant="contained">
+        Test
+      </AugmentedButton>
 
       {/* Theme Switcher Dialog */}
       <Dialog
