@@ -196,7 +196,6 @@ const LedController = () => {
         <AugmentedButton color="secondary" variant="contained">
           Test
         </AugmentedButton>
-        <TestComponent />
         <ThemeProvider theme={theme}>
           <LedControllerDashboard
             onUpdateSolidColor={handleSolidColorUpdate}
