@@ -172,37 +172,10 @@ const LedController = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      {/* <LedControllerDashboard
+      <LedControllerDashboard
         onUpdateSolidColor={handleSolidColorUpdate}
         onUpdateGradientPattern={handleGradientPattenUpdate}
-      /> */}
-      <Box
-        sx={(theme) => ({
-          bgcolor: 'background.paper',
-          p: 3,
-          border: '1px solid',
-          borderColor: theme.palette.text.primary,
-          mt: 4,
-        })}
-      >
-        <Typography color="textPrimary">Test Primary</Typography>
-        <Typography color="textSecondary">Test Secondary</Typography>
-      </Box>
-
-      <Box>
-        <AugmentedButton color="primary" variant="outlined">
-          Test
-        </AugmentedButton>
-        <AugmentedButton color="secondary" variant="contained">
-          Test
-        </AugmentedButton>
-        <ThemeProvider theme={theme}>
-          <LedControllerDashboard
-            onUpdateSolidColor={handleSolidColorUpdate}
-            onUpdateGradientPattern={handleGradientPattenUpdate}
-          />
-        </ThemeProvider>
-      </Box>
+      />
 
       {/* Theme Switcher Dialog */}
       <Dialog
