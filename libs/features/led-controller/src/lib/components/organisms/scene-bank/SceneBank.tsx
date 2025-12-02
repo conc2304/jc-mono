@@ -20,7 +20,6 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   PlayArrow as PlayArrowIcon,
-  Add as AddIcon,
 } from '@mui/icons-material';
 import { GradientPatternVisualizer } from '@jc/ui-components';
 import type { Scene } from '../../../types/storage';

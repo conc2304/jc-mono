@@ -10,8 +10,7 @@ import {
 } from '@jc/ui-components';
 import { ActiveDisplayState } from './ActiveDisplayState';
 import { hexToRgb } from '@jc/utils';
-import { SceneBank } from '../../organisms/scene-bank';
-import { SaveSceneDialog } from '../../organisms/save-scene-dialog';
+import { SceneBank, SaveSceneDialog } from '../../organisms';
 import {
   usePersistentColors,
   usePersistentGradients,
