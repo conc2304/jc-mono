@@ -146,7 +146,6 @@ export const LedControllerDashboard = ({
   const [patternConfig, setPatternConfig] =
     useState<GradientPatternConfig | null>(null);
   const [brightness, setBrightness] = useState<number>(100);
-  const [systemOn, setSystemOn] = useState<boolean>(true);
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
 
   // Mode handlers
@@ -200,11 +199,6 @@ export const LedControllerDashboard = ({
   const handleBrightnessChange = (value: number) => {
     // TODO - Send brightness update to LED controller
     setBrightness(value);
-  };
-
-  const handleSystemToggle = (isOn: boolean) => {
-    // TODO - Send system on/off update to LED controller
-    setSystemOn(isOn);
   };
 
   const unsetActiveModes = () => {

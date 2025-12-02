@@ -1,4 +1,8 @@
-import { ActiveDisplayState, LedControllerDashboard } from '@jc/led-controller';
+import {
+  ActiveDisplayState,
+  LedControllerDashboard,
+  TestComponent,
+} from '@jc/led-controller';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
 import { hexToRgb } from '@jc/utils';
@@ -196,6 +200,7 @@ const LedController = () => {
         <AugmentedButton color="secondary" variant="contained">
           Test
         </AugmentedButton>
+        <TestComponent />
         <ThemeProvider theme={theme}>
           <LedControllerDashboard
             onUpdateSolidColor={handleSolidColorUpdate}
