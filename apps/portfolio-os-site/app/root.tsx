@@ -17,6 +17,7 @@ import {
   MediaProvider,
   ErrorBoundary,
 } from '@jc/ui-components';
+import { Box } from '@mui/material';
 
 export const meta: MetaFunction = () => [
   // Basic meta tags
@@ -444,9 +445,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export function HydrateFallback() {
   return (
-    <div className="hydrate-fallback">
+    <Box className="hydrate-fallback">
       <LoadingFallback message="Loading Jose Conchello's Portfolio Site: " />
-    </div>
+    </Box>
   );
 }
 

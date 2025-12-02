@@ -5,7 +5,7 @@ import { lazy, Suspense } from 'react';
 
 const DesktopOS = lazy(() => import('../components/desktop-system'));
 
-export function App() {
+export function Home() {
   return (
     <Box position={'relative'} height={'100%'}>
       <Suspense
@@ -19,4 +19,4 @@ export function App() {
   );
 }
 
-export default App;
+export default Home;
