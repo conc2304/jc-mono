@@ -61,7 +61,6 @@ export const ActiveDisplayState = ({
         p: 2,
         br: 0,
         bgcolor: 'background.paper',
-        backgroundColor: theme.palette.background.paper,
         '--aug-border-all': '2px',
         '--aug-border-bg': theme.palette.info.main,
         '--aug-tr': theme.spacing(1),

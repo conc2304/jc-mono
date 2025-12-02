@@ -1,8 +1,4 @@
-import {
-  ActiveDisplayState,
-  LedControllerDashboard,
-  TestComponent,
-} from '@jc/led-controller';
+import { LedControllerDashboard } from '@jc/led-controls';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
 import { hexToRgb } from '@jc/utils';

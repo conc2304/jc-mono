@@ -41,6 +41,9 @@
     },
     {
       "path": "./libs/features/led-controller"
+    },
+    {
+      "path": "./libs/features/led-controls"
     }
   ]
 }
