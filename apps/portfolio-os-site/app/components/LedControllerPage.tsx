@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogTitle,
   getContrastRatio,
+  ThemeProvider,
   Toolbar,
   Tooltip,
   Typography,
@@ -188,20 +189,20 @@ const LedController = () => {
         <Typography color="textSecondary">Test Secondary</Typography>
       </Box>
 
-      <ActiveDisplayState
-        displayMode={'solid-color'}
-        activeColor={'#FF0000'}
-        patternConfig={null}
-        patternGradient={null}
-        brightness={100}
-        onBrightnessChange={() => {}}
-      />
-      <AugmentedButton color="primary" variant="outlined">
-        Test
-      </AugmentedButton>
-      <AugmentedButton color="secondary" variant="contained">
-        Test
-      </AugmentedButton>
+      <Box>
+        <AugmentedButton color="primary" variant="outlined">
+          Test
+        </AugmentedButton>
+        <AugmentedButton color="secondary" variant="contained">
+          Test
+        </AugmentedButton>
+        <ThemeProvider theme={theme}>
+          <LedControllerDashboard
+            onUpdateSolidColor={handleSolidColorUpdate}
+            onUpdateGradientPattern={handleGradientPattenUpdate}
+          />
+        </ThemeProvider>
+      </Box>
 
       {/* Theme Switcher Dialog */}
       <Dialog
