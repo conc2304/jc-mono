@@ -1,4 +1,4 @@
-import { LedControllerDashboard } from '@jc/led-controller';
+import { ActiveDisplayState, LedControllerDashboard } from '@jc/led-controller';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
 import { hexToRgb } from '@jc/utils';
@@ -175,6 +175,27 @@ const LedController = () => {
         onUpdateSolidColor={handleSolidColorUpdate}
         onUpdateGradientPattern={handleGradientPattenUpdate}
       /> */}
+      <Box
+        sx={(theme) => ({
+          bgcolor: 'background.paper',
+          p: 3,
+          border: '1px solid',
+          borderColor: theme.palette.text.primary,
+          mt: 4,
+        })}
+      >
+        <Typography color="textPrimary">Test Primary</Typography>
+        <Typography color="textSecondary">Test Secondary</Typography>
+      </Box>
+
+      <ActiveDisplayState
+        displayMode={'solid-color'}
+        activeColor={'#FF0000'}
+        patternConfig={null}
+        patternGradient={null}
+        brightness={100}
+        onBrightnessChange={() => {}}
+      />
 
       {/* Theme Switcher Dialog */}
       <Dialog
