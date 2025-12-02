@@ -68,12 +68,7 @@ export const ActiveDisplayState = ({
         '--aug-tl': theme.spacing(1),
       })}
     >
-      <Typography
-        variant="body2"
-        fontWeight={600}
-        color="text.primary"
-        sx={{ mb: 1, color: 'text.primary' }}
-      >
+      <Typography variant="body2" fontWeight={600} sx={{ mb: 1 }}>
         Active Display Mode: {isNothingActive && 'Nothing Active'}
         {displayMode === 'solid-color' && !isNothingActive && 'Solid Color'}
         {displayMode === 'gradient' && 'Static Gradient'}
