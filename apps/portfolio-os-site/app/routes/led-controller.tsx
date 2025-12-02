@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, ThemeProvider, useTheme } from '@mui/material';
 import { LoadingFallback } from '@jc/ui-components';
 
 import { lazy, Suspense } from 'react';
@@ -13,15 +13,17 @@ function LedControllerRoute() {
     theme.palette.text.primary
   );
   return (
-    <Box position={'relative'} height="100%">
-      <Suspense
-        fallback={
-          <LoadingFallback message="Loading LED Controller Experience." />
-        }
-      >
-        <LedControllerPage />
-      </Suspense>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box position={'relative'} height="100%">
+        <Suspense
+          fallback={
+            <LoadingFallback message="Loading LED Controller Experience." />
+          }
+        >
+          <LedControllerPage />
+        </Suspense>
+      </Box>
+    </ThemeProvider>
   );
 }
 
