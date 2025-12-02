@@ -51,6 +51,13 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     rollupOptions: {
+      external: [
+        '@mui/material',
+        '@emotion/react',
+        '@emotion/styled',
+        'react',
+        'react-dom',
+      ],
       output: {
         manualChunks(id) {
           // Chunk Project data to load later
