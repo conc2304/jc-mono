@@ -171,10 +171,10 @@ const LedController = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <LedControllerDashboard
+      {/* <LedControllerDashboard
         onUpdateSolidColor={handleSolidColorUpdate}
         onUpdateGradientPattern={handleGradientPattenUpdate}
-      />
+      /> */}
 
       {/* Theme Switcher Dialog */}
       <Dialog

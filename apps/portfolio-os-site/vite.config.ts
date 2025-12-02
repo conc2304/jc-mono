@@ -51,13 +51,6 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     rollupOptions: {
-      external: [
-        '@mui/material',
-        '@emotion/react',
-        '@emotion/styled',
-        'react',
-        'react-dom',
-      ],
       output: {
         manualChunks(id) {
           // Chunk Project data to load later
@@ -67,12 +60,6 @@ export default defineConfig(() => ({
           if (id.includes('portfolio/src/data/projects')) {
             return 'project-data';
           }
-
-          // if (id.includes('404')) {
-          //   return '404-page';
-          // }
-
-          // if (id.includes('libs/shared')) return 'shared-lib';
 
           // Skip externalized modules (React, React-DOM, etc.)
           if (id.includes('node_modules')) {

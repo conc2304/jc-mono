@@ -6,6 +6,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
 } from 'react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, Theme } from '@mui/material/styles';
@@ -221,7 +222,7 @@ const EnhancedThemeProviderInner: React.FC<{
   const currentTheme = themes.find((t) => t.id === currentThemeId) || themes[0];
 
   // Create MUI theme based on current theme and resolved mode
-  const muiTheme = React.useMemo(() => {
+  const muiTheme = useMemo(() => {
     if (!currentTheme) return createThemeFromOptions({});
 
     const palette =
@@ -247,12 +248,10 @@ const EnhancedThemeProviderInner: React.FC<{
 
   return (
     <EnhancedThemeContext.Provider value={contextValue}>
-      {/* <AppRouterCacheProvider> */}
       <ThemeProvider theme={muiTheme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
-      {/* </AppRouterCacheProvider> */}
     </EnhancedThemeContext.Provider>
   );
 };
