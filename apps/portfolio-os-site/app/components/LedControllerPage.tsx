@@ -1,6 +1,10 @@
 import { LedControllerDashboard } from '@jc/led-controls';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
-import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
+import {
+  AugmentedButton,
+  AugmentedIconButton,
+  UIFrameBorder1,
+} from '@jc/ui-components';
 import { hexToRgb } from '@jc/utils';
 import { Close, HomeFilled, Palette as PaletteIcon } from '@mui/icons-material';
 import {
@@ -9,13 +13,13 @@ import {
   Dialog,
   DialogTitle,
   getContrastRatio,
-  ThemeProvider,
   Toolbar,
   Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { Stack } from '@mui/system';
 import { useState } from 'react';
 
 const LedController = () => {
@@ -117,14 +121,7 @@ const LedController = () => {
     })[0];
 
   return (
-    <Box
-      className="LedControllerPage--root"
-      sx={{
-        position: 'relative',
-        height: '100%',
-        pb: '40px',
-      }}
-    >
+    <>
       {/* App Bar / Title Bar */}
       <AppBar enableColorOnDark position="static" color="secondary">
         <Toolbar
@@ -172,48 +169,59 @@ const LedController = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <LedControllerDashboard
-        onUpdateSolidColor={handleSolidColorUpdate}
-        onUpdateGradientPattern={handleGradientPattenUpdate}
-      />
 
-      {/* Theme Switcher Dialog */}
-      <Dialog
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        aria-labelledby="theme-selector-modal-title"
-        aria-describedby="theme-selector-modal-description"
-        fullWidth
+      {/* Main */}
+      <Box
+        className="LedControllerPage--root"
+        sx={{
+          position: 'relative',
+          height: '100%',
+          pb: '65px',
+        }}
       >
-        <DialogTitle
-          id="theme-selector-modal-title"
-          sx={{
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            mb: 1,
-            pt: 2,
-          }}
-        >
-          Select App Theme
-        </DialogTitle>
+        <LedControllerDashboard
+          onUpdateSolidColor={handleSolidColorUpdate}
+          onUpdateGradientPattern={handleGradientPattenUpdate}
+        />
 
-        <AugmentedIconButton
-          size="large"
-          color="primary"
-          shape="buttonRounded"
-          onClick={() => setIsModalOpen(false)}
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            color: 'text.primary',
-          }}
+        {/* Theme Switcher Dialog */}
+        <Dialog
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          aria-labelledby="theme-selector-modal-title"
+          aria-describedby="theme-selector-modal-description"
+          fullWidth
         >
-          <Close />
-        </AugmentedIconButton>
-        <MinimalThemeSwitcher />
-      </Dialog>
-    </Box>
+          <DialogTitle
+            id="theme-selector-modal-title"
+            sx={{
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+              mb: 1,
+              pt: 2,
+            }}
+          >
+            Select App Theme
+          </DialogTitle>
+
+          <AugmentedIconButton
+            size="large"
+            color="primary"
+            shape="buttonRounded"
+            onClick={() => setIsModalOpen(false)}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              color: 'text.primary',
+            }}
+          >
+            <Close />
+          </AugmentedIconButton>
+          <MinimalThemeSwitcher />
+        </Dialog>
+      </Box>
+    </>
   );
 };
 

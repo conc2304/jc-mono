@@ -1,4 +1,4 @@
-const UIFrameBorder3 = ({
+export const UIFrameBorder3 = ({
   fillColor = 'rgb(5.447388%, 5.892944%, 5.529785%)',
   strokeColor = 'none',
   strokeWidth = 0,
@@ -26,5 +26,3 @@ const UIFrameBorder3 = ({
     </svg>
   );
 };
-
-export default UIFrameBorder3;

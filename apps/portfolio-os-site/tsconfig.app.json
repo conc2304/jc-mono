@@ -49,7 +49,7 @@
       "path": "../../libs/features/desktop-OS/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/features/led-controller/tsconfig.lib.json"
+      "path": "../../libs/features/led-controls/tsconfig.lib.json"
     },
     {
       "path": "../../libs/shared/utils/tsconfig.lib.json"

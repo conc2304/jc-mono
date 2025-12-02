@@ -12,7 +12,7 @@
       "path": "../../libs/features/desktop-OS"
     },
     {
-      "path": "../../libs/features/led-controller"
+      "path": "../../libs/features/led-controls"
     },
     {
       "path": "../../libs/shared/utils"

@@ -1,7 +1,10 @@
 import { Box } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { Gradient, ColorStop } from '../../organisms/color-gradient-editor/types';
+import {
+  Gradient,
+  ColorStop,
+} from '../../organisms/color-gradient-editor/types';
 import { SwatchItem, SwatchPicker } from '../../organisms/swatch-picker';
 import { AugmentedButton } from '../../atoms';
 
@@ -90,7 +93,7 @@ export const GradientSwatchPicker = ({
         onRemoveSavedItem={onRemoveSavedGradient}
         customButton={customButton}
         size="large"
-        gridColumns={{ xs: 2, sm: 3, md: 4 }}
+        gridColumns={{ xs: 2, sm: 3, md: 4, lg: 9 }}
       />
     </Box>
   );

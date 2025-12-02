@@ -157,7 +157,7 @@ export const GradientPatternSelector: React.FC<
   };
 
   return (
-    <Box sx={{ width: '100%', mx: 'auto', p: 2 }}>
+    <Box sx={{ width: '100%', mx: 'auto' }}>
       {/* Pattern Type Selection */}
       <PatternTypeSelector
         selectedPatternType={patternType}

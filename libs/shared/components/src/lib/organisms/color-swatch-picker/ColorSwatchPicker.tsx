@@ -83,7 +83,7 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   );
 
   return (
-    <Box sx={{ width: '100%', mx: 'auto', p: 2 }}>
+    <Box sx={{ width: '100%', mx: 'auto', py: 2 }}>
       <SwatchPicker
         title="Solid Colors"
         items={colorItems}
@@ -94,7 +94,7 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
         onRemoveSavedItem={handleRemoveSavedColor}
         customButton={customButton}
         size="medium"
-        gridColumns={{ xs: 3, sm: 4, md: 6, lg: 8 }}
+        gridColumns={{ xs: 3, sm: 4, md: 7, lg: 14 }}
       />
 
       {/* Custom Color Modal */}
