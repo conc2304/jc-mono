@@ -196,6 +196,10 @@ const LedController = () => {
           <Alert severity="warning" sx={{ m: 2 }}>
             The LED controller only works on my personal home WiFi to control my
             personal LED lights.
+            <br />
+            If on Jose's home wifi visit and approve the touchdesigner server
+            url:{' '}
+            <a href="https://192.168.4.44:9980">https://192.168.4.44:9980</a>
           </Alert>
         )}
         <LedControllerDashboard
