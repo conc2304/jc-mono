@@ -11,6 +11,7 @@ import {
   InterpolationMode,
   GradientPatternConfig,
   ColorStop,
+  SpeedDirection,
 } from './types';
 
 interface GradientPatternSelectorProps {
@@ -34,9 +35,11 @@ export const GradientPatternSelector: React.FC<
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [savedGradients, setSavedGradients] = useState<Gradient[]>([]);
   const [customGradientStops, setCustomGradientStops] = useState<ColorStop[]>([
-    { id: 1, color: '#FF0000', position: 0 },
+    { id: 0, color: '#FF0000', position: 0 },
+    { id: 1, color: '#000000', position: 50 },
     { id: 2, color: '#0000FF', position: 100 },
   ]);
+  const [editingGradient, setEditingGradient] = useState<Gradient | null>(null);
 
   // Local pattern config state - defaults
   const [patternType, setPatternType] = useState<GradientPatternType | null>(
@@ -46,6 +49,9 @@ export const GradientPatternSelector: React.FC<
     activePatternConfig?.interpolation || 'linear'
   );
   const [speed, setSpeed] = useState<number>(activePatternConfig?.speed || 0);
+  const [direction, setDirection] = useState<SpeedDirection>(
+    activePatternConfig?.direction || 'forward'
+  );
   const [selectedGradient, setSelectedGradient] = useState<Gradient | null>(
     activeGradient || null
   );
@@ -59,6 +65,7 @@ export const GradientPatternSelector: React.FC<
     setPatternType(activePatternConfig?.type || null);
     setInterpolation(activePatternConfig?.interpolation || 'linear');
     setSpeed(activePatternConfig?.speed || 0);
+    setDirection(activePatternConfig?.direction || 'forward');
   }, [activePatternConfig]);
 
   // Notify parent when config changes
@@ -66,6 +73,7 @@ export const GradientPatternSelector: React.FC<
     newType: GradientPatternType,
     newInterpolation: InterpolationMode,
     newSpeed: number,
+    newDirection: SpeedDirection,
     gradient: Gradient | null
   ) => {
     if (onPatternConfigChange) {
@@ -74,6 +82,7 @@ export const GradientPatternSelector: React.FC<
           type: newType,
           interpolation: newInterpolation,
           speed: newSpeed,
+          direction: newDirection,
         },
         gradient
       );
@@ -82,7 +91,7 @@ export const GradientPatternSelector: React.FC<
 
   const handlePatternTypeSelect = (type: GradientPatternType): void => {
     setPatternType(type);
-    notifyConfigChange(type, interpolation, speed, selectedGradient);
+    notifyConfigChange(type, interpolation, speed, direction, selectedGradient);
   };
 
   const handleGradientSelect = (gradient: Gradient): void => {
@@ -91,6 +100,7 @@ export const GradientPatternSelector: React.FC<
       patternType || 'horizontal',
       interpolation,
       speed,
+      direction,
       gradient
     );
   };
@@ -105,6 +115,7 @@ export const GradientPatternSelector: React.FC<
         patternType || 'horizontal',
         newInterpolation,
         speed,
+        direction,
         selectedGradient
       );
     }
@@ -117,6 +128,7 @@ export const GradientPatternSelector: React.FC<
       patternType || 'horizontal',
       interpolation,
       speedValue,
+      direction,
       selectedGradient
     );
   };
@@ -127,6 +139,21 @@ export const GradientPatternSelector: React.FC<
       patternType || 'horizontal',
       interpolation,
       0,
+      direction,
+      selectedGradient
+    );
+  };
+
+  const handleDirectionChange = (newDirection: SpeedDirection) => {
+    setDirection(newDirection);
+    // Multiply speed by -1 when changing direction to backward, by 1 for forward
+    const adjustedSpeed =
+      newDirection === 'backward' ? -Math.abs(speed) : Math.abs(speed);
+    notifyConfigChange(
+      patternType || 'horizontal',
+      interpolation,
+      adjustedSpeed,
+      newDirection,
       selectedGradient
     );
   };
@@ -135,6 +162,7 @@ export const GradientPatternSelector: React.FC<
     const newGradient: Gradient = {
       id: `custom-${Date.now()}`,
       stops: customGradientStops,
+      isDefault: false,
     };
 
     if (
@@ -145,6 +173,53 @@ export const GradientPatternSelector: React.FC<
       setSavedGradients([...savedGradients, newGradient]);
     }
     handleGradientSelect(newGradient);
+    setEditingGradient(null);
+    setIsModalOpen(false);
+  };
+
+  const handleUpdateGradient = (gradientId: string): void => {
+    const updatedGradient: Gradient = {
+      id: gradientId,
+      stops: customGradientStops,
+      isDefault: false,
+    };
+
+    setSavedGradients(
+      savedGradients.map((g) => (g.id === gradientId ? updatedGradient : g))
+    );
+    handleGradientSelect(updatedGradient);
+    setEditingGradient(null);
+    setIsModalOpen(false);
+  };
+
+  const handleEditGradient = (gradient: Gradient): void => {
+    setCustomGradientStops(gradient.stops);
+    setEditingGradient(gradient);
+    setIsModalOpen(true);
+  };
+
+  const handleDuplicateGradient = (gradient: Gradient): void => {
+    const duplicatedGradient: Gradient = {
+      id: `custom-${Date.now()}`,
+      stops: gradient.stops,
+      isDefault: false,
+    };
+    setSavedGradients([...savedGradients, duplicatedGradient]);
+    handleGradientSelect(duplicatedGradient);
+  };
+
+  const handleOpenCustomEditor = (): void => {
+    setCustomGradientStops([
+      { id: 0, color: '#FF0000', position: 0 },
+      { id: 1, color: '#000000', position: 50 },
+      { id: 2, color: '#0000FF', position: 100 },
+    ]);
+    setEditingGradient(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = (): void => {
+    setEditingGradient(null);
     setIsModalOpen(false);
   };
 
@@ -173,7 +248,9 @@ export const GradientPatternSelector: React.FC<
         selectedGradient={selectedGradient}
         onGradientSelect={handleGradientSelect}
         onRemoveSavedGradient={handleRemoveSavedGradient}
-        onOpenCustomEditor={() => setIsModalOpen(true)}
+        onOpenCustomEditor={handleOpenCustomEditor}
+        onEditGradient={handleEditGradient}
+        onDuplicateGradient={handleDuplicateGradient}
       />
 
       {/* Pattern Configuration Controls */}
@@ -181,19 +258,23 @@ export const GradientPatternSelector: React.FC<
         patternType={patternType}
         interpolation={interpolation}
         speed={speed}
+        direction={direction}
         selectedGradientStops={selectedGradient?.stops}
         onInterpolationChange={handleInterpolationChange}
         onSpeedChange={handleSpeedChange}
         onStaticClick={handleStaticClick}
+        onDirectionChange={handleDirectionChange}
       />
 
       {/* Custom Gradient Editor Modal */}
       <CustomGradientEditorModal
         isOpen={isModalOpen}
         customGradientStops={customGradientStops}
-        onClose={() => setIsModalOpen(false)}
+        editingGradient={editingGradient}
+        onClose={handleCloseModal}
         onGradientChange={handleGradientChange}
         onSaveGradient={handleSaveGradient}
+        onUpdateGradient={handleUpdateGradient}
       />
     </Box>
   );

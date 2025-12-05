@@ -69,8 +69,12 @@ export const SHAPE_MAPPINGS: ShapeMapping = {
   complexPanel: {
     'data-augmented-ui': 'tl-clip tr-2-clip-x br-clip bl-2-clip-x inlay',
   },
-  gamingButton: {
+  gamingButtonL: {
     'data-augmented-ui': 'tl-clip tr-round br-clip bl-round',
+  },
+
+  gamingButtonR: {
+    'data-augmented-ui': 'tr-clip tl-round bl-clip br-round',
   },
 
   // Edge variations

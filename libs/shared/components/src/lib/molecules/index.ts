@@ -1,4 +1,5 @@
 export * from './custom-gradient-editor-modal';
+export * from './gradient-swatch-context-menu';
 export * from './gradient-swatch-picker';
 export * from './markdown-renderer';
 export * from './overflow-chip-container';

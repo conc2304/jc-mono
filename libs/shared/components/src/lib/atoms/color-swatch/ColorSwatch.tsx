@@ -56,7 +56,7 @@ export const ColorSwatch = ({
           p: 0,
           transition: 'all 0.2s ease-in-out',
 
-          // Override augmented-ui button styles
+          // Override augmented-ui button styles for the inlay look
           '&.ColorSwatch--root': {
             background: 'unset !important',
 
@@ -70,7 +70,7 @@ export const ColorSwatch = ({
               '--aug-border-bg': !isActive
                 ? undefined
                 : theme.palette.secondary.main,
-              width: `calc(${dimensions.width} + 14px)`, // (4px + 3px) * 2 to keep the center of swatch the same size ish
+              width: `calc(${dimensions.width} + 14px)`, // (4px + 3px) * 2 = 14px to keep the center of swatch the same size ish
               height: `calc(${dimensions.height} + 14px)`,
             },
           },

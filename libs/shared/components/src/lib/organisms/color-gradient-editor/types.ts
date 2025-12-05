@@ -7,6 +7,7 @@ export interface ColorStop {
 export interface Gradient {
   id: string;
   stops: ColorStop[];
+  isDefault?: boolean; // Marks if this is a default/preset gradient
 }
 
 export type GradientPatternType =
@@ -25,8 +26,11 @@ export interface GradientPattern {
   gradient?: Gradient;
 }
 
+export type SpeedDirection = 'forward' | 'backward';
+
 export interface GradientPatternConfig {
   type: GradientPatternType;
   interpolation: InterpolationMode;
   speed: number;
+  direction?: SpeedDirection;
 }

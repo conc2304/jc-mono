@@ -6,16 +6,19 @@ import {
   ToggleButton,
   Slider,
   Button,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
-import { Stop as StopIcon } from '@mui/icons-material';
+import { Stop as StopIcon, ArrowForward as ArrowForwardIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
-import { GradientPatternType, InterpolationMode, ColorStop } from '../../organisms/color-gradient-editor/types';
+import { GradientPatternType, InterpolationMode, ColorStop, SpeedDirection } from '../../organisms/color-gradient-editor/types';
 
 interface PatternConfigurationProps {
   patternType: GradientPatternType | null;
   interpolation: InterpolationMode;
   speed: number;
+  direction?: SpeedDirection;
   selectedGradientStops?: ColorStop[];
   onInterpolationChange: (
     event: React.MouseEvent<HTMLElement>,
@@ -23,18 +26,28 @@ interface PatternConfigurationProps {
   ) => void;
   onSpeedChange: (event: Event, newSpeed: number | number[]) => void;
   onStaticClick: () => void;
+  onDirectionChange?: (direction: SpeedDirection) => void;
 }
 
 export const PatternConfiguration = ({
   patternType,
   interpolation,
   speed,
+  direction = 'forward',
   selectedGradientStops,
   onInterpolationChange,
   onSpeedChange,
   onStaticClick,
+  onDirectionChange,
 }: PatternConfigurationProps) => {
   const theme = useTheme();
+
+  const handleDirectionToggle = () => {
+    if (onDirectionChange) {
+      const newDirection = direction === 'forward' ? 'backward' : 'forward';
+      onDirectionChange(newDirection);
+    }
+  };
 
   return (
     <Paper
@@ -113,8 +126,28 @@ export const PatternConfiguration = ({
               color="text.secondary"
               sx={{ fontFamily: 'monospace' }}
             >
-              {speed === 0 ? 'Static' : `${speed}%`}
+              {speed === 0 ? 'Static' : `${Math.abs(speed)}%`}
             </Typography>
+            {speed !== 0 && onDirectionChange && (
+              <Tooltip title={direction === 'forward' ? 'Forward' : 'Backward'}>
+                <IconButton
+                  size="small"
+                  onClick={handleDirectionToggle}
+                  color="primary"
+                  sx={{
+                    border: `1px solid ${theme.palette.primary.main}`,
+                    width: 32,
+                    height: 32,
+                  }}
+                >
+                  {direction === 'forward' ? (
+                    <ArrowForwardIcon fontSize="small" />
+                  ) : (
+                    <ArrowBackIcon fontSize="small" />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
             <Button
               variant={speed === 0 ? 'contained' : 'outlined'}
               size="small"

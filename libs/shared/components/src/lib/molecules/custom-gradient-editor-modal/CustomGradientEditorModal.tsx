@@ -1,26 +1,38 @@
-import { Box, Paper, Modal, Typography, IconButton, Button } from '@mui/material';
+import { Box, Paper, Modal, Typography, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { ColorGradientEditor } from '../../organisms/color-gradient-editor';
-import { ColorStop } from '../../organisms/color-gradient-editor/types';
+import {
+  ColorStop,
+  Gradient,
+} from '../../organisms/color-gradient-editor/types';
 import { GradientData } from '../../organisms/color-gradient-editor/ColorGradientEditor';
+import { AugmentedButton } from '../../atoms';
 
 interface CustomGradientEditorModalProps {
   isOpen: boolean;
   customGradientStops: ColorStop[];
+  editingGradient?: Gradient | null;
   onClose: () => void;
   onGradientChange: (gradientData: GradientData) => void;
   onSaveGradient: () => void;
+  onUpdateGradient?: (gradientId: string) => void;
 }
 
 export const CustomGradientEditorModal = ({
   isOpen,
   customGradientStops,
+  editingGradient = null,
   onClose,
   onGradientChange,
   onSaveGradient,
+  onUpdateGradient,
 }: CustomGradientEditorModalProps) => {
   const theme = useTheme();
+
+  const isEditMode = editingGradient !== null;
+  const isDefaultGradient = editingGradient?.isDefault === true;
+  const canOverwrite = isEditMode && !isDefaultGradient;
 
   return (
     <Modal
@@ -52,7 +64,7 @@ export const CustomGradientEditorModal = ({
           }}
         >
           <Typography variant="h6" fontWeight="bold">
-            Create Custom Gradient
+            {isEditMode ? 'Edit Gradient' : 'Create Custom Gradient'}
           </Typography>
           <IconButton
             onClick={onClose}
@@ -71,12 +83,34 @@ export const CustomGradientEditorModal = ({
 
         {/* Action Buttons */}
         <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-          <Button fullWidth variant="contained" onClick={onSaveGradient}>
-            Save & Apply Gradient
-          </Button>
-          <Button variant="outlined" onClick={onClose} sx={{ px: 2 }}>
-            Cancel
-          </Button>
+          {canOverwrite && onUpdateGradient && (
+            <AugmentedButton
+              fullWidth
+              variant="contained"
+              shape="asymmetricLeft"
+              onClick={() => {
+                onUpdateGradient(editingGradient.id);
+                onClose();
+              }}
+            >
+              Update Gradient
+            </AugmentedButton>
+          )}
+          <AugmentedButton
+            fullWidth
+            variant="contained"
+            shape="asymmetricRight"
+            onClick={onSaveGradient}
+          >
+            {isEditMode ? 'Save as New' : 'Save & Apply Gradient'}
+          </AugmentedButton>
+          <AugmentedButton
+            variant="outlined"
+            color="secondary"
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </AugmentedButton>
         </Box>
       </Paper>
     </Modal>

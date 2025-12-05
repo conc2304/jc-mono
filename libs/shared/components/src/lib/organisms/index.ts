@@ -1,6 +1,5 @@
 export * from './color-gradient-editor';
 export * from './color-swatch-picker';
-export * from './context-menu';
 export * from './custom-color-modal';
 export * from './gif-player';
 export * from './gradient-pattern-picker';

@@ -8,6 +8,7 @@ export interface SwatchItem<T = string> {
   value: T;
   display: string; // CSS color or gradient string
   isGradient?: boolean;
+  customActions?: React.ReactNode;
 }
 
 interface SwatchPickerProps<T = string> {
@@ -44,9 +45,11 @@ export const SwatchPicker = <T,>({
 
   const renderSwatchGrid = (
     swatches: SwatchItem<T>[],
-    showRemoveButton = false
+    showRemoveButton = false,
+    hasAddSwatchButton = false
   ) => (
     <Box
+      className="SwatchPicker--swatch-grid"
       sx={{
         display: 'grid',
         gridTemplateColumns: {
@@ -58,12 +61,15 @@ export const SwatchPicker = <T,>({
         gap: 1,
       }}
     >
+      {hasAddSwatchButton && customButton && customButton}
+
       {swatches.map((swatch) => (
         <Box
           key={swatch.id}
           sx={{
             position: 'relative',
             '&:hover .remove-btn': { opacity: 1 },
+            '&:hover .action-btn': { opacity: 1 },
           }}
         >
           <ColorSwatch
@@ -76,7 +82,8 @@ export const SwatchPicker = <T,>({
               swatch.isGradient ? 'gradient' : 'color'
             }`}
           />
-          {showRemoveButton && onRemoveSavedItem && (
+          {swatch.customActions}
+          {!swatch.customActions && showRemoveButton && onRemoveSavedItem && (
             <IconButton
               className="remove-btn"
               size="small"
@@ -110,7 +117,8 @@ export const SwatchPicker = <T,>({
 
   const renderSwatchScroll = (
     swatches: SwatchItem<T>[],
-    showRemoveButton = false
+    showRemoveButton = false,
+    hasAddSwatchButton = false
   ) => (
     <Box
       sx={{
@@ -138,12 +146,15 @@ export const SwatchPicker = <T,>({
         },
       }}
     >
+      {hasAddSwatchButton && customButton && customButton}
+
       {swatches.map((swatch) => (
         <Box
           key={swatch.id}
           sx={{
             position: 'relative',
             '&:hover .remove-btn': { opacity: 1 },
+            '&:hover .action-btn': { opacity: 1 },
           }}
         >
           <ColorSwatch
@@ -156,7 +167,8 @@ export const SwatchPicker = <T,>({
               swatch.isGradient ? 'gradient' : 'color'
             }`}
           />
-          {showRemoveButton && onRemoveSavedItem && (
+          {swatch.customActions}
+          {!swatch.customActions && showRemoveButton && onRemoveSavedItem && (
             <IconButton
               className="remove-btn"
               size="small"
@@ -189,7 +201,7 @@ export const SwatchPicker = <T,>({
   );
 
   return (
-    <Box>
+    <Box className="SwatchPicker--root">
       {/* Saved Items Section */}
       {savedItems.length > 0 && (
         <Box sx={{ mb: 2 }}>
@@ -210,7 +222,7 @@ export const SwatchPicker = <T,>({
               {renderSwatchScroll(savedItems, true)}
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-              {renderSwatchGrid(savedItems, true)}
+              {renderSwatchGrid(savedItems, true, false)}
             </Box>
           </Box>
         </Box>
@@ -232,7 +244,7 @@ export const SwatchPicker = <T,>({
       >
         {/* Mobile: Horizontal Scroll */}
         <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-          <Box
+          {/* <Box
             sx={{
               display: 'grid',
               gridTemplateRows: 'repeat(2, 1fr)',
@@ -272,12 +284,17 @@ export const SwatchPicker = <T,>({
                 }`}
               />
             ))}
-          </Box>
+          </Box> */}
+          {renderSwatchScroll(items, false, true)}
         </Box>
 
         {/* Desktop: Grid */}
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          <Box
+        <Box
+          className="SwatchPicker--desktop-grid"
+          sx={{ display: { xs: 'none', md: 'block' } }}
+        >
+          {renderSwatchGrid(items, false, true)}
+          {/* <Box
             sx={{
               display: 'grid',
               gridTemplateColumns: {
@@ -303,7 +320,7 @@ export const SwatchPicker = <T,>({
                 }`}
               />
             ))}
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </Box>

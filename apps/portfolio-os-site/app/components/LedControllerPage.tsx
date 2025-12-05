@@ -136,7 +136,7 @@ const LedController = () => {
                 color={appBarBtnColor}
                 variant={appBarBtnSize === 'large' ? 'outlined' : 'text'}
                 size={appBarBtnSize}
-                shape="gamingButton"
+                shape="gamingButtonR"
               >
                 <HomeFilled />
               </AugmentedButton>
@@ -160,7 +160,7 @@ const LedController = () => {
                 color={appBarBtnColor}
                 variant={appBarBtnSize === 'large' ? 'outlined' : 'text'}
                 size={appBarBtnSize}
-                shape="gamingButton"
+                shape="gamingButtonL"
                 sx={{}}
               >
                 <PaletteIcon color="inherit" />

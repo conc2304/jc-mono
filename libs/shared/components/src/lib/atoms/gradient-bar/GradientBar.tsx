@@ -32,6 +32,12 @@ export const GradientBar: React.FC<GradientBarProps> = ({
     onStopSelect(stopId);
   };
 
+  const handleStopTouchStart = (e: React.TouchEvent, stopId: number): void => {
+    e.preventDefault();
+    setDraggingStop(stopId);
+    onStopSelect(stopId);
+  };
+
   const handleMouseMove = (e: MouseEvent): void => {
     if (draggingStop !== null && gradientBarRef.current) {
       const rect = gradientBarRef.current.getBoundingClientRect();
@@ -41,7 +47,20 @@ export const GradientBar: React.FC<GradientBarProps> = ({
     }
   };
 
+  const handleTouchMove = (e: TouchEvent): void => {
+    if (draggingStop !== null && gradientBarRef.current && e.touches.length > 0) {
+      const rect = gradientBarRef.current.getBoundingClientRect();
+      const x = e.touches[0].clientX - rect.left;
+      const percentage = (x / rect.width) * 100;
+      onStopPositionChange(draggingStop, percentage);
+    }
+  };
+
   const handleMouseUp = (): void => {
+    setDraggingStop(null);
+  };
+
+  const handleTouchEnd = (): void => {
     setDraggingStop(null);
   };
 
@@ -49,9 +68,13 @@ export const GradientBar: React.FC<GradientBarProps> = ({
     if (draggingStop !== null) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleTouchEnd);
       return () => {
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchend', handleTouchEnd);
       };
     }
   }, [draggingStop, stops]);
@@ -74,10 +97,29 @@ export const GradientBar: React.FC<GradientBarProps> = ({
     }
   };
 
+  const handleGradientBarTouch = (
+    e: React.TouchEvent<HTMLDivElement>
+  ): void => {
+    if (!onAddStop || e.touches.length === 0) return;
+
+    const target = e.target as HTMLElement;
+    if (
+      target === gradientBarRef.current ||
+      target.classList.contains('gradient-background')
+    ) {
+      const rect = gradientBarRef.current!.getBoundingClientRect();
+      const x = e.touches[0].clientX - rect.left;
+      const percentage = (x / rect.width) * 100;
+      const color = interpolateColor(percentage);
+      onAddStop(percentage, color);
+    }
+  };
+
   return (
     <Box
       ref={gradientBarRef}
       onClick={handleGradientBarClick}
+      onTouchStart={handleGradientBarTouch}
       sx={{
         position: 'relative',
         width: '100%',
@@ -85,6 +127,7 @@ export const GradientBar: React.FC<GradientBarProps> = ({
         cursor: onAddStop ? 'crosshair' : 'default',
         background:
           'repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 20px 20px',
+        touchAction: 'none',
       }}
     >
       {/* Gradient overlay */}
@@ -108,8 +151,10 @@ export const GradientBar: React.FC<GradientBarProps> = ({
             transform: 'translate(-50%, -50%)',
             cursor: 'move',
             zIndex: selectedStop === stop.id ? 20 : 10,
+            touchAction: 'none',
           }}
           onMouseDown={(e) => handleStopMouseDown(e, stop.id)}
+          onTouchStart={(e) => handleStopTouchStart(e, stop.id)}
         >
           <Box
             sx={{
