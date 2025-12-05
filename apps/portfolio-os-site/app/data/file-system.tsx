@@ -7,6 +7,7 @@ import { SculpturePortfolioFileSystemItem } from './sculpture/sculpture-file-ite
 import { SettingsFileSystemItem } from './settings-file-item';
 import { setFileSystemHierarchy } from './utils';
 import { VJSetsPortfolioFileSystemItem } from './vj-sets/vj-sets-file-item';
+import { LEDControllerFileItem } from './led-controller-file-item';
 
 const unMappedFileSystem: BaseFileSystemItem[] = [
   ProjectsFileSystemItem,
@@ -15,6 +16,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
   SettingsFileSystemItem,
   SculpturePortfolioFileSystemItem,
   VJSetsPortfolioFileSystemItem,
+  LEDControllerFileItem,
 ];
 
 export const FileSystem = setFileSystemHierarchy(unMappedFileSystem);

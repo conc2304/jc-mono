@@ -9,7 +9,7 @@ import { TileContentProps } from './components';
 export interface BaseFileSystemItem {
   id: string;
   name: string;
-  type: 'file' | 'folder' | string;
+  type: 'file' | 'folder' | 'link' | string;
   icon: ReactNode;
   size?: number;
   dateModified: Date;

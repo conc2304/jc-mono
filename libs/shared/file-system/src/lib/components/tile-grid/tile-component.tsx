@@ -25,6 +25,7 @@ import { PlacedTile, ResponsiveBreakpointConfig, Tile } from './types';
 import { useWindowActions } from '../../context';
 import { TileRenderer } from '../../types';
 import { DefaultTileContent, IconContainer, TileContainer } from '../live-tile';
+import { useNavigate } from 'react-router-dom';
 
 const textureImages = [
   'scratched-glass.jpg',
@@ -77,6 +78,7 @@ export const TileComponent = memo(
     maxPreviews = 4,
   }: TileComponentProps) => {
     const theme = useTheme();
+    const navigate = useNavigate();
     const { openWindow } = useWindowActions();
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -181,7 +183,12 @@ export const TileComponent = memo(
     );
 
     const handleOpenWindow = useCallback(() => {
-      openWindow(id);
+      if (type === 'link' && metadata.customProperties?.linkUrl) {
+        // TODO handle file system items that link to pages with react router
+        navigate(metadata.customProperties?.linkUrl);
+      } else {
+        openWindow(id);
+      }
     }, [openWindow, id]);
 
     // Memoize style objects

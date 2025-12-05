@@ -135,13 +135,13 @@ export const GradientSwatchPicker = ({
           color: 'white',
           width: 24,
           height: 24,
-          opacity: 0,
+          opacity: 0, // controlled by SwatchPicker
           transition: 'opacity 0.2s',
           '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
           },
         }}
-        className="action-btn" // maps to display on hover from parent component
+        className="action-btn" // maps to display on hover from parent component (Swatch)
       >
         <MoreVertIcon sx={{ fontSize: 16 }} />
       </IconButton>

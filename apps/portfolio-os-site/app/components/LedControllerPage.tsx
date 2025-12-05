@@ -1,13 +1,10 @@
 import { LedControllerDashboard } from '@jc/led-controls';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
-import {
-  AugmentedButton,
-  AugmentedIconButton,
-  UIFrameBorder1,
-} from '@jc/ui-components';
+import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
 import { hexToRgb } from '@jc/utils';
 import { Close, HomeFilled, Palette as PaletteIcon } from '@mui/icons-material';
 import {
+  Alert,
   AppBar,
   Box,
   Dialog,
@@ -19,8 +16,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { Stack } from '@mui/system';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const LedController = () => {
   const tdServerApi = 'https://192.168.4.44:9980';
@@ -44,6 +40,23 @@ const LedController = () => {
     ? 'large'
     : 'large';
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showWarning, setShowWarning] = useState<boolean>(false);
+
+  // Check LED controller status on load
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const response = await fetch(`${tdServerApi}/status`);
+        if (!response.ok) {
+          setShowWarning(true);
+        }
+      } catch (error) {
+        setShowWarning(true);
+      }
+    };
+
+    checkStatus();
+  }, [tdServerApi]);
 
   // TODO handle api calls here
   const handleSolidColorUpdate = async (color: string) => {
@@ -179,6 +192,12 @@ const LedController = () => {
           pb: '65px',
         }}
       >
+        {showWarning && (
+          <Alert severity="warning" sx={{ m: 2 }}>
+            The LED controller only works on my personal home WiFi to control my
+            personal LED lights.
+          </Alert>
+        )}
         <LedControllerDashboard
           onUpdateSolidColor={handleSolidColorUpdate}
           onUpdateGradientPattern={handleGradientPattenUpdate}
