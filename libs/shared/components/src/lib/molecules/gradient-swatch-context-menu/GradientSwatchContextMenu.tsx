@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SpeedDial, SpeedDialAction } from '@mui/material';
+import { Backdrop, SpeedDial, SpeedDialAction } from '@mui/material';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -75,34 +75,37 @@ export const GradientSwatchContextMenu: React.FC<
   }
 
   return (
-    <SpeedDial
-      ariaLabel="Gradient actions"
-      sx={{
-        position: 'fixed',
-        left: position.x,
-        top: position.y,
-        '& .MuiSpeedDial-fab': {
-          width: 0,
-          height: 0,
-          minHeight: 0,
-          visibility: 'hidden',
-        },
-      }}
-      open={open}
-      onClose={handleClose}
-      direction="down"
-      FabProps={{
-        size: 'small',
-      }}
-    >
-      {actions.map((action) => (
-        <SpeedDialAction
-          key={action.name}
-          icon={action.icon}
-          slotProps={{ tooltip: { title: action.name, open: true } }}
-          onClick={action.onClick}
-        />
-      ))}
-    </SpeedDial>
+    <>
+      <Backdrop open={open} onTouchStart={handleClose} onClick={handleClose} />
+      <SpeedDial
+        ariaLabel="Gradient actions"
+        sx={{
+          position: 'fixed',
+          left: position.x,
+          top: position.y,
+          '& .MuiSpeedDial-fab': {
+            width: 0,
+            height: 0,
+            minHeight: 0,
+            visibility: 'hidden',
+          },
+        }}
+        open={open}
+        onClose={handleClose}
+        direction="down"
+        FabProps={{
+          size: 'small',
+        }}
+      >
+        {actions.map((action) => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            slotProps={{ tooltip: { title: action.name, open: true } }}
+            onClick={action.onClick}
+          />
+        ))}
+      </SpeedDial>
+    </>
   );
 };

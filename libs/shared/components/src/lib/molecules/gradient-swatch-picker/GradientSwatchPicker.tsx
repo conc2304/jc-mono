@@ -179,7 +179,7 @@ export const GradientSwatchPicker = ({
   }));
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ mb: 3, position: 'relative' }}>
       <SwatchPicker
         title="Gradient Colors"
         items={enhancedGradientItems}
