@@ -199,7 +199,9 @@ const LedController = () => {
             <br />
             If on Jose's home wifi visit and approve the touchdesigner server
             url:{' '}
-            <a href="https://192.168.4.44:9980">https://192.168.4.44:9980</a>
+            <a href="https://192.168.4.44:9980" target="_blank">
+              https://192.168.4.44:9980
+            </a>
           </Alert>
         )}
         <LedControllerDashboard
