@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogTitle,
   getContrastRatio,
+  Link,
   Toolbar,
   Tooltip,
   Typography,
@@ -23,15 +24,20 @@ const LedController = () => {
   const apiPath = '/api/v1';
 
   const theme = useTheme();
+  const params = new URLSearchParams({
+    primary: theme.palette.primary.main,
+    secondary: theme.palette.secondary.main,
+    success: theme.palette.success.main,
+    warning: theme.palette.warning.main,
+    error: theme.palette.error.main,
+    background: theme.palette.background.paper,
+    text: theme.palette.text.primary,
+    referer_url: window.location.href,
+  });
   const isXs = useMediaQuery(theme.breakpoints.down('xs'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
 
-  console.log(
-    'Current theme in LED PAGE ',
-    theme.palette.background.paper,
-    theme.palette.text.primary
-  );
   const appBarBtnSize = isXs
     ? 'small'
     : isSm
@@ -45,6 +51,7 @@ const LedController = () => {
   // Check LED controller status on load
   useEffect(() => {
     const checkStatus = async () => {
+      setShowWarning(false);
       try {
         const response = await fetch(`${tdServerApi}/status`);
         if (!response.ok) {
@@ -56,6 +63,12 @@ const LedController = () => {
     };
 
     checkStatus();
+
+    // double check on page refocus
+    window.addEventListener('focus', checkStatus);
+    return () => {
+      window.removeEventListener('focus', checkStatus);
+    };
   }, [tdServerApi]);
 
   // TODO handle api calls here
@@ -64,13 +77,17 @@ const LedController = () => {
 
     const { r, g, b } = hexToRgb(color);
 
-    await fetch(`${tdServerApi}${apiPath}/color`, {
+    const response = await fetch(`${tdServerApi}${apiPath}/color`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ r, g, b }),
     });
+
+    if (!response.ok) {
+      setShowWarning(true);
+    }
   };
 
   const handleGradientPattenUpdate = async ({
@@ -92,13 +109,17 @@ const LedController = () => {
       interpolation
     );
 
-    await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
+    const response = await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ colorStops, type, speed, interpolation }),
     });
+
+    if (!response.ok) {
+      setShowWarning(true);
+    }
   };
 
   const appBarBtnColor =
@@ -136,10 +157,29 @@ const LedController = () => {
   return (
     <>
       {/* App Bar / Title Bar */}
-      <AppBar enableColorOnDark position="static" color="secondary">
+      <AppBar
+        enableColorOnDark
+        position="static"
+        color="secondary"
+        sx={{
+          backgroundColor: 'unset',
+          color: 'unset',
+          // borderBottom: '1px solid',
+          // borderBottomColor: alpha(theme.palette.primary.main, 0.5),
+        }}
+      >
         <Toolbar
           variant={'dense'}
-          sx={{ display: 'flex', justifyContent: 'space-between' }}
+          data-augmented-ui="border inlay"
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            '--aug-border-all': '0px',
+            '--aug-border-bottom': '2px',
+            '--aug-border-opacity': 0.5,
+            '--aug-inlay-all': '5px',
+            '--aug-bl': theme.spacing(1),
+          }}
         >
           <Box>
             {/* Route Home */}
@@ -193,15 +233,36 @@ const LedController = () => {
         }}
       >
         {showWarning && (
-          <Alert severity="warning" sx={{ m: 2 }}>
-            The LED controller only works on my personal home WiFi to control my
-            personal LED lights.
-            <br />
-            If on Jose's home wifi visit and approve the touchdesigner server
-            url:{' '}
-            <a href="https://192.168.4.44:9980" target="_blank">
-              https://192.168.4.44:9980
-            </a>
+          <Alert
+            severity="warning"
+            sx={{
+              m: 2,
+              border: '1px solid',
+              borderColor: 'warning.main',
+              borderRadius: 'unset',
+            }}
+            color="warning"
+          >
+            <Typography variant="body2">
+              The LED controller only works on my personal home WiFi to control
+              my personal LED lights.
+              <br />
+              <br />
+              If on Jose's home wifi visit and approve the touchdesigner server
+              url:
+              <br />
+              <br />
+            </Typography>
+
+            <Link
+              textAlign="center"
+              href={`${tdServerApi}/?${params}`}
+              target="_blank"
+              width="100%"
+              color="info"
+            >
+              Touchdesigner Server Access
+            </Link>
           </Alert>
         )}
         <LedControllerDashboard
