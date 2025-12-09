@@ -51,7 +51,7 @@ const LedController = () => {
   // Check LED controller status on load
   useEffect(() => {
     const checkStatus = async () => {
-      setShowWarning(false);
+      // setShowWarning(false);
       try {
         const response = await fetch(`${tdServerApi}${apiPath}/status`);
         if (!response.ok) {
@@ -84,6 +84,8 @@ const LedController = () => {
       },
       body: JSON.stringify({ r, g, b }),
     });
+
+    console.log({ response });
 
     if (!response.ok) {
       setShowWarning(true);
@@ -242,6 +244,7 @@ const LedController = () => {
               borderRadius: 'unset',
             }}
             color="warning"
+            onClose={() => setShowWarning(false)}
           >
             <Typography variant="body2">
               The LED controller only works on my personal home WiFi to control
