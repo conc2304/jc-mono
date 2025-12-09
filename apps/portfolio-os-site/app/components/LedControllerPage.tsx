@@ -53,7 +53,7 @@ const LedController = () => {
     const checkStatus = async () => {
       setShowWarning(false);
       try {
-        const response = await fetch(`${tdServerApi}/status`);
+        const response = await fetch(`${tdServerApi}${apiPath}/status`);
         if (!response.ok) {
           setShowWarning(true);
         }
@@ -255,7 +255,6 @@ const LedController = () => {
             </Typography>
 
             <Link
-              textAlign="center"
               href={`${tdServerApi}/?${params}`}
               target="_blank"
               width="100%"
