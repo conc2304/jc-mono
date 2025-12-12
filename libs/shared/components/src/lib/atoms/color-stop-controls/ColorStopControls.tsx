@@ -45,6 +45,7 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
           border: `2px solid ${theme.palette.divider}`,
           textAlign: 'center',
           color: theme.palette.text.secondary,
+          borderRadius: 0,
         }}
       >
         Click on a color stop above to edit it
@@ -67,9 +68,15 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           mb: 1,
+          flexWrap: 'wrap',
         }}
       >
-        <Typography variant="body2" fontWeight={600} color="text.primary">
+        <Typography
+          variant="body2"
+          fontWeight={600}
+          color="text.primary"
+          flexShrink={0}
+        >
           Selected Stop ({selectedStopIndex} of {stops.length})
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
@@ -96,12 +103,14 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
           p: 2,
           border: `2px solid ${theme.palette.primary.main}`,
           backgroundColor: theme.palette.primary.light + '20',
+          borderRadius: 0,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'end', gap: 2 }}>
           {/* Color Preview */}
           <Box
             sx={{
+              display: { xs: 'none', sm: 'initial' },
               width: 48,
               height: 48,
               border: `2px solid ${theme.palette.divider}`,
@@ -156,11 +165,16 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
                   onStopColorChange(stop.id, hex);
                 }
               }}
+              slotProps={{
+                htmlInput: {
+                  sx: { minWidth: '75px' },
+                },
+              }}
             />
           </Box>
 
           {/* Position Input */}
-          <Box sx={{ width: 100 }}>
+          <Box sx={{ width: { sm: '85px', md: 'initial' } }}>
             <Typography
               variant="caption"
               color="text.secondary"

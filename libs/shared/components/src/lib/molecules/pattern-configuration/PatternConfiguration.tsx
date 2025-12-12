@@ -9,10 +9,19 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
-import { Stop as StopIcon, ArrowForward as ArrowForwardIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import {
+  Stop as StopIcon,
+  ArrowForward as ArrowForwardIcon,
+  ArrowBack as ArrowBackIcon,
+} from '@mui/icons-material';
+import { alpha, useTheme } from '@mui/material/styles';
 import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
-import { GradientPatternType, InterpolationMode, ColorStop, SpeedDirection } from '../../organisms/color-gradient-editor/types';
+import {
+  GradientPatternType,
+  InterpolationMode,
+  ColorStop,
+  SpeedDirection,
+} from '../../organisms/color-gradient-editor/types';
 
 interface PatternConfigurationProps {
   patternType: GradientPatternType | null;
@@ -53,8 +62,10 @@ export const PatternConfiguration = ({
     <Paper
       sx={{
         p: 2,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: alpha(theme.palette.background.default, 0.7),
         border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 0,
+        m: 1,
       }}
     >
       <Typography
@@ -82,6 +93,9 @@ export const PatternConfiguration = ({
           fullWidth
           color="primary"
           size="small"
+          sx={{
+            '& *': { borderRadius: 0 },
+          }}
         >
           <ToggleButton value="linear">
             <Box sx={{ textAlign: 'center' }}>

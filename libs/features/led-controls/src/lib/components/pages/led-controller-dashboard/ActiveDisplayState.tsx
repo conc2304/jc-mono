@@ -1,4 +1,5 @@
 import {
+  alpha,
   Box,
   FormControlLabel,
   Paper,
@@ -61,9 +62,10 @@ export const ActiveDisplayState = ({
       data-augmented-ui="border tr-clip tl-clip"
       sx={(theme) => ({
         mb: 4,
+        mx: 1,
         p: 2,
         br: 0,
-        bgcolor: 'background.paper',
+        bg: alpha(theme.palette.background.paper, 0.7),
         '--aug-border-all': '2px',
         '--aug-border-bg': theme.palette.info.main,
         '--aug-tr': theme.spacing(1),

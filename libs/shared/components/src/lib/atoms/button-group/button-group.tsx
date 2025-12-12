@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   Stack,
   IconButton,
@@ -11,7 +11,7 @@ import {
 export interface ButtonGroupItem {
   key: string;
   icon: React.ReactNode;
-  label: string;
+  label: string | ReactNode;
   onClick: () => void;
   isActive?: boolean;
   isResolved?: boolean;

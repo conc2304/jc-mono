@@ -15,12 +15,13 @@ import {
   Typography,
   Chip,
   Stack,
+  Theme,
+  alpha,
 } from '@mui/material';
 import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   PlayArrow as PlayArrowIcon,
-  Add as AddIcon,
 } from '@mui/icons-material';
 import { GradientPatternVisualizer } from '@jc/ui-components';
 import type { Scene } from '../../../types/storage';
@@ -88,34 +89,42 @@ export const SceneBank = ({
       </Box>
     );
   }
+  const augmentedStyle = {
+    attr: 'border tr-clip tl-clip',
+    sx: (theme: Theme) => ({
+      '--aug-border-all': '2px',
+      '--aug-border-bg': theme.palette.divider,
+      '--aug-tr': theme.spacing(1),
+      '--aug-tl': theme.spacing(1),
+      borderRadius: 0,
+    }),
+  };
 
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} m={1}>
         {scenes.map((scene) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={scene.id}>
             <Card
-              data-augmented-ui="border tr-clip tl-clip"
+              data-augmented-ui={augmentedStyle.attr}
               sx={(theme) => ({
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: 'background.default',
-                '--aug-border-all': '2px',
-                '--aug-border-bg': theme.palette.divider,
-                '--aug-tr': theme.spacing(1),
-                '--aug-tl': theme.spacing(1),
+                backgroundColor: alpha(theme.palette.background.default, 0.7),
+                ...augmentedStyle.sx(theme),
               })}
             >
               <CardContent sx={{ flexGrow: 1, pb: 1 }}>
                 {/* Visual Preview */}
                 <Box
-                  sx={{
+                  data-augmented-ui={augmentedStyle.attr}
+                  sx={(theme) => ({
                     mb: 2,
-                    borderRadius: 1,
                     overflow: 'hidden',
                     height: 80,
-                  }}
+                    ...augmentedStyle.sx(theme),
+                  })}
                 >
                   {scene.type === 'solid-color' && scene.color ? (
                     <Box

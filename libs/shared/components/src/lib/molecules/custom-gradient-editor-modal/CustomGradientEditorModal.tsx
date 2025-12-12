@@ -1,6 +1,6 @@
 import { Box, Paper, Modal, Typography, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import { ColorGradientEditor } from '../../organisms/color-gradient-editor';
 import {
   ColorStop,
@@ -49,10 +49,12 @@ export const CustomGradientEditorModal = ({
           p: 3,
           maxWidth: 800,
           width: '100%',
-          mx: 2,
-          maxHeight: '90vh',
+          mx: 0,
+          height: { sm: '100vh', md: '90vh' },
           overflow: 'auto',
           outline: 'none',
+          bg: alpha(theme.palette.background.paper, 0.7),
+          borderRadius: 0,
         }}
       >
         <Box
@@ -60,7 +62,6 @@ export const CustomGradientEditorModal = ({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            mb: 2,
           }}
         >
           <Typography variant="h6" fontWeight="bold">

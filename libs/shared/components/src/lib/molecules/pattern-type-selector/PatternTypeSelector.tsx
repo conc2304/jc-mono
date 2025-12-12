@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, Tooltip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
 import {
   GradientPatternType,
@@ -75,7 +75,7 @@ export const PatternTypeSelector = ({
                 backgroundColor:
                   selectedPatternType === pattern.type
                     ? theme.palette.action.selected
-                    : 'background.paper',
+                    : alpha(theme.palette.background.paper, 0.7),
                 transition: 'all 0.2s',
                 '&:hover': {
                   '--aug-border-bg':

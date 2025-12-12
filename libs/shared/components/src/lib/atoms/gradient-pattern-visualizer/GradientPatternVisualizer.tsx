@@ -1,6 +1,10 @@
 import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
-import { ColorStop, GradientPatternType, InterpolationMode } from '../../organisms/color-gradient-editor/types';
+import {
+  ColorStop,
+  GradientPatternType,
+  InterpolationMode,
+} from '../../organisms/color-gradient-editor/types';
 import { Property } from 'csstype';
 
 interface GradientPatternVisualizerProps {
@@ -64,7 +68,6 @@ export const GradientPatternVisualizer: React.FC<
         return `linear-gradient(to bottom, ${gradientString})`;
       case 'horizontal':
         return `linear-gradient(to right, ${gradientString})`;
-      // TODO - Investigate if this matches TD
       case 'circular':
         // Circular gradient using conic-gradient
         return `conic-gradient(from 0deg, ${gradientString}, ${sortedStops[0].color})`;

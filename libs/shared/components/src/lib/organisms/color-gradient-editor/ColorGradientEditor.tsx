@@ -53,7 +53,7 @@ export const ColorGradientEditor: React.FC<GradientEditorProps> = ({
   }, [stops, onGradientChange, getSortedStops, generateGradient]);
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 768, mx: 'auto', p: 3 }}>
+    <Box sx={{ width: '100%', maxWidth: 768, mx: 'auto', p: 0 }}>
       {showTitle && (
         <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
           Gradient Editor

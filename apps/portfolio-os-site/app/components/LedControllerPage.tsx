@@ -166,8 +166,6 @@ const LedController = () => {
         sx={{
           backgroundColor: 'unset',
           color: 'unset',
-          // borderBottom: '1px solid',
-          // borderBottomColor: alpha(theme.palette.primary.main, 0.5),
         }}
       >
         <Toolbar

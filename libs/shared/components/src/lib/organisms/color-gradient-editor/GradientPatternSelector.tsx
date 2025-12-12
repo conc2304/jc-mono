@@ -234,12 +234,14 @@ export const GradientPatternSelector: React.FC<
   return (
     <Box sx={{ width: '100%', mx: 'auto' }}>
       {/* Pattern Type Selection */}
-      <PatternTypeSelector
-        selectedPatternType={patternType}
-        interpolation={interpolation}
-        selectedGradientStops={selectedGradient?.stops}
-        onPatternTypeSelect={handlePatternTypeSelect}
-      />
+      <Box mx={1}>
+        <PatternTypeSelector
+          selectedPatternType={patternType}
+          interpolation={interpolation}
+          selectedGradientStops={selectedGradient?.stops}
+          onPatternTypeSelect={handlePatternTypeSelect}
+        />
+      </Box>
 
       {/* Gradient Swatch Picker */}
       <GradientSwatchPicker
