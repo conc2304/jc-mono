@@ -3,7 +3,6 @@ import { Box, styled } from '@mui/material';
 
 import ProjectData from '../types';
 import { MobileNavigation } from './navigation/mobile-navigation';
-import { MobileMenu } from './navigation/mobile-menu';
 import { DesktopNavigation } from './navigation/desktop-navigation';
 import { HeroSection } from './hero/hero-section';
 import { MobileContent } from './mobile/mobile-content';
@@ -53,11 +52,7 @@ export const BrutalistTemplate: React.FC<
   ...portfolioProject
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [activeTab, setActiveTab] = useState<string>('overview');
-  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
-    null
-  );
 
   const { generateImageSources } = useMediaProvider().provider;
 
@@ -119,20 +114,9 @@ export const BrutalistTemplate: React.FC<
     <ResponsiveContainer ref={containerRef}>
       <MobileNavigation
         hasNavigation={hasNavigation}
-        onMenuClick={(e) => setMobileMenuAnchor(e.currentTarget)}
         onNext={onNext}
         onPrevious={onPrevious}
         navigationInfo={navigationInfo}
-      />
-
-      <MobileMenu
-        anchorEl={mobileMenuAnchor}
-        onClose={() => setMobileMenuAnchor(null)}
-        tabs={tabsData}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        status={projectData.metadata?.status}
-        getStatusColor={getStatusColor}
       />
 
       <DesktopNavigation
@@ -155,6 +139,10 @@ export const BrutalistTemplate: React.FC<
         activeTab={activeTab}
         data={projectData}
         renderContent={renderContent}
+        tabs={tabsData}
+        onTabChange={setActiveTab}
+        status={projectData.metadata?.status}
+        getStatusColor={getStatusColor}
       />
 
       <DesktopContent

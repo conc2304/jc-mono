@@ -2,23 +2,21 @@ import {
   AppBar,
   Toolbar,
   Button,
-  IconButton,
   Typography,
   alpha,
   useTheme,
   Box,
 } from '@mui/material';
-import { ArrowLeft, ArrowRight, Menu as MenuIcon } from '@mui/icons-material';
+import { ArrowLeft, ArrowRight } from '@mui/icons-material';
 import { NavigationContext } from '@jc/file-system';
 
 interface MobileNavigationProps {
   hasNavigation: boolean;
-  onMenuClick: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 export const MobileNavigation: React.FC<
   MobileNavigationProps & NavigationContext
-> = ({ hasNavigation, onMenuClick, onNext, onPrevious, navigationInfo }) => {
+> = ({ hasNavigation, onNext, onPrevious }) => {
   const theme = useTheme();
   const showNavigation = onNext || onPrevious;
 
@@ -32,7 +30,7 @@ export const MobileNavigation: React.FC<
         borderBottom: `1px solid ${theme.palette.getInvertedMode('secondary')}`,
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between', px: 1.5 }}>
+      <Toolbar sx={{ justifyContent: 'center', px: 1.5 }}>
         {showNavigation && (
           <Box>
             <Button
@@ -70,14 +68,6 @@ export const MobileNavigation: React.FC<
             </Button>
           </Box>
         )}
-        <IconButton
-          onClick={onMenuClick}
-          sx={{
-            color: theme.palette.getContrastText(theme.palette.secondary.main),
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
       </Toolbar>
     </AppBar>
   );

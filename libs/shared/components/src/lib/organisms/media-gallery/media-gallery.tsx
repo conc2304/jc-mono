@@ -61,6 +61,7 @@ export const MediaGallery = ({
 }: MediaGalleryProps) => {
   const theme = useTheme();
   const galleryRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentModalIndex, setCurrentModalIndex] = useState(0);
@@ -117,6 +118,13 @@ export const MediaGallery = ({
 
     return () => resizeObserver.disconnect();
   }, []);
+
+  // Reset scroll position when media items change
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+  }, [images, videos]);
 
   // Determine if we should use mobile layout
   const isMobile = containerWidth < mobileBreakpoint;
@@ -488,6 +496,7 @@ export const MediaGallery = ({
         /* Mobile: Horizontal scrolling thumbnails */
         <Box sx={{ mb: 3 }}>
           <Box
+            ref={scrollContainerRef}
             sx={{
               display: 'flex',
               gap: 1.5,
