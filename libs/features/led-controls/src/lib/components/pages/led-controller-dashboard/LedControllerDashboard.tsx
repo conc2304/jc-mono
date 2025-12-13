@@ -229,9 +229,7 @@ export const LedControllerDashboard = ({
     });
   };
 
-  // Generate handlers for brightness and system toggle
   const handleBrightnessChange = (value: number) => {
-    // TODO - Send brightness update to LED controller
     onUpdateBrightness(value);
     setBrightness(value);
   };

@@ -48,7 +48,9 @@ export const GradientPatternSelector: React.FC<
   const [interpolation, setInterpolation] = useState<InterpolationMode>(
     activePatternConfig?.interpolation || 'linear'
   );
-  const [speed, setSpeed] = useState<number>(activePatternConfig?.speed || 0);
+  const [speed, setSpeed] = useState<number>(
+    Math.abs(activePatternConfig?.speed || 0)
+  );
   const [direction, setDirection] = useState<SpeedDirection>(
     activePatternConfig?.direction || 'forward'
   );
@@ -64,7 +66,7 @@ export const GradientPatternSelector: React.FC<
   useEffect(() => {
     setPatternType(activePatternConfig?.type || null);
     setInterpolation(activePatternConfig?.interpolation || 'linear');
-    setSpeed(activePatternConfig?.speed || 0);
+    setSpeed(Math.abs(activePatternConfig?.speed || 0));
     setDirection(activePatternConfig?.direction || 'forward');
   }, [activePatternConfig]);
 
