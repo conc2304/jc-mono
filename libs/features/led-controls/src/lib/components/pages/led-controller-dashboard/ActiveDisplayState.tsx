@@ -65,20 +65,26 @@ export const ActiveDisplayState = ({
 
   const isNothingActive = !activeColor && !patternConfig;
 
-  const handleBrightnessChange = (event: Event, value: number | number[]) => {
+  const handleBrightnessChange = (
+    event: Event | null,
+    value: number | number[]
+  ) => {
     if (typeof value === 'number') {
       onBrightnessChange && onBrightnessChange(value);
     }
   };
 
-  const handleInvertChange = (event: Event, value: number | number[]) => {
+  const handleInvertChange = (
+    event: Event | null,
+    value: number | number[]
+  ) => {
     if (typeof value === 'number') {
       onInvertChange && onInvertChange(value);
     }
   };
 
   const handleHueRotationSpeedChange = (
-    event: Event,
+    event: Event | null,
     value: number | number[]
   ) => {
     if (typeof value === 'number') {
@@ -232,7 +238,7 @@ export const ActiveDisplayState = ({
               size="small"
               color="warning"
               variant="outlined"
-              onClick={(e) => handleBrightnessChange(e, 50)}
+              onClick={() => handleBrightnessChange(null, 50)}
             >
               <Restore />
             </AugmentedButton>
@@ -276,7 +282,7 @@ export const ActiveDisplayState = ({
               size="small"
               color="warning"
               variant="outlined"
-              onClick={(e) => handleInvertChange(e, 0)}
+              onClick={() => handleInvertChange(null, 0)}
             >
               <Restore />
             </AugmentedButton>
@@ -320,7 +326,7 @@ export const ActiveDisplayState = ({
               size="small"
               color="warning"
               variant="outlined"
-              onClick={(e) => handleHueRotationSpeedChange(e, 0)}
+              onClick={() => handleHueRotationSpeedChange(null, 0)}
             >
               <Restore />
             </AugmentedButton>
