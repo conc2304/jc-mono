@@ -32,6 +32,8 @@ export const Text404 = () => {
               ).color,
               0.85
             ),
+            px: 2,
+            py: 5,
           })}
         >
           <Box
@@ -72,16 +74,8 @@ export const Text404 = () => {
                 sx={(theme) => ({
                   textAlign: 'center',
                   verticalAlign: 'top',
-
-                  [theme.breakpoints.up('sm')]: {
-                    fontSize: '10rem',
-                  },
-                  [theme.breakpoints.up('md')]: {
-                    fontSize: '16rem',
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    fontSize: '22rem',
-                  },
+                  // px: 1,
+                  fontSize: { xs: '9.5rem', md: '12rem', lg: '1rem' },
                 })}
               >
                 {char}

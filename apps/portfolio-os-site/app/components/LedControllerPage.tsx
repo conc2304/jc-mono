@@ -1,7 +1,7 @@
 import { LedControllerDashboard } from '@jc/led-controls';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
-import { hexToRgb } from '@jc/utils';
+import { hexToRgb, remapNumber } from '@jc/utils';
 import { Close, HomeFilled, Palette as PaletteIcon } from '@mui/icons-material';
 import {
   Alert,
@@ -73,8 +73,6 @@ const LedController = () => {
 
   // TODO handle api calls here
   const handleSolidColorUpdate = async (color: string) => {
-    console.log('LED-Controller MAKE API CALL : ', color);
-
     const { r, g, b } = hexToRgb(color);
 
     const response = await fetch(`${tdServerApi}${apiPath}/color`, {
@@ -84,8 +82,6 @@ const LedController = () => {
       },
       body: JSON.stringify({ r, g, b }),
     });
-
-    console.log({ response });
 
     if (!response.ok) {
       setShowWarning(true);
@@ -103,14 +99,6 @@ const LedController = () => {
     speed: number;
     interpolation: string;
   }) => {
-    console.log(
-      'LED-Controller MAKE API CALL - GRADIENT/PATTERN: ',
-      colorStops,
-      type,
-      speed,
-      interpolation
-    );
-
     const response = await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
       method: 'POST',
       headers: {
@@ -122,6 +110,35 @@ const LedController = () => {
     if (!response.ok) {
       setShowWarning(true);
     }
+  };
+
+  const handleBrightnessChange = async (brightness: number) => {
+    const tdValue = remapNumber(brightness, 0, 100, 0, 2);
+    await fetch(`${tdServerApi}${apiPath}/brightness`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brightness: tdValue }),
+    });
+  };
+
+  const handleInvertChange = async (invert: number) => {
+    const tdValue = remapNumber(invert, 0, 100, 0, 1);
+
+    await fetch(`${tdServerApi}${apiPath}/invert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ invert: tdValue }),
+    });
+  };
+
+  const handleHueRotationSpeedChange = async (rotationSpeed: number) => {
+    const tdValue = remapNumber(rotationSpeed, 0, 100, 0, 1);
+
+    await fetch(`${tdServerApi}${apiPath}/hue-rotation-speed`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ speed: tdValue }),
+    });
   };
 
   const appBarBtnColor =
@@ -268,6 +285,9 @@ const LedController = () => {
         <LedControllerDashboard
           onUpdateSolidColor={handleSolidColorUpdate}
           onUpdateGradientPattern={handleGradientPattenUpdate}
+          onUpdateBrightness={handleBrightnessChange}
+          onUpdateInvert={handleInvertChange}
+          onUpdateHueRotationSpeed={handleHueRotationSpeedChange}
         />
 
         {/* Theme Switcher Dialog */}

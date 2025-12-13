@@ -26,6 +26,9 @@ interface LedControllerDashboardProps {
     speed,
     interpolation,
   }: GradientApiRequestBody) => void;
+  onUpdateBrightness: (value: number) => void;
+  onUpdateInvert: (value: number) => void;
+  onUpdateHueRotationSpeed: (value: number) => void;
 }
 
 type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
@@ -159,6 +162,9 @@ const defaultGradients: Gradient[] = [
 export const LedControllerDashboard = ({
   onUpdateSolidColor,
   onUpdateGradientPattern,
+  onUpdateBrightness,
+  onUpdateInvert,
+  onUpdateHueRotationSpeed,
 }: LedControllerDashboardProps) => {
   // Persistent storage hooks
   const { savedColors, setSavedColors } = usePersistentColors();
@@ -172,14 +178,16 @@ export const LedControllerDashboard = ({
   const [patternGradient, setPatternGradient] = useState<Gradient | null>(null);
   const [patternConfig, setPatternConfig] =
     useState<GradientPatternConfig | null>(null);
-  const [brightness, setBrightness] = useState<number>(100);
-  const [systemOn, setSystemOn] = useState<boolean>(true);
+
+  const [brightness, setBrightness] = useState<number>(50);
+  const [invert, setInvert] = useState<number>(0);
+  const [hueRotationSpeed, setHueRotationSpeed] = useState<number>(0);
+
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
 
   // Mode handlers
   // Modes are mutually exclusive - setting one unsets the others
   const handleColorSelect = (color: string) => {
-    console.log('Selected color:', color);
     unsetActiveModes();
 
     setActiveColor(color);
@@ -192,8 +200,6 @@ export const LedControllerDashboard = ({
     gradient: Gradient | null
   ): void => {
     if (gradient === null) return;
-
-    console.log('Pattern config changed:', config, gradient);
 
     const colorStopsForApi = gradient.stops.map((stop) => {
       const rgb = hexToRgb(stop.color);
@@ -226,7 +232,18 @@ export const LedControllerDashboard = ({
   // Generate handlers for brightness and system toggle
   const handleBrightnessChange = (value: number) => {
     // TODO - Send brightness update to LED controller
+    onUpdateBrightness(value);
     setBrightness(value);
+  };
+
+  const handleInvertChange = (value: number) => {
+    onUpdateInvert(value);
+    setInvert(value);
+  };
+
+  const handleHueRotationSpeedChange = (value: number) => {
+    onUpdateHueRotationSpeed(value);
+    setHueRotationSpeed(value);
   };
 
   const unsetActiveModes = () => {
@@ -294,7 +311,11 @@ export const LedControllerDashboard = ({
         patternConfig={patternConfig}
         patternGradient={patternGradient}
         brightness={brightness}
+        invert={invert}
+        hueRotationSpeed={hueRotationSpeed}
         onBrightnessChange={handleBrightnessChange}
+        onInvertChange={handleInvertChange}
+        onHueRotationSpeedChange={handleHueRotationSpeedChange}
       />
 
       {/* Save Current State as Scene */}
@@ -382,7 +403,6 @@ export const LedControllerDashboard = ({
         gradient={patternGradient}
         patternConfig={patternConfig}
       />
-      {/* <Uifra */}
     </Box>
   );
 };

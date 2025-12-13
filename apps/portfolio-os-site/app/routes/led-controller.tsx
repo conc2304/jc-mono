@@ -7,11 +7,7 @@ const LedControllerPage = lazy(() => import('../components/LedControllerPage'));
 
 function LedControllerRoute() {
   const theme = useTheme();
-  console.log(
-    'Current theme in LED Controller Route: ',
-    theme.palette.background.paper,
-    theme.palette.text.primary
-  );
+
   return (
     <ThemeProvider theme={theme}>
       <Box position={'relative'} height="100%">

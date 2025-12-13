@@ -421,7 +421,6 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
     autoGlitchInterval,
     scrambleOnLeave,
   ]);
-  console.log({ sx });
   return (
     <Typography
       component="span"
