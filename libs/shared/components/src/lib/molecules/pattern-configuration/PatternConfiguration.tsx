@@ -100,7 +100,7 @@ export const PatternConfiguration = ({
             '& *': { borderRadius: 0 },
           }}
         >
-          <ToggleButton value="linear">
+          <ToggleButton value="linear" sx={{ borderRadius: 0 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" fontWeight={600}>
                 Linear
@@ -110,7 +110,7 @@ export const PatternConfiguration = ({
               </Typography>
             </Box>
           </ToggleButton>
-          <ToggleButton value="step">
+          <ToggleButton value="step" sx={{ borderRadius: 0 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" fontWeight={600}>
                 Step
