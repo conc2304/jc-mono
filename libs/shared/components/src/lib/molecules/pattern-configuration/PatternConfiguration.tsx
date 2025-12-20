@@ -8,6 +8,7 @@ import {
   Button,
   IconButton,
   Tooltip,
+  Stack,
 } from '@mui/material';
 import {
   Stop as StopIcon,
@@ -22,6 +23,8 @@ import {
   ColorStop,
   SpeedDirection,
 } from '../../organisms/color-gradient-editor/types';
+import { AugmentedButton } from '../../atoms';
+import { RabbitIcon, TurtleIcon } from 'lucide-react';
 
 interface PatternConfigurationProps {
   patternType: GradientPatternType | null;
@@ -173,19 +176,42 @@ export const PatternConfiguration = ({
             </Button>
           </Box>
         </Box>
-        <Slider
-          value={speed}
-          onChange={onSpeedChange}
-          min={0}
-          max={100}
-          step={1}
-          marks={[
-            { value: 0, label: '0' },
-            { value: 50, label: '50' },
-            { value: 100, label: '100' },
-          ]}
-          valueLabelDisplay="auto"
-        />
+
+        <Stack
+          spacing={3}
+          direction="row"
+          sx={{ alignItems: 'center', my: 2, width: '100%' }}
+        >
+          <AugmentedButton
+            size="small"
+            color="primary"
+            variant="outlined"
+            onClick={() => onSpeedChange({} as Event, speed - 1)}
+          >
+            <TurtleIcon />
+          </AugmentedButton>
+          <Slider
+            value={speed}
+            onChange={onSpeedChange}
+            min={0}
+            max={100}
+            marks={[
+              { value: 0, label: '0' },
+              { value: 50, label: '50' },
+              { value: 100, label: '100' },
+            ]}
+            sx={{ flexShrink: 1 }}
+            valueLabelDisplay="auto"
+          />
+          <AugmentedButton
+            size="small"
+            color="primary"
+            variant="outlined"
+            onClick={() => onSpeedChange({} as Event, speed + 1)}
+          >
+            <RabbitIcon />
+          </AugmentedButton>
+        </Stack>
       </Box>
 
       {/* Live Preview */}

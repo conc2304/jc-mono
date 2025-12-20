@@ -207,7 +207,7 @@ export const ActiveDisplayState = ({
       {onBrightnessChange && (
         <Box>
           <Stack
-            spacing={2}
+            spacing={3}
             direction="row"
             sx={{ alignItems: 'center', my: 1, width: '100%' }}
           >
@@ -222,18 +222,35 @@ export const ActiveDisplayState = ({
             >
               Brightness
             </Typography>
-            <BrightnessLow />
+
+            <AugmentedButton
+              size="small"
+              color="primary"
+              variant="outlined"
+              onClick={() => handleBrightnessChange(null, brightness--)}
+            >
+              <BrightnessLow />
+            </AugmentedButton>
+
             <Slider
               value={brightness}
               onChange={handleBrightnessChange}
               min={0}
               max={100}
-              step={1}
               aria-label="LED Brightness"
               valueLabelDisplay="auto"
               aria-labelledby="brightness-slider"
             />
-            <BrightnessHigh />
+
+            <AugmentedButton
+              size="small"
+              color="primary"
+              variant="outlined"
+              onClick={() => handleBrightnessChange(null, brightness++)}
+            >
+              <BrightnessHigh />
+            </AugmentedButton>
+
             <AugmentedButton
               size="small"
               color="warning"
@@ -246,55 +263,11 @@ export const ActiveDisplayState = ({
         </Box>
       )}
 
-      {/* Invert Controller */}
-      {onInvertChange && (
-        <Box>
-          <Stack
-            spacing={2}
-            direction="row"
-            sx={{ alignItems: 'center', my: 1, width: '100%' }}
-          >
-            <Typography
-              variant="caption"
-              noWrap
-              sx={{
-                flexShrink: 0,
-                width: '75px',
-                display: { xs: 'none', sm: 'block' },
-              }}
-            >
-              Invert
-            </Typography>
-
-            <InvertColorsOff />
-            <Slider
-              value={invert}
-              onChange={handleInvertChange}
-              min={0}
-              max={100}
-              step={1}
-              aria-label="Color Inversion"
-              valueLabelDisplay="auto"
-              aria-labelledby="inversion-slider"
-            />
-            <InvertColors />
-            <AugmentedButton
-              size="small"
-              color="warning"
-              variant="outlined"
-              onClick={() => handleInvertChange(null, 0)}
-            >
-              <Restore />
-            </AugmentedButton>
-          </Stack>
-        </Box>
-      )}
-
       {/* Hue Rotate Speed Controller */}
       {onHueRotationSpeedChange && (
         <Box>
           <Stack
-            spacing={2}
+            spacing={3}
             direction="row"
             sx={{ alignItems: 'center', my: 1, width: '100%' }}
           >
@@ -310,18 +283,37 @@ export const ActiveDisplayState = ({
               Hue Rotate
             </Typography>
 
-            <Palette />
+            <AugmentedButton
+              size="small"
+              color="primary"
+              variant="outlined"
+              onClick={() =>
+                handleHueRotationSpeedChange(null, hueRotationSpeed--)
+              }
+            >
+              <Palette />
+            </AugmentedButton>
+
             <Slider
               value={hueRotationSpeed}
               onChange={handleHueRotationSpeedChange}
               min={0}
               max={100}
-              step={1}
               aria-label="Hue Rotate Speed"
               valueLabelDisplay="auto"
               aria-labelledby="hue-rotate-speed-slider"
             />
-            <ElectricBolt />
+            <AugmentedButton
+              size="small"
+              color="primary"
+              variant="outlined"
+              onClick={() =>
+                handleHueRotationSpeedChange(null, hueRotationSpeed--)
+              }
+            >
+              <ElectricBolt />
+            </AugmentedButton>
+
             <AugmentedButton
               size="small"
               color="warning"

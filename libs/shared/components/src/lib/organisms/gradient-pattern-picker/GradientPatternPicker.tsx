@@ -239,7 +239,6 @@ export const GradientPatternPicker = ({
           onChange={handleSpeedChange}
           min={0}
           max={100}
-          step={1}
           marks={[
             { value: 0, label: 'Static' },
             { value: 50, label: '50%' },
