@@ -93,18 +93,20 @@ const LedController = () => {
     type,
     speed,
     interpolation,
+    period,
   }: {
     colorStops: Array<{ position: number; r: number; g: number; b: number }>;
     type: string;
     speed: number;
     interpolation: string;
+    period: number;
   }) => {
     const response = await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ colorStops, type, speed, interpolation }),
+      body: JSON.stringify({ colorStops, type, speed, interpolation, period }),
     });
 
     if (!response.ok) {

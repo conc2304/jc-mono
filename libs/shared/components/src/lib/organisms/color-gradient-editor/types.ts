@@ -23,6 +23,7 @@ export interface GradientPattern {
   type: GradientPatternType;
   interpolation: InterpolationMode;
   speed: number; // 0-100, where 0 is static
+  period?: number; // 0.2-10, where 1 is default
   gradient?: Gradient;
 }
 
@@ -33,4 +34,5 @@ export interface GradientPatternConfig {
   interpolation: InterpolationMode;
   speed: number;
   direction?: SpeedDirection;
+  period?: number;
 }

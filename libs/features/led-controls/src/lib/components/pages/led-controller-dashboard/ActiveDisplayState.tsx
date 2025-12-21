@@ -2,14 +2,12 @@ import {
   alpha,
   Box,
   Paper,
-  Slider,
-  Stack,
   Typography,
   useTheme,
 } from '@mui/material';
 import { useMemo } from 'react';
 import {
-  AugmentedButton,
+  AugmentedSlider,
   GradientPatternVisualizer,
   type Gradient,
   type GradientPatternConfig,
@@ -19,8 +17,6 @@ import {
   BrightnessHigh,
   BrightnessLow,
   ElectricBolt,
-  InvertColors,
-  InvertColorsOff,
   Palette,
   Restore,
 } from '@mui/icons-material';
@@ -71,15 +67,6 @@ export const ActiveDisplayState = ({
   ) => {
     if (typeof value === 'number') {
       onBrightnessChange && onBrightnessChange(value);
-    }
-  };
-
-  const handleInvertChange = (
-    event: Event | null,
-    value: number | number[]
-  ) => {
-    if (typeof value === 'number') {
-      onInvertChange && onInvertChange(value);
     }
   };
 
@@ -167,7 +154,6 @@ export const ActiveDisplayState = ({
         <Box>
           <Box
             sx={{
-              borderRadius: 1,
               border: `2px solid ${theme.palette.divider}`,
               overflow: 'hidden',
               mb: 1,
@@ -205,125 +191,36 @@ export const ActiveDisplayState = ({
 
       {/* Brightness Controller */}
       {onBrightnessChange && (
-        <Box>
-          <Stack
-            spacing={3}
-            direction="row"
-            sx={{ alignItems: 'center', my: 1, width: '100%' }}
-          >
-            <Typography
-              variant="caption"
-              noWrap
-              sx={{
-                flexShrink: 0,
-                width: '75px',
-                display: { xs: 'none', sm: 'block' },
-              }}
-            >
-              Brightness
-            </Typography>
-
-            <AugmentedButton
-              size="small"
-              color="primary"
-              variant="outlined"
-              onClick={() => handleBrightnessChange(null, brightness--)}
-            >
-              <BrightnessLow />
-            </AugmentedButton>
-
-            <Slider
-              value={brightness}
-              onChange={handleBrightnessChange}
-              min={0}
-              max={100}
-              aria-label="LED Brightness"
-              valueLabelDisplay="auto"
-              aria-labelledby="brightness-slider"
-            />
-
-            <AugmentedButton
-              size="small"
-              color="primary"
-              variant="outlined"
-              onClick={() => handleBrightnessChange(null, brightness++)}
-            >
-              <BrightnessHigh />
-            </AugmentedButton>
-
-            <AugmentedButton
-              size="small"
-              color="warning"
-              variant="outlined"
-              onClick={() => handleBrightnessChange(null, 50)}
-            >
-              <Restore />
-            </AugmentedButton>
-          </Stack>
-        </Box>
+        <AugmentedSlider
+          label="Brightness"
+          value={brightness}
+          onChange={handleBrightnessChange}
+          min={0}
+          max={100}
+          resetValue={50}
+          decrementIcon={<BrightnessLow />}
+          incrementIcon={<BrightnessHigh />}
+          restoreIcon={<Restore />}
+          ariaLabel="LED Brightness"
+          ariaLabelledBy="brightness-slider"
+        />
       )}
 
       {/* Hue Rotate Speed Controller */}
       {onHueRotationSpeedChange && (
-        <Box>
-          <Stack
-            spacing={3}
-            direction="row"
-            sx={{ alignItems: 'center', my: 1, width: '100%' }}
-          >
-            <Typography
-              variant="caption"
-              noWrap
-              sx={{
-                flexShrink: 0,
-                width: '75px',
-                display: { xs: 'none', sm: 'block' },
-              }}
-            >
-              Hue Rotate
-            </Typography>
-
-            <AugmentedButton
-              size="small"
-              color="primary"
-              variant="outlined"
-              onClick={() =>
-                handleHueRotationSpeedChange(null, hueRotationSpeed--)
-              }
-            >
-              <Palette />
-            </AugmentedButton>
-
-            <Slider
-              value={hueRotationSpeed}
-              onChange={handleHueRotationSpeedChange}
-              min={0}
-              max={100}
-              aria-label="Hue Rotate Speed"
-              valueLabelDisplay="auto"
-              aria-labelledby="hue-rotate-speed-slider"
-            />
-            <AugmentedButton
-              size="small"
-              color="primary"
-              variant="outlined"
-              onClick={() =>
-                handleHueRotationSpeedChange(null, hueRotationSpeed--)
-              }
-            >
-              <ElectricBolt />
-            </AugmentedButton>
-
-            <AugmentedButton
-              size="small"
-              color="warning"
-              variant="outlined"
-              onClick={() => handleHueRotationSpeedChange(null, 0)}
-            >
-              <Restore />
-            </AugmentedButton>
-          </Stack>
-        </Box>
+        <AugmentedSlider
+          label="Hue Rotate"
+          value={hueRotationSpeed}
+          onChange={handleHueRotationSpeedChange}
+          min={0}
+          max={100}
+          resetValue={0}
+          decrementIcon={<Palette />}
+          incrementIcon={<ElectricBolt />}
+          restoreIcon={<Restore />}
+          ariaLabel="Hue Rotate Speed"
+          ariaLabelledBy="hue-rotate-speed-slider"
+        />
       )}
     </Paper>
   );

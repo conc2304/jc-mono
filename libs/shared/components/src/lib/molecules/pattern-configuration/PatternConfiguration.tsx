@@ -4,16 +4,15 @@ import {
   Typography,
   ToggleButtonGroup,
   ToggleButton,
-  Slider,
-  Button,
   IconButton,
   Tooltip,
-  Stack,
 } from '@mui/material';
 import {
-  Stop as StopIcon,
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon,
+  CloseFullscreen,
+  OpenInFull,
+  Restore,
 } from '@mui/icons-material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
@@ -23,7 +22,7 @@ import {
   ColorStop,
   SpeedDirection,
 } from '../../organisms/color-gradient-editor/types';
-import { AugmentedButton } from '../../atoms';
+import { AugmentedSlider } from '../augmented-slider';
 import { RabbitIcon, TurtleIcon } from 'lucide-react';
 
 interface PatternConfigurationProps {
@@ -31,6 +30,7 @@ interface PatternConfigurationProps {
   interpolation: InterpolationMode;
   speed: number;
   direction?: SpeedDirection;
+  period?: number;
   selectedGradientStops?: ColorStop[];
   onInterpolationChange: (
     event: React.MouseEvent<HTMLElement>,
@@ -39,6 +39,7 @@ interface PatternConfigurationProps {
   onSpeedChange: (event: Event, newSpeed: number | number[]) => void;
   onStaticClick: () => void;
   onDirectionChange?: (direction: SpeedDirection) => void;
+  onPeriodChange?: (event: Event, newPeriod: number | number[]) => void;
 }
 
 export const PatternConfiguration = ({
@@ -46,11 +47,13 @@ export const PatternConfiguration = ({
   interpolation,
   speed,
   direction = 'forward',
+  period = 1,
   selectedGradientStops,
   onInterpolationChange,
   onSpeedChange,
   onStaticClick,
   onDirectionChange,
+  onPeriodChange,
 }: PatternConfigurationProps) => {
   const theme = useTheme();
 
@@ -58,6 +61,44 @@ export const PatternConfiguration = ({
     if (onDirectionChange) {
       const newDirection = direction === 'forward' ? 'backward' : 'forward';
       onDirectionChange(newDirection);
+    }
+  };
+
+  const handleSpeedChange = (event: Event | null, value: number | number[]) => {
+    onSpeedChange(event || ({} as Event), value);
+  };
+
+  // Scale function to map slider position (0-100) to period value (0.2-10)
+  // Middle value (50) should map to 1
+  const scalePeriod = (sliderValue: number): number => {
+    if (sliderValue <= 50) {
+      // Map 0-50 to 0.2-1 linearly
+      return 0.2 + (sliderValue / 50) * 0.8;
+    } else {
+      // Map 50-100 to 1-10 linearly
+      return 1 + ((sliderValue - 50) / 50) * 9;
+    }
+  };
+
+  // Inverse scale function to map period value (0.2-10) to slider position (0-100)
+  const inverseScalePeriod = (periodValue: number): number => {
+    if (periodValue <= 1) {
+      // Map 0.2-1 to 0-50 linearly
+      return ((periodValue - 0.2) / 0.8) * 50;
+    } else {
+      // Map 1-10 to 50-100 linearly
+      return 50 + ((periodValue - 1) / 9) * 50;
+    }
+  };
+
+  const handlePeriodSliderChange = (
+    event: Event | null,
+    newValue: number | number[]
+  ) => {
+    if (onPeriodChange) {
+      const sliderValue = Array.isArray(newValue) ? newValue[0] : newValue;
+      const scaledPeriod = scalePeriod(sliderValue);
+      onPeriodChange(event || ({} as Event), scaledPeriod);
     }
   };
 
@@ -165,7 +206,7 @@ export const PatternConfiguration = ({
                 </IconButton>
               </Tooltip>
             )}
-            <Button
+            {/* <Button
               variant={speed === 0 ? 'contained' : 'outlined'}
               size="small"
               onClick={onStaticClick}
@@ -173,46 +214,45 @@ export const PatternConfiguration = ({
               sx={{ minWidth: 80 }}
             >
               Static
-            </Button>
+            </Button> */}
           </Box>
         </Box>
 
-        <Stack
-          spacing={3}
-          direction="row"
-          sx={{ alignItems: 'center', my: 2, width: '100%' }}
-        >
-          <AugmentedButton
-            size="small"
-            color="primary"
-            variant="outlined"
-            onClick={() => onSpeedChange({} as Event, speed - 1)}
-          >
-            <TurtleIcon />
-          </AugmentedButton>
-          <Slider
-            value={speed}
-            onChange={onSpeedChange}
-            min={0}
-            max={100}
-            marks={[
-              { value: 0, label: '0' },
-              { value: 50, label: '50' },
-              { value: 100, label: '100' },
-            ]}
-            sx={{ flexShrink: 1 }}
-            valueLabelDisplay="auto"
-          />
-          <AugmentedButton
-            size="small"
-            color="primary"
-            variant="outlined"
-            onClick={() => onSpeedChange({} as Event, speed + 1)}
-          >
-            <RabbitIcon />
-          </AugmentedButton>
-        </Stack>
+        <AugmentedSlider
+          label=""
+          value={speed}
+          onChange={handleSpeedChange}
+          min={0}
+          max={100}
+          resetValue={0}
+          decrementIcon={<TurtleIcon />}
+          incrementIcon={<RabbitIcon />}
+          restoreIcon={<Restore />}
+          ariaLabel="Animation Speed"
+          restoreButtonSlotProps={{
+            onClick: onStaticClick,
+          }}
+        />
       </Box>
+
+      {/* Gradient Period */}
+      {onPeriodChange && (
+        <AugmentedSlider
+          label=""
+          value={inverseScalePeriod(period)}
+          onChange={handlePeriodSliderChange}
+          min={0}
+          max={100}
+          resetValue={50}
+          decrementIcon={<CloseFullscreen />}
+          incrementIcon={<OpenInFull />}
+          restoreIcon={<Restore />}
+          ariaLabel="Gradient Period"
+          sliderSlotProps={{
+            valueLabelFormat: () => period.toFixed(2),
+          }}
+        />
+      )}
 
       {/* Live Preview */}
       <Box sx={{ mt: 2 }}>
