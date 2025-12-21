@@ -37,7 +37,7 @@ declare module '@mui/material/styles' {
       background: string,
       semanticColors: readonly T[],
       theme: Theme
-    ): T;
+    ): { colorKey: T; variant: 'main' | 'light' | 'dark'; hex: string };
   }
 
   interface TypographyVariants {
