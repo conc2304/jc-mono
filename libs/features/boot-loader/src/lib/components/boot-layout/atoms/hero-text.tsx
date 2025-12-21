@@ -1,8 +1,7 @@
 import { ScrambleText } from '@jc/ui-components';
-import { useTheme, useMediaQuery, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 export const HeroText = () => {
-  const isSm = useMediaQuery(useTheme().breakpoints.down('sm'));
   return (
     <>
       <Typography variant="h4" color="primary" my={1}>
@@ -14,7 +13,9 @@ export const HeroText = () => {
         hoverText="Via @CLYZBY_OS"
         variant="display"
         color="primary"
-        fontSize={isSm ? '1.9rem' : undefined}
+        sx={{
+          fontSize: { sm: '1.9rem', md: '2.35rem', lg: '3rem' },
+        }}
         my={1}
       />
       <Typography variant="h3" color="primary">

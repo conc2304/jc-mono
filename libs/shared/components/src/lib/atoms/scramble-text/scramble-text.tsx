@@ -371,7 +371,7 @@ const ScrambleTextInner: React.FC<ScrambleTextProps> = ({
   return (
     <Typography
       ref={containerRef}
-      className={`scramble-text ${className}`}
+      className={`ScrambleText--root scramble-text ${className}`}
       style={combinedStyle}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}

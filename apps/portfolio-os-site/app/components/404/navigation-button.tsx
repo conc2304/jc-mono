@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box, Stack, useTheme, keyframes } from '@mui/material';
 import { HomeFilled } from '@mui/icons-material';
-import { useMediaQuery } from '@mui/system';
 
 import { ensureContrast, getContextualImage } from '@jc/utils';
 
@@ -48,10 +47,6 @@ export const NavigationButtons = ({
 }) => {
   const theme = useTheme();
 
-  // Mobile breakpoint detection
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
@@ -60,13 +55,6 @@ export const NavigationButtons = ({
       setIsClicked(false);
       onHomeClick && onHomeClick();
     }, 200);
-  };
-
-  // Responsive sizing
-  const getIconSize = () => {
-    if (isMobile) return '4rem';
-    if (isTablet) return '7rem';
-    return '10.5rem';
   };
 
   return (
@@ -83,11 +71,11 @@ export const NavigationButtons = ({
         sx={(theme) => ({
           height: '100%',
           width: '100%',
-          background: `linear-gradient(${
-            isMobile || isTablet ? '-' : ''
-          }135deg, ${theme.palette.primary.main}FF, ${
-            theme.palette.secondary.main
-          }00)`,
+          background: {
+            xs: `linear-gradient(-135deg, ${theme.palette.primary.main}FF, ${theme.palette.secondary.main}00)`,
+            sm: `linear-gradient(-135deg, ${theme.palette.primary.main}FF, ${theme.palette.secondary.main}00)`,
+            md: `linear-gradient(135deg, ${theme.palette.primary.main}FF, ${theme.palette.secondary.main}00)`,
+          },
           border: '1px solid',
           borderRadius: '4px',
           backdropFilter: 'blur(1px)',
@@ -119,7 +107,7 @@ export const NavigationButtons = ({
               animation: `${diagonalShift} 3s ease-in-out infinite`,
             },
           },
-          p: isMobile ? '1rem' : '2rem',
+          p: { xs: '1rem', sm: '2rem' },
           display: 'flex',
           justifyContent: 'space-around',
           gap: 2,
@@ -192,7 +180,7 @@ export const NavigationButtons = ({
             className="home-icon"
             color="secondary"
             sx={{
-              fontSize: getIconSize(),
+              fontSize: { sm: '4rem', md: '7rem', lg: '10.5rem' },
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))',
             }}

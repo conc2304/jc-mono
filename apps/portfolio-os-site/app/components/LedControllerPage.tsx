@@ -10,7 +10,6 @@ import {
   Dialog,
   DialogTitle,
   getContrastRatio,
-  Link,
   Toolbar,
   Tooltip,
   Typography,
@@ -47,6 +46,7 @@ const LedController = () => {
     : 'large';
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showWarning, setShowWarning] = useState<boolean>(false);
+  const [showServerModal, setShowServerModal] = useState<boolean>(false);
 
   // Check LED controller status on load
   useEffect(() => {
@@ -121,7 +121,7 @@ const LedController = () => {
         interpolation,
         period: period || 1,
         direction,
-        wave
+        wave,
       }),
     });
 
@@ -290,14 +290,14 @@ const LedController = () => {
               <br />
             </Typography>
 
-            <Link
-              href={`${tdServerApi}/?${params}`}
-              target="_blank"
-              width="100%"
+            <AugmentedButton
+              onClick={() => setShowServerModal(true)}
+              fullWidth
               color="info"
+              variant="outlined"
             >
               Touchdesigner Server Access
-            </Link>
+            </AugmentedButton>
           </Alert>
         )}
         <LedControllerDashboard
@@ -343,6 +343,63 @@ const LedController = () => {
             <Close />
           </AugmentedIconButton>
           <MinimalThemeSwitcher />
+        </Dialog>
+
+        {/* TouchDesigner Server Access Dialog */}
+        <Dialog
+          open={showServerModal}
+          onClose={() => setShowServerModal(false)}
+          aria-labelledby="server-access-modal-title"
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle
+            id="server-access-modal-title"
+            sx={{
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+              mb: 0,
+              pt: 2,
+            }}
+          >
+            TouchDesigner Server Access
+          </DialogTitle>
+
+          <AugmentedIconButton
+            size="large"
+            color="primary"
+            shape="buttonRounded"
+            onClick={() => setShowServerModal(false)}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              color: 'text.primary',
+            }}
+          >
+            <Close />
+          </AugmentedIconButton>
+
+          <Box sx={{ p: 2 }}>
+            <Alert severity="info" sx={{ mb: 2 }}>
+              <Typography variant="body2">
+                Click "Advanced" or "Proceed" in the security warning below to
+                approve the self-signed certificate. Once approved, close this
+                modal and the LED controller will work.
+              </Typography>
+            </Alert>
+            <Box
+              component="iframe"
+              src={`${tdServerApi}/?${params}`}
+              sx={{
+                width: '100%',
+                height: '400px',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+              }}
+            />
+          </Box>
         </Dialog>
       </Box>
     </>
