@@ -23,7 +23,7 @@ import {
   Edit as EditIcon,
   PlayArrow as PlayArrowIcon,
 } from '@mui/icons-material';
-import { GradientPatternVisualizer } from '@jc/ui-components';
+import { AugmentedButton, GradientPatternVisualizer } from '@jc/ui-components';
 import type { Scene } from '../../../types/storage';
 
 interface SceneBankProps {
@@ -175,6 +175,7 @@ export const SceneBank = ({
                         ? 'Solid Color'
                         : 'Gradient Pattern'
                     }
+                    variant="outlined"
                     size="small"
                     color={
                       scene.type === 'solid-color' ? 'primary' : 'secondary'
@@ -195,7 +196,7 @@ export const SceneBank = ({
               </CardContent>
 
               <CardActions sx={{ pt: 0, px: 2, pb: 2 }}>
-                <Button
+                <AugmentedButton
                   size="small"
                   variant="contained"
                   color="primary"
@@ -204,7 +205,7 @@ export const SceneBank = ({
                   sx={{ flexGrow: 1 }}
                 >
                   Play
-                </Button>
+                </AugmentedButton>
                 <IconButton
                   size="small"
                   onClick={() => handleEditClick(scene)}

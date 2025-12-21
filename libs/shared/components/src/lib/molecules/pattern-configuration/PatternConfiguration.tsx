@@ -271,15 +271,6 @@ export const PatternConfiguration = ({
                 </IconButton>
               </Tooltip>
             )}
-            {/* <Button
-              variant={speed === 0 ? 'contained' : 'outlined'}
-              size="small"
-              onClick={onStaticClick}
-              startIcon={<StopIcon />}
-              sx={{ minWidth: 80 }}
-            >
-              Static
-            </Button> */}
           </Box>
         </Box>
 
@@ -302,21 +293,26 @@ export const PatternConfiguration = ({
 
       {/* Gradient Period */}
       {onPeriodChange && (
-        <AugmentedSlider
-          label=""
-          value={inverseScalePeriod(period)}
-          onChange={handlePeriodSliderChange}
-          min={0}
-          max={100}
-          resetValue={50}
-          decrementIcon={<CloseFullscreen />}
-          incrementIcon={<OpenInFull />}
-          restoreIcon={<Restore />}
-          ariaLabel="Gradient Period"
-          sliderSlotProps={{
-            valueLabelFormat: () => period.toFixed(2),
-          }}
-        />
+        <>
+          <Typography variant="caption" color="text.secondary">
+            Gradient Stretch
+          </Typography>
+          <AugmentedSlider
+            label=""
+            value={inverseScalePeriod(period)}
+            onChange={handlePeriodSliderChange}
+            min={0}
+            max={100}
+            resetValue={50}
+            decrementIcon={<CloseFullscreen />}
+            incrementIcon={<OpenInFull />}
+            restoreIcon={<Restore />}
+            ariaLabel="Gradient Period"
+            sliderSlotProps={{
+              valueLabelFormat: () => period.toFixed(2),
+            }}
+          />
+        </>
       )}
 
       {/* Wave Adjuster - Only for horizontal/vertical patterns */}

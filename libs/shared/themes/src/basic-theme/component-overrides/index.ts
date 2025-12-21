@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material';
-import { Components } from '@mui/material/styles';
+import { Components, alpha } from '@mui/material/styles';
 import { LinkProps } from '@mui/material/Link';
 
 import BaselineCSS from './baseline';
@@ -22,5 +22,13 @@ export default function getComponentOverrides(theme: Theme): Components {
     ...BaselineCSS(theme),
     ...ButtonBase(theme),
     ...ButtonIcon(theme),
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: alpha(theme.palette.background.paper, 0.7),
+          borderRadius: 'unset',
+        },
+      },
+    },
   };
 }

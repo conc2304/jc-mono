@@ -3,6 +3,7 @@ import { Box, Typography, Button } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 
 import {
+  AugmentedButton,
   ColorSwatchPicker,
   GradientPatternSelector,
   type Gradient,
@@ -200,8 +201,8 @@ export const LedControllerDashboard = ({
 
       {/* Save Current State as Scene */}
       <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <Button
-          variant="contained"
+        <AugmentedButton
+          variant="outlined"
           color="secondary"
           startIcon={<SaveIcon />}
           onClick={() => setSaveSceneDialogOpen(true)}
@@ -209,7 +210,7 @@ export const LedControllerDashboard = ({
           size="large"
         >
           Save as Scene
-        </Button>
+        </AugmentedButton>
         {!canSaveScene && (
           <Typography
             variant="caption"

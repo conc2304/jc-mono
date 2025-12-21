@@ -1,9 +1,6 @@
 import { Box, Typography, useTheme } from '@mui/material';
 
-export const LoadingFallback = ({
-  message = 'Loading...',
-  hydrate = false,
-}) => {
+export const LoadingFallback = ({ message = 'Loading...' }) => {
   const theme = useTheme();
 
   return (

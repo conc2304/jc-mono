@@ -8,6 +8,7 @@ import {
   AppBar,
   Box,
   Dialog,
+  DialogContent,
   DialogTitle,
   getContrastRatio,
   Toolbar,
@@ -321,7 +322,6 @@ const LedController = () => {
             sx={{
               borderBottom: '1px solid',
               borderColor: 'divider',
-              mb: 1,
               pt: 2,
             }}
           >
@@ -342,7 +342,9 @@ const LedController = () => {
           >
             <Close />
           </AugmentedIconButton>
-          <MinimalThemeSwitcher />
+          <DialogContent>
+            <MinimalThemeSwitcher />
+          </DialogContent>
         </Dialog>
 
         {/* TouchDesigner Server Access Dialog */}
@@ -358,7 +360,6 @@ const LedController = () => {
             sx={{
               borderBottom: '1px solid',
               borderColor: 'divider',
-              mb: 0,
               pt: 2,
             }}
           >
@@ -380,7 +381,7 @@ const LedController = () => {
             <Close />
           </AugmentedIconButton>
 
-          <Box sx={{ p: 2 }}>
+          <DialogContent>
             <Alert severity="info" sx={{ mb: 2 }}>
               <Typography variant="body2">
                 Click "Advanced" or "Proceed" in the security warning below to
@@ -399,7 +400,7 @@ const LedController = () => {
                 borderRadius: 1,
               }}
             />
-          </Box>
+          </DialogContent>
         </Dialog>
       </Box>
     </>
