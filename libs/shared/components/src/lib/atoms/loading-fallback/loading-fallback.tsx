@@ -1,6 +1,9 @@
 import { Box, Typography, useTheme } from '@mui/material';
 
-export const LoadingFallback = ({ message = 'Loading...' }) => {
+export const LoadingFallback = ({
+  message = 'Loading...',
+  hydrate = false,
+}) => {
   const theme = useTheme();
 
   return (
@@ -88,6 +91,7 @@ export const LoadingFallback = ({ message = 'Loading...' }) => {
         {/* Terminal-style text */}
         {message && (
           <Box
+            className="loading-message"
             sx={{
               textAlign: 'center',
               gap: 1,
