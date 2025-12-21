@@ -88,25 +88,41 @@ const LedController = () => {
     }
   };
 
-  const handleGradientPattenUpdate = async ({
+  const handleGradientPatternUpdate = async ({
     colorStops,
     type,
     speed,
     interpolation,
     period,
+    direction,
+    wave,
   }: {
     colorStops: Array<{ position: number; r: number; g: number; b: number }>;
     type: string;
     speed: number;
     interpolation: string;
-    period: number;
+    period?: number;
+    direction?: string;
+    wave?: {
+      type: string | null;
+      period: number;
+      amplitude: number;
+    };
   }) => {
     const response = await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ colorStops, type, speed, interpolation, period }),
+      body: JSON.stringify({
+        colorStops,
+        type,
+        speed,
+        interpolation,
+        period: period || 1,
+        direction,
+        wave
+      }),
     });
 
     if (!response.ok) {
@@ -286,7 +302,7 @@ const LedController = () => {
         )}
         <LedControllerDashboard
           onUpdateSolidColor={handleSolidColorUpdate}
-          onUpdateGradientPattern={handleGradientPattenUpdate}
+          onUpdateGradientPattern={handleGradientPatternUpdate}
           onUpdateBrightness={handleBrightnessChange}
           onUpdateInvert={handleInvertChange}
           onUpdateHueRotationSpeed={handleHueRotationSpeedChange}

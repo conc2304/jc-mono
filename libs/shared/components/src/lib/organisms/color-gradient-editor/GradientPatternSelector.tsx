@@ -12,6 +12,7 @@ import {
   GradientPatternConfig,
   ColorStop,
   SpeedDirection,
+  WaveConfig,
 } from './types';
 
 interface GradientPatternSelectorProps {
@@ -57,6 +58,9 @@ export const GradientPatternSelector: React.FC<
   const [period, setPeriod] = useState<number>(
     activePatternConfig?.period || 1
   );
+  const [waveConfig, setWaveConfig] = useState<WaveConfig>(
+    activePatternConfig?.wave || { type: null, period: 1, amplitude: 0.5 }
+  );
   const [selectedGradient, setSelectedGradient] = useState<Gradient | null>(
     activeGradient || null
   );
@@ -72,6 +76,7 @@ export const GradientPatternSelector: React.FC<
     setSpeed(Math.abs(activePatternConfig?.speed || 0));
     setDirection(activePatternConfig?.direction || 'forward');
     setPeriod(activePatternConfig?.period || 1);
+    setWaveConfig(activePatternConfig?.wave || { type: null, period: 1, amplitude: 0.5 });
   }, [activePatternConfig]);
 
   // Notify parent when config changes
@@ -81,6 +86,7 @@ export const GradientPatternSelector: React.FC<
     newSpeed: number,
     newDirection: SpeedDirection,
     newPeriod: number,
+    newWaveConfig: WaveConfig,
     gradient: Gradient | null
   ) => {
     if (onPatternConfigChange) {
@@ -91,6 +97,7 @@ export const GradientPatternSelector: React.FC<
           speed: newSpeed,
           direction: newDirection,
           period: newPeriod,
+          wave: newWaveConfig,
         },
         gradient
       );
@@ -99,7 +106,15 @@ export const GradientPatternSelector: React.FC<
 
   const handlePatternTypeSelect = (type: GradientPatternType): void => {
     setPatternType(type);
-    notifyConfigChange(type, interpolation, speed, direction, period, selectedGradient);
+    notifyConfigChange(
+      type,
+      interpolation,
+      speed,
+      direction,
+      period,
+      waveConfig,
+      selectedGradient
+    );
   };
 
   const handleGradientSelect = (gradient: Gradient): void => {
@@ -110,6 +125,7 @@ export const GradientPatternSelector: React.FC<
       speed,
       direction,
       period,
+      waveConfig,
       gradient
     );
   };
@@ -126,6 +142,7 @@ export const GradientPatternSelector: React.FC<
         speed,
         direction,
         period,
+        waveConfig,
         selectedGradient
       );
     }
@@ -140,6 +157,7 @@ export const GradientPatternSelector: React.FC<
       speedValue,
       direction,
       period,
+      waveConfig,
       selectedGradient
     );
   };
@@ -152,6 +170,7 @@ export const GradientPatternSelector: React.FC<
       0,
       direction,
       period,
+      waveConfig,
       selectedGradient
     );
   };
@@ -167,6 +186,7 @@ export const GradientPatternSelector: React.FC<
       adjustedSpeed,
       newDirection,
       period,
+      waveConfig,
       selectedGradient
     );
   };
@@ -180,6 +200,20 @@ export const GradientPatternSelector: React.FC<
       speed,
       direction,
       periodValue,
+      waveConfig,
+      selectedGradient
+    );
+  };
+
+  const handleWaveConfigChange = (newWaveConfig: WaveConfig) => {
+    setWaveConfig(newWaveConfig);
+    notifyConfigChange(
+      patternType || 'horizontal',
+      interpolation,
+      speed,
+      direction,
+      period,
+      newWaveConfig,
       selectedGradient
     );
   };
@@ -289,11 +323,13 @@ export const GradientPatternSelector: React.FC<
         direction={direction}
         period={period}
         selectedGradientStops={selectedGradient?.stops}
+        waveConfig={waveConfig}
         onInterpolationChange={handleInterpolationChange}
         onSpeedChange={handleSpeedChange}
         onStaticClick={handleStaticClick}
         onDirectionChange={handleDirectionChange}
         onPeriodChange={handlePeriodChange}
+        onWaveConfigChange={handleWaveConfigChange}
       />
 
       {/* Custom Gradient Editor Modal */}

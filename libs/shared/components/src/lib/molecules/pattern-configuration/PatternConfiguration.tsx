@@ -21,9 +21,17 @@ import {
   InterpolationMode,
   ColorStop,
   SpeedDirection,
+  WaveType,
+  WaveConfig,
 } from '../../organisms/color-gradient-editor/types';
 import { AugmentedSlider } from '../augmented-slider';
 import { RabbitIcon, TurtleIcon } from 'lucide-react';
+import {
+  SineWaveIcon,
+  TriangleWaveIcon,
+  SawtoothWaveIcon,
+  SquareWaveIcon,
+} from '../../atoms/wave-icons';
 
 interface PatternConfigurationProps {
   patternType: GradientPatternType | null;
@@ -32,6 +40,7 @@ interface PatternConfigurationProps {
   direction?: SpeedDirection;
   period?: number;
   selectedGradientStops?: ColorStop[];
+  waveConfig?: WaveConfig;
   onInterpolationChange: (
     event: React.MouseEvent<HTMLElement>,
     newInterpolation: InterpolationMode | null
@@ -40,6 +49,7 @@ interface PatternConfigurationProps {
   onStaticClick: () => void;
   onDirectionChange?: (direction: SpeedDirection) => void;
   onPeriodChange?: (event: Event, newPeriod: number | number[]) => void;
+  onWaveConfigChange?: (waveConfig: WaveConfig) => void;
 }
 
 export const PatternConfiguration = ({
@@ -49,11 +59,13 @@ export const PatternConfiguration = ({
   direction = 'forward',
   period = 1,
   selectedGradientStops,
+  waveConfig = { type: null, period: 1, amplitude: 0.5 },
   onInterpolationChange,
   onSpeedChange,
   onStaticClick,
   onDirectionChange,
   onPeriodChange,
+  onWaveConfigChange,
 }: PatternConfigurationProps) => {
   const theme = useTheme();
 
@@ -101,6 +113,59 @@ export const PatternConfiguration = ({
       onPeriodChange(event || ({} as Event), scaledPeriod);
     }
   };
+
+  // Scale function for wave period (0-100 slider to 0.2-4 value)
+  const scaleWavePeriod = (sliderValue: number): number => {
+    return 0.2 + (sliderValue / 100) * 3.8;
+  };
+
+  // Inverse scale for wave period (0.2-4 value to 0-100 slider)
+  const inverseScaleWavePeriod = (periodValue: number): number => {
+    return ((periodValue - 0.2) / 3.8) * 100;
+  };
+
+  const handleWavePeriodSliderChange = (
+    event: Event | null,
+    newValue: number | number[]
+  ) => {
+    if (onWaveConfigChange) {
+      const sliderValue = Array.isArray(newValue) ? newValue[0] : newValue;
+      const scaledPeriod = scaleWavePeriod(sliderValue);
+      onWaveConfigChange({
+        ...waveConfig,
+        period: scaledPeriod,
+      });
+    }
+  };
+
+  const handleWaveAmplitudeChange = (
+    event: Event | null,
+    newValue: number | number[]
+  ) => {
+    if (onWaveConfigChange) {
+      const sliderValue = Array.isArray(newValue) ? newValue[0] : newValue;
+      // Convert from 0-100 slider to 0-1 value
+      const scaledAmplitude = sliderValue / 100;
+      onWaveConfigChange({
+        ...waveConfig,
+        amplitude: scaledAmplitude,
+      });
+    }
+  };
+
+  const handleWaveTypeClick = (newWaveType: WaveType) => {
+    if (onWaveConfigChange) {
+      // Toggle off if clicking the same type
+      const newType = waveConfig.type === newWaveType ? null : newWaveType;
+      onWaveConfigChange({
+        ...waveConfig,
+        type: newType,
+      });
+    }
+  };
+
+  const isHorizontalOrVertical =
+    patternType === 'horizontal' || patternType === 'vertical';
 
   return (
     <Paper
@@ -252,6 +317,154 @@ export const PatternConfiguration = ({
             valueLabelFormat: () => period.toFixed(2),
           }}
         />
+      )}
+
+      {/* Wave Adjuster - Only for horizontal/vertical patterns */}
+      {isHorizontalOrVertical && onWaveConfigChange && (
+        <Box sx={{ mt: 2 }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mb: 1, display: 'block' }}
+          >
+            Wave Pattern
+          </Typography>
+
+          {/* Wave Type Selector */}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              mb: 2,
+              justifyContent: 'space-between',
+            }}
+          >
+            <Tooltip title="Sine Wave">
+              <IconButton
+                size="small"
+                onClick={() => handleWaveTypeClick('sine')}
+                color={waveConfig.type === 'sine' ? 'primary' : 'default'}
+                sx={{
+                  border: `1px solid ${
+                    waveConfig.type === 'sine'
+                      ? theme.palette.primary.main
+                      : theme.palette.divider
+                  }`,
+                  flex: 1,
+                }}
+              >
+                <SineWaveIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Triangle Wave">
+              <IconButton
+                size="small"
+                onClick={() => handleWaveTypeClick('triangle')}
+                color={waveConfig.type === 'triangle' ? 'primary' : 'default'}
+                sx={{
+                  border: `1px solid ${
+                    waveConfig.type === 'triangle'
+                      ? theme.palette.primary.main
+                      : theme.palette.divider
+                  }`,
+                  flex: 1,
+                }}
+              >
+                <TriangleWaveIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Sawtooth Wave">
+              <IconButton
+                size="small"
+                onClick={() => handleWaveTypeClick('sawtooth')}
+                color={waveConfig.type === 'sawtooth' ? 'primary' : 'default'}
+                sx={{
+                  border: `1px solid ${
+                    waveConfig.type === 'sawtooth'
+                      ? theme.palette.primary.main
+                      : theme.palette.divider
+                  }`,
+                  flex: 1,
+                }}
+              >
+                <SawtoothWaveIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Square Wave">
+              <IconButton
+                size="small"
+                onClick={() => handleWaveTypeClick('square')}
+                color={waveConfig.type === 'square' ? 'primary' : 'default'}
+                sx={{
+                  border: `1px solid ${
+                    waveConfig.type === 'square'
+                      ? theme.palette.primary.main
+                      : theme.palette.divider
+                  }`,
+                  flex: 1,
+                }}
+              >
+                <SquareWaveIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+
+          {/* Wave Period Slider */}
+          {waveConfig.type && (
+            <Box sx={{ mb: 1 }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mb: 1, display: 'block' }}
+              >
+                Wave Period
+              </Typography>
+              <AugmentedSlider
+                label=""
+                value={inverseScaleWavePeriod(waveConfig.period)}
+                onChange={handleWavePeriodSliderChange}
+                min={0}
+                max={100}
+                resetValue={inverseScaleWavePeriod(1)}
+                decrementIcon={<CloseFullscreen />}
+                incrementIcon={<OpenInFull />}
+                restoreIcon={<Restore />}
+                ariaLabel="Wave Period"
+                sliderSlotProps={{
+                  valueLabelFormat: () => waveConfig.period.toFixed(2),
+                }}
+              />
+            </Box>
+          )}
+
+          {/* Wave Amplitude Slider */}
+          {waveConfig.type && (
+            <Box>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mb: 1, display: 'block' }}
+              >
+                Wave Amplitude
+              </Typography>
+              <AugmentedSlider
+                label=""
+                value={waveConfig.amplitude * 100}
+                onChange={handleWaveAmplitudeChange}
+                min={0}
+                max={100}
+                resetValue={50}
+                decrementIcon={<CloseFullscreen />}
+                incrementIcon={<OpenInFull />}
+                restoreIcon={<Restore />}
+                ariaLabel="Wave Amplitude"
+                sliderSlotProps={{
+                  valueLabelFormat: () => waveConfig.amplitude.toFixed(2),
+                }}
+              />
+            </Box>
+          )}
+        </Box>
       )}
 
       {/* Live Preview */}

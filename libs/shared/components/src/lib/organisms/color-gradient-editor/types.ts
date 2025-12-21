@@ -29,10 +29,19 @@ export interface GradientPattern {
 
 export type SpeedDirection = 'forward' | 'backward';
 
+export type WaveType = 'sine' | 'triangle' | 'sawtooth' | 'square' | null;
+
+export interface WaveConfig {
+  type: WaveType;
+  period: number; // 0.2-4, default 1
+  amplitude: number; // 0-1, default 0.5
+}
+
 export interface GradientPatternConfig {
   type: GradientPatternType;
   interpolation: InterpolationMode;
   speed: number;
   direction?: SpeedDirection;
   period?: number;
+  wave?: WaveConfig;
 }

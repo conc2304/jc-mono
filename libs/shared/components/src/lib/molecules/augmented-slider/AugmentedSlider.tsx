@@ -85,7 +85,7 @@ export const AugmentedSlider = ({
         direction="row"
         sx={{ alignItems: 'center', my: 1, width: '100%' }}
       >
-        {!isMobile && (
+        {!isMobile && label && (
           <Typography
             variant="caption"
             noWrap

@@ -18,3 +18,4 @@ export * from './radial-speed-dial';
 export * from './scramble-text';
 export * from './speed-dial-responsive';
 export * from './cyber-border-svg';
+export * from './wave-icons';

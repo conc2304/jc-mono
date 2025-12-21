@@ -105,7 +105,9 @@ export const LedControllerDashboard = ({
       type: patternType,
       speed: config.speed,
       interpolation: config.interpolation,
-      period: config.period,
+      period: config.period || 1,
+      direction: config.direction,
+      wave: config.wave,
     });
   };
 
