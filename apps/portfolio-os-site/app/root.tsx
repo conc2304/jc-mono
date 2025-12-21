@@ -10,9 +10,11 @@ import {
   ErrorBoundary,
 } from '@jc/ui-components';
 import { Box } from '@mui/material';
-import { meta, structuredData, links } from './config/seo';
+import { metaDescriptors, structuredData, linkDescriptors } from './config/seo';
+import type { MetaFunction, LinksFunction } from 'react-router';
 
-export { meta, links };
+export const meta: MetaFunction = () => metaDescriptors;
+export const links: LinksFunction = () => linkDescriptors;
 
 const mediaProviderService = new CloudflareMediaProvider();
 
