@@ -10,7 +10,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  getContrastRatio,
   Toolbar,
   Tooltip,
   Typography,
@@ -51,7 +50,6 @@ const LedController = () => {
   const [showServerModal, setShowServerModal] = useState<boolean>(false);
   const [certAccepted, setCertAccepted] = useState<boolean>(false);
 
-  // Check LED controller status on load
   // Check LED controller status on load
   useEffect(() => {
     const checkStatus = async () => {
@@ -197,37 +195,11 @@ const LedController = () => {
     });
   };
 
-  const appBarBtnColor =
-    // Find the semantic color that has sufficient contrast with the app bar background
-    [
-      ...([
-        'primary',
-        'secondary',
-        'info',
-        'success',
-        'warning',
-        'error',
-      ] as const),
-    ].sort((a, b) => {
-      const paletteA = theme.palette[a as keyof typeof theme.palette];
-      const paletteB = theme.palette[b as keyof typeof theme.palette];
-
-      const contrastA =
-        typeof paletteA === 'object' && 'main' in paletteA
-          ? getContrastRatio(
-              paletteA.main,
-              theme.palette.getInvertedMode('secondary', true)
-            )
-          : 0;
-      const contrastB =
-        typeof paletteB === 'object' && 'main' in paletteB
-          ? getContrastRatio(
-              paletteB.main,
-              theme.palette.getInvertedMode('secondary', true)
-            )
-          : 0;
-      return contrastB - contrastA;
-    })[0];
+  const appBarBtnColor = theme.palette.getHighestContrastColor(
+    theme.palette.getInvertedMode('secondary', true),
+    ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const,
+    theme
+  ).colorKey;
 
   return (
     <>

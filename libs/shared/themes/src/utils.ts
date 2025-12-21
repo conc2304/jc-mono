@@ -1,4 +1,6 @@
 import { ThemeOption } from './basic-theme';
+import { getContrastRatio } from '@mui/material';
+import type { Theme } from '@mui/material';
 
 // Safe localStorage access for Next.js
 export const getStoredTheme = (
@@ -272,6 +274,76 @@ export const remToPixels = (rem: string) => {
     parseFloat(getComputedStyle(document.documentElement).fontSize)
   );
 };
+
+/**
+ * Finds the semantic color with the highest contrast ratio against a background color.
+ * Checks main, light, and dark variants of each semantic color.
+ *
+ * @param background - The background color to check contrast against
+ * @param semanticColors - Array of semantic color keys to check
+ * @param theme - The MUI theme object
+ * @returns The semantic color key with the highest contrast, or the first color if none found
+ */
+export function getHighestContrastColor<T extends string>(
+  background: string,
+  semanticColors: readonly T[],
+  theme: Theme
+): { colorKey: T; variant: 'main' | 'light' | 'dark'; hex: string } {
+  const colorContrasts = semanticColors.map((colorKey) => {
+    const palette = theme.palette[colorKey as keyof typeof theme.palette];
+
+    if (typeof palette !== 'object' || !palette) {
+      return { colorKey, contrast: 0, variant: 'main' as const, hex: '#000000' };
+    }
+
+    // Check main, light, and dark variants
+    const variants: Array<{ variant: 'main' | 'light' | 'dark'; contrast: number; hex: string }> = [];
+
+    if ('main' in palette && typeof palette.main === 'string') {
+      variants.push({
+        variant: 'main',
+        contrast: getContrastRatio(palette.main, background),
+        hex: palette.main
+      });
+    }
+    if ('light' in palette && typeof palette.light === 'string') {
+      variants.push({
+        variant: 'light',
+        contrast: getContrastRatio(palette.light, background),
+        hex: palette.light
+      });
+    }
+    if ('dark' in palette && typeof palette.dark === 'string') {
+      variants.push({
+        variant: 'dark',
+        contrast: getContrastRatio(palette.dark, background),
+        hex: palette.dark
+      });
+    }
+
+    // Find the variant with the highest contrast
+    const bestVariant = variants.reduce((best, current) =>
+      current.contrast > best.contrast ? current : best,
+      variants[0] ?? { variant: 'main' as const, contrast: 0, hex: '#000000' }
+    );
+
+    return {
+      colorKey,
+      contrast: bestVariant.contrast,
+      variant: bestVariant.variant,
+      hex: bestVariant.hex
+    };
+  });
+
+  // Sort by contrast (highest first) and return the best result
+  colorContrasts.sort((a, b) => b.contrast - a.contrast);
+
+  return {
+    colorKey: colorContrasts[0]?.colorKey ?? semanticColors[0],
+    variant: colorContrasts[0]?.variant ?? 'main',
+    hex: colorContrasts[0]?.hex ?? '#000000'
+  };
+}
 
 // Custom Cursor Logic
 // TODO get Cursor Files

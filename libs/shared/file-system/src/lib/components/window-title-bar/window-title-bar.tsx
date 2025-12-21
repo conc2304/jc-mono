@@ -27,14 +27,16 @@ export const WindowTitleBar = ({
   const { handleWindowMouseDown } = useWindowManager();
   const theme = useTheme();
   const background = isActive
-    ? alpha(theme.palette.getInvertedMode('primary'), 0.7)
+    ? alpha(theme.palette.getInvertedMode('primary'), 0.5)
     : alpha(theme.palette.background.paper, 0.3);
 
   return (
     <Box
       className="TitleBar--root"
       sx={(theme) => ({
-        color: alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
+        // color: alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
+        // color: isActive ? 'red' : 'blue',
+        // alpha(theme.palette.text.primary, isActive ? 1 : 0.5),
         m: 0,
       })}
     >
@@ -66,22 +68,20 @@ export const WindowTitleBar = ({
             pr: 2.5,
             background,
             backdropFilter: 'blur(4px)',
-            color: ensureContrast(theme.palette.text.primary, background, 3)
-              .color,
+            color: isActive
+              ? theme.palette.getContrastText(background)
+              : theme.palette.text.primary,
 
             '&[data-augmented-ui]': {
               '--aug-tr': '5px',
               '--aug-tl': '5px',
               '--aug-bl': '5px',
               '--aug-br': '5px',
-              '--aug-border-all': '1px',
-              '--aug-border-bottom': '-1px',
+              '--aug-border-all': '2px',
+              '--aug-border-bottom': '-2px',
               '--aug-border-bg': isActive
-                ? theme.palette.primary[theme.palette.getInvertedMode()]
-                : darken(
-                    theme.palette.primary[theme.palette.getInvertedMode()],
-                    0.5
-                  ),
+                ? theme.palette.getInvertedMode('primary')
+                : darken(theme.palette.getInvertedMode('primary'), 0.5),
             },
           })}
         >
@@ -120,8 +120,8 @@ export const WindowTitleBar = ({
               '--aug-tl': '5px',
               '--aug-bl': '5px',
               '--aug-br': '5px',
-              '--aug-border-all': '1px',
-              '--aug-border-bottom': '-1px',
+              '--aug-border-all': '2px',
+              '--aug-border-bottom': '-2px',
               '--aug-border-bg': isActive
                 ? theme.palette.primary.light
                 : darken(theme.palette.primary.light, 0.5),

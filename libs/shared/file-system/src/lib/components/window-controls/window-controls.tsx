@@ -6,7 +6,6 @@ import {
   AugmentedIconButton,
   AugmentedIconButtonProps,
 } from '@jc/ui-components';
-import { ensureContrast } from '@jc/utils';
 
 import { useWindowActions } from '../../context';
 
@@ -60,6 +59,19 @@ export const WindowControls = ({
     }
   };
 
+  const minimizeColor = theme.palette.getHighestContrastColor(
+    bgColor,
+    ['secondary', 'info'],
+    theme
+  );
+
+  const closeColor = theme.palette.getHighestContrastColor(
+    bgColor,
+    ['warning', 'error'],
+    theme
+  );
+  console.log({ bgColor, minimizeColor, closeColor });
+
   return (
     <Box
       sx={(theme) => ({
@@ -69,7 +81,12 @@ export const WindowControls = ({
       })}
     >
       {!isXs && (
-        <Box color={ensureContrast(theme.palette.info.main, bgColor, 3).color}>
+        <Box
+          sx={{}}
+          color={minimizeColor.hex}
+          // color={emphasize(theme.palette.secondary.main, 0)}
+          // color={ensureContrast(theme.palette.info.main, bgColor, 3).color}
+        >
           {hasMinimize && (
             <AugmentedIconButton
               {...buttonProps}
@@ -101,7 +118,8 @@ export const WindowControls = ({
           </AugmentedIconButton>
         </Box>
       )}
-      <Box color={ensureContrast(theme.palette.error.main, bgColor, 3).color}>
+
+      <Box color={closeColor.hex}>
         <AugmentedIconButton
           {...buttonProps}
           color="inherit"

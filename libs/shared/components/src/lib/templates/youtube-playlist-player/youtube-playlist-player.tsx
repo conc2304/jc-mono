@@ -256,7 +256,7 @@ export const YouTubePlaylistPlayer = ({
                 >
                   <ListItemAvatar>
                     <Avatar
-                      variant="rounded"
+                      variant="square"
                       src={item.snippet?.thumbnails?.default?.url}
                       sx={{
                         width: { xs: 80, sm: 120 },

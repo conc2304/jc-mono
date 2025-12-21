@@ -33,6 +33,11 @@ declare module '@mui/material/styles' {
     getInvertedMode(): 'light' | 'dark';
     getInvertedMode(paletteColor: PaletteOptionName): string;
     getInvertedMode(paletteColor: PaletteOptionName, reInvert: boolean): string;
+    getHighestContrastColor<T extends string>(
+      background: string,
+      semanticColors: readonly T[],
+      theme: Theme
+    ): T;
   }
 
   interface TypographyVariants {

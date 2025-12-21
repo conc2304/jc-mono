@@ -12,6 +12,7 @@ import {
 import getComponentOverrides from './component-overrides';
 import { basicPalette } from './palettes';
 import getTypography from './typography';
+import { getHighestContrastColor } from './../utils';
 
 type CreateThemeOptionProps = {
   palette?: PaletteOptions;
@@ -114,6 +115,8 @@ export const createThemeFromOptions = ({
     const color = theme.palette[paletteColor][invertedMode];
     return color;
   }) as Palette['getInvertedMode'];
+
+  fullTheme.palette.getHighestContrastColor = getHighestContrastColor;
 
   return fullTheme;
 };

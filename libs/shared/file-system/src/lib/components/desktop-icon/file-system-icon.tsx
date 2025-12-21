@@ -76,7 +76,6 @@ export const FileSystemIcon = ({
           sx={(theme) => ({
             '& svg': {
               color: !isActive ? 'currentcolor' : theme.palette.primary.main,
-              // stroke: 'red',
             },
           })}
         >
