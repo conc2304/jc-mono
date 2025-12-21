@@ -14,6 +14,7 @@ import {
   CircularProgress,
   Alert,
   useTheme,
+  alpha,
 } from '@mui/material';
 
 import {
@@ -115,6 +116,7 @@ export const YouTubePlaylistPlayer = ({
         }}
       >
         <Paper
+          data-augmented-ui="border tl-clip"
           elevation={3}
           sx={{
             position: 'relative',
@@ -122,6 +124,8 @@ export const YouTubePlaylistPlayer = ({
             height: 0,
             overflow: 'hidden',
             bgcolor: 'black',
+            '--aug-border-all': '2px',
+            '--aug-border-bg': alpha(theme.palette.primary.main, 0.7),
           }}
         >
           {videoId && (
@@ -143,7 +147,14 @@ export const YouTubePlaylistPlayer = ({
           )}
         </Paper>
 
-        <Card elevation={2}>
+        <Card
+          elevation={0}
+          data-augmented-ui="border br-2-clip-x "
+          sx={{
+            '--aug-border-all': '2px',
+            '--aug-border-bg': alpha(theme.palette.primary.main, 0.7),
+          }}
+        >
           <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
             <Typography
               variant="h6"
@@ -179,13 +190,19 @@ export const YouTubePlaylistPlayer = ({
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          background: 'unset',
         }}
       >
         <Box
+          data-augmented-ui="border tr-2-clip-x tl-clip"
           sx={{
             p: { xs: 1.5, sm: 2 },
-            bgcolor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
+            '--aug-border-all': '2px',
+            '--aug-border-bg': theme.palette.primary.main,
+            // background:
+
+            bgcolor: alpha(theme.palette.primary.main, 0.25),
+            // color: theme.palette.primary.contrastText,
           }}
         >
           <Typography
@@ -200,8 +217,13 @@ export const YouTubePlaylistPlayer = ({
           sx={{
             overflow: 'auto',
             flex: 1,
+            border: '2px solid',
+            borderTop: 'none',
+            borderColor: 'primary.main',
             '& .MuiListItemButton-root:hover': {
+              borderColor: 'primary.main',
               bgcolor: theme.palette.action.hover,
+              transition: 'all 0s ease-in',
             },
           }}
         >
@@ -221,6 +243,11 @@ export const YouTubePlaylistPlayer = ({
                   borderLeft: isActive
                     ? `4px solid ${theme.palette.primary.main}`
                     : '4px solid transparent',
+
+                  '&:hover': {
+                    borderColor: !isActive ? 'secondary.main' : 'primary.main',
+                    transition: 'border-color 0s ease-in',
+                  },
                 }}
               >
                 <ListItemButton

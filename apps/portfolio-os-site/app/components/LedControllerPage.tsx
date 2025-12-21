@@ -45,10 +45,13 @@ const LedController = () => {
     : isMd
     ? 'large'
     : 'large';
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [showServerModal, setShowServerModal] = useState<boolean>(false);
+  const [certAccepted, setCertAccepted] = useState<boolean>(false);
 
+  // Check LED controller status on load
   // Check LED controller status on load
   useEffect(() => {
     const checkStatus = async () => {
@@ -57,9 +60,13 @@ const LedController = () => {
         const response = await fetch(`${tdServerApi}${apiPath}/status`);
         if (!response.ok) {
           setShowWarning(true);
+          setCertAccepted(false);
+        } else {
+          setCertAccepted(true);
         }
       } catch (error) {
         setShowWarning(true);
+        setCertAccepted(false);
       }
     };
 
@@ -71,6 +78,36 @@ const LedController = () => {
       window.removeEventListener('focus', checkStatus);
     };
   }, [tdServerApi]);
+
+  // Handle certificate acceptance via pop-up
+  const handleGrantCertificateAccess = () => {
+    const certWindow = window.open(
+      `${tdServerApi}/?${params}`,
+      'TD Certificate',
+      'width=800,height=600,scrollbars=yes,resizable=yes'
+    );
+
+    // Check when window is closed and re-verify connection
+    const checkWindow = setInterval(() => {
+      if (certWindow?.closed) {
+        clearInterval(checkWindow);
+        // Give browser a moment to process the certificate acceptance
+        setTimeout(async () => {
+          try {
+            const response = await fetch(`${tdServerApi}${apiPath}/status`);
+            if (response.ok) {
+              setShowWarning(false);
+              setCertAccepted(true);
+              setShowServerModal(false);
+            }
+          } catch (error) {
+            // Still having issues
+            console.error('Certificate may not have been accepted');
+          }
+        }, 500);
+      }
+    }, 500);
+  };
 
   // TODO handle api calls here
   const handleSolidColorUpdate = async (color: string) => {
@@ -352,7 +389,7 @@ const LedController = () => {
           open={showServerModal}
           onClose={() => setShowServerModal(false)}
           aria-labelledby="server-access-modal-title"
-          maxWidth="md"
+          maxWidth="sm"
           fullWidth
         >
           <DialogTitle
@@ -360,10 +397,11 @@ const LedController = () => {
             sx={{
               borderBottom: '1px solid',
               borderColor: 'divider',
+              mb: 0,
               pt: 2,
             }}
           >
-            TouchDesigner Server Access
+            Grant Certificate Access
           </DialogTitle>
 
           <AugmentedIconButton
@@ -381,26 +419,45 @@ const LedController = () => {
             <Close />
           </AugmentedIconButton>
 
-          <DialogContent>
-            <Alert severity="info" sx={{ mb: 2 }}>
+          <Box sx={{ p: 3 }}>
+            <Alert severity="info" sx={{ mb: 3 }}>
+              <Typography variant="body2" sx={{ mb: 2 }}>
+                Your browser needs to accept the self-signed certificate from
+                the TouchDesigner server before the LED controls will work.
+              </Typography>
               <Typography variant="body2">
-                Click "Advanced" or "Proceed" in the security warning below to
-                approve the self-signed certificate. Once approved, close this
-                modal and the LED controller will work.
+                <strong>Steps:</strong>
+              </Typography>
+              <Typography variant="body2" component="ol" sx={{ pl: 2, mt: 1 }}>
+                <li>
+                  Click the button below to open the server in a new window
+                </li>
+                <li>
+                  Click "Advanced" or "Proceed anyway" in the security warning
+                </li>
+                <li>Close the window when you see the server page</li>
+                <li>The LED controls will now work!</li>
               </Typography>
             </Alert>
-            <Box
-              component="iframe"
-              src={`${tdServerApi}/?${params}`}
-              sx={{
-                width: '100%',
-                height: '400px',
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-              }}
-            />
-          </DialogContent>
+
+            <AugmentedButton
+              onClick={handleGrantCertificateAccess}
+              fullWidth
+              color="primary"
+              variant="contained"
+              size="large"
+            >
+              Open Server & Accept Certificate
+            </AugmentedButton>
+
+            {certAccepted && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2">
+                  ✓ Certificate accepted! You can close this dialog.
+                </Typography>
+              </Alert>
+            )}
+          </Box>
         </Dialog>
       </Box>
     </>
