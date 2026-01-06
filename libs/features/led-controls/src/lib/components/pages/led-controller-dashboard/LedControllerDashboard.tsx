@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 import {
@@ -53,7 +53,9 @@ export const LedControllerDashboard = ({
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
   // Persistent storage hooks
   const { savedColors, setSavedColors } = usePersistentColors();
-  const { savedGradients } = usePersistentGradients();
+
+  const { savedGradients, addGradient, removeGradient } =
+    usePersistentGradients();
   const { scenes, addScene, updateScene, removeScene } = usePersistentScenes();
 
   // Extract LED state with defaults
@@ -108,6 +110,19 @@ export const LedControllerDashboard = ({
         }
       : null;
 
+  // Auto-save gradients from server that don't match any existing gradients
+  useEffect(() => {
+    if (patternGradient && patternGradient.id) {
+      const gradientExists =
+        defaultGradients.some((g) => g.id === patternGradient.id) ||
+        savedGradients.some((g) => g.id === patternGradient.id);
+
+      if (!gradientExists) {
+        addGradient(patternGradient);
+      }
+    }
+  }, [patternGradient?.id, defaultGradients, savedGradients, addGradient]);
+
   // Update Handlers
 
   const handleColorSelect = (color: string) => {
@@ -128,12 +143,6 @@ export const LedControllerDashboard = ({
     } else if (patternType === 'radial') {
       patternType = 'circular';
     }
-
-    // // Pass hex colors directly - hook will handle conversion to backend format
-    // const colorStopsWithHex = gradient.stops.map((stop) => ({
-    //   position: stop.position,
-    //   color: stop.color, // Already in hex format
-    // }));
 
     onUpdateGradientPattern({
       colorStops: gradient.stops,
@@ -274,10 +283,13 @@ export const LedControllerDashboard = ({
         Gradient Patterns
       </Typography>
       <GradientPatternSelector
-        gradients={[...defaultGradients, ...savedGradients]}
+        gradients={defaultGradients}
+        savedGradients={savedGradients}
         onPatternConfigChange={handlePatternConfigChange}
         activeGradient={patternGradient}
         activePatternConfig={patternConfig}
+        onAddGradient={addGradient}
+        onRemoveGradient={removeGradient}
       />
 
       {/* Scene Bank Section */}

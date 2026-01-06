@@ -23,6 +23,9 @@ interface GradientPatternSelectorProps {
   ) => void;
   activeGradient?: Gradient | null;
   activePatternConfig?: GradientPatternConfig | null;
+  savedGradients?: Gradient[];
+  onAddGradient?: (gradient: Gradient) => void;
+  onRemoveGradient?: (gradientId: string) => void;
 }
 
 export const GradientPatternSelector: React.FC<
@@ -32,9 +35,11 @@ export const GradientPatternSelector: React.FC<
   onPatternConfigChange,
   activeGradient,
   activePatternConfig,
+  savedGradients = [],
+  onAddGradient,
+  onRemoveGradient,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [savedGradients, setSavedGradients] = useState<Gradient[]>([]);
   const [customGradientStops, setCustomGradientStops] = useState<ColorStop[]>([
     { id: 0, color: '#FF0000', position: 0 },
     { id: 1, color: '#000000', position: 50 },
@@ -232,7 +237,7 @@ export const GradientPatternSelector: React.FC<
         (g) => JSON.stringify(g.stops) === JSON.stringify(newGradient.stops)
       )
     ) {
-      setSavedGradients([...savedGradients, newGradient]);
+      onAddGradient?.(newGradient);
     }
     handleGradientSelect(newGradient);
     setEditingGradient(null);
@@ -246,9 +251,7 @@ export const GradientPatternSelector: React.FC<
       isDefault: false,
     };
 
-    setSavedGradients(
-      savedGradients.map((g) => (g.id === gradientId ? updatedGradient : g))
-    );
+    onAddGradient?.(updatedGradient);
     handleGradientSelect(updatedGradient);
     setEditingGradient(null);
     setIsModalOpen(false);
@@ -266,7 +269,7 @@ export const GradientPatternSelector: React.FC<
       stops: gradient.stops,
       isDefault: false,
     };
-    setSavedGradients([...savedGradients, duplicatedGradient]);
+    onAddGradient?.(duplicatedGradient);
     handleGradientSelect(duplicatedGradient);
   };
 
@@ -286,7 +289,7 @@ export const GradientPatternSelector: React.FC<
   };
 
   const handleRemoveSavedGradient = (gradientId: string): void => {
-    setSavedGradients(savedGradients.filter((g) => g.id !== gradientId));
+    onRemoveGradient?.(gradientId);
   };
 
   const handleGradientChange = (gradientData: GradientData): void => {
