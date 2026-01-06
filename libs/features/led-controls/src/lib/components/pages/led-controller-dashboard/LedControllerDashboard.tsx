@@ -20,6 +20,7 @@ import {
 } from '../../organisms';
 import { defaultColors, defaultGradients } from '../../../data';
 import { DisplayMode, LedState } from '../../../data-fetching';
+import { generateGradientId } from '@jc/utils';
 
 interface LedControllerDashboardProps {
   LEDState: LedState | null;
@@ -64,7 +65,8 @@ export const LedControllerDashboard = ({
   const hueRotationPercentage = Math.round(hueRotationSpeed * 100);
 
   // Derive display mode and active content from backend state
-  const displayMode: DisplayMode = LEDState?.current_content_name ?? 'solid-color';
+  const displayMode: DisplayMode =
+    LEDState?.current_content_name ?? 'solid-color';
 
   // Extract active color (with hex) when in solid-color mode
   const activeColor: string | null =
@@ -75,19 +77,27 @@ export const LedControllerDashboard = ({
   // Extract active gradient pattern when in gradient/pattern mode
   const backendGradientPattern = LEDState?.current_gradient_pattern;
   const patternGradient: Gradient | null =
-    (displayMode === 'gradient' || displayMode === 'pattern') && backendGradientPattern
+    displayMode === 'gradient' && backendGradientPattern
       ? {
-          id: `backend-gradient-${displayMode}`,
-          stops: backendGradientPattern.colorStops.map((stop: any, idx: number) => ({
-            id: idx,
-            color: stop.hex || '#000000',
-            position: stop.position,
-          })),
+          id: `backend-${displayMode}--TEMP`,
+          stops: backendGradientPattern.colorStops.map(
+            (stop: any, idx: number) => ({
+              id: idx,
+              color: stop.hex || '#000000',
+              position: stop.position,
+            })
+          ),
         }
       : null;
 
+  // Update gradient ID based on stops for matching
+  if (patternGradient?.id) {
+    patternGradient.id = generateGradientId(patternGradient.stops);
+  }
+
   const patternConfig: GradientPatternConfig | null =
-    (displayMode === 'gradient' || displayMode === 'pattern') && backendGradientPattern
+    (displayMode === 'gradient' || displayMode === 'pattern') &&
+    backendGradientPattern
       ? {
           type: backendGradientPattern.type as any,
           interpolation: backendGradientPattern.interpolation as any,
@@ -99,8 +109,8 @@ export const LedControllerDashboard = ({
 
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
 
-  // Mode handlers
-  // State is now derived from backend, so we just call the update functions
+  // Update Handlers
+
   const handleColorSelect = (color: string) => {
     onUpdateSolidColor(color);
   };

@@ -103,10 +103,11 @@ export const ActiveDisplayState = ({
           color="text.primary"
           sx={{ mb: 1 }}
         >
-          Active Display Mode: {isNothingActive && 'Nothing Active'}
+          <strong style={{ textWrap: 'nowrap' }}>Active Display Mode:</strong>{' '}
+          <br />
+          {isNothingActive && 'Nothing Active'}
           {displayMode === 'solid-color' && !isNothingActive && 'Solid Color'}
-          {displayMode === 'gradient' && 'Static Gradient'}
-          {displayMode === 'pattern' && !isNothingActive && 'Gradient Pattern'}
+          {displayMode === 'gradient' && 'Gradient Pattern'}
           {displayMode === 'image' && 'Image/GIF'}
         </Typography>
 
@@ -116,6 +117,7 @@ export const ActiveDisplayState = ({
             color={powerOn ? 'success' : 'error'}
             variant="contained"
             onClick={() => handlePowerChange(!powerOn)}
+            sx={{ ml: 1, mb: 1 }}
           >
             {powerOn ? 'ON' : 'OFF'}
             <PowerSettingsNew sx={{ ml: 1 }} />
@@ -166,7 +168,7 @@ export const ActiveDisplayState = ({
         </Box>
       )}
 
-      {displayMode === 'pattern' && patternConfig !== null && (
+      {displayMode === 'gradient' && patternConfig !== null && (
         <Box>
           <Box
             sx={{
