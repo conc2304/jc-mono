@@ -16,14 +16,8 @@ import {
 } from '@mui/icons-material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
-import {
-  GradientPatternType,
-  InterpolationMode,
-  ColorStop,
-  SpeedDirection,
-  WaveType,
-  WaveConfig,
-} from '../../organisms/color-gradient-editor/types';
+import { TbEscalator, TbStairs } from 'react-icons/tb';
+
 import { AugmentedSlider } from '../augmented-slider';
 import { RabbitIcon, TurtleIcon } from 'lucide-react';
 import {
@@ -32,6 +26,15 @@ import {
   SawtoothWaveIcon,
   SquareWaveIcon,
 } from '../../atoms/wave-icons';
+import {
+  ColorStop,
+  GradientPatternType,
+  InterpolationMode,
+  SpeedDirection,
+  WaveConfig,
+  WaveType,
+} from '@jc/utils';
+import { Stack } from '@mui/system';
 
 interface PatternConfigurationProps {
   patternType: GradientPatternType | null;
@@ -207,24 +210,55 @@ export const PatternConfiguration = ({
           }}
         >
           <ToggleButton value="linear" sx={{ borderRadius: 0 }}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2" fontWeight={600}>
-                Linear
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Smooth
-              </Typography>
-            </Box>
+            <Stack
+              sx={{ textAlign: 'center' }}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Stack>
+                <Typography variant="body2" fontWeight={600}>
+                  Linear
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Smooth
+                </Typography>
+              </Stack>
+              <Box
+                sx={{
+                  px: 2,
+                  fontSize: '1.5rem',
+                }}
+              >
+                <TbEscalator fontSize="inherit" />
+              </Box>
+            </Stack>
           </ToggleButton>
+
           <ToggleButton value="step" sx={{ borderRadius: 0 }}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2" fontWeight={600}>
-                Step
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Hard edges
-              </Typography>
-            </Box>
+            <Stack
+              sx={{ textAlign: 'center' }}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Stack>
+                <Typography variant="body2" fontWeight={600}>
+                  Step
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Hard edges
+                </Typography>
+              </Stack>
+              <Box
+                sx={{
+                  px: 2,
+                  fontSize: '1.5rem',
+                }}
+              >
+                <TbStairs fontSize="inherit" />
+              </Box>
+            </Stack>
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>

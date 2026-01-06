@@ -1,4 +1,4 @@
-import type { Gradient, GradientPatternConfig } from '@jc/ui-components';
+import { Gradient, GradientPatternConfig } from '@jc/utils';
 
 export interface Scene {
   id: string;

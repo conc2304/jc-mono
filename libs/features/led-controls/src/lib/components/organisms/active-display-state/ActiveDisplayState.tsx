@@ -116,8 +116,8 @@ export const ActiveDisplayState = ({
             size="medium"
             color={powerOn ? 'success' : 'error'}
             variant="contained"
-            onClick={() => handlePowerChange(!powerOn)}
             sx={{ ml: 1, mb: 1 }}
+            onClick={() => handlePowerChange(!powerOn)}
           >
             {powerOn ? 'ON' : 'OFF'}
             <PowerSettingsNew sx={{ ml: 1 }} />

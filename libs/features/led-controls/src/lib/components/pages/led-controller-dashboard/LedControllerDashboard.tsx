@@ -50,6 +50,7 @@ export const LedControllerDashboard = ({
   onUpdatePower,
   onUpdateHueRotationSpeed,
 }: LedControllerDashboardProps) => {
+  const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
   // Persistent storage hooks
   const { savedColors, setSavedColors } = usePersistentColors();
   const { savedGradients } = usePersistentGradients();
@@ -107,8 +108,6 @@ export const LedControllerDashboard = ({
         }
       : null;
 
-  const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
-
   // Update Handlers
 
   const handleColorSelect = (color: string) => {
@@ -130,14 +129,14 @@ export const LedControllerDashboard = ({
       patternType = 'circular';
     }
 
-    // Pass hex colors directly - hook will handle conversion to backend format
-    const colorStopsWithHex = gradient.stops.map((stop) => ({
-      position: stop.position,
-      color: stop.color, // Already in hex format
-    }));
+    // // Pass hex colors directly - hook will handle conversion to backend format
+    // const colorStopsWithHex = gradient.stops.map((stop) => ({
+    //   position: stop.position,
+    //   color: stop.color, // Already in hex format
+    // }));
 
     onUpdateGradientPattern({
-      colorStops: colorStopsWithHex,
+      colorStops: gradient.stops,
       type: patternType,
       speed: config.speed,
       interpolation: config.interpolation,
@@ -172,7 +171,7 @@ export const LedControllerDashboard = ({
         type: 'solid-color',
         color: activeColor,
       });
-    } else if (displayMode === 'pattern' && patternGradient && patternConfig) {
+    } else if (displayMode === 'gradient' && patternGradient && patternConfig) {
       addScene({
         name,
         description,
@@ -197,7 +196,7 @@ export const LedControllerDashboard = ({
 
   const canSaveScene = !!(
     (displayMode === 'solid-color' && activeColor) ||
-    (displayMode === 'pattern' && patternGradient && patternConfig)
+    (displayMode === 'gradient' && patternGradient && patternConfig)
   );
 
   return (

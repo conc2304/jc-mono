@@ -61,15 +61,13 @@ export const ColorSwatch = ({
             background: 'unset !important',
 
             '--aug-border-bg': isActive
-              ? theme.palette.primary.main
-              : theme.palette.secondary.main,
+              ? theme.palette.secondary.main
+              : theme.palette.primary.main,
             '--aug-border-all': isActive ? '3px' : undefined,
 
             '&:hover': {
               '--aug-border-all': '4px',
-              '--aug-border-bg': !isActive
-                ? undefined
-                : theme.palette.secondary.main,
+              '--aug-border-bg': undefined,
               width: `calc(${dimensions.width} + 14px)`, // (4px + 3px) * 2 = 14px to keep the center of swatch the same size ish
               height: `calc(${dimensions.height} + 14px)`,
             },
