@@ -12,6 +12,8 @@ import {
 import { Box } from '@mui/material';
 import { metaDescriptors, structuredData, linkDescriptors } from './config/seo';
 import type { MetaFunction, LinksFunction } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export const meta: MetaFunction = () => metaDescriptors;
 export const links: LinksFunction = () => linkDescriptors;
@@ -19,6 +21,18 @@ export const links: LinksFunction = () => linkDescriptors;
 const mediaProviderService = new CloudflareMediaProvider();
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60, // 1 minute
+            refetchOnWindowFocus: true,
+          },
+        },
+      })
+  );
+
   return (
     <html lang="en">
       <head>
@@ -37,23 +51,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <EnhancedThemeProvider
-          themes={enhancedThemes}
-          defaultThemeId="developer-terminal"
-          defaultColorMode="system"
-          themeStorageKey="clyzby-app-theme"
-          colorModeStorageKey="clyzby-app-color-mode"
-        >
-          <ErrorBoundary>
-            <MediaProvider
-              provider={mediaProviderService}
-              defaultContext="gallery"
-            >
-              <ThemedBgContainer />
-              {children}
-            </MediaProvider>
-          </ErrorBoundary>
-        </EnhancedThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <EnhancedThemeProvider
+            themes={enhancedThemes}
+            defaultThemeId="developer-terminal"
+            defaultColorMode="system"
+            themeStorageKey="clyzby-app-theme"
+            colorModeStorageKey="clyzby-app-color-mode"
+          >
+            <ErrorBoundary>
+              <MediaProvider
+                provider={mediaProviderService}
+                defaultContext="gallery"
+              >
+                <ThemedBgContainer />
+                {children}
+              </MediaProvider>
+            </ErrorBoundary>
+          </EnhancedThemeProvider>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -1,7 +1,6 @@
 import { LedControllerDashboard } from '@jc/led-controls';
 import { MinimalThemeSwitcher } from '@jc/theme-components';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
-import { hexToRgb, remapNumber } from '@jc/utils';
 import { Close, HomeFilled, Palette as PaletteIcon } from '@mui/icons-material';
 import {
   Alert,
@@ -16,11 +15,19 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import {
+  useLedStatus,
+  useSetBrightness,
+  useSetGradientPattern,
+  useSetHueRotationSpeed,
+  useSetInvert,
+  useSetPower,
+  useSetSolidColor,
+} from '../hooks/useLedController';
 
 const LedController = () => {
   const tdServerApi = 'https://192.168.4.44:9980';
-  const apiPath = '/api/v1';
 
   const theme = useTheme();
   const params = new URLSearchParams({
@@ -46,37 +53,19 @@ const LedController = () => {
     : 'large';
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [showWarning, setShowWarning] = useState<boolean>(false);
   const [showServerModal, setShowServerModal] = useState<boolean>(false);
-  const [certAccepted, setCertAccepted] = useState<boolean>(false);
 
-  // Check LED controller status on load
-  useEffect(() => {
-    const checkStatus = async () => {
-      // setShowWarning(false);
-      try {
-        const response = await fetch(`${tdServerApi}${apiPath}/status`);
-        if (!response.ok) {
-          setShowWarning(true);
-          setCertAccepted(false);
-        } else {
-          console.log({ response });
-          setCertAccepted(true);
-        }
-      } catch (error) {
-        setShowWarning(true);
-        setCertAccepted(false);
-      }
-    };
+  // Use TanStack Query hooks
+  const { data: ledStatus, isError, refetch } = useLedStatus();
+  const setSolidColor = useSetSolidColor();
+  const setGradientPattern = useSetGradientPattern();
+  const setBrightness = useSetBrightness();
+  const setInvert = useSetInvert();
+  const setHueRotationSpeed = useSetHueRotationSpeed();
+  const setPower = useSetPower();
 
-    checkStatus();
-
-    // double check on page refocus
-    window.addEventListener('focus', checkStatus);
-    return () => {
-      window.removeEventListener('focus', checkStatus);
-    };
-  }, [tdServerApi]);
+  const showWarning = isError;
+  const certAccepted = !isError && ledStatus?.status === 'online';
 
   // Handle certificate acceptance via pop-up
   const handleGrantCertificateAccess = () => {
@@ -92,48 +81,21 @@ const LedController = () => {
         clearInterval(checkWindow);
         // Give browser a moment to process the certificate acceptance
         setTimeout(async () => {
-          try {
-            const response = await fetch(`${tdServerApi}${apiPath}/status`);
-            if (response.ok) {
-              setShowWarning(false);
-              setCertAccepted(true);
-              setShowServerModal(false);
-            }
-          } catch (error) {
-            // Still having issues
-            console.error('Certificate may not have been accepted');
+          const result = await refetch();
+          if (!result.isError) {
+            setShowServerModal(false);
           }
         }, 500);
       }
     }, 500);
   };
 
-  // TODO handle api calls here
-  const handleSolidColorUpdate = async (color: string) => {
-    const { r, g, b } = hexToRgb(color);
-
-    const response = await fetch(`${tdServerApi}${apiPath}/color`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ r, g, b }),
-    });
-
-    if (!response.ok) {
-      setShowWarning(true);
-    }
+  // Handler functions using TanStack Query mutations
+  const handleSolidColorUpdate = (color: string) => {
+    setSolidColor.mutate(color);
   };
 
-  const handleGradientPatternUpdate = async ({
-    colorStops,
-    type,
-    speed,
-    interpolation,
-    period,
-    direction,
-    wave,
-  }: {
+  const handleGradientPatternUpdate = (data: {
     colorStops: Array<{ position: number; r: number; g: number; b: number }>;
     type: string;
     speed: number;
@@ -146,64 +108,23 @@ const LedController = () => {
       amplitude: number;
     };
   }) => {
-    const response = await fetch(`${tdServerApi}${apiPath}/gradient-pattern`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        colorStops,
-        type,
-        speed,
-        interpolation,
-        period: period || 1,
-        direction,
-        wave,
-      }),
-    });
-
-    if (!response.ok) {
-      setShowWarning(true);
-    }
+    setGradientPattern.mutate(data);
   };
 
-  const handleBrightnessChange = async (brightness: number) => {
-    const tdValue = remapNumber(brightness, 0, 100, 0, 2);
-    await fetch(`${tdServerApi}${apiPath}/brightness`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ brightness: tdValue }),
-    });
+  const handleBrightnessChange = (brightness: number) => {
+    setBrightness.mutate(brightness);
   };
 
-  const handleInvertChange = async (invert: number) => {
-    const tdValue = remapNumber(invert, 0, 100, 0, 1);
-
-    await fetch(`${tdServerApi}${apiPath}/invert`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ invert: tdValue }),
-    });
+  const handleInvertChange = (invert: number) => {
+    setInvert.mutate(invert);
   };
 
-  const handleHueRotationSpeedChange = async (rotationSpeed: number) => {
-    const tdValue = remapNumber(rotationSpeed, 0, 100, 0, 1);
-
-    await fetch(`${tdServerApi}${apiPath}/hue-rotation-speed`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ speed: tdValue }),
-    });
+  const handleHueRotationSpeedChange = (rotationSpeed: number) => {
+    setHueRotationSpeed.mutate(rotationSpeed);
   };
 
-  const handlePowerChange = async (power: boolean) => {
-    const powerToInt = Number(power);
-
-    await fetch(`${tdServerApi}${apiPath}/power`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ power: powerToInt }),
-    });
+  const handlePowerChange = (power: boolean) => {
+    setPower.mutate(power);
   };
 
   const appBarBtnColor = theme.palette.getHighestContrastColor(
@@ -298,7 +219,6 @@ const LedController = () => {
               borderRadius: 'unset',
             }}
             color="warning"
-            onClose={() => setShowWarning(false)}
           >
             <Typography variant="body2">
               The LED controller only works on my personal home WiFi to control

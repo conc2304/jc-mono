@@ -96,7 +96,7 @@ export const ActiveDisplayState = ({
         '--aug-tl': theme.spacing(1),
       })}
     >
-      <Stack direction="row">
+      <Stack direction="row" justifyContent="space-between">
         <Typography
           variant="body2"
           fontWeight={600}
