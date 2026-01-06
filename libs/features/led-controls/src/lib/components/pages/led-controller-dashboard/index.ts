@@ -1,2 +1,2 @@
 export * from './LedControllerDashboard';
-export * from './ActiveDisplayState';
+export * from '../../organisms/active-display-state/ActiveDisplayState';

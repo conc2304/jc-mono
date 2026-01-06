@@ -1,12 +1,17 @@
 import type {
+  BrightnessPostResponse,
+  ColorPostResponse,
+  GradientPostResponse,
+  HueRotationPostResponse,
   LedStatusResponse,
+  PowerSetResponse,
   SetBrightnessRequest,
   SetColorRequest,
   SetGradientPatternRequest,
   SetHueRotationSpeedRequest,
   SetInvertRequest,
   SetPowerRequest,
-} from '../types/led-api.types';
+} from './types';
 
 const TD_SERVER_API = 'https://192.168.4.44:9980';
 const API_PATH = '/api/v1';
@@ -19,10 +24,10 @@ class LedApiService {
     if (!response.ok) {
       throw new Error('Failed to fetch LED status');
     }
-    return response.json();
+    return response.json() as Promise<LedStatusResponse>;
   }
 
-  async setColor(data: SetColorRequest): Promise<void> {
+  async setColor(data: SetColorRequest): Promise<ColorPostResponse> {
     const response = await fetch(`${this.baseUrl}/color`, {
       method: 'POST',
       headers: {
@@ -34,9 +39,12 @@ class LedApiService {
     if (!response.ok) {
       throw new Error('Failed to set color');
     }
+    return response.json() as Promise<ColorPostResponse>;
   }
 
-  async setGradientPattern(data: SetGradientPatternRequest): Promise<void> {
+  async setGradientPattern(
+    data: SetGradientPatternRequest
+  ): Promise<GradientPostResponse> {
     const response = await fetch(`${this.baseUrl}/gradient-pattern`, {
       method: 'POST',
       headers: {
@@ -51,9 +59,12 @@ class LedApiService {
     if (!response.ok) {
       throw new Error('Failed to set gradient pattern');
     }
+    return response.json() as Promise<GradientPostResponse>;
   }
 
-  async setBrightness(data: SetBrightnessRequest): Promise<void> {
+  async setBrightness(
+    data: SetBrightnessRequest
+  ): Promise<BrightnessPostResponse> {
     const response = await fetch(`${this.baseUrl}/brightness`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -63,6 +74,7 @@ class LedApiService {
     if (!response.ok) {
       throw new Error('Failed to set brightness');
     }
+    return response.json() as Promise<BrightnessPostResponse>;
   }
 
   async setInvert(data: SetInvertRequest): Promise<void> {
@@ -77,7 +89,9 @@ class LedApiService {
     }
   }
 
-  async setHueRotationSpeed(data: SetHueRotationSpeedRequest): Promise<void> {
+  async setHueRotationSpeed(
+    data: SetHueRotationSpeedRequest
+  ): Promise<HueRotationPostResponse> {
     const response = await fetch(`${this.baseUrl}/hue-rotation-speed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -87,9 +101,10 @@ class LedApiService {
     if (!response.ok) {
       throw new Error('Failed to set hue rotation speed');
     }
+    return response.json() as Promise<HueRotationPostResponse>;
   }
 
-  async setPower(data: SetPowerRequest): Promise<void> {
+  async setPower(data: SetPowerRequest): Promise<PowerSetResponse> {
     const response = await fetch(`${this.baseUrl}/power`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -99,6 +114,7 @@ class LedApiService {
     if (!response.ok) {
       throw new Error('Failed to set power');
     }
+    return response.json() as Promise<PowerSetResponse>;
   }
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 
 import {
@@ -9,16 +9,18 @@ import {
   type Gradient,
   type GradientPatternConfig,
 } from '@jc/ui-components';
-import { ActiveDisplayState } from './ActiveDisplayState';
 import { hexToRgb } from '@jc/utils';
-import { SceneBank } from '../../organisms/scene-bank';
-import { SaveSceneDialog } from '../../organisms/save-scene-dialog';
 import {
   usePersistentColors,
   usePersistentGradients,
   usePersistentScenes,
-} from '../../../hooks/usePersistentStorage';
-import { defaultColors, defaultGradients } from './ledDefaults';
+} from '../../../hooks';
+import {
+  ActiveDisplayState,
+  SaveSceneDialog,
+  SceneBank,
+} from '../../organisms';
+import { defaultColors, defaultGradients } from '../../../data';
 
 interface LedControllerDashboardProps {
   onUpdateSolidColor: (color: string) => void;

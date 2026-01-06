@@ -15,6 +15,7 @@ export type GradientPatternType =
   | 'horizontal'
   | 'circular'
   | 'radial';
+
 export type InterpolationMode = 'linear' | 'step';
 
 export interface GradientPattern {

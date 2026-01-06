@@ -22,7 +22,7 @@
     "**/.client/**/*.ts",
     "**/.client/**/*.tsx",
     "../../declaration-files/*.d.ts"
-  ],
+, "../../libs/features/led-controls/src/lib/data-fetching/led-api.service.ts"  ],
   "exclude": [
     "out-tsc",
     "dist",
