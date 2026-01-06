@@ -60,6 +60,7 @@ const LedController = () => {
           setShowWarning(true);
           setCertAccepted(false);
         } else {
+          console.log({ response });
           setCertAccepted(true);
         }
       } catch (error) {
@@ -195,6 +196,16 @@ const LedController = () => {
     });
   };
 
+  const handlePowerChange = async (power: boolean) => {
+    const powerToInt = Number(power);
+
+    await fetch(`${tdServerApi}${apiPath}/power`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ power: powerToInt }),
+    });
+  };
+
   const appBarBtnColor = theme.palette.getHighestContrastColor(
     theme.palette.getInvertedMode('secondary', true),
     ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const,
@@ -311,6 +322,7 @@ const LedController = () => {
           </Alert>
         )}
         <LedControllerDashboard
+          onUpdatePower={handlePowerChange}
           onUpdateSolidColor={handleSolidColorUpdate}
           onUpdateGradientPattern={handleGradientPatternUpdate}
           onUpdateBrightness={handleBrightnessChange}

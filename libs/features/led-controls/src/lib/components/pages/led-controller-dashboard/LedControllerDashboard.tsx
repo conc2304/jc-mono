@@ -29,6 +29,7 @@ interface LedControllerDashboardProps {
     interpolation,
     period,
   }: GradientApiRequestBody) => void;
+  onUpdatePower: (value: boolean) => void;
   onUpdateBrightness: (value: number) => void;
   onUpdateInvert: (value: number) => void;
   onUpdateHueRotationSpeed: (value: number) => void;
@@ -43,7 +44,7 @@ export const LedControllerDashboard = ({
   onUpdateSolidColor,
   onUpdateGradientPattern,
   onUpdateBrightness,
-  onUpdateInvert,
+  onUpdatePower,
   onUpdateHueRotationSpeed,
 }: LedControllerDashboardProps) => {
   // Persistent storage hooks
@@ -60,7 +61,7 @@ export const LedControllerDashboard = ({
     useState<GradientPatternConfig | null>(null);
 
   const [brightness, setBrightness] = useState<number>(50);
-  const [invert, setInvert] = useState<number>(0);
+  const [power, setPower] = useState<boolean>(false);
   const [hueRotationSpeed, setHueRotationSpeed] = useState<number>(0);
 
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
@@ -112,14 +113,14 @@ export const LedControllerDashboard = ({
     });
   };
 
+  const handlePowerChange = (value: boolean) => {
+    onUpdatePower(value);
+    setPower(value);
+  };
+
   const handleBrightnessChange = (value: number) => {
     onUpdateBrightness(value);
     setBrightness(value);
-  };
-
-  const handleInvertChange = (value: number) => {
-    onUpdateInvert(value);
-    setInvert(value);
   };
 
   const handleHueRotationSpeedChange = (value: number) => {
@@ -192,10 +193,10 @@ export const LedControllerDashboard = ({
         patternConfig={patternConfig}
         patternGradient={patternGradient}
         brightness={brightness}
-        invert={invert}
+        powerOn={power}
         hueRotationSpeed={hueRotationSpeed}
         onBrightnessChange={handleBrightnessChange}
-        onInvertChange={handleInvertChange}
+        onPowerChange={handlePowerChange}
         onHueRotationSpeedChange={handleHueRotationSpeedChange}
       />
 

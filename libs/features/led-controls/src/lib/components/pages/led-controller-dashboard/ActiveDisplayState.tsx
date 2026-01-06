@@ -1,12 +1,7 @@
-import {
-  alpha,
-  Box,
-  Paper,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { alpha, Box, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import {
+  AugmentedButton,
   AugmentedSlider,
   GradientPatternVisualizer,
   type Gradient,
@@ -18,6 +13,7 @@ import {
   BrightnessLow,
   ElectricBolt,
   Palette,
+  PowerSettingsNew,
   Restore,
 } from '@mui/icons-material';
 
@@ -29,10 +25,10 @@ interface ActiveDisplayStateProps {
   patternConfig: GradientPatternConfig | null;
   patternGradient: Gradient | null;
   brightness: number;
-  invert: number;
   hueRotationSpeed: number;
+  powerOn: boolean;
+  onPowerChange?: (value: boolean) => void;
   onBrightnessChange?: (value: number) => void;
-  onInvertChange?: (value: number) => void;
   onHueRotationSpeedChange?: (value: number) => void;
 }
 
@@ -42,10 +38,10 @@ export const ActiveDisplayState = ({
   patternConfig,
   patternGradient,
   brightness,
-  invert,
+  powerOn,
   hueRotationSpeed,
+  onPowerChange,
   onBrightnessChange,
-  onInvertChange,
   onHueRotationSpeedChange,
 }: ActiveDisplayStateProps) => {
   const theme = useTheme();
@@ -60,6 +56,12 @@ export const ActiveDisplayState = ({
   }, [activeColor]);
 
   const isNothingActive = !activeColor && !patternConfig;
+
+  const handlePowerChange = (value: boolean) => {
+    if (typeof value === 'boolean') {
+      onPowerChange && onPowerChange(value);
+    }
+  };
 
   const handleBrightnessChange = (
     event: Event | null,
@@ -94,18 +96,32 @@ export const ActiveDisplayState = ({
         '--aug-tl': theme.spacing(1),
       })}
     >
-      <Typography
-        variant="body2"
-        fontWeight={600}
-        color="text.primary"
-        sx={{ mb: 1 }}
-      >
-        Active Display Mode: {isNothingActive && 'Nothing Active'}
-        {displayMode === 'solid-color' && !isNothingActive && 'Solid Color'}
-        {displayMode === 'gradient' && 'Static Gradient'}
-        {displayMode === 'pattern' && !isNothingActive && 'Gradient Pattern'}
-        {displayMode === 'image' && 'Image/GIF'}
-      </Typography>
+      <Stack direction="row">
+        <Typography
+          variant="body2"
+          fontWeight={600}
+          color="text.primary"
+          sx={{ mb: 1 }}
+        >
+          Active Display Mode: {isNothingActive && 'Nothing Active'}
+          {displayMode === 'solid-color' && !isNothingActive && 'Solid Color'}
+          {displayMode === 'gradient' && 'Static Gradient'}
+          {displayMode === 'pattern' && !isNothingActive && 'Gradient Pattern'}
+          {displayMode === 'image' && 'Image/GIF'}
+        </Typography>
+
+        {onPowerChange && (
+          <AugmentedButton
+            size="medium"
+            color={powerOn ? 'success' : 'error'}
+            variant="contained"
+            onClick={() => handlePowerChange(!powerOn)}
+          >
+            {powerOn ? 'ON' : 'OFF'}
+            <PowerSettingsNew sx={{ ml: 1 }} />
+          </AugmentedButton>
+        )}
+      </Stack>
 
       {displayMode === 'solid-color' && !!activeColor && !!colorValues && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
