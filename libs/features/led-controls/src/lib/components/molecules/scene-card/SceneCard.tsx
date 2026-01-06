@@ -39,7 +39,6 @@ export const SceneCard = ({
   onEditScene,
   onDeleteScene,
 }: SceneCardProps) => {
-  console.log({ scene });
   const augmentedStyle = {
     attr: 'border tr-clip tl-clip',
     sx: (theme: Theme) => ({

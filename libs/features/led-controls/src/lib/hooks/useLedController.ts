@@ -72,8 +72,8 @@ export function useLedStatus() {
     },
     refetchOnWindowFocus: true,
     retry: false,
-    refetchInterval: 5000, // Poll every 5 seconds
-    staleTime: 3000, // Consider data fresh for 3 seconds
+    refetchInterval: 60000, // Poll every 60 seconds
+    staleTime: 15000, // Consider data fresh for 15 seconds
   });
 }
 
