@@ -55,6 +55,21 @@ interface PatternConfigurationProps {
   onWaveConfigChange?: (waveConfig: WaveConfig) => void;
 }
 
+const waveTypeOptions = [
+  { type: 'sine' as WaveType, label: 'Sine Wave', icon: SineWaveIcon },
+  {
+    type: 'triangle' as WaveType,
+    label: 'Triangle Wave',
+    icon: TriangleWaveIcon,
+  },
+  {
+    type: 'sawtooth' as WaveType,
+    label: 'Sawtooth Wave',
+    icon: SawtoothWaveIcon,
+  },
+  { type: 'square' as WaveType, label: 'Square Wave', icon: SquareWaveIcon },
+];
+
 export const PatternConfiguration = ({
   patternType,
   interpolation,
@@ -203,7 +218,7 @@ export const PatternConfiguration = ({
           exclusive
           onChange={onInterpolationChange}
           fullWidth
-          color="primary"
+          color="secondary"
           size="small"
           sx={{
             '& *': { borderRadius: 0 },
@@ -369,74 +384,25 @@ export const PatternConfiguration = ({
               justifyContent: 'space-between',
             }}
           >
-            <Tooltip title="Sine Wave">
-              <IconButton
-                size="small"
-                onClick={() => handleWaveTypeClick('sine')}
-                color={waveConfig.type === 'sine' ? 'primary' : 'default'}
-                sx={{
-                  border: `1px solid ${
-                    waveConfig.type === 'sine'
-                      ? theme.palette.primary.main
-                      : theme.palette.divider
-                  }`,
-                  flex: 1,
-                }}
-              >
-                <SineWaveIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Triangle Wave">
-              <IconButton
-                size="small"
-                onClick={() => handleWaveTypeClick('triangle')}
-                color={waveConfig.type === 'triangle' ? 'primary' : 'default'}
-                sx={{
-                  border: `1px solid ${
-                    waveConfig.type === 'triangle'
-                      ? theme.palette.primary.main
-                      : theme.palette.divider
-                  }`,
-                  flex: 1,
-                }}
-              >
-                <TriangleWaveIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Sawtooth Wave">
-              <IconButton
-                size="small"
-                onClick={() => handleWaveTypeClick('sawtooth')}
-                color={waveConfig.type === 'sawtooth' ? 'primary' : 'default'}
-                sx={{
-                  border: `1px solid ${
-                    waveConfig.type === 'sawtooth'
-                      ? theme.palette.primary.main
-                      : theme.palette.divider
-                  }`,
-                  flex: 1,
-                }}
-              >
-                <SawtoothWaveIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Square Wave">
-              <IconButton
-                size="small"
-                onClick={() => handleWaveTypeClick('square')}
-                color={waveConfig.type === 'square' ? 'primary' : 'default'}
-                sx={{
-                  border: `1px solid ${
-                    waveConfig.type === 'square'
-                      ? theme.palette.primary.main
-                      : theme.palette.divider
-                  }`,
-                  flex: 1,
-                }}
-              >
-                <SquareWaveIcon />
-              </IconButton>
-            </Tooltip>
+            {waveTypeOptions.map(({ type, label, icon: Icon }) => (
+              <Tooltip key={type} title={label}>
+                <IconButton
+                  size="small"
+                  onClick={() => handleWaveTypeClick(type)}
+                  color={waveConfig.type === type ? 'secondary' : 'default'}
+                  sx={{
+                    border: `1px solid ${
+                      waveConfig.type === type
+                        ? theme.palette.secondary.main
+                        : theme.palette.primary.main
+                    }`,
+                    flex: 1,
+                  }}
+                >
+                  <Icon />
+                </IconButton>
+              </Tooltip>
+            ))}
           </Box>
 
           {/* Wave Period Slider */}

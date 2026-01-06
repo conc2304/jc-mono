@@ -1,11 +1,7 @@
 import { Box, Typography, Paper, Tooltip } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
-import {
-  GradientPatternType,
-  InterpolationMode,
-  ColorStop,
-} from '../../organisms/color-gradient-editor/types';
+import { ColorStop, GradientPatternType, InterpolationMode } from '@jc/utils';
 
 interface PatternTypeSelectorProps {
   selectedPatternType: GradientPatternType | null;
@@ -70,7 +66,7 @@ export const PatternTypeSelector = ({
                 '--aug-border-all': '2px',
                 '--aug-border-bg':
                   selectedPatternType === pattern.type
-                    ? theme.palette.primary.main
+                    ? theme.palette.secondary.main
                     : theme.palette.divider,
                 backgroundColor:
                   selectedPatternType === pattern.type

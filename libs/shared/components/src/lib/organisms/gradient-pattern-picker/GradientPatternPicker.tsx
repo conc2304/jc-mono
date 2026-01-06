@@ -8,13 +8,14 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+
+import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
 import {
   ColorStop,
+  GradientPatternConfig,
   GradientPatternType,
   InterpolationMode,
-  GradientPatternConfig,
-} from '../color-gradient-editor/types';
-import { GradientPatternVisualizer } from '../../atoms/gradient-pattern-visualizer';
+} from '@jc/utils';
 
 interface GradientPatternPickerProps {
   gradient?: ColorStop[];
@@ -161,7 +162,7 @@ export const GradientPatternPicker = ({
           exclusive
           onChange={handleInterpolationChange}
           fullWidth
-          color="primary"
+          color="secondary"
         >
           <ToggleButton value="linear">
             <Box sx={{ textAlign: 'center' }}>
