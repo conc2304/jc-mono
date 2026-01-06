@@ -3,13 +3,11 @@ import { Add as AddIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
-import {
-  Gradient,
-  ColorStop,
-} from '../../organisms/color-gradient-editor/types';
+
 import { SwatchItem, SwatchPicker } from '../../organisms/swatch-picker';
 import { AugmentedButton } from '../../atoms';
 import { GradientSwatchContextMenu } from '../gradient-swatch-context-menu';
+import { ColorStop, Gradient } from '@jc/utils';
 
 interface GradientSwatchPickerProps {
   gradients: Gradient[];
