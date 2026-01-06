@@ -67,9 +67,9 @@ export const tresSendasTheme: EnhancedThemeOption = {
       contrastText: '#000000',
     },
     error: {
-      main: '#C8A57B', // Muted sandy brown
-      light: '#D8B58B',
-      dark: '#B8956B',
+      main: '#c7897a', // Muted sandy brown
+      light: '#d9a28c',
+      dark: '#b8786b',
     },
     warning: {
       main: '#D4C56B', // Muted gold

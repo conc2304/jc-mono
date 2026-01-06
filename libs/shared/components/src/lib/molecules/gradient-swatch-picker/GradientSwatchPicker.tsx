@@ -105,7 +105,7 @@ export const GradientSwatchPicker = ({
   const customButton = (
     <AugmentedButton
       onClick={onOpenCustomEditor}
-      color="primary"
+      color="secondary"
       variant="outlined"
       sx={{
         width: 140,

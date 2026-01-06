@@ -66,7 +66,7 @@ export const PatternTypeSelector = ({
                 '--aug-border-all': '2px',
                 '--aug-border-bg':
                   selectedPatternType === pattern.type
-                    ? theme.palette.secondary.main
+                    ? theme.palette.primary.main
                     : theme.palette.divider,
                 backgroundColor:
                   selectedPatternType === pattern.type

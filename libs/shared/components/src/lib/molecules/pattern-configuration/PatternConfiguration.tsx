@@ -218,7 +218,7 @@ export const PatternConfiguration = ({
           exclusive
           onChange={onInterpolationChange}
           fullWidth
-          color="secondary"
+          color="primary"
           size="small"
           sx={{
             '& *': { borderRadius: 0 },
@@ -389,12 +389,12 @@ export const PatternConfiguration = ({
                 <IconButton
                   size="small"
                   onClick={() => handleWaveTypeClick(type)}
-                  color={waveConfig.type === type ? 'secondary' : 'default'}
+                  color={waveConfig.type === type ? 'primary' : 'default'}
                   sx={{
                     border: `1px solid ${
                       waveConfig.type === type
-                        ? theme.palette.secondary.main
-                        : theme.palette.primary.main
+                        ? theme.palette.primary.main
+                        : theme.palette.divider
                     }`,
                     flex: 1,
                   }}

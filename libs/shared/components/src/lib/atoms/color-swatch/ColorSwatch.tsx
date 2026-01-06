@@ -61,8 +61,8 @@ export const ColorSwatch = ({
             background: 'unset !important',
 
             '--aug-border-bg': isActive
-              ? theme.palette.secondary.main
-              : theme.palette.primary.main,
+              ? theme.palette.primary.main
+              : theme.palette.divider,
             '--aug-border-all': isActive ? '3px' : undefined,
 
             '&:hover': {

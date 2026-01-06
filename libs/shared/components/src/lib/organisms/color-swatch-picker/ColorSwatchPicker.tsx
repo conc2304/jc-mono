@@ -70,7 +70,7 @@ export const ColorSwatchPicker: React.FC<ColorSwatchPickerProps> = ({
   const customButton = (
     <AugmentedButton
       onClick={() => setIsModalOpen(true)}
-      color="primary"
+      color="secondary"
       variant="outlined"
       sx={{
         width: 64,
