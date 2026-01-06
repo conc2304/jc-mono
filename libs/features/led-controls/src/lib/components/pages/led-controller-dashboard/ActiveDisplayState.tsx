@@ -96,14 +96,16 @@ export const ActiveDisplayState = ({
         '--aug-tl': theme.spacing(1),
       })}
     >
-      <Stack direction="row">
+      <Stack direction="row" justifyContent="space-between">
         <Typography
           variant="body2"
           fontWeight={600}
           color="text.primary"
           sx={{ mb: 1 }}
         >
-          Active Display Mode: {isNothingActive && 'Nothing Active'}
+          Active Display Mode:
+          <br />
+          {isNothingActive && 'Nothing Active'}
           {displayMode === 'solid-color' && !isNothingActive && 'Solid Color'}
           {displayMode === 'gradient' && 'Static Gradient'}
           {displayMode === 'pattern' && !isNothingActive && 'Gradient Pattern'}
@@ -115,6 +117,7 @@ export const ActiveDisplayState = ({
             size="medium"
             color={powerOn ? 'success' : 'error'}
             variant="contained"
+            sx={{ ml: 1, mb: 1 }}
             onClick={() => handlePowerChange(!powerOn)}
           >
             {powerOn ? 'ON' : 'OFF'}
