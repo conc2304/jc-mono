@@ -1,3 +1,5 @@
+export type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
+
 export interface ColorRGB {
   r: number;
   g: number;
@@ -28,7 +30,7 @@ export interface LedState {
   brightness: number;
   hue_rotation_speed: number;
   current_content_index: number;
-  current_content_name: string;
+  current_content_name: DisplayMode;
   current_solid_color: ColorRGB;
   current_gradient_pattern: GradientPattern;
 }
@@ -48,14 +50,14 @@ export interface APIResponse<T = any> {
   error?: string;
 }
 
-// Specific response data types - UPDATED with active_state
+// Specific response data types
 export interface PowerResponseData {
   power: number;
 }
 
 export interface ColorResponseData {
   color: ColorRGB;
-  active_state: 'solid-color'; // NEW: Always returns "solid-color"
+  active_state: 'solid-color';
 }
 
 export interface BrightnessResponseData {
@@ -64,7 +66,7 @@ export interface BrightnessResponseData {
 
 export interface GradientResponseData {
   gradient: GradientPattern;
-  active_state: 'gradient'; // NEW: Always returns "gradient"
+  active_state: 'gradient';
 }
 
 export interface HueRotationResponseData {

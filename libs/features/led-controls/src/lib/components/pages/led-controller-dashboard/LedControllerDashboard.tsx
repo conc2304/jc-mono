@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
-
+import { Property } from 'csstype';
 import {
   AugmentedButton,
   ColorSwatchPicker,
@@ -21,8 +21,10 @@ import {
   SceneBank,
 } from '../../organisms';
 import { defaultColors, defaultGradients } from '../../../data';
+import { DisplayMode, LedState } from '../../../data-fetching';
 
 interface LedControllerDashboardProps {
+  LEDState: LedState | null;
   onUpdateSolidColor: (color: string) => void;
   onUpdateGradientPattern: ({
     colorStops,
@@ -37,12 +39,12 @@ interface LedControllerDashboardProps {
   onUpdateHueRotationSpeed: (value: number) => void;
 }
 
-type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
 type GradientApiRequestBody = GradientPatternConfig & {
   colorStops: Array<{ position: number; r: number; g: number; b: number }>;
 };
 
 export const LedControllerDashboard = ({
+  LEDState,
   onUpdateSolidColor,
   onUpdateGradientPattern,
   onUpdateBrightness,
@@ -51,9 +53,25 @@ export const LedControllerDashboard = ({
 }: LedControllerDashboardProps) => {
   // Persistent storage hooks
   const { savedColors, setSavedColors } = usePersistentColors();
-  const { savedGradients, addGradient, removeGradient } =
-    usePersistentGradients();
+  const { savedGradients } = usePersistentGradients();
   const { scenes, addScene, updateScene, removeScene } = usePersistentScenes();
+
+  // Extract LED state with defaults
+  const powerOn = LEDState?.power_on ?? false;
+  const brightness = LEDState?.brightness ?? 0.5; // 0-1 range from backend
+  const hueRotationSpeed = LEDState?.hue_rotation_speed ?? 0;
+
+  // TODO
+  // if display mode is 'solid-color' then patternGradient and patterConfig should be null
+  // if display mode is 'gradient' then activeColor shoule be null and patternGradient and patternConfig should be set
+  // const displayMode: DisplayMode = LEDState?.current_content_name || 'solid-color'
+  // const activeColor: string = displayMode === 'solid-color' && LEDState?.current_solid_color ? LEDState?.current_solid_color : null
+
+  // const patternGradient = displayMode === 'gradient' && LEDState?.current_gradient_pattern ? LEDState.current_gradient_pattern
+
+  // Convert 0-1 brightness to 0-100 for UI
+  const brightnessPercentage = Math.round(brightness * 100);
+  const hueRotationPercentage = Math.round(hueRotationSpeed * 100);
 
   // UI state
   const [displayMode, setDisplayMode] = useState<DisplayMode>('solid-color');
@@ -62,10 +80,6 @@ export const LedControllerDashboard = ({
   const [patternConfig, setPatternConfig] =
     useState<GradientPatternConfig | null>(null);
 
-  const [brightness, setBrightness] = useState<number>(50);
-  const [power, setPower] = useState<boolean>(false);
-  const [hueRotationSpeed, setHueRotationSpeed] = useState<number>(0);
-
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
 
   // Mode handlers
@@ -73,8 +87,8 @@ export const LedControllerDashboard = ({
   const handleColorSelect = (color: string) => {
     unsetActiveModes();
 
-    setActiveColor(color);
-    setDisplayMode('solid-color');
+    // setActiveColor(color);
+    // setDisplayMode('solid-color');
     onUpdateSolidColor(color);
   };
 
@@ -117,17 +131,14 @@ export const LedControllerDashboard = ({
 
   const handlePowerChange = (value: boolean) => {
     onUpdatePower(value);
-    setPower(value);
   };
 
   const handleBrightnessChange = (value: number) => {
     onUpdateBrightness(value);
-    setBrightness(value);
   };
 
   const handleHueRotationSpeedChange = (value: number) => {
     onUpdateHueRotationSpeed(value);
-    setHueRotationSpeed(value);
   };
 
   const unsetActiveModes = () => {
@@ -194,9 +205,9 @@ export const LedControllerDashboard = ({
         activeColor={activeColor}
         patternConfig={patternConfig}
         patternGradient={patternGradient}
-        brightness={brightness}
-        powerOn={power}
-        hueRotationSpeed={hueRotationSpeed}
+        brightness={brightnessPercentage}
+        powerOn={powerOn}
+        hueRotationSpeed={hueRotationPercentage}
         onBrightnessChange={handleBrightnessChange}
         onPowerChange={handlePowerChange}
         onHueRotationSpeedChange={handleHueRotationSpeedChange}

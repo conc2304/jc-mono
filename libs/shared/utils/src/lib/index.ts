@@ -3,3 +3,4 @@ export * from './numbers.js';
 export * from './strings.js';
 export * from './colors.js';
 export * from './media-cloudflare.js';
+export * from './gradients.js';

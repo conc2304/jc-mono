@@ -11,8 +11,8 @@ import {
 import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { ColorGradientEditor, GradientData } from './ColorGradientEditor';
-import { ColorStop } from './types';
 import { AugmentedButton } from '../../atoms';
+import { ColorStop } from '@jc/utils';
 
 interface Gradient {
   id: string;

@@ -49,6 +49,7 @@ const LedController = () => {
 
   const showWarning = isError;
   const certAccepted = !isError && ledStatus?.status === 'online';
+  const ledState = ledStatus?.['led-state'] || null;
 
   // Handle certificate acceptance via pop-up
   const handleGrantCertificateAccess = () => {
@@ -124,6 +125,7 @@ const LedController = () => {
           pb: '65px',
         }}
       >
+        {/* TD Server Access Warning */}
         {showWarning && (
           <Alert
             severity="warning"
@@ -156,7 +158,9 @@ const LedController = () => {
             </AugmentedButton>
           </Alert>
         )}
+
         <LedControllerDashboard
+          LEDState={ledState}
           onUpdatePower={handlePowerChange}
           onUpdateSolidColor={handleSolidColorUpdate}
           onUpdateGradientPattern={handleGradientPatternUpdate}

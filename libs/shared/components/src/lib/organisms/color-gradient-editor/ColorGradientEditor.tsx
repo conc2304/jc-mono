@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Button, Typography, Paper } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import {
   useGradientStops,
@@ -7,7 +7,7 @@ import {
 } from './hooks/useGradientStops';
 import { GradientBar } from '../../atoms/gradient-bar';
 import { ColorStopControls } from '../../atoms/color-stop-controls';
-import { ColorStop } from './types';
+import { ColorStop } from '@jc/utils';
 import { AugmentedButton } from '../../atoms';
 
 export interface GradientData {

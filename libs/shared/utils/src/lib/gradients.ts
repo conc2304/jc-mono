@@ -46,3 +46,22 @@ export interface GradientPatternConfig {
   period?: number;
   wave?: WaveConfig;
 }
+
+export function generateGradientId(stops: ColorStop[]): string {
+  // Sort stops by position to ensure consistent ordering
+  const sortedStops = [...stops].sort((a, b) => a.position - b.position);
+
+  // Create a string representation of all stops
+  const stopsString = sortedStops
+    .map((stop) => `${stop.color}-${stop.position}`)
+    .join('|');
+
+  // Simple hash function (djb2)
+  let hash = 5381;
+  for (let i = 0; i < stopsString.length; i++) {
+    hash = (hash << 5) + hash + stopsString.charCodeAt(i);
+  }
+
+  // Convert to positive number and then to base36 for shorter ID
+  return `gradient-${(hash >>> 0).toString(36)}`;
+}

@@ -13,7 +13,7 @@ import {
   ColorStop,
   SpeedDirection,
   WaveConfig,
-} from './types';
+} from '@jc/utils';
 
 interface GradientPatternSelectorProps {
   gradients?: Gradient[];
@@ -76,7 +76,9 @@ export const GradientPatternSelector: React.FC<
     setSpeed(Math.abs(activePatternConfig?.speed || 0));
     setDirection(activePatternConfig?.direction || 'forward');
     setPeriod(activePatternConfig?.period || 1);
-    setWaveConfig(activePatternConfig?.wave || { type: null, period: 1, amplitude: 0.5 });
+    setWaveConfig(
+      activePatternConfig?.wave || { type: null, period: 1, amplitude: 0.5 }
+    );
   }, [activePatternConfig]);
 
   // Notify parent when config changes

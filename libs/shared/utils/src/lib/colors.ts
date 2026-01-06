@@ -1,6 +1,8 @@
 import { lighten, darken, getContrastRatio } from '@mui/material';
 import { Property } from 'csstype';
-
+export interface ColorStopLike extends RGB {
+  position: number;
+}
 export interface RGB {
   r: number;
   g: number;

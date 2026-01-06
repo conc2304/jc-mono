@@ -1,4 +1,4 @@
-import { Gradient } from '@jc/ui-components';
+import { generateGradientId, type Gradient } from '@jc/utils';
 
 export const defaultColors = [
   '#000000',
@@ -18,7 +18,6 @@ export const defaultColors = [
 
 export const defaultGradients: Gradient[] = [
   {
-    id: 'neon-strobe',
     stops: [
       { id: 1, color: '#FF0000', position: 0 },
       { id: 2, color: '#000000', position: 25 },
@@ -28,7 +27,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'midnight-city',
     stops: [
       { id: 1, color: '#000000', position: 0 },
       { id: 2, color: '#0080FF', position: 30 },
@@ -38,7 +36,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'toxic-waste',
     stops: [
       { id: 1, color: '#00FF00', position: 0 },
       { id: 2, color: '#000000', position: 33 },
@@ -48,7 +45,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'sunset-blaze',
     stops: [
       { id: 1, color: '#8000FF', position: 0 },
       { id: 2, color: '#FF0080', position: 25 },
@@ -58,7 +54,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'electric-pulse',
     stops: [
       { id: 1, color: '#00FFFF', position: 0 },
       { id: 2, color: '#000000', position: 20 },
@@ -69,7 +64,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'lava-flow',
     stops: [
       { id: 1, color: '#000000', position: 0 },
       { id: 2, color: '#8B0000', position: 25 },
@@ -79,7 +73,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'aurora-borealis',
     stops: [
       { id: 1, color: '#000080', position: 0 },
       { id: 2, color: '#0080FF', position: 20 },
@@ -90,7 +83,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'digital-glitch',
     stops: [
       { id: 1, color: '#FF0000', position: 0 },
       { id: 2, color: '#000000', position: 16 },
@@ -102,7 +94,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'ocean-depth',
     stops: [
       { id: 1, color: '#00FFFF', position: 0 },
       { id: 2, color: '#0080FF', position: 30 },
@@ -112,7 +103,6 @@ export const defaultGradients: Gradient[] = [
     ],
   },
   {
-    id: 'candy-crush',
     stops: [
       { id: 1, color: '#FF00FF', position: 0 },
       { id: 2, color: '#FF0080', position: 25 },
@@ -121,4 +111,7 @@ export const defaultGradients: Gradient[] = [
       { id: 5, color: '#FF00FF', position: 100 },
     ],
   },
-];
+].map(({ stops }) => ({
+  id: generateGradientId(stops),
+  stops,
+}));
