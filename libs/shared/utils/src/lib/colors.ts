@@ -225,3 +225,39 @@ export const hsvToRgb = (h: number, s: number, v: number): RGB => {
     b: Math.round((b + m) * 255),
   };
 };
+
+/**
+ * Convert RGB object (0-1 range) to hex color string
+ * @param rgb - RGB object with values in 0-1 range (from backend)
+ * @returns Hex color string (e.g., "#ff0000")
+ */
+export const rgbObjectToHex = (rgb: RGB): string => {
+  return rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255);
+};
+
+/**
+ * Transform color stop from backend format (RGB 0-1) to frontend format (hex)
+ * @param backendStop - Color stop with RGB values in 0-1 range
+ * @returns Color stop with hex color string
+ */
+export const transformColorStopFromBackend = (backendStop: ColorStopLike): { position: number; color: string } => {
+  return {
+    position: backendStop.position,
+    color: rgbObjectToHex(backendStop),
+  };
+};
+
+/**
+ * Transform color stop from frontend format (hex) to backend format (RGB 0-1)
+ * @param frontendStop - Color stop with hex color string
+ * @returns Color stop with RGB values in 0-1 range
+ */
+export const transformColorStopToBackend = (frontendStop: { position: number; color: string }): ColorStopLike => {
+  const rgb = hexToRgb(frontendStop.color, true, 3); // normalize to 0-1, round to 3 decimals
+  return {
+    position: frontendStop.position,
+    r: rgb.r,
+    g: rgb.g,
+    b: rgb.b,
+  };
+};

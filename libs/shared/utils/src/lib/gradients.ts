@@ -52,8 +52,13 @@ export function generateGradientId(stops: ColorStop[]): string {
   const sortedStops = [...stops].sort((a, b) => a.position - b.position);
 
   // Create a string representation of all stops
+  // Use lowercase hex colors and round positions to avoid floating point differences
   const stopsString = sortedStops
-    .map((stop) => `${stop.color}-${stop.position}`)
+    .map((stop) => {
+      const color = stop.color.toLowerCase();
+      const position = Math.round(stop.position * 100) / 100; // Round to 2 decimals
+      return `${color}-${position}`;
+    })
     .join('|');
 
   // Simple hash function (djb2)

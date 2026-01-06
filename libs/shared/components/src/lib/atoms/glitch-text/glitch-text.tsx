@@ -265,7 +265,7 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
           );
       };
 
-      // New scramble effect for mouse leave
+      // Scramble effect for mouse leave
       const performScrambleLeave = (): void => {
         // TODO investigate if we need this
         // // First, interrupt any ongoing glitch animation

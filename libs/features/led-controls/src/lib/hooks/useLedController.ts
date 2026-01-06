@@ -1,6 +1,30 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { hexToRgb, remapNumber } from '@jc/utils';
-import { ledApiService, SetGradientPatternRequest } from '../data-fetching';
+import {
+  hexToRgb,
+  remapNumber,
+  rgbObjectToHex,
+  transformColorStopToBackend,
+} from '@jc/utils';
+import {
+  ledApiService,
+  SetGradientPatternRequest,
+  LedStatusResponse,
+} from '../data-fetching';
+
+// Frontend gradient request with hex colors
+export interface FrontendGradientRequest {
+  colorStops: Array<{ position: number; color: string }>; // hex format
+  type: string;
+  speed: number;
+  interpolation: string;
+  period?: number;
+  direction?: string;
+  wave?: {
+    type: string | null;
+    period: number;
+    amplitude: number;
+  };
+}
 
 // Query keys
 export const ledQueryKeys = {
@@ -9,12 +33,43 @@ export const ledQueryKeys = {
 };
 
 /**
- * Hook to fetch LED controller status
+ * Hook to fetch LED controller status with color transformations
+ * Transforms backend RGB (0-1) to frontend hex colors
  */
 export function useLedStatus() {
   return useQuery({
     queryKey: ledQueryKeys.status(),
     queryFn: () => ledApiService.getStatus(),
+    select: (data: LedStatusResponse) => {
+      // Transform backend response to include hex colors
+      const ledState = data['led-state'];
+
+      return {
+        ...data,
+        'led-state': {
+          ...ledState,
+          // Add hex property to current_solid_color
+          current_solid_color: ledState.current_solid_color
+            ? {
+                ...ledState.current_solid_color,
+                hex: rgbObjectToHex(ledState.current_solid_color),
+              }
+            : ledState.current_solid_color,
+          // Transform gradient pattern color stops to include hex
+          current_gradient_pattern: ledState.current_gradient_pattern
+            ? {
+                ...ledState.current_gradient_pattern,
+                colorStops: ledState.current_gradient_pattern.colorStops.map(
+                  (stop) => ({
+                    ...stop,
+                    hex: rgbObjectToHex(stop),
+                  })
+                ),
+              }
+            : ledState.current_gradient_pattern,
+        },
+      };
+    },
     refetchOnWindowFocus: true,
     retry: false,
     refetchInterval: 5000, // Poll every 5 seconds
@@ -24,14 +79,16 @@ export function useLedStatus() {
 
 /**
  * Hook to update solid color with optimistic updates
+ * Accepts hex color string, converts to backend RGB format
  */
 export function useSetSolidColor() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (color: string) => {
-      const { r, g, b } = hexToRgb(color);
-      return ledApiService.setColor({ r, g, b });
+      // Convert hex to RGB (0-1 range) for backend
+      const rgb = hexToRgb(color, true, 3); // normalize to 0-1, round to 3 decimals
+      return ledApiService.setColor(rgb);
     },
     onMutate: async (color: string) => {
       // Cancel any outgoing refetches
@@ -41,12 +98,15 @@ export function useSetSolidColor() {
       const previous = queryClient.getQueryData(ledQueryKeys.status());
 
       // Optimistically update to the new value
-      const { r, g, b } = hexToRgb(color);
+      const rgb = hexToRgb(color, true, 3);
       queryClient.setQueryData(ledQueryKeys.status(), (old: any) => ({
         ...old,
         'led-state': {
           ...old?.['led-state'],
-          current_solid_color: { r, g, b },
+          current_solid_color: {
+            ...rgb,
+            hex: color, // Store both RGB and hex
+          },
           current_content_name: 'solid-color',
         },
       }));
@@ -62,7 +122,10 @@ export function useSetSolidColor() {
             ...old,
             'led-state': {
               ...old?.['led-state'],
-              current_solid_color: color,
+              current_solid_color: {
+                ...color,
+                hex: rgbObjectToHex(color), // Add hex property
+              },
               current_content_name: active_state,
             },
           }));
@@ -80,29 +143,48 @@ export function useSetSolidColor() {
 
 /**
  * Hook to update gradient pattern with optimistic updates
+ * Accepts frontend format with hex colors, converts to backend RGB format
  */
 export function useSetGradientPattern() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: SetGradientPatternRequest) => {
-      return ledApiService.setGradientPattern(data);
+    mutationFn: (data: FrontendGradientRequest) => {
+      // Transform frontend hex colors to backend RGB format (0-1 range)
+      const backendColorStops = data.colorStops.map(
+        transformColorStopToBackend
+      );
+
+      const backendRequest: SetGradientPatternRequest = {
+        ...data,
+        colorStops: backendColorStops,
+      };
+
+      return ledApiService.setGradientPattern(backendRequest);
     },
-    onMutate: async (data: SetGradientPatternRequest) => {
+    onMutate: async (data: FrontendGradientRequest) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ledQueryKeys.status() });
 
       // Snapshot the previous value
       const previous = queryClient.getQueryData(ledQueryKeys.status());
 
-      // Optimistically update to the new value
+      // Transform frontend format to backend format for optimistic update
+      const backendColorStops = data.colorStops.map(
+        transformColorStopToBackend
+      );
+
+      // Optimistically update to the new value (with both RGB and hex)
       queryClient.setQueryData(ledQueryKeys.status(), (old: any) => ({
         ...old,
         'led-state': {
           ...old?.['led-state'],
           current_gradient_pattern: {
             type: data.type,
-            colorStops: data.colorStops,
+            colorStops: backendColorStops.map((stop, idx) => ({
+              ...stop,
+              hex: data.colorStops[idx].color, // Add hex property
+            })),
             speed: data.speed,
             period: data.period || 1,
             interpolation: data.interpolation,
@@ -119,11 +201,20 @@ export function useSetGradientPattern() {
       if (response.success && response.data) {
         const { gradient, active_state } = response.data;
         if (gradient && active_state) {
+          // Transform backend RGB to include hex colors
+          const gradientWithHex = {
+            ...gradient,
+            colorStops: gradient.colorStops.map((stop) => ({
+              ...stop,
+              hex: rgbObjectToHex(stop),
+            })),
+          };
+
           queryClient.setQueryData(ledQueryKeys.status(), (old: any) => ({
             ...old,
             'led-state': {
               ...old?.['led-state'],
-              current_gradient_pattern: gradient,
+              current_gradient_pattern: gradientWithHex,
               current_content_name: active_state,
             },
           }));

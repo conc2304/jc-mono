@@ -80,7 +80,7 @@ const LedController = () => {
   };
 
   const handleGradientPatternUpdate = (data: {
-    colorStops: Array<{ position: number; r: number; g: number; b: number }>;
+    colorStops: Array<{ position: number; color: string }>; // hex format
     type: string;
     speed: number;
     interpolation: string;
@@ -112,7 +112,7 @@ const LedController = () => {
   };
 
   return (
-    <Box>
+    <>
       {/* App Bar / Title Bar */}
       <LEDAppBar />
 
@@ -245,7 +245,7 @@ const LedController = () => {
           </Box>
         </Dialog>
       </Box>
-    </Box>
+    </>
   );
 };
 

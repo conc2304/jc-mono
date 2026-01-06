@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
-import { Property } from 'csstype';
 import {
   AugmentedButton,
   ColorSwatchPicker,
@@ -9,7 +8,6 @@ import {
   type Gradient,
   type GradientPatternConfig,
 } from '@jc/ui-components';
-import { hexToRgb } from '@jc/utils';
 import {
   usePersistentColors,
   usePersistentGradients,
@@ -32,15 +30,15 @@ interface LedControllerDashboardProps {
     speed,
     interpolation,
     period,
-  }: GradientApiRequestBody) => void;
+  }: FrontendGradientRequestBody) => void;
   onUpdatePower: (value: boolean) => void;
   onUpdateBrightness: (value: number) => void;
   onUpdateInvert: (value: number) => void;
   onUpdateHueRotationSpeed: (value: number) => void;
 }
 
-type GradientApiRequestBody = GradientPatternConfig & {
-  colorStops: Array<{ position: number; r: number; g: number; b: number }>;
+type FrontendGradientRequestBody = GradientPatternConfig & {
+  colorStops: Array<{ position: number; color: string }>; // hex format
 };
 
 export const LedControllerDashboard = ({
@@ -61,34 +59,49 @@ export const LedControllerDashboard = ({
   const brightness = LEDState?.brightness ?? 0.5; // 0-1 range from backend
   const hueRotationSpeed = LEDState?.hue_rotation_speed ?? 0;
 
-  // TODO
-  // if display mode is 'solid-color' then patternGradient and patterConfig should be null
-  // if display mode is 'gradient' then activeColor shoule be null and patternGradient and patternConfig should be set
-  // const displayMode: DisplayMode = LEDState?.current_content_name || 'solid-color'
-  // const activeColor: string = displayMode === 'solid-color' && LEDState?.current_solid_color ? LEDState?.current_solid_color : null
-
-  // const patternGradient = displayMode === 'gradient' && LEDState?.current_gradient_pattern ? LEDState.current_gradient_pattern
-
   // Convert 0-1 brightness to 0-100 for UI
   const brightnessPercentage = Math.round(brightness * 100);
   const hueRotationPercentage = Math.round(hueRotationSpeed * 100);
 
-  // UI state
-  const [displayMode, setDisplayMode] = useState<DisplayMode>('solid-color');
-  const [activeColor, setActiveColor] = useState<string | null>(null);
-  const [patternGradient, setPatternGradient] = useState<Gradient | null>(null);
-  const [patternConfig, setPatternConfig] =
-    useState<GradientPatternConfig | null>(null);
+  // Derive display mode and active content from backend state
+  const displayMode: DisplayMode = LEDState?.current_content_name ?? 'solid-color';
+
+  // Extract active color (with hex) when in solid-color mode
+  const activeColor: string | null =
+    displayMode === 'solid-color' && LEDState?.current_solid_color
+      ? (LEDState.current_solid_color as any).hex || null
+      : null;
+
+  // Extract active gradient pattern when in gradient/pattern mode
+  const backendGradientPattern = LEDState?.current_gradient_pattern;
+  const patternGradient: Gradient | null =
+    (displayMode === 'gradient' || displayMode === 'pattern') && backendGradientPattern
+      ? {
+          id: `backend-gradient-${displayMode}`,
+          stops: backendGradientPattern.colorStops.map((stop: any, idx: number) => ({
+            id: idx,
+            color: stop.hex || '#000000',
+            position: stop.position,
+          })),
+        }
+      : null;
+
+  const patternConfig: GradientPatternConfig | null =
+    (displayMode === 'gradient' || displayMode === 'pattern') && backendGradientPattern
+      ? {
+          type: backendGradientPattern.type as any,
+          interpolation: backendGradientPattern.interpolation as any,
+          speed: backendGradientPattern.speed,
+          period: backendGradientPattern.period,
+          wave: backendGradientPattern.wave,
+        }
+      : null;
 
   const [saveSceneDialogOpen, setSaveSceneDialogOpen] = useState(false);
 
   // Mode handlers
-  // Modes are mutually exclusive - setting one unsets the others
+  // State is now derived from backend, so we just call the update functions
   const handleColorSelect = (color: string) => {
-    unsetActiveModes();
-
-    // setActiveColor(color);
-    // setDisplayMode('solid-color');
     onUpdateSolidColor(color);
   };
 
@@ -98,18 +111,7 @@ export const LedControllerDashboard = ({
   ): void => {
     if (gradient === null) return;
 
-    const colorStopsForApi = gradient.stops.map((stop) => {
-      const rgb = hexToRgb(stop.color);
-      return { position: stop.position, r: rgb.r, g: rgb.g, b: rgb.b };
-    });
-
-    unsetActiveModes();
-
-    setPatternConfig(config);
-    setPatternGradient(gradient);
-    setDisplayMode('pattern');
-
-    // Flip after setting state
+    // Flip pattern types for TouchDesigner API
     // Pattern types are flipped in TouchDesigner API for "radial" vs "circular"
     let patternType = config.type;
     if (patternType === 'circular') {
@@ -118,8 +120,14 @@ export const LedControllerDashboard = ({
       patternType = 'circular';
     }
 
+    // Pass hex colors directly - hook will handle conversion to backend format
+    const colorStopsWithHex = gradient.stops.map((stop) => ({
+      position: stop.position,
+      color: stop.color, // Already in hex format
+    }));
+
     onUpdateGradientPattern({
-      colorStops: colorStopsForApi,
+      colorStops: colorStopsWithHex,
       type: patternType,
       speed: config.speed,
       interpolation: config.interpolation,
@@ -139,13 +147,6 @@ export const LedControllerDashboard = ({
 
   const handleHueRotationSpeedChange = (value: number) => {
     onUpdateHueRotationSpeed(value);
-  };
-
-  const unsetActiveModes = () => {
-    setActiveColor(null);
-    setPatternConfig(null);
-    setPatternGradient(null);
-    setDisplayMode('solid-color');
   };
 
   const handleAddSavedColor = (colors: string[]) => {
