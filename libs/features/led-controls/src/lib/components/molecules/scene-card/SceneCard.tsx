@@ -59,8 +59,8 @@ export const SceneCard = ({
   };
 
   const interpIconMap: Record<InterpolationMode, ReactNode> = {
-    linear: <TbEscalator fontSize="small" />,
-    step: <TbStairs fontSize="small" />,
+    linear: <TbEscalator fontSize="1rem" />,
+    step: <TbStairs fontSize="1rem" />,
   };
 
   const formatDate = (timestamp: number) => {
