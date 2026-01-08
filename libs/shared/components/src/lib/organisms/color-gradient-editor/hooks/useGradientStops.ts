@@ -88,66 +88,71 @@ export const useGradientStops = (
   );
 
   const addStop = useCallback((): void => {
-    const sortedStops = getSortedStops();
-    let maxGap = 0;
-    let maxGapPosition = 50;
+    setStops((prevStops) => {
+      const sortedStops = [...prevStops].sort((a, b) => a.position - b.position);
+      let maxGap = 0;
+      let maxGapPosition = 50;
 
-    for (let i = 0; i < sortedStops.length - 1; i++) {
-      const gap = sortedStops[i + 1].position - sortedStops[i].position;
-      if (gap > maxGap) {
-        maxGap = gap;
-        maxGapPosition = sortedStops[i].position + gap / 2;
+      for (let i = 0; i < sortedStops.length - 1; i++) {
+        const gap = sortedStops[i + 1].position - sortedStops[i].position;
+        if (gap > maxGap) {
+          maxGap = gap;
+          maxGapPosition = sortedStops[i].position + gap / 2;
+        }
       }
-    }
 
-    const color = interpolateColor(maxGapPosition);
+      const color = interpolateColor(maxGapPosition);
 
-    const newStop: ColorStop = {
-      id: nextId,
-      color: color,
-      position: maxGapPosition,
-    };
+      const newStop: ColorStop = {
+        id: nextId,
+        color: color,
+        position: maxGapPosition,
+      };
 
-    setStops([...stops, newStop]);
-    setNextId(nextId + 1);
-    setSelectedStop(newStop.id);
-  }, [stops, nextId, getSortedStops, interpolateColor]);
+      setNextId(nextId + 1);
+      setSelectedStop(newStop.id);
+
+      return [...prevStops, newStop];
+    });
+  }, [nextId, interpolateColor]);
 
   const removeStop = useCallback(
     (stopId: number): void => {
-      if (stops.length <= 2) {
-        alert('You must have at least 2 color stops');
-        return;
-      }
-      setStops(stops.filter((stop) => stop.id !== stopId));
+      setStops((prevStops) => {
+        if (prevStops.length <= 2) {
+          alert('You must have at least 2 color stops');
+          return prevStops;
+        }
+        return prevStops.filter((stop) => stop.id !== stopId);
+      });
       if (selectedStop === stopId) {
         setSelectedStop(null);
       }
     },
-    [stops, selectedStop]
+    [selectedStop]
   );
 
   const updateStopColor = useCallback(
     (stopId: number, newColor: string): void => {
-      setStops(
-        stops.map((stop) =>
+      setStops((prevStops) =>
+        prevStops.map((stop) =>
           stop.id === stopId ? { ...stop, color: newColor } : stop
         )
       );
     },
-    [stops]
+    []
   );
 
   const updateStopPosition = useCallback(
     (stopId: number, newPosition: number): void => {
       const clampedPosition = Math.max(0, Math.min(100, newPosition));
-      setStops(
-        stops.map((stop) =>
+      setStops((prevStops) =>
+        prevStops.map((stop) =>
           stop.id === stopId ? { ...stop, position: clampedPosition } : stop
         )
       );
     },
-    [stops]
+    []
   );
 
   const navigateToPreviousStop = useCallback((): void => {

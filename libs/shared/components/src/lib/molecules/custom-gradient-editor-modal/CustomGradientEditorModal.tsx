@@ -1,13 +1,10 @@
 import { Box, Paper, Modal, Typography, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { alpha, useTheme } from '@mui/material/styles';
-import { ColorGradientEditor } from '../../organisms/color-gradient-editor';
-import {
-  ColorStop,
-  Gradient,
-} from '../../organisms/color-gradient-editor/types';
-import { GradientData } from '../../organisms/color-gradient-editor/ColorGradientEditor';
+
 import { AugmentedButton } from '../../atoms';
+import { ColorStop, Gradient } from '@jc/utils';
+import { ColorGradientEditor, GradientData } from '../../organisms';
 
 interface CustomGradientEditorModalProps {
   isOpen: boolean;

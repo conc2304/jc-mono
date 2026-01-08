@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { Box } from '@mui/material';
 import { GradientData } from './ColorGradientEditor';
 import { PatternTypeSelector } from '../../molecules/pattern-type-selector';
@@ -30,7 +30,7 @@ interface GradientPatternSelectorProps {
 
 export const GradientPatternSelector: React.FC<
   GradientPatternSelectorProps
-> = ({
+> = memo(({
   gradients = [],
   onPatternConfigChange,
   activeGradient,
@@ -87,89 +87,104 @@ export const GradientPatternSelector: React.FC<
   }, [activePatternConfig]);
 
   // Notify parent when config changes
-  const notifyConfigChange = (
-    newType: GradientPatternType,
-    newInterpolation: InterpolationMode,
-    newSpeed: number,
-    newDirection: SpeedDirection,
-    newPeriod: number,
-    newWaveConfig: WaveConfig,
-    gradient: Gradient | null
-  ) => {
-    if (onPatternConfigChange) {
-      onPatternConfigChange(
-        {
-          type: newType,
-          interpolation: newInterpolation,
-          speed: newSpeed,
-          direction: newDirection,
-          period: newPeriod,
-          wave: newWaveConfig,
-        },
-        gradient
-      );
-    }
-  };
+  const notifyConfigChange = useCallback(
+    (
+      newType: GradientPatternType,
+      newInterpolation: InterpolationMode,
+      newSpeed: number,
+      newDirection: SpeedDirection,
+      newPeriod: number,
+      newWaveConfig: WaveConfig,
+      gradient: Gradient | null
+    ) => {
+      if (onPatternConfigChange) {
+        onPatternConfigChange(
+          {
+            type: newType,
+            interpolation: newInterpolation,
+            speed: newSpeed,
+            direction: newDirection,
+            period: newPeriod,
+            wave: newWaveConfig,
+          },
+          gradient
+        );
+      }
+    },
+    [onPatternConfigChange]
+  );
 
-  const handlePatternTypeSelect = (type: GradientPatternType): void => {
-    setPatternType(type);
-    notifyConfigChange(
-      type,
-      interpolation,
-      speed,
-      direction,
-      period,
-      waveConfig,
-      selectedGradient
-    );
-  };
-
-  const handleGradientSelect = (gradient: Gradient): void => {
-    setSelectedGradient(gradient);
-    notifyConfigChange(
-      patternType || 'horizontal',
-      interpolation,
-      speed,
-      direction,
-      period,
-      waveConfig,
-      gradient
-    );
-  };
-
-  const handleInterpolationChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newInterpolation: InterpolationMode | null
-  ) => {
-    if (newInterpolation !== null) {
-      setInterpolation(newInterpolation);
+  const handlePatternTypeSelect = useCallback(
+    (type: GradientPatternType): void => {
+      setPatternType(type);
       notifyConfigChange(
-        patternType || 'horizontal',
-        newInterpolation,
+        type,
+        interpolation,
         speed,
         direction,
         period,
         waveConfig,
         selectedGradient
       );
-    }
-  };
+    },
+    [notifyConfigChange, interpolation, speed, direction, period, waveConfig, selectedGradient]
+  );
 
-  const handleSpeedChange = (_event: Event, newSpeed: number | number[]) => {
-    const speedValue = newSpeed as number;
-    setSpeed(speedValue);
-    notifyConfigChange(
-      patternType || 'horizontal',
-      interpolation,
-      speedValue,
-      direction,
-      period,
-      waveConfig,
-      selectedGradient
-    );
-  };
+  const handleGradientSelect = useCallback(
+    (gradient: Gradient): void => {
+      setSelectedGradient(gradient);
+      notifyConfigChange(
+        patternType || 'horizontal',
+        interpolation,
+        speed,
+        direction,
+        period,
+        waveConfig,
+        gradient
+      );
+    },
+    [notifyConfigChange, patternType, interpolation, speed, direction, period, waveConfig]
+  );
 
-  const handleStaticClick = () => {
+  const handleInterpolationChange = useCallback(
+    (
+      _event: React.MouseEvent<HTMLElement>,
+      newInterpolation: InterpolationMode | null
+    ) => {
+      if (newInterpolation !== null) {
+        setInterpolation(newInterpolation);
+        notifyConfigChange(
+          patternType || 'horizontal',
+          newInterpolation,
+          speed,
+          direction,
+          period,
+          waveConfig,
+          selectedGradient
+        );
+      }
+    },
+    [notifyConfigChange, patternType, speed, direction, period, waveConfig, selectedGradient]
+  );
+
+  const handleSpeedChange = useCallback(
+    (_event: Event, newSpeed: number | number[]) => {
+      const speedValue = newSpeed as number;
+      setSpeed(speedValue);
+      notifyConfigChange(
+        patternType || 'horizontal',
+        interpolation,
+        speedValue,
+        direction,
+        period,
+        waveConfig,
+        selectedGradient
+      );
+    },
+    [notifyConfigChange, patternType, interpolation, direction, period, waveConfig, selectedGradient]
+  );
+
+  const handleStaticClick = useCallback(() => {
     setSpeed(0);
     notifyConfigChange(
       patternType || 'horizontal',
@@ -180,52 +195,61 @@ export const GradientPatternSelector: React.FC<
       waveConfig,
       selectedGradient
     );
-  };
+  }, [notifyConfigChange, patternType, interpolation, direction, period, waveConfig, selectedGradient]);
 
-  const handleDirectionChange = (newDirection: SpeedDirection) => {
-    setDirection(newDirection);
-    // Multiply speed by -1 when changing direction to backward, by 1 for forward
-    const adjustedSpeed =
-      newDirection === 'backward' ? -Math.abs(speed) : Math.abs(speed);
-    notifyConfigChange(
-      patternType || 'horizontal',
-      interpolation,
-      adjustedSpeed,
-      newDirection,
-      period,
-      waveConfig,
-      selectedGradient
-    );
-  };
+  const handleDirectionChange = useCallback(
+    (newDirection: SpeedDirection) => {
+      setDirection(newDirection);
+      // Multiply speed by -1 when changing direction to backward, by 1 for forward
+      const adjustedSpeed =
+        newDirection === 'backward' ? -Math.abs(speed) : Math.abs(speed);
+      notifyConfigChange(
+        patternType || 'horizontal',
+        interpolation,
+        adjustedSpeed,
+        newDirection,
+        period,
+        waveConfig,
+        selectedGradient
+      );
+    },
+    [notifyConfigChange, patternType, interpolation, speed, period, waveConfig, selectedGradient]
+  );
 
-  const handlePeriodChange = (_event: Event, newPeriod: number | number[]) => {
-    const periodValue = newPeriod as number;
-    setPeriod(periodValue);
-    notifyConfigChange(
-      patternType || 'horizontal',
-      interpolation,
-      speed,
-      direction,
-      periodValue,
-      waveConfig,
-      selectedGradient
-    );
-  };
+  const handlePeriodChange = useCallback(
+    (_event: Event, newPeriod: number | number[]) => {
+      const periodValue = newPeriod as number;
+      setPeriod(periodValue);
+      notifyConfigChange(
+        patternType || 'horizontal',
+        interpolation,
+        speed,
+        direction,
+        periodValue,
+        waveConfig,
+        selectedGradient
+      );
+    },
+    [notifyConfigChange, patternType, interpolation, speed, direction, waveConfig, selectedGradient]
+  );
 
-  const handleWaveConfigChange = (newWaveConfig: WaveConfig) => {
-    setWaveConfig(newWaveConfig);
-    notifyConfigChange(
-      patternType || 'horizontal',
-      interpolation,
-      speed,
-      direction,
-      period,
-      newWaveConfig,
-      selectedGradient
-    );
-  };
+  const handleWaveConfigChange = useCallback(
+    (newWaveConfig: WaveConfig) => {
+      setWaveConfig(newWaveConfig);
+      notifyConfigChange(
+        patternType || 'horizontal',
+        interpolation,
+        speed,
+        direction,
+        period,
+        newWaveConfig,
+        selectedGradient
+      );
+    },
+    [notifyConfigChange, patternType, interpolation, speed, direction, period, selectedGradient]
+  );
 
-  const handleSaveGradient = (): void => {
+  const handleSaveGradient = useCallback((): void => {
     const newGradient: Gradient = {
       id: `custom-${Date.now()}`,
       stops: customGradientStops,
@@ -242,38 +266,44 @@ export const GradientPatternSelector: React.FC<
     handleGradientSelect(newGradient);
     setEditingGradient(null);
     setIsModalOpen(false);
-  };
+  }, [customGradientStops, savedGradients, onAddGradient, handleGradientSelect]);
 
-  const handleUpdateGradient = (gradientId: string): void => {
-    const updatedGradient: Gradient = {
-      id: gradientId,
-      stops: customGradientStops,
-      isDefault: false,
-    };
+  const handleUpdateGradient = useCallback(
+    (gradientId: string): void => {
+      const updatedGradient: Gradient = {
+        id: gradientId,
+        stops: customGradientStops,
+        isDefault: false,
+      };
 
-    onAddGradient?.(updatedGradient);
-    handleGradientSelect(updatedGradient);
-    setEditingGradient(null);
-    setIsModalOpen(false);
-  };
+      onAddGradient?.(updatedGradient);
+      handleGradientSelect(updatedGradient);
+      setEditingGradient(null);
+      setIsModalOpen(false);
+    },
+    [customGradientStops, onAddGradient, handleGradientSelect]
+  );
 
-  const handleEditGradient = (gradient: Gradient): void => {
+  const handleEditGradient = useCallback((gradient: Gradient): void => {
     setCustomGradientStops(gradient.stops);
     setEditingGradient(gradient);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleDuplicateGradient = (gradient: Gradient): void => {
-    const duplicatedGradient: Gradient = {
-      id: `custom-${Date.now()}`,
-      stops: gradient.stops,
-      isDefault: false,
-    };
-    onAddGradient?.(duplicatedGradient);
-    handleGradientSelect(duplicatedGradient);
-  };
+  const handleDuplicateGradient = useCallback(
+    (gradient: Gradient): void => {
+      const duplicatedGradient: Gradient = {
+        id: `custom-${Date.now()}`,
+        stops: gradient.stops,
+        isDefault: false,
+      };
+      onAddGradient?.(duplicatedGradient);
+      handleGradientSelect(duplicatedGradient);
+    },
+    [onAddGradient, handleGradientSelect]
+  );
 
-  const handleOpenCustomEditor = (): void => {
+  const handleOpenCustomEditor = useCallback((): void => {
     setCustomGradientStops([
       { id: 0, color: '#FF0000', position: 0 },
       { id: 1, color: '#000000', position: 50 },
@@ -281,20 +311,23 @@ export const GradientPatternSelector: React.FC<
     ]);
     setEditingGradient(null);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseModal = (): void => {
+  const handleCloseModal = useCallback((): void => {
     setEditingGradient(null);
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleRemoveSavedGradient = (gradientId: string): void => {
-    onRemoveGradient?.(gradientId);
-  };
+  const handleRemoveSavedGradient = useCallback(
+    (gradientId: string): void => {
+      onRemoveGradient?.(gradientId);
+    },
+    [onRemoveGradient]
+  );
 
-  const handleGradientChange = (gradientData: GradientData): void => {
+  const handleGradientChange = useCallback((gradientData: GradientData): void => {
     setCustomGradientStops(gradientData.stops);
-  };
+  }, []);
 
   return (
     <Box sx={{ width: '100%', mx: 'auto' }}>
@@ -349,4 +382,4 @@ export const GradientPatternSelector: React.FC<
       />
     </Box>
   );
-};
+});

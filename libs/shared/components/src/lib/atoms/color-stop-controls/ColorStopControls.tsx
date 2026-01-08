@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import {
   NavigateNext as NavigateNextIcon,
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { ColorStop } from '../../organisms/color-gradient-editor/types';
+import { ColorStop } from '@jc/utils';
 
 interface ColorStopControlsProps {
   stops: ColorStop[];
@@ -36,6 +36,42 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
   onNavigateNext,
 }) => {
   const theme = useTheme();
+  const stop = stops.find((s) => s.id === selectedStop);
+
+  // Local state for color to enable debouncing
+  const [localColor, setLocalColor] = useState(stop?.color || '#000000');
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Sync local color with prop changes
+  useEffect(() => {
+    if (stop?.color) {
+      setLocalColor(stop.color);
+    }
+  }, [stop?.color, selectedStop]);
+
+  // Debounced color change handler
+  const handleColorChange = (newColor: string) => {
+    setLocalColor(newColor);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      if (stop) {
+        onStopColorChange(stop.id, newColor);
+      }
+    }, 16); // ~60fps debounce
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   if (selectedStop === null) {
     return (
@@ -56,7 +92,6 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
   const sortedStops = [...stops].sort((a, b) => a.position - b.position);
   const selectedStopIndex =
     sortedStops.findIndex((s) => s.id === selectedStop) + 1;
-  const stop = stops.find((s) => s.id === selectedStop);
 
   if (!stop) return null;
 
@@ -114,7 +149,7 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
               width: 48,
               height: 48,
               border: `2px solid ${theme.palette.divider}`,
-              backgroundColor: stop.color,
+              backgroundColor: localColor,
               flexShrink: 0,
             }}
           />
@@ -131,9 +166,9 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
             <Box
               component="input"
               type="color"
-              value={stop.color}
+              value={localColor}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onStopColorChange(stop.id, e.target.value)
+                handleColorChange(e.target.value)
               }
               sx={{
                 width: '100%',
@@ -156,13 +191,13 @@ export const ColorStopControls: React.FC<ColorStopControlsProps> = ({
             <TextField
               fullWidth
               size="small"
-              value={stop.color}
+              value={localColor}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const hex = e.target.value.startsWith('#')
                   ? e.target.value
                   : '#' + e.target.value;
                 if (/^#[0-9A-F]{6}$/i.test(hex)) {
-                  onStopColorChange(stop.id, hex);
+                  handleColorChange(hex);
                 }
               }}
               slotProps={{

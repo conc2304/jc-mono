@@ -10,6 +10,7 @@ import {
   useSetSolidColor,
 } from '@jc/led-controls';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
+import { GradientPatternType, InterpolationMode } from '@jc/utils';
 import { Close } from '@mui/icons-material';
 import {
   Alert,
@@ -81,9 +82,9 @@ const LedController = () => {
 
   const handleGradientPatternUpdate = (data: {
     colorStops: Array<{ position: number; color: string }>; // hex format
-    type: string;
+    type: GradientPatternType;
     speed: number;
-    interpolation: string;
+    interpolation: InterpolationMode;
     period?: number;
     direction?: string;
     wave?: {

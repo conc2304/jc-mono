@@ -133,8 +133,6 @@ export const LedControllerDashboard = ({
     gradient: Gradient | null
   ): void => {
     if (gradient === null) return;
-    //  TODO REMOVE THIS
-    console.log({ type: config.type });
 
     onUpdateGradientPattern({
       colorStops: gradient.stops,
