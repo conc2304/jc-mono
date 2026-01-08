@@ -54,33 +54,6 @@ const DEFAULT_CONFIG: Required<ScrollAwareClickConfig> = {
   allowClickCondition: () => false,
 };
 
-/**
- * A flexible hook to prevent click events during scroll/drag gestures on mobile devices
- *
- * @param onClick - The click handler to call when it's a legitimate click
- * @param config - Configuration options for the hook behavior
- * @returns Object with props to spread on element, current state, and utilities
- *
- * @example
- * ```tsx
- * const MyComponent = () => {
- *   const handleClick = (e: React.MouseEvent) => {
- *     console.log('Legitimate click!');
- *   };
- *
- *   const scrollAware = useScrollAwareClick(handleClick, {
- *     threshold: 15,
- *     debug: true
- *   });
- *
- *   return (
- *     <div {...scrollAware.props}>
- *       Click me (scroll-safe)
- *     </div>
- *   );
- * };
- * ```
- */
 export const useScrollAwareClick = <T extends HTMLElement = HTMLElement>(
   onClick?: (e: React.MouseEvent<T>) => void,
   config: ScrollAwareClickConfig = {}

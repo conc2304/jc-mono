@@ -19,7 +19,7 @@ import {
   SceneBank,
 } from '../../organisms';
 import { defaultColors, defaultGradients } from '../../../data';
-import { DisplayMode, LedState } from '../../../data-fetching';
+import { LedDisplayMode, LedState } from '../../../data-fetching';
 import { generateGradientId } from '@jc/utils';
 
 interface LedControllerDashboardProps {
@@ -68,7 +68,7 @@ export const LedControllerDashboard = ({
   const hueRotationPercentage = Math.round(hueRotationSpeed * 100);
 
   // Derive display mode and active content from backend state
-  const displayMode: DisplayMode =
+  const displayMode: LedDisplayMode =
     LEDState?.current_content_name ?? 'solid-color';
 
   // Extract active color (with hex) when in solid-color mode
@@ -99,11 +99,10 @@ export const LedControllerDashboard = ({
   }
 
   const patternConfig: GradientPatternConfig | null =
-    (displayMode === 'gradient' || displayMode === 'pattern') &&
-    backendGradientPattern
+    displayMode === 'gradient' && backendGradientPattern
       ? {
-          type: backendGradientPattern.type as any,
-          interpolation: backendGradientPattern.interpolation as any,
+          type: backendGradientPattern.type,
+          interpolation: backendGradientPattern.interpolation,
           speed: backendGradientPattern.speed,
           period: backendGradientPattern.period,
           wave: backendGradientPattern.wave,
@@ -134,19 +133,12 @@ export const LedControllerDashboard = ({
     gradient: Gradient | null
   ): void => {
     if (gradient === null) return;
-
-    // Flip pattern types for TouchDesigner API
-    // Pattern types are flipped in TouchDesigner API for "radial" vs "circular"
-    let patternType = config.type;
-    if (patternType === 'circular') {
-      patternType = 'radial';
-    } else if (patternType === 'radial') {
-      patternType = 'circular';
-    }
+    //  TODO REMOVE THIS
+    console.log({ type: config.type });
 
     onUpdateGradientPattern({
       colorStops: gradient.stops,
-      type: patternType,
+      type: config.type,
       speed: config.speed,
       interpolation: config.interpolation,
       period: config.period || 1,

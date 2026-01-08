@@ -70,7 +70,6 @@ export const WindowControls = ({
     ['warning', 'error'],
     theme
   );
-  console.log({ bgColor, minimizeColor, closeColor });
 
   return (
     <Box

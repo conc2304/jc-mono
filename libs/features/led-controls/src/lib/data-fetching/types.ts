@@ -1,4 +1,6 @@
-export type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
+import { GradientPatternType, InterpolationMode } from '@jc/utils';
+
+export type LedDisplayMode = 'solid-color' | 'gradient' | 'image';
 
 export interface ColorRGB {
   r: number;
@@ -17,11 +19,11 @@ export interface WaveConfig {
 }
 
 export interface GradientPattern {
-  type: string;
+  type: GradientPatternType;
   colorStops: ColorStop[];
   speed: number;
   period: number;
-  interpolation: string;
+  interpolation: InterpolationMode;
   wave?: WaveConfig;
 }
 
@@ -30,7 +32,7 @@ export interface LedState {
   brightness: number;
   hue_rotation_speed: number;
   current_content_index: number;
-  current_content_name: DisplayMode;
+  current_content_name: LedDisplayMode;
   current_solid_color: ColorRGB;
   current_gradient_pattern: GradientPattern;
 }

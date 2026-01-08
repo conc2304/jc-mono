@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  GradientPatternType,
   hexToRgb,
+  InterpolationMode,
   remapNumber,
   rgbObjectToHex,
   transformColorStopToBackend,
@@ -11,12 +13,27 @@ import {
   LedStatusResponse,
 } from '../data-fetching';
 
+// Gradient Patterns in TouchDesigner are flipped from the css gradient type
+export const convertTouchDesignerGradient = (
+  gradientType: GradientPatternType
+) => {
+  let patternType = gradientType;
+
+  if (gradientType === 'circular') {
+    patternType = 'radial';
+  } else if (gradientType === 'radial') {
+    patternType = 'circular';
+  }
+
+  return patternType;
+};
+
 // Frontend gradient request with hex colors
 export interface FrontendGradientRequest {
   colorStops: Array<{ position: number; color: string }>; // hex format
-  type: string;
+  type: GradientPatternType;
   speed: number;
-  interpolation: string;
+  interpolation: InterpolationMode;
   period?: number;
   direction?: string;
   wave?: {
@@ -55,10 +72,14 @@ export function useLedStatus() {
                 hex: rgbObjectToHex(ledState.current_solid_color),
               }
             : ledState.current_solid_color,
+
           // Transform gradient pattern color stops to include hex
           current_gradient_pattern: ledState.current_gradient_pattern
             ? {
                 ...ledState.current_gradient_pattern,
+                type: convertTouchDesignerGradient(
+                  ledState.current_gradient_pattern.type
+                ),
                 colorStops: ledState.current_gradient_pattern.colorStops.map(
                   (stop) => ({
                     ...stop,
@@ -180,7 +201,7 @@ export function useSetGradientPattern() {
         'led-state': {
           ...old?.['led-state'],
           current_gradient_pattern: {
-            type: data.type,
+            type: convertTouchDesignerGradient(data.type),
             colorStops: backendColorStops.map((stop, idx) => ({
               ...stop,
               hex: data.colorStops[idx].color, // Add hex property

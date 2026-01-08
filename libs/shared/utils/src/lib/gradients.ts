@@ -10,6 +10,7 @@ export interface Gradient {
   isDefault?: boolean; // Marks if this is a default/preset gradient
 }
 
+// NOTE When Using Touchdesigner Circular and Radial Gradients are flipped
 export type GradientPatternType =
   | 'vertical'
   | 'horizontal'

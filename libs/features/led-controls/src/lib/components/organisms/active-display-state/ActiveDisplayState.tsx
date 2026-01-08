@@ -16,11 +16,10 @@ import {
   PowerSettingsNew,
   Restore,
 } from '@mui/icons-material';
-
-type DisplayMode = 'solid-color' | 'gradient' | 'pattern' | 'image';
+import { LedDisplayMode } from '../../../data-fetching';
 
 interface ActiveDisplayStateProps {
-  displayMode: DisplayMode;
+  displayMode: LedDisplayMode;
   activeColor: string | null;
   patternConfig: GradientPatternConfig | null;
   patternGradient: Gradient | null;
