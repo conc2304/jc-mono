@@ -17,7 +17,77 @@ const path = (filename: string) => `${baseRelativePath}/${filename}`;
 
 export const sculpturesData: Sculpture[] = [
   {
-    id: 2,
+    id: 100,
+    title: 'Mossy Lady',
+    date: 'Fall 2025',
+    materials: 'Colorado Alabaster,  Preserved & Artificial Moss',
+    description:
+      'This piece is my first exploration into the use of moss as part of the sculptural process and represents my love for nature and mossy areas in particular. This piece started by ignoring a large fracture in the stone while chasing a particular shape for years, which led to the larger stone fracturing into 3 major pieces. Part 3 of 3 of the Broken Dreams Series.',
+    images: [
+      {
+        relativePath: path('Mossy-Lady-01-profile-view.jpg'),
+        alt: 'Profile view of Mossy Lady alabaster sculpture with preserved moss accents',
+        caption:
+          'Profile view highlighting the flowing silhouette and moss-covered surface details.',
+      },
+      {
+        relativePath: path('Mossy-Lady-02-front-quarter-view.jpg'),
+        alt: 'Front quarter view of Mossy Lady sculpture in Colorado alabaster and moss',
+        caption:
+          'Front quarter view showing the organic form and contrasting stone and moss textures.',
+      },
+      {
+        relativePath: path('Mossy-Lady-03-back-quarter-view.jpg'),
+        alt: 'Back quarter view of Mossy Lady stone sculpture with moss elements',
+        caption:
+          'Rear angle revealing fractures, contours, and the integration of moss into the sculpture.',
+      },
+      {
+        relativePath: path('Mossy-Lady-04-close-up-top-view.jpg'),
+        alt: 'Close-up top view of Mossy Lady sculpture surface and moss detail',
+        caption:
+          'Close-up from above emphasizing the layered textures of alabaster and moss.',
+      },
+      {
+        relativePath: path('Mossy-Lady-05-close-up-top-view-detail.jpg'),
+        alt: 'Detailed close-up of moss and alabaster textures on Mossy Lady sculpture',
+        caption:
+          'Detailed surface study capturing the tactile contrast between polished stone and soft moss.',
+      },
+    ],
+  },
+  {
+    id: 150,
+    title: 'Knobber',
+    date: 'Spring 2025',
+    description:
+      'An exercise in using the entire stone and finding beauty in the broken. This piece emerged from what would have been the lower half of Mossy Lady, formed from one of the major fragments of the original fractured sculpture. Part 2 of 3 of the Broken Dreams Series.',
+    materials: 'Colorado Alabaster',
+    images: [
+      {
+        relativePath: path('Knobber-01-front-view.JPG'),
+        alt: 'Front view of Knobber alabaster sculpture',
+        caption:
+          'Front view emphasizing the organic contours and fractured origins of the form.',
+      },
+
+      {
+        relativePath: path('Knobber-02-left-quarter-view.JPG'),
+        alt: 'Left quarter view of Knobber Colorado alabaster sculpture',
+        caption:
+          'Left quarter view revealing the asymmetrical carving and natural stone patterns.',
+      },
+
+      {
+        relativePath: path('Knobber-03-right-quarter-view.JPG'),
+        alt: 'Right quarter view of Knobber abstract alabaster sculpture',
+        caption:
+          'Right quarter view highlighting the sculptural balance and polished alabaster surface.',
+      },
+    ],
+  },
+  {
+    id: 200,
     title: 'Square Peg',
     date: 'Fall 2018',
     materials: 'Colorado Alabaster',
@@ -37,7 +107,7 @@ export const sculpturesData: Sculpture[] = [
       'Square Peg is the first piece to emerge after my Body Positivity exploration where I had begun to explore a form that was captivating me. With Square Peg my goal was to be process driven, and precision oriented. Melding the precision of a square with the organic yet mechanical presence of a circle, the two shapes that contrast each other so starkly become one.',
   },
   {
-    id: 3,
+    id: 300,
     title: 'Belly Love',
     date: 'Summer 2018',
     materials: 'Colorado Alabaster',
@@ -58,7 +128,7 @@ export const sculpturesData: Sculpture[] = [
       "As the last piece in my iterative exploration of the celebration of the inclusivity of the natural human body I place my focus and my frame on the belly. The belly, which many of us are ashamed of or embarrassed about, is brought into focus and is framed by the idea of an exaggerated 'muffin top' which we are all so self conscious about. But rather than being ashamed of it, The Belly celebrates it with a triumphant a playful pose that saying here I am.",
   },
   {
-    id: 4,
+    id: 400,
     title: 'Healthy Heart',
     date: 'Spring 2017',
     materials: 'Colorado Alabaster',
@@ -79,7 +149,7 @@ export const sculpturesData: Sculpture[] = [
       "Healthy Heart iterates on Rolls' exploration of the voluptuousness of the human body. This piece brings body positivity to heart by both literally and figuratively. Here we see a heart as the foundation being punctuated and accented by soft curves reminiscent of a belly and sumptuous rolls and folds that celebrate the natural human form.",
   },
   {
-    id: 5,
+    id: 500,
     title: 'Rolls',
     date: 'Spring 2016',
     materials: 'Colorado Alabaster',
@@ -99,7 +169,7 @@ export const sculpturesData: Sculpture[] = [
       'In this piece I start exploring new tools and techniques including diamond needle files in order to be able to create more voluptuous curves and folds. With rolls I begin looking at parts of the human form and finding ways to abstract out less desirable traits, like body fat rolls, and intersperse them into the natural shape of the stone. Rolls celebrates the idea of body positivity through its motif of voluptuous rolls.',
   },
   {
-    id: 6,
+    id: 600,
     title: 'Intersections',
     date: 'Fall 2010',
     materials: 'Colorado Alabaster and Red Oak',
@@ -121,7 +191,7 @@ export const sculpturesData: Sculpture[] = [
       'Intersections explores the juxtaposition of a traditionally hard, jagged material like stone being softened and rounded out to be given human like curvatures and suppleness while wood, a raw material traditionally organic in shape is is given a very machined and sharp feel. The play between the materials is then heightened by having the oak perfectly and seamlessly pierce through stone.',
   },
   {
-    id: 7,
+    id: 700,
     title: 'Spinal Fossil',
     date: 'Fall 2010',
     materials: 'Colorado Alabaster',
@@ -145,7 +215,7 @@ export const sculpturesData: Sculpture[] = [
       'Spinal Fossil seeks to play with the contrast between the refined and polished parts of the stone with those parts which have been left raw. The general shape loosely resembles that of a vertebra with the raw stone sections acting like encroaching osteoporosis speaks to the raw fragility of even the most durable natural materials.',
   },
   {
-    id: 8,
+    id: 800,
     title: 'Handsome',
     date: 'Fall 2009',
     materials: 'Plaster and Spray Paint',
@@ -171,7 +241,7 @@ export const sculpturesData: Sculpture[] = [
   },
 
   {
-    id: 8,
+    id: 850,
     title: 'Envy',
     date: 'Fall 2009',
     materials: 'Plaster and Spray Paint',
@@ -196,7 +266,7 @@ export const sculpturesData: Sculpture[] = [
       'Part of a college assignment through the University of Oklahoma’s sculpture department, where students were given a random word to sculpt using plaster as a reductive medium. They say that “jealousy is in the eyes of the beholder”, with that in mind I strove to create a shape of wanting and reaching , with the two arms pulling for each other. With jealousy we tend to want what we can’t have or maybe even are not supposed to have. I wanted to play with this idea by having the pupil of the play the role of a treasure that Indiana Jones would be seen taking and running away with. Something in the middle to want to covet at all cost.',
   },
   {
-    id: 1,
+    id: 900,
     title: 'Hoodie Scarves',
     subtitle:
       'Burning Man Edition with Audio Reactive LEDs and City Chic Edition in Tweed',

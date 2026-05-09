@@ -97,7 +97,7 @@ to_lowercase() {
 # List files that will be processed
 list_media_files() {
     local input_dir="${1:-.}"
-    local image_extensions=("jpg" "jpeg" "png" "gif" "bmp" "tiff" "tif" "webp" "psd" "svg")
+    local image_extensions=("jpg" "jpeg" "png" "gif" "bmp" "tiff" "tif" "webp" "psd" "svg" "heic" "heif")
     local video_extensions=("mp4" "mov" "avi" "mkv" "webm" "flv" "wmv" "m4v" "3gp")
 
     echo "📁 Scanning for media files in: $input_dir"
@@ -214,6 +214,14 @@ optimize_image() {
                 -resize '2048x2048>' \
                 "$output_dir/${basename}.jpg"
             ;;
+        heic|heif)
+            echo "  Converting HEIC/HEIF to JPEG"
+            convert "$input_file" \
+                -strip \
+                -quality 92 \
+                -resize '2048x2048>' \
+                "$output_dir/${basename}.jpg"
+            ;;
         tiff|tif|bmp|psd)
             echo "  Converting $extension to JPEG"
             convert "$input_file" \
@@ -312,7 +320,7 @@ optimize_all_media() {
     echo "======================================"
 
     # Define supported file extensions
-    local image_extensions=("jpg" "jpeg" "png" "gif" "bmp" "tiff" "tif" "webp" "psd" "svg")
+    local image_extensions=("jpg" "jpeg" "png" "gif" "bmp" "tiff" "tif" "webp" "psd" "svg" "heic" "heif")
     local video_extensions=("mp4" "mov" "avi" "mkv" "webm" "flv" "wmv" "m4v" "3gp")
 
     # Process all image files
@@ -397,7 +405,7 @@ show_usage() {
     echo "  $0 ./photos ./web-ready      # Optimize ./photos → ./web-ready"
     echo ""
     echo "Supported formats:"
-    echo "  Images: JPG, PNG, GIF, BMP, TIFF, WebP, PSD, SVG"
+    echo "  Images: JPG, PNG, GIF, BMP, TIFF, WebP, PSD, SVG, HEIC, HEIF"
     echo "  Videos: MP4, MOV, AVI, MKV, WebM, FLV, WMV, M4V, 3GP"
     echo ""
     echo "Requirements:"
