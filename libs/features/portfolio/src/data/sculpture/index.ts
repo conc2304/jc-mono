@@ -17,6 +17,104 @@ const path = (filename: string) => `${baseRelativePath}/${filename}`;
 
 export const sculpturesData: Sculpture[] = [
   {
+    id: 50,
+    title: 'The Ancient Softness',
+    date: 'Summer 2020',
+    materials: 'Colorado Alabaster',
+    description:
+      'The first sculpture in the Broken Dreams series, The Ancient Softness explores organic emergence, erosion, and vulnerability through hand-carved Colorado alabaster. Its flowing voids and biomorphic contours suggest something both ancient and unfamiliar — a primordial form suspended between fossil, organism, and memory. This original sculpture later fractured, becoming the source form for the subsequent Broken Dreams works.',
+
+    images: [
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness 001 - front view studio light.jpg'
+        ),
+        alt: 'Front studio view of The Ancient Softness alabaster sculpture',
+        caption: 'Front studio view',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness 003 - close up top view studio light.jpg'
+        ),
+        alt: 'Close-up top detail of The Ancient Softness showing organic openings and alabaster marbling',
+        caption: 'Close-up top detail',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness 003 - side view studio light.jpg'
+        ),
+        alt: 'Side studio view of The Ancient Softness alabaster sculpture',
+        caption: 'Side studio view',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 100 process late quarter profile.jpg'
+        ),
+        alt: 'Late-stage process view of The Ancient Softness from a quarter profile angle',
+        caption: 'Late-stage process — quarter profile',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 101 process on table with hammer.jpg'
+        ),
+        alt: 'Process photograph of The Ancient Softness on worktable with carving tools and hammer',
+        caption: 'Studio carving process',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 102 process late font view.jpg'
+        ),
+        alt: 'Late-stage front process view of The Ancient Softness sculpture',
+        caption: 'Late-stage process — front view',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 104 process quarter profile.jpg'
+        ),
+        alt: 'Quarter profile process view of The Ancient Softness during carving',
+        caption: 'Process — quarter profile',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 107 process early top view.jpg'
+        ),
+        alt: 'Early-stage top process view of The Ancient Softness alabaster sculpture',
+        caption: 'Early-stage process — top view',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 108 process top quarter profile.jpg'
+        ),
+        alt: 'Top quarter profile process photograph of The Ancient Softness',
+        caption: 'Process — top quarter profile',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 109 process mid-stage quarter profileJPG.JPG'
+        ),
+        alt: 'Mid-stage quarter profile process view of The Ancient Softness sculpture',
+        caption: 'Mid-stage process — quarter profile',
+      },
+
+      {
+        relativePath: path(
+          'Broken Dreams 1 - The Ancient Softness - 111 process mid-stage  quarter profile.jpg'
+        ),
+        alt: 'Mid-stage carving process of The Ancient Softness from a quarter profile angle',
+        caption: 'Mid-stage carving process',
+      },
+    ],
+  },
+  {
     id: 100,
     title: 'Mossy Lady',
     date: 'Fall 2025',

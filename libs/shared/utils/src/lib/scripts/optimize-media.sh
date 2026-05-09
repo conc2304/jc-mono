@@ -24,8 +24,8 @@ debug_start() {
 check_tools() {
     local missing=()
 
-    if ! command -v convert >/dev/null 2>&1; then
-        missing+=("ImageMagick (convert)")
+    if ! command -v magick >/dev/null 2>&1; then
+        missing+=("ImageMagick (magick)")
     fi
 
     if ! command -v ffmpeg >/dev/null 2>&1; then
@@ -164,16 +164,16 @@ optimize_image() {
     case "$ext_lower" in
         png)
             # Check if PNG has transparency
-            if convert "$input_file" -format "%A" info: | grep -q "True"; then
+            if magick "$input_file" -format "%A" info: | grep -q "True"; then
                 echo "  PNG with transparency - optimizing as PNG"
-                convert "$input_file" \
+                magick "$input_file" \
                     -strip \
                     -define png:compression-level=9 \
                     -resize '2048x2048>' \
                     "$output_dir/$filename"
             else
                 echo "  PNG without transparency - converting to JPEG"
-                convert "$input_file" \
+                magick "$input_file" \
                     -strip \
                     -quality 92 \
                     -resize '2048x2048>' \
@@ -182,7 +182,7 @@ optimize_image() {
             ;;
         jpg|jpeg)
             echo "  Optimizing JPEG"
-            convert "$input_file" \
+            magick "$input_file" \
                 -strip \
                 -quality 92 \
                 -resize '2048x2048>' \
@@ -190,16 +190,16 @@ optimize_image() {
             ;;
         gif)
             # Check if animated GIF
-            if [ "$(identify "$input_file" | wc -l)" -gt 1 ]; then
+            if [ "$(magick identify "$input_file" | wc -l)" -gt 1 ]; then
                 echo "  Animated GIF - optimizing frames"
-                convert "$input_file" \
+                magick "$input_file" \
                     -coalesce \
                     -layers OptimizeFrame \
                     -resize '1024x1024>' \
                     "$output_dir/$filename"
             else
                 echo "  Static GIF - converting to JPEG"
-                convert "$input_file" \
+                magick "$input_file" \
                     -strip \
                     -quality 92 \
                     -resize '2048x2048>' \
@@ -208,7 +208,7 @@ optimize_image() {
             ;;
         webp)
             echo "  Converting WebP to JPEG"
-            convert "$input_file" \
+            magick "$input_file" \
                 -strip \
                 -quality 92 \
                 -resize '2048x2048>' \
@@ -216,7 +216,7 @@ optimize_image() {
             ;;
         heic|heif)
             echo "  Converting HEIC/HEIF to JPEG"
-            convert "$input_file" \
+            magick "$input_file" \
                 -strip \
                 -quality 92 \
                 -resize '2048x2048>' \
@@ -224,7 +224,7 @@ optimize_image() {
             ;;
         tiff|tif|bmp|psd)
             echo "  Converting $extension to JPEG"
-            convert "$input_file" \
+            magick "$input_file" \
                 -strip \
                 -quality 92 \
                 -resize '2048x2048>' \
@@ -303,7 +303,8 @@ optimize_video() {
 # Main optimization function
 optimize_all_media() {
     local input_dir="${1:-.}"
-    local output_dir="${2:-optimized}"
+    local input_dir_abs=$(cd "$input_dir" && pwd)
+    local output_dir="${2:-$(dirname "$input_dir_abs")/optimized}"
 
     # Validate input directory
     if [ ! -d "$input_dir" ]; then
@@ -409,7 +410,7 @@ show_usage() {
     echo "  Videos: MP4, MOV, AVI, MKV, WebM, FLV, WMV, M4V, 3GP"
     echo ""
     echo "Requirements:"
-    echo "  • ImageMagick (for images): brew install imagemagick"
+    echo "  • ImageMagick (for images): brew install imagemagick "
     echo "  • FFmpeg (for videos): brew install ffmpeg"
     echo "  • bc (for calculations): brew install bc"
 }
