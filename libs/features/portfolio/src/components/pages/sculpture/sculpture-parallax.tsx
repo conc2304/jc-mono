@@ -859,7 +859,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
     const section = sectionsRef.current[index];
     if (section && scrollerRef.current) {
       gsap.to(scrollerRef.current, {
-        scrollTo: { y: section, offsetY: 0 },
+        scrollTo: { y: section, offsetY: appBarHeight },
         duration: 1,
         ease: 'power2.inOut',
       });
@@ -871,7 +871,7 @@ export const SculpturePortfolio: React.FC<SculpturePortfolioProps> = ({
     const section = sectionsRef.current[index];
     if (section && scrollerRef.current) {
       gsap.to(scrollerRef.current, {
-        scrollTo: { y: section, offsetY: 0 },
+        scrollTo: { y: section, offsetY: appBarHeight },
         duration: 0.8,
         ease: 'power2.inOut',
       });
