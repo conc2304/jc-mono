@@ -118,12 +118,19 @@ export const WindowProvider: React.FC<{
   navigationGroups?: NavigationGroup[];
   defaultDesktopItemPositions?: Record<string, ItemPosition>;
   windowAnimationType?: 'transform' | 'fade';
+  onOpenWindow?: (fsId: string) => void;
+  onReplaceWindowContent?: (
+    windowId: string,
+    metadata?: Record<string, unknown>
+  ) => void;
 }> = ({
   children,
   fileSystemItems,
   defaultDesktopItemPositions = {},
   navigationGroups = [],
   windowAnimationType = 'transform',
+  onOpenWindow,
+  onReplaceWindowContent,
 }) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
@@ -422,8 +429,9 @@ export const WindowProvider: React.FC<{
             : window
         )
       );
+      onReplaceWindowContent?.(windowId, options.metadata);
     },
-    []
+    [onReplaceWindowContent]
   );
 
   const bringToFront = useCallback((windowId: string) => {
@@ -519,6 +527,7 @@ export const WindowProvider: React.FC<{
       }
 
       setWindowZIndex(windowZIndex + 1);
+      onOpenWindow?.(itemId);
     },
     [
       fileSystemItems,
@@ -527,6 +536,7 @@ export const WindowProvider: React.FC<{
       onWindowAnimationComplete,
       replaceWindowContent,
       getWindowContent,
+      onOpenWindow,
     ]
   );
 
