@@ -26,7 +26,7 @@ import {
   nudgeCorner,
   type CornerKey,
 } from '@jc/projection-warp';
-import { useOFClient } from '@jc/of-control-client';
+import { useOFClient, useOFStore } from '@jc/of-control-client';
 import { ProjectionCanvas } from './ProjectionCanvas';
 
 const CORNER_LABELS: Record<CornerKey, string> = {
@@ -44,6 +44,9 @@ export const ProjectionMappingController: React.FC<Props> = ({
   projection,
 }) => {
   const { client } = useOFClient();
+  const store = useOFStore();
+  const maskVersion = store.maskVersion;
+  const gridSize = store.projection?.gridSize ?? 50;
   const [corners, setCorners] = useState<ProjectionCorners>(
     projection?.corners ?? defaultCorners()
   );
@@ -158,7 +161,8 @@ export const ProjectionMappingController: React.FC<Props> = ({
           corners={corners}
           selectedCorner={selectedCornerIndex}
           testGrid={testGrid}
-          imageUrl={projection ? undefined : undefined}
+          gridSize={gridSize}
+          maskVersion={maskVersion}
           onSelectCorner={setSelectedCornerIndex}
           onMoveCorner={handleMove}
         />

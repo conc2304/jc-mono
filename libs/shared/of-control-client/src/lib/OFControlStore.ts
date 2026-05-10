@@ -21,6 +21,7 @@ export class OFControlStore {
   currentPreset: string | null = null;
   fps: number | null = null;
   projection: ProjectionState | null = null;
+  maskVersion = 0;
   connection: ConnectionState = { status: 'disconnected' };
 
   private listeners = new Set<StoreListener>();
@@ -128,6 +129,10 @@ export class OFControlStore {
         };
         break;
       }
+
+      case 'maskChanged':
+        this.maskVersion += 1;
+        break;
 
       default:
         break;
