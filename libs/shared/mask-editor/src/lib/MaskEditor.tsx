@@ -19,6 +19,8 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { uploadMask } from '@jc/of-control-client';
 
 type Tool = 'brush' | 'eraser';
@@ -77,6 +79,7 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [maskView, setMaskView] = useState(false);
 
   const getOverlay = () => overlayRef.current?.getContext('2d') ?? null;
 
@@ -109,7 +112,17 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
   }, []);
 
   useEffect(() => {
-    if (!sourceFile) { drawSourceImage(); return; }
+    if (!sourceFile) {
+      drawSourceImage();
+      const overlay = overlayRef.current;
+      if (overlay) {
+        const octx = overlay.getContext('2d')!;
+        octx.fillStyle = '#ffffff';
+        octx.fillRect(0, 0, overlay.width, overlay.height);
+      }
+      revalidate();
+      return;
+    }
     const img = new Image();
     img.onload = () => {
       sourceImgRef.current = img;
@@ -268,10 +281,9 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
     left: 0,
     width: '100%',
     height: '100%',
-    opacity,
+    opacity: maskView ? 1 : opacity,
     touchAction: 'none',
     cursor: tool === 'brush' ? 'crosshair' : 'cell',
-    mixBlendMode: 'multiply',
   };
 
   return (
@@ -284,8 +296,8 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
         </Stack>
       </Box>
 
-      <Box sx={{ position: 'relative', borderRadius: 2, overflow: 'hidden', backgroundColor: '#111' }}>
-        <canvas ref={canvasRef} width={600} height={400} style={{ width: '100%', height: 'auto', display: 'block' }} />
+      <Box sx={{ position: 'relative', borderRadius: 2, overflow: 'hidden', backgroundColor: '#ffffff' }}>
+        <canvas ref={canvasRef} width={600} height={400} style={{ width: '100%', height: 'auto', display: 'block', visibility: maskView ? 'hidden' : 'visible' }} />
         <canvas
           ref={overlayRef}
           width={600}
@@ -315,6 +327,11 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
           </Tooltip>
         </ButtonGroup>
         <Tooltip title="Invert mask"><IconButton size="small" onClick={handleInvert}><InvertColorsIcon /></IconButton></Tooltip>
+        <Tooltip title={maskView ? 'Show with source image' : 'Preview mask only'}>
+          <IconButton size="small" onClick={() => setMaskView((v) => !v)} color={maskView ? 'primary' : 'default'}>
+            {maskView ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </IconButton>
+        </Tooltip>
       </Stack>
 
       <Box>
