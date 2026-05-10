@@ -19,7 +19,7 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { uploadMask } from '@jc/shared/of-control-client';
+import { uploadMask } from '@jc/of-control-client';
 
 type Tool = 'brush' | 'eraser';
 
@@ -210,19 +210,6 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
     }
     ctx.putImageData(data, 0, 0);
     revalidate();
-  };
-
-  const exportPng = (): Blob | null => {
-    const c = overlayRef.current;
-    if (!c) return null;
-    const off = document.createElement('canvas');
-    off.width = c.width;
-    off.height = c.height;
-    const ctx = off.getContext('2d')!;
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, off.width, off.height);
-    ctx.drawImage(c, 0, 0);
-    return new Promise<Blob | null>((resolve) => off.toBlob(resolve, 'image/png')) as unknown as Blob;
   };
 
   const handleDownload = () => {

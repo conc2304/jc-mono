@@ -2,11 +2,17 @@ import type {
   ControlSchema,
   ServerMessage,
   ConnectionState,
+  ProjectionCornersWire,
+  ProjectionCorners,
   ProjectionState,
 } from '@jc/of-control-protocol';
 import type { OFControlClient } from './OFControlClient';
 
 export type StoreListener = (store: OFControlStore) => void;
+
+function normalizeCorners(wire: ProjectionCornersWire): ProjectionCorners {
+  return [wire.topLeft, wire.topRight, wire.bottomRight, wire.bottomLeft];
+}
 
 export class OFControlStore {
   schema: ControlSchema | null = null;
@@ -81,7 +87,14 @@ export class OFControlStore {
           };
         }
         if (msg.projection !== undefined) {
-          this.projection = { corners: msg.projection.corners, calibrating: msg.projection.calibrating };
+          const p = msg.projection;
+          this.projection = {
+            corners: normalizeCorners(p.corners),
+            calibrationEnabled: p.calibrationEnabled,
+            testGridEnabled: p.testGridEnabled,
+            gridSize: p.gridSize,
+            dirty: p.dirty,
+          };
         }
         break;
 
@@ -104,19 +117,17 @@ export class OFControlStore {
         this.currentPreset = msg.presetId;
         break;
 
-      case 'projectionChanged':
+      case 'projectionChanged': {
+        const p = msg.projection;
         this.projection = {
-          corners: msg.projection.corners,
-          calibrating: msg.projection.calibrating,
-          dirty: this.projection?.dirty,
+          corners: normalizeCorners(p.corners),
+          calibrationEnabled: p.calibrationEnabled,
+          testGridEnabled: p.testGridEnabled,
+          gridSize: p.gridSize,
+          dirty: p.dirty,
         };
         break;
-
-      case 'projectionCalibrationChanged':
-        if (this.projection) {
-          this.projection = { ...this.projection, calibrating: msg.calibrating };
-        }
-        break;
+      }
 
       default:
         break;

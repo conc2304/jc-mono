@@ -7,6 +7,12 @@
       "path": "../of-control-protocol"
     },
     {
+      "path": "../of-control-client"
+    },
+    {
+      "path": "../projection-warp"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ],
@@ -14,6 +20,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "lib": ["es2022", "dom"]
   }
 }

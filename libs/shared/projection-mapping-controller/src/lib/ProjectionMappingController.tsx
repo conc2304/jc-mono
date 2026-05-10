@@ -18,14 +18,15 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import type {
   ProjectionCorners,
+  ProjectionCornersWire,
   ProjectionState,
 } from '@jc/of-control-protocol';
 import {
   defaultCorners,
   nudgeCorner,
   type CornerKey,
-} from '@jc/shared/projection-warp';
-import { useOFClient } from '@jc/shared/of-control-client';
+} from '@jc/projection-warp';
+import { useOFClient } from '@jc/of-control-client';
 import { ProjectionCanvas } from './ProjectionCanvas';
 
 const CORNER_LABELS: Record<CornerKey, string> = {
@@ -46,7 +47,8 @@ export const ProjectionMappingController: React.FC<Props> = ({
   const [corners, setCorners] = useState<ProjectionCorners>(
     projection?.corners ?? defaultCorners()
   );
-  const [selectedCorner, setSelectedCorner] = useState<CornerKey | null>(0);
+  const [selectedCornerIndex, setSelectedCornerIndex] =
+    useState<CornerKey | null>(0);
   const [nudgeAmount, setNudgeAmount] = useState(0.005);
   const [testGrid, setTestGrid] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -62,11 +64,18 @@ export const ProjectionMappingController: React.FC<Props> = ({
     };
   }, [client]);
 
+  const toWire = (c: ProjectionCorners): ProjectionCornersWire => ({
+    topLeft: c[0],
+    topRight: c[1],
+    bottomRight: c[2],
+    bottomLeft: c[3],
+  });
+
   const sendCorners = useCallback(
     (c: ProjectionCorners) => {
       if (throttleRef.current) clearTimeout(throttleRef.current);
       throttleRef.current = setTimeout(() => {
-        client.send({ type: 'setProjectionCorners', corners: c });
+        client.send({ type: 'setProjectionCorners', corners: toWire(c) });
       }, 40);
     },
     [client]
@@ -82,10 +91,10 @@ export const ProjectionMappingController: React.FC<Props> = ({
   );
 
   const handleNudge = (dx: number, dy: number) => {
-    if (selectedCorner === null) return;
+    if (selectedCornerIndex === null) return;
     const updated = nudgeCorner(
       corners,
-      selectedCorner,
+      selectedCornerIndex,
       dx * nudgeAmount,
       dy * nudgeAmount
     );
@@ -112,7 +121,7 @@ export const ProjectionMappingController: React.FC<Props> = ({
     setDirty(false);
     client.send({
       type: 'setProjectionCorners',
-      corners: savedCornersRef.current,
+      corners: toWire(savedCornersRef.current),
     });
   };
 
@@ -141,16 +150,16 @@ export const ProjectionMappingController: React.FC<Props> = ({
       <Box
         sx={{
           p: 2,
-          borderColor: 'primary',
+          borderColor: 'divider',
           border: '1px solid',
         }}
       >
         <ProjectionCanvas
           corners={corners}
-          selectedCorner={selectedCorner}
+          selectedCorner={selectedCornerIndex}
           testGrid={testGrid}
           imageUrl={projection ? undefined : undefined}
-          onSelectCorner={setSelectedCorner}
+          onSelectCorner={setSelectedCornerIndex}
           onMoveCorner={handleMove}
         />
       </Box>
@@ -161,19 +170,19 @@ export const ProjectionMappingController: React.FC<Props> = ({
             key={k}
             label={CORNER_LABELS[k]}
             size="small"
-            onClick={() => setSelectedCorner(k)}
-            color={selectedCorner === k ? 'primary' : 'default'}
-            variant={selectedCorner === k ? 'filled' : 'outlined'}
+            onClick={() => setSelectedCornerIndex(k)}
+            color={selectedCornerIndex === k ? 'primary' : 'default'}
+            variant={selectedCornerIndex === k ? 'filled' : 'outlined'}
           />
         ))}
-        {selectedCorner !== null && (
+        {corners && selectedCornerIndex !== null && (
           <Typography
             variant="caption"
             color="text.secondary"
             sx={{ alignSelf: 'center', ml: 'auto' }}
           >
-            x: {corners[selectedCorner].x.toFixed(4)} y:{' '}
-            {corners[selectedCorner].y.toFixed(4)}
+            <span>x: {corners[selectedCornerIndex].x.toFixed(4)}</span>
+            <span>y: {corners[selectedCornerIndex].y.toFixed(4)}</span>
           </Typography>
         )}
       </Box>
@@ -191,7 +200,7 @@ export const ProjectionMappingController: React.FC<Props> = ({
         <IconButton
           size="small"
           onClick={() => handleNudge(0, -1)}
-          disabled={selectedCorner === null}
+          disabled={selectedCornerIndex === null}
         >
           <ArrowUpwardIcon fontSize="small" />
         </IconButton>
@@ -199,7 +208,7 @@ export const ProjectionMappingController: React.FC<Props> = ({
         <IconButton
           size="small"
           onClick={() => handleNudge(-1, 0)}
-          disabled={selectedCorner === null}
+          disabled={selectedCornerIndex === null}
         >
           <ArrowBackIcon fontSize="small" />
         </IconButton>
@@ -221,7 +230,7 @@ export const ProjectionMappingController: React.FC<Props> = ({
         <IconButton
           size="small"
           onClick={() => handleNudge(1, 0)}
-          disabled={selectedCorner === null}
+          disabled={selectedCornerIndex === null}
         >
           <ArrowForwardIcon fontSize="small" />
         </IconButton>
@@ -229,7 +238,7 @@ export const ProjectionMappingController: React.FC<Props> = ({
         <IconButton
           size="small"
           onClick={() => handleNudge(0, 1)}
-          disabled={selectedCorner === null}
+          disabled={selectedCornerIndex === null}
         >
           <ArrowDownwardIcon fontSize="small" />
         </IconButton>
@@ -267,7 +276,11 @@ export const ProjectionMappingController: React.FC<Props> = ({
         <Switch
           size="small"
           checked={testGrid}
-          onChange={(e) => setTestGrid(e.target.checked)}
+          onChange={(e) => {
+            const enabled = e.target.checked;
+            setTestGrid(enabled);
+            client.send({ type: 'setProjectionGrid', enabled });
+          }}
         />
       </Box>
 

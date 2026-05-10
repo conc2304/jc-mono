@@ -5,6 +5,8 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "inlineSourceMap": true,
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/shared/fireplace-control-shared-ui/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],

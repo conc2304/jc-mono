@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy:pi": "vite build && rsync -avz --delete dist/ conc@rockpi-4b:~/openFrameworks/apps/myApps/FireplaceWaterfall/bin/data/web/",
-    "publish:pi": "rsync -avz --delete dist/ conc@rockpi-4b:~/openFrameworks/apps/myApps/FireplaceWaterfall/bin/data/web/"
+    "prepublish:pi": "rsync -avz --delete dist/ conc@rockpi-4b:~/openFrameworks/apps/myApps/FireplaceWaterfall/bin/data/web/"
   },
   "nx": {
     "name": "fireplace-control-shell",

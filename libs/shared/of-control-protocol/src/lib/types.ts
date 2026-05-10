@@ -74,19 +74,30 @@ export interface ControlSchema {
 }
 
 /**
- * Projection corners as an ordered 4-tuple.
+ * Projection corners as an ordered 4-tuple (internal representation).
  * Index: 0=topLeft, 1=topRight, 2=bottomRight, 3=bottomLeft
  */
 export type ProjectionCorners = [NormalizedPoint, NormalizedPoint, NormalizedPoint, NormalizedPoint];
 
 /**
- * Projection state matching OF wire format.
- * `dirty` is frontend-only and never sent by OF.
+ * Projection corners as named keys matching the wire format.
+ */
+export interface ProjectionCornersWire {
+  topLeft: NormalizedPoint;
+  topRight: NormalizedPoint;
+  bottomRight: NormalizedPoint;
+  bottomLeft: NormalizedPoint;
+}
+
+/**
+ * Projection state. `dirty` reflects server-side unsaved state.
  */
 export interface ProjectionState {
   corners: ProjectionCorners;
-  calibrating: boolean;
-  dirty?: boolean;
+  calibrationEnabled: boolean;
+  testGridEnabled: boolean;
+  gridSize: number;
+  dirty: boolean;
 }
 
 /**

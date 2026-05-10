@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "outDir": "../../../dist/out-tsc", "declaration": true, "declarationMap": true, "inlineSources": true, "types": ["node"] },
+  "compilerOptions": { "outDir": "../../../dist/out-tsc", "tsBuildInfoFile": "../../../dist/out-tsc/libs/shared/mask-editor/tsconfig.lib.tsbuildinfo", "declaration": true, "declarationMap": true, "inlineSources": true, "inlineSourceMap": true, "types": ["node"] },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [{ "path": "../of-control-client/tsconfig.lib.json" }]
 }

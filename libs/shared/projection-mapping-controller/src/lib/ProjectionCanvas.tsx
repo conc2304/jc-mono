@@ -6,7 +6,7 @@ import {
   hitTestCorner,
   pixelToNormalized,
   type CornerKey,
-} from '@jc/shared/projection-warp';
+} from '@jc/projection-warp';
 
 interface Props {
   corners: ProjectionCorners;
@@ -87,13 +87,22 @@ export const ProjectionCanvas: React.FC<Props> = ({
   }, [corners, selectedCorner, testGrid, draw]);
 
   useEffect(() => {
-    if (!imageUrl) { imageRef.current = null; draw(); return; }
+    if (!imageUrl) {
+      imageRef.current = null;
+      draw();
+      return;
+    }
     const img = new Image();
-    img.onload = () => { imageRef.current = img; draw(); };
+    img.onload = () => {
+      imageRef.current = img;
+      draw();
+    };
     img.src = imageUrl;
   }, [imageUrl, draw]);
 
-  const getPos = (e: React.MouseEvent | React.TouchEvent): { x: number; y: number } => {
+  const getPos = (
+    e: React.MouseEvent | React.TouchEvent
+  ): { x: number; y: number } => {
     const canvas = canvasRef.current!;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -113,7 +122,13 @@ export const ProjectionCanvas: React.FC<Props> = ({
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current!;
     const pos = getPos(e);
-    const hit = hitTestCorner(cornersRef.current, canvas.width, canvas.height, pos.x, pos.y);
+    const hit = hitTestCorner(
+      cornersRef.current,
+      canvas.width,
+      canvas.height,
+      pos.x,
+      pos.y
+    );
     if (hit !== null) {
       draggingRef.current = hit;
       onSelectCorner(hit);
@@ -128,8 +143,13 @@ export const ProjectionCanvas: React.FC<Props> = ({
     const canvas = canvasRef.current!;
     const pos = getPos(e);
     const norm = pixelToNormalized(pos.x, pos.y, canvas.width, canvas.height);
-    const clamped = { x: Math.max(0, Math.min(1, norm.x)), y: Math.max(0, Math.min(1, norm.y)) };
-    const updated: ProjectionCorners = [...cornersRef.current] as unknown as ProjectionCorners;
+    const clamped = {
+      x: Math.max(0, Math.min(1, norm.x)),
+      y: Math.max(0, Math.min(1, norm.y)),
+    };
+    const updated: ProjectionCorners = [
+      ...cornersRef.current,
+    ] as unknown as ProjectionCorners;
     updated[draggingRef.current] = clamped;
     onMoveCorner(draggingRef.current, updated);
   };
@@ -143,7 +163,14 @@ export const ProjectionCanvas: React.FC<Props> = ({
       ref={canvasRef}
       width={600}
       height={400}
-      style={{ width: '100%', height: 'auto', touchAction: 'none', cursor: 'crosshair', borderRadius: 8, display: 'block' }}
+      style={{
+        width: '100%',
+        height: 'auto',
+        touchAction: 'none',
+        cursor: 'crosshair',
+        borderRadius: 0,
+        display: 'block',
+      }}
       onMouseDown={handlePointerDown}
       onMouseMove={handlePointerMove}
       onMouseUp={handlePointerUp}

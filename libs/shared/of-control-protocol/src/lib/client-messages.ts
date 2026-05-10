@@ -2,7 +2,7 @@
  * WebSocket messages sent from client (frontend) to OF server
  */
 
-import type { ProjectionCorners } from './types';
+import type { ProjectionCornersWire } from './types';
 
 /**
  * Base message with optional requestId for ack pattern
@@ -51,22 +51,29 @@ export interface LoadPresetMessage extends BaseClientMessage {
 }
 
 /**
- * Set a single projection corner by index.
- * Index: 0=topLeft, 1=topRight, 2=bottomRight, 3=bottomLeft
+ * Set a single projection corner by name.
  */
 export interface SetProjectionCornerMessage extends BaseClientMessage {
   type: 'setProjectionCorner';
-  index: 0 | 1 | 2 | 3;
-  x: number;
-  y: number;
+  corner: 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
+  point: { x: number; y: number };
 }
 
 /**
- * Set all projection corners at once
+ * Set all projection corners at once (named keys, normalized coords)
  */
 export interface SetProjectionCornersMessage extends BaseClientMessage {
   type: 'setProjectionCorners';
-  corners: ProjectionCorners;
+  corners: ProjectionCornersWire;
+}
+
+/**
+ * Show or hide the test grid overlay
+ */
+export interface SetProjectionGridMessage extends BaseClientMessage {
+  type: 'setProjectionGrid';
+  enabled: boolean;
+  gridSize?: number;
 }
 
 /**
@@ -102,6 +109,7 @@ export type ClientMessage =
   | LoadPresetMessage
   | SetProjectionCornerMessage
   | SetProjectionCornersMessage
+  | SetProjectionGridMessage
   | SaveProjectionMessage
   | ResetProjectionMessage
   | SetProjectionCalibrationMessage;

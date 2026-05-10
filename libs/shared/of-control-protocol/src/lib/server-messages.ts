@@ -3,7 +3,7 @@
  */
 
 import type {
-  NormalizedPoint,
+  ProjectionCornersWire,
   MaskAssetState,
 } from './types';
 
@@ -22,8 +22,11 @@ export interface FullStateMessage {
   type: 'fullState';
   values: Record<string, unknown>;
   projection?: {
-    corners: [NormalizedPoint, NormalizedPoint, NormalizedPoint, NormalizedPoint];
-    calibrating: boolean;
+    corners: ProjectionCornersWire;
+    calibrationEnabled: boolean;
+    testGridEnabled: boolean;
+    gridSize: number;
+    dirty: boolean;
   };
   preset?: string;
   presets?: Array<{ id: string; label: string; description?: string }>;
@@ -75,18 +78,12 @@ export interface PresetChangedMessage {
 export interface ProjectionChangedMessage {
   type: 'projectionChanged';
   projection: {
-    corners: [NormalizedPoint, NormalizedPoint, NormalizedPoint, NormalizedPoint];
-    calibrating: boolean;
+    corners: ProjectionCornersWire;
+    calibrationEnabled: boolean;
+    testGridEnabled: boolean;
+    gridSize: number;
+    dirty: boolean;
   };
-}
-
-/**
- * Notification when calibration mode changes
- * Sent in response to setProjectionCalibration
- */
-export interface ProjectionCalibrationChangedMessage {
-  type: 'projectionCalibrationChanged';
-  calibrating: boolean;
 }
 
 /**
@@ -104,7 +101,7 @@ export interface MaskChangedMessage {
 export interface AckMessage {
   type: 'ack';
   requestId: string;
-  ok: boolean;
+  success: boolean;
   error?: string;
 }
 
@@ -129,7 +126,6 @@ export type ServerMessage =
   | ModeChangedMessage
   | PresetChangedMessage
   | ProjectionChangedMessage
-  | ProjectionCalibrationChangedMessage
   | MaskChangedMessage
   | AckMessage
   | ErrorMessage;

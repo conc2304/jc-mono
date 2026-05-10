@@ -2,9 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/shared/of-control-protocol/tsconfig.lib.tsbuildinfo",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "inlineSourceMap": true,
     "types": []
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],

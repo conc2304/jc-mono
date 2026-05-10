@@ -12,7 +12,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
-import { uploadMask, type UploadProgress } from '@jc/shared/of-control-client';
+import { uploadMask, type UploadProgress } from '@jc/of-control-client';
 
 interface Props {
   baseUrl?: string;

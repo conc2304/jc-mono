@@ -2,9 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/shared/projection-mapping-controller/tsconfig.lib.tsbuildinfo",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "inlineSourceMap": true,
     "types": ["node"]
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],
@@ -12,6 +14,12 @@
   "references": [
     {
       "path": "../of-control-protocol/tsconfig.lib.json"
+    },
+    {
+      "path": "../of-control-client/tsconfig.lib.json"
+    },
+    {
+      "path": "../projection-warp/tsconfig.lib.json"
     }
   ]
 }
