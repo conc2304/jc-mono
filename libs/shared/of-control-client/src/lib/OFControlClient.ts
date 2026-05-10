@@ -11,6 +11,11 @@ export type ConnectionListener = (state: ConnectionState) => void;
 const DEFAULT_RECONNECT_DELAYS = [1000, 2000, 5000, 10000, 30000];
 
 function resolveWsUrl(): string {
+  // VITE_OF_WS_URL overrides auto-detect — use this in dev to point at the Pi
+  const envUrl = typeof import.meta !== 'undefined'
+    ? (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_OF_WS_URL
+    : undefined;
+  if (envUrl) return envUrl;
   if (typeof window === 'undefined') return 'ws://localhost:8080/ws';
   const { protocol, hostname, port } = window.location;
   const wsProto = protocol === 'https:' ? 'wss:' : 'ws:';
@@ -43,8 +48,17 @@ export class OFControlClient {
   disconnect(): void {
     this.destroyed = true;
     this._clearReconnect();
-    this.ws?.close();
-    this.ws = null;
+    if (this.ws) {
+      // Nullify handlers first so onclose doesn't trigger a reconnect
+      this.ws.onopen = null;
+      this.ws.onmessage = null;
+      this.ws.onerror = null;
+      this.ws.onclose = null;
+      if (this.ws.readyState === 0 /* CONNECTING */ || this.ws.readyState === 1 /* OPEN */) {
+        this.ws.close();
+      }
+      this.ws = null;
+    }
     this._setStatus('disconnected');
   }
 

@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 export interface SelectOption {
   label: string;
-  value: string | number | boolean;
+  value?: string | number | boolean;
 }
 
 export interface ControlSelectProps {
@@ -31,10 +31,15 @@ export const ControlSelect: React.FC<ControlSelectProps> = ({
   disabled = false,
   onChange,
 }) => {
+  // Resolve each option's effective value: use opt.value if present, else fall back to opt.label.
+  // This handles OF sending options as [{label: "water"}, ...] with no value field.
+  const optionValue = (opt: SelectOption) =>
+    opt.value != null ? String(opt.value) : opt.label;
+
   const handleChange = (e: SelectChangeEvent<string>) => {
     const raw = e.target.value;
-    const matched = options.find((o) => String(o.value) === raw);
-    onChange(id, matched ? matched.value : raw);
+    const matched = options.find((o) => optionValue(o) === raw);
+    onChange(id, matched ? (matched.value ?? matched.label) : raw);
   };
 
   return (
@@ -51,15 +56,23 @@ export const ControlSelect: React.FC<ControlSelectProps> = ({
         <Select
           labelId={`${id}-label`}
           id={id}
-          value={String(value)}
+          value={value != null ? String(value) : ''}
           label={!description ? label : undefined}
           onChange={handleChange}
+          displayEmpty
+          renderValue={(v) => {
+            const matched = options.find((o) => optionValue(o) === v);
+            return matched ? matched.label : String(v);
+          }}
         >
-          {options.map((opt) => (
-            <MenuItem key={String(opt.value)} value={String(opt.value)}>
-              {opt.label}
-            </MenuItem>
-          ))}
+          {options.map((opt, i) => {
+            const v = optionValue(opt);
+            return (
+              <MenuItem key={`${v}-${i}`} value={v}>
+                {opt.label}
+              </MenuItem>
+            );
+          })}
         </Select>
       </FormControl>
     </Box>

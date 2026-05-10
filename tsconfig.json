@@ -43,7 +43,31 @@
       "path": "./libs/features/led-controls"
     },
     {
-      "path": "./libs/shared"
+      "path": "./libs/shared/projection-mapping-controller"
+    },
+    {
+      "path": "./libs/shared/fireplace-control-shared-ui"
+    },
+    {
+      "path": "./libs/shared/of-control-protocol"
+    },
+    {
+      "path": "./libs/shared/of-control-client"
+    },
+    {
+      "path": "./apps/fireplace-control-shell"
+    },
+    {
+      "path": "./libs/shared/scene-controller"
+    },
+    {
+      "path": "./libs/shared/projection-warp"
+    },
+    {
+      "path": "./libs/shared/mask-capture"
+    },
+    {
+      "path": "./libs/shared/mask-editor"
     }
   ]
 }

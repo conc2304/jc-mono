@@ -60,7 +60,7 @@ export class OFControlStore {
         this.schema = {
           modes: [],
           presets: [],
-          params: msg.params ?? [],
+          params: (msg.params ?? []).map(normalizeParam),
         };
         break;
 
@@ -96,3 +96,12 @@ export class OFControlStore {
 }
 
 export const globalStore = new OFControlStore();
+
+// OF sends options as either string[] or {label,value}[] — normalise to {label,value}[].
+function normalizeParam(p: Record<string, unknown>): Record<string, unknown> {
+  if (!Array.isArray(p.options)) return p;
+  const options = (p.options as unknown[]).map((o) =>
+    typeof o === 'string' ? { label: o, value: o } : o
+  );
+  return { ...p, options };
+}

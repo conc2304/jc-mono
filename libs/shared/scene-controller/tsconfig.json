@@ -4,6 +4,12 @@
   "include": [],
   "references": [
     {
+      "path": "../fireplace-control-shared-ui"
+    },
+    {
+      "path": "../of-control-protocol"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ],

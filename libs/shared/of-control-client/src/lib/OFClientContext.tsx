@@ -17,15 +17,24 @@ export interface OFClientProviderProps {
 export const OFClientProvider: React.FC<OFClientProviderProps> = ({ wsUrl, children }) => {
   const clientRef = useRef<OFControlClient | null>(null);
 
+  // Lazily initialise so the ref is stable across StrictMode double-renders.
+  // The effect below owns the connect/disconnect lifecycle.
   if (!clientRef.current) {
     clientRef.current = new OFControlClient(wsUrl);
-    globalStore.attach(clientRef.current);
   }
 
   useEffect(() => {
     const client = clientRef.current!;
+    globalStore.attach(client);
     client.connect();
-    return () => client.disconnect();
+    return () => {
+      client.disconnect();
+      // Reset so the next mount (StrictMode re-fire or real remount) gets a
+      // fresh socket rather than reusing a destroyed one.
+      clientRef.current = new OFControlClient(wsUrl);
+      globalStore.detach();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

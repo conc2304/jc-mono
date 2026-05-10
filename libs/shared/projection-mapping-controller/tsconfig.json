@@ -2,6 +2,18 @@
   "extends": "../../../tsconfig.base.json",
   "files": [],
   "include": [],
-  "references": [{ "path": "./tsconfig.lib.json" }],
-  "compilerOptions": { "esModuleInterop": true, "allowSyntheticDefaultImports": true, "jsx": "react-jsx", "moduleResolution": "bundler" }
+  "references": [
+    {
+      "path": "../of-control-protocol"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ],
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler"
+  }
 }

@@ -5,13 +5,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:pi": "vite build && rsync -avz --delete dist/ conc@rockpi-4b:~/openFrameworks/apps/myApps/FireplaceWaterfall/bin/data/web/"
   },
   "nx": {
     "name": "fireplace-control-shell",
     "targets": {
       "build": {
-        "outputs": ["{projectRoot}/dist"]
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
       }
     }
   },
