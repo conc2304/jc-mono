@@ -30,7 +30,7 @@ export const AppShell: React.FC = () => {
       case 'projection':
         return (
           <ProjectionMappingController
-            projection={store.schema ? undefined : undefined}
+            projection={store.projection ?? undefined}
           />
         );
       case 'mask':

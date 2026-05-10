@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -17,48 +16,79 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import SaveIcon from '@mui/icons-material/Save';
 import RestoreIcon from '@mui/icons-material/Restore';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import type { ProjectionCorners, ProjectionState } from '@jc/of-control-protocol';
-import { defaultCorners, nudgeCorner, type CornerKey } from '@jc/shared/projection-warp';
+import type {
+  ProjectionCorners,
+  ProjectionState,
+} from '@jc/of-control-protocol';
+import {
+  defaultCorners,
+  nudgeCorner,
+  type CornerKey,
+} from '@jc/shared/projection-warp';
 import { useOFClient } from '@jc/shared/of-control-client';
 import { ProjectionCanvas } from './ProjectionCanvas';
 
 const CORNER_LABELS: Record<CornerKey, string> = {
-  topLeft: 'TL',
-  topRight: 'TR',
-  bottomRight: 'BR',
-  bottomLeft: 'BL',
+  0: 'TL',
+  1: 'TR',
+  2: 'BR',
+  3: 'BL',
 };
 
 interface Props {
   projection?: ProjectionState;
 }
 
-export const ProjectionMappingController: React.FC<Props> = ({ projection }) => {
+export const ProjectionMappingController: React.FC<Props> = ({
+  projection,
+}) => {
   const { client } = useOFClient();
-  const [corners, setCorners] = useState<ProjectionCorners>(projection?.corners ?? defaultCorners());
-  const [selectedCorner, setSelectedCorner] = useState<CornerKey | null>('topLeft');
+  const [corners, setCorners] = useState<ProjectionCorners>(
+    projection?.corners ?? defaultCorners()
+  );
+  const [selectedCorner, setSelectedCorner] = useState<CornerKey | null>(0);
   const [nudgeAmount, setNudgeAmount] = useState(0.005);
-  const [testGrid, setTestGrid] = useState(projection?.testGridEnabled ?? false);
+  const [testGrid, setTestGrid] = useState(false);
   const [dirty, setDirty] = useState(false);
-  const savedCornersRef = useRef<ProjectionCorners>(projection?.corners ?? defaultCorners());
+  const savedCornersRef = useRef<ProjectionCorners>(
+    projection?.corners ?? defaultCorners()
+  );
   const throttleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const sendCorners = useCallback((c: ProjectionCorners) => {
-    if (throttleRef.current) clearTimeout(throttleRef.current);
-    throttleRef.current = setTimeout(() => {
-      client.send({ type: 'setProjectionCorners', corners: c });
-    }, 40);
+  useEffect(() => {
+    client.send({ type: 'setProjectionCalibration', enabled: true });
+    return () => {
+      client.send({ type: 'setProjectionCalibration', enabled: false });
+    };
   }, [client]);
 
-  const handleMove = useCallback((corner: CornerKey, updated: ProjectionCorners) => {
-    setCorners(updated);
-    setDirty(true);
-    sendCorners(updated);
-  }, [sendCorners]);
+  const sendCorners = useCallback(
+    (c: ProjectionCorners) => {
+      if (throttleRef.current) clearTimeout(throttleRef.current);
+      throttleRef.current = setTimeout(() => {
+        client.send({ type: 'setProjectionCorners', corners: c });
+      }, 40);
+    },
+    [client]
+  );
+
+  const handleMove = useCallback(
+    (corner: CornerKey, updated: ProjectionCorners) => {
+      setCorners(updated);
+      setDirty(true);
+      sendCorners(updated);
+    },
+    [sendCorners]
+  );
 
   const handleNudge = (dx: number, dy: number) => {
-    if (!selectedCorner) return;
-    const updated = nudgeCorner(corners, selectedCorner, dx * nudgeAmount, dy * nudgeAmount);
+    if (selectedCorner === null) return;
+    const updated = nudgeCorner(
+      corners,
+      selectedCorner,
+      dx * nudgeAmount,
+      dy * nudgeAmount
+    );
     setCorners(updated);
     setDirty(true);
     sendCorners(updated);
@@ -80,31 +110,53 @@ export const ProjectionMappingController: React.FC<Props> = ({ projection }) => 
   const handleRevert = () => {
     setCorners(savedCornersRef.current);
     setDirty(false);
-    client.send({ type: 'setProjectionCorners', corners: savedCornersRef.current });
-  };
-
-  const handleTestGrid = (enabled: boolean) => {
-    setTestGrid(enabled);
-    client.send({ type: 'setProjectionGrid', enabled });
+    client.send({
+      type: 'setProjectionCorners',
+      corners: savedCornersRef.current,
+    });
   };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="overline" sx={{ letterSpacing: 1 }}>Projection Mapping</Typography>
-        {dirty && <Chip label="Unsaved" size="small" color="warning" variant="outlined" />}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant="overline" sx={{ letterSpacing: 1 }}>
+          Projection Mapping
+        </Typography>
+        {dirty && (
+          <Chip
+            label="Unsaved"
+            size="small"
+            color="warning"
+            variant="outlined"
+          />
+        )}
       </Box>
 
-      <ProjectionCanvas
-        corners={corners}
-        selectedCorner={selectedCorner}
-        imageUrl={projection ? undefined : undefined}
-        onSelectCorner={setSelectedCorner}
-        onMoveCorner={handleMove}
-      />
+      <Box
+        sx={{
+          p: 2,
+          borderColor: 'primary',
+          border: '1px solid',
+        }}
+      >
+        <ProjectionCanvas
+          corners={corners}
+          selectedCorner={selectedCorner}
+          testGrid={testGrid}
+          imageUrl={projection ? undefined : undefined}
+          onSelectCorner={setSelectedCorner}
+          onMoveCorner={handleMove}
+        />
+      </Box>
 
       <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        {(Object.keys(CORNER_LABELS) as CornerKey[]).map((k) => (
+        {([0, 1, 2, 3] as CornerKey[]).map((k) => (
           <Chip
             key={k}
             label={CORNER_LABELS[k]}
@@ -114,29 +166,80 @@ export const ProjectionMappingController: React.FC<Props> = ({ projection }) => 
             variant={selectedCorner === k ? 'filled' : 'outlined'}
           />
         ))}
-        {selectedCorner && (
-          <Typography variant="caption" color="text.secondary" sx={{ alignSelf: 'center', ml: 'auto' }}>
-            x: {corners[selectedCorner].x.toFixed(4)} y: {corners[selectedCorner].y.toFixed(4)}
+        {selectedCorner !== null && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ alignSelf: 'center', ml: 'auto' }}
+          >
+            x: {corners[selectedCorner].x.toFixed(4)} y:{' '}
+            {corners[selectedCorner].y.toFixed(4)}
           </Typography>
         )}
       </Box>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0.5, maxWidth: 180, mx: 'auto' }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr',
+          gap: 0.5,
+          maxWidth: 180,
+          mx: 'auto',
+        }}
+      >
         <Box />
-        <IconButton size="small" onClick={() => handleNudge(0, -1)} disabled={!selectedCorner}><ArrowUpwardIcon fontSize="small" /></IconButton>
+        <IconButton
+          size="small"
+          onClick={() => handleNudge(0, -1)}
+          disabled={selectedCorner === null}
+        >
+          <ArrowUpwardIcon fontSize="small" />
+        </IconButton>
         <Box />
-        <IconButton size="small" onClick={() => handleNudge(-1, 0)} disabled={!selectedCorner}><ArrowBackIcon fontSize="small" /></IconButton>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.6rem' }}>D-PAD</Typography>
+        <IconButton
+          size="small"
+          onClick={() => handleNudge(-1, 0)}
+          disabled={selectedCorner === null}
+        >
+          <ArrowBackIcon fontSize="small" />
+        </IconButton>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography
+            variant="caption"
+            color="text.disabled"
+            sx={{ fontSize: '0.6rem' }}
+          >
+            D-PAD
+          </Typography>
         </Box>
-        <IconButton size="small" onClick={() => handleNudge(1, 0)} disabled={!selectedCorner}><ArrowForwardIcon fontSize="small" /></IconButton>
+        <IconButton
+          size="small"
+          onClick={() => handleNudge(1, 0)}
+          disabled={selectedCorner === null}
+        >
+          <ArrowForwardIcon fontSize="small" />
+        </IconButton>
         <Box />
-        <IconButton size="small" onClick={() => handleNudge(0, 1)} disabled={!selectedCorner}><ArrowDownwardIcon fontSize="small" /></IconButton>
+        <IconButton
+          size="small"
+          onClick={() => handleNudge(0, 1)}
+          disabled={selectedCorner === null}
+        >
+          <ArrowDownwardIcon fontSize="small" />
+        </IconButton>
         <Box />
       </Box>
 
       <Box>
-        <Typography variant="caption" color="text.secondary">Nudge amount: {nudgeAmount.toFixed(4)}</Typography>
+        <Typography variant="caption" color="text.secondary">
+          Nudge amount: {nudgeAmount.toFixed(4)}
+        </Typography>
         <Slider
           size="small"
           min={0.001}
@@ -150,12 +253,22 @@ export const ProjectionMappingController: React.FC<Props> = ({ projection }) => 
 
       <Divider />
 
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <GridOnIcon fontSize="small" color="action" />
           <Typography variant="caption">Test Grid</Typography>
         </Box>
-        <Switch size="small" checked={testGrid} onChange={(e) => handleTestGrid(e.target.checked)} />
+        <Switch
+          size="small"
+          checked={testGrid}
+          onChange={(e) => setTestGrid(e.target.checked)}
+        />
       </Box>
 
       <Stack direction="row" spacing={1}>
@@ -172,12 +285,24 @@ export const ProjectionMappingController: React.FC<Props> = ({ projection }) => 
           </Button>
         </Tooltip>
         <Tooltip title="Revert to last saved">
-          <Button size="small" variant="outlined" startIcon={<RestoreIcon />} onClick={handleRevert} fullWidth>
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<RestoreIcon />}
+            onClick={handleRevert}
+            fullWidth
+          >
             Revert
           </Button>
         </Tooltip>
         <Tooltip title="Reset to default corners">
-          <Button size="small" variant="outlined" color="error" onClick={handleReset} fullWidth>
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            onClick={handleReset}
+            fullWidth
+          >
             Reset
           </Button>
         </Tooltip>

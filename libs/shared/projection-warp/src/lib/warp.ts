@@ -1,11 +1,14 @@
 import type { NormalizedPoint, ProjectionCorners } from '@jc/of-control-protocol';
 
-export interface PixelCorners {
-  topLeft: { x: number; y: number };
-  topRight: { x: number; y: number };
-  bottomRight: { x: number; y: number };
-  bottomLeft: { x: number; y: number };
-}
+// index 0=topLeft, 1=topRight, 2=bottomRight, 3=bottomLeft
+export type CornerKey = 0 | 1 | 2 | 3;
+
+export type PixelCorners = [
+  { x: number; y: number },
+  { x: number; y: number },
+  { x: number; y: number },
+  { x: number; y: number },
+];
 
 export function normalizedToPixel(p: NormalizedPoint, width: number, height: number): { x: number; y: number } {
   return { x: p.x * width, y: p.y * height };
@@ -16,24 +19,22 @@ export function pixelToNormalized(x: number, y: number, width: number, height: n
 }
 
 export function cornersToPixel(corners: ProjectionCorners, width: number, height: number): PixelCorners {
-  return {
-    topLeft:     normalizedToPixel(corners.topLeft,     width, height),
-    topRight:    normalizedToPixel(corners.topRight,    width, height),
-    bottomRight: normalizedToPixel(corners.bottomRight, width, height),
-    bottomLeft:  normalizedToPixel(corners.bottomLeft,  width, height),
-  };
+  return [
+    normalizedToPixel(corners[0], width, height),
+    normalizedToPixel(corners[1], width, height),
+    normalizedToPixel(corners[2], width, height),
+    normalizedToPixel(corners[3], width, height),
+  ];
 }
 
 export function defaultCorners(): ProjectionCorners {
-  return {
-    topLeft:     { x: 0.0, y: 0.0 },
-    topRight:    { x: 1.0, y: 0.0 },
-    bottomRight: { x: 1.0, y: 1.0 },
-    bottomLeft:  { x: 0.0, y: 1.0 },
-  };
+  return [
+    { x: 0.0, y: 0.0 },
+    { x: 1.0, y: 0.0 },
+    { x: 1.0, y: 1.0 },
+    { x: 0.0, y: 1.0 },
+  ];
 }
-
-export type CornerKey = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
 export function nudgeCorner(
   corners: ProjectionCorners,
@@ -42,13 +43,12 @@ export function nudgeCorner(
   dy: number
 ): ProjectionCorners {
   const c = corners[corner];
-  return {
-    ...corners,
-    [corner]: {
-      x: Math.max(0, Math.min(1, c.x + dx)),
-      y: Math.max(0, Math.min(1, c.y + dy)),
-    },
+  const updated: ProjectionCorners = [...corners] as unknown as ProjectionCorners;
+  updated[corner] = {
+    x: Math.max(0, Math.min(1, c.x + dx)),
+    y: Math.max(0, Math.min(1, c.y + dy)),
   };
+  return updated;
 }
 
 export function drawWarpedOutline(
@@ -65,10 +65,10 @@ export function drawWarpedOutline(
   ctx.lineWidth = lineWidth;
   ctx.setLineDash([6, 4]);
   ctx.beginPath();
-  ctx.moveTo(px.topLeft.x, px.topLeft.y);
-  ctx.lineTo(px.topRight.x, px.topRight.y);
-  ctx.lineTo(px.bottomRight.x, px.bottomRight.y);
-  ctx.lineTo(px.bottomLeft.x, px.bottomLeft.y);
+  ctx.moveTo(px[0].x, px[0].y);
+  ctx.lineTo(px[1].x, px[1].y);
+  ctx.lineTo(px[2].x, px[2].y);
+  ctx.lineTo(px[3].x, px[3].y);
   ctx.closePath();
   ctx.stroke();
   ctx.restore();
@@ -83,9 +83,9 @@ export function drawCornerHandles(
   radius = 10
 ): void {
   const px = cornersToPixel(corners, width, height);
-  const entries = Object.entries(px) as Array<[CornerKey, { x: number; y: number }]>;
-
-  for (const [key, pt] of entries) {
+  for (let i = 0; i < 4; i++) {
+    const key = i as CornerKey;
+    const pt = px[key];
     const isSelected = key === selectedCorner;
     ctx.save();
     ctx.beginPath();
@@ -108,10 +108,10 @@ export function hitTestCorner(
   hitRadius = 18
 ): CornerKey | null {
   const px = cornersToPixel(corners, width, height);
-  const entries = Object.entries(px) as Array<[CornerKey, { x: number; y: number }]>;
-  for (const [key, pt] of entries) {
+  for (let i = 0; i < 4; i++) {
+    const pt = px[i as CornerKey];
     const dist = Math.hypot(pt.x - mouseX, pt.y - mouseY);
-    if (dist <= hitRadius) return key;
+    if (dist <= hitRadius) return i as CornerKey;
   }
   return null;
 }

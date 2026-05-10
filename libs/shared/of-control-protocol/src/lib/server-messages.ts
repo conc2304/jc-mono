@@ -3,13 +3,12 @@
  */
 
 import type {
-  ControlSchema,
-  ProjectionState,
+  NormalizedPoint,
   MaskAssetState,
 } from './types';
 
 /**
- * Parameter schema sent on connect or when requested
+ * Parameter schema sent on connect
  */
 export interface ParamSchemaMessage {
   type: 'paramSchema';
@@ -17,7 +16,21 @@ export interface ParamSchemaMessage {
 }
 
 /**
- * Current state snapshot sent on connect or when requested
+ * Full state snapshot sent on connect by OF
+ */
+export interface FullStateMessage {
+  type: 'fullState';
+  values: Record<string, unknown>;
+  projection?: {
+    corners: [NormalizedPoint, NormalizedPoint, NormalizedPoint, NormalizedPoint];
+    calibrating: boolean;
+  };
+  preset?: string;
+  presets?: Array<{ id: string; label: string; description?: string }>;
+}
+
+/**
+ * Current state snapshot (legacy, kept for compatibility)
  */
 export interface StateMessage {
   type: 'state';
@@ -56,12 +69,24 @@ export interface PresetChangedMessage {
 }
 
 /**
- * Notification when projection changes
- * Broadcast to all connected clients
+ * Notification when projection corners change
+ * Broadcast to all connected clients after corner updates and reset
  */
 export interface ProjectionChangedMessage {
   type: 'projectionChanged';
-  projection: ProjectionState;
+  projection: {
+    corners: [NormalizedPoint, NormalizedPoint, NormalizedPoint, NormalizedPoint];
+    calibrating: boolean;
+  };
+}
+
+/**
+ * Notification when calibration mode changes
+ * Sent in response to setProjectionCalibration
+ */
+export interface ProjectionCalibrationChangedMessage {
+  type: 'projectionCalibrationChanged';
+  calibrating: boolean;
 }
 
 /**
@@ -98,11 +123,13 @@ export interface ErrorMessage {
  */
 export type ServerMessage =
   | ParamSchemaMessage
+  | FullStateMessage
   | StateMessage
   | ParamChangedMessage
   | ModeChangedMessage
   | PresetChangedMessage
   | ProjectionChangedMessage
+  | ProjectionCalibrationChangedMessage
   | MaskChangedMessage
   | AckMessage
   | ErrorMessage;

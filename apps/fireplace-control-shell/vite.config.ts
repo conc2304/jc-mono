@@ -31,6 +31,13 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: resolve(__dirname, 'index.html'),
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-mui': ['@mui/material', '@mui/icons-material'],
+          'vendor-emotion': ['@emotion/react', '@emotion/styled'],
+        },
+      },
     },
   },
 });

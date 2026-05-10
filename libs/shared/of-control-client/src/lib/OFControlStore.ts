@@ -2,6 +2,7 @@ import type {
   ControlSchema,
   ServerMessage,
   ConnectionState,
+  ProjectionState,
 } from '@jc/of-control-protocol';
 import type { OFControlClient } from './OFControlClient';
 
@@ -13,6 +14,7 @@ export class OFControlStore {
   currentMode: string | null = null;
   currentPreset: string | null = null;
   fps: number | null = null;
+  projection: ProjectionState | null = null;
   connection: ConnectionState = { status: 'disconnected' };
 
   private listeners = new Set<StoreListener>();
@@ -64,6 +66,25 @@ export class OFControlStore {
         };
         break;
 
+      case 'fullState':
+        this.values = { ...this.values, ...msg.values };
+        if (msg.preset !== undefined) this.currentPreset = msg.preset;
+        if (msg.presets !== undefined && this.schema) {
+          this.schema = {
+            ...this.schema,
+            presets: msg.presets.map((p) => ({
+              id: p.id,
+              label: p.label,
+              description: p.description,
+              mode: '',
+            })),
+          };
+        }
+        if (msg.projection !== undefined) {
+          this.projection = { corners: msg.projection.corners, calibrating: msg.projection.calibrating };
+        }
+        break;
+
       case 'state':
         this.values = { ...this.values, ...msg.values };
         if (msg.mode !== undefined) this.currentMode = msg.mode;
@@ -81,6 +102,20 @@ export class OFControlStore {
 
       case 'presetChanged':
         this.currentPreset = msg.presetId;
+        break;
+
+      case 'projectionChanged':
+        this.projection = {
+          corners: msg.projection.corners,
+          calibrating: msg.projection.calibrating,
+          dirty: this.projection?.dirty,
+        };
+        break;
+
+      case 'projectionCalibrationChanged':
+        if (this.projection) {
+          this.projection = { ...this.projection, calibrating: msg.calibrating };
+        }
         break;
 
       default:
