@@ -1,0 +1,98 @@
+import type {
+  ControlSchema,
+  ServerMessage,
+  ConnectionState,
+} from '@jc/of-control-protocol';
+import type { OFControlClient } from './OFControlClient';
+
+export type StoreListener = (store: OFControlStore) => void;
+
+export class OFControlStore {
+  schema: ControlSchema | null = null;
+  values: Record<string, unknown> = {};
+  currentMode: string | null = null;
+  currentPreset: string | null = null;
+  fps: number | null = null;
+  connection: ConnectionState = { status: 'disconnected' };
+
+  private listeners = new Set<StoreListener>();
+  private unsubMessage: (() => void) | null = null;
+  private unsubConnection: (() => void) | null = null;
+
+  attach(client: OFControlClient): void {
+    this.unsubMessage?.();
+    this.unsubConnection?.();
+
+    this.unsubMessage = client.onMessage((msg: ServerMessage) => {
+      this._handleMessage(msg);
+    });
+
+    this.unsubConnection = client.onConnectionChange((state: ConnectionState) => {
+      this.connection = state;
+      this._notify();
+    });
+  }
+
+  detach(): void {
+    this.unsubMessage?.();
+    this.unsubConnection?.();
+    this.unsubMessage = null;
+    this.unsubConnection = null;
+  }
+
+  subscribe(listener: StoreListener): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  getValue(id: string): unknown {
+    return this.values[id];
+  }
+
+  setValueOptimistic(id: string, value: unknown): void {
+    this.values = { ...this.values, [id]: value };
+    this._notify();
+  }
+
+  private _handleMessage(msg: ServerMessage): void {
+    switch (msg.type) {
+      case 'paramSchema':
+        this.schema = {
+          modes: [],
+          presets: [],
+          params: msg.params ?? [],
+        };
+        break;
+
+      case 'state':
+        this.values = { ...this.values, ...msg.values };
+        if (msg.mode !== undefined) this.currentMode = msg.mode;
+        if (msg.preset !== undefined) this.currentPreset = msg.preset;
+        if (msg.fps !== undefined) this.fps = msg.fps;
+        break;
+
+      case 'paramChanged':
+        this.values = { ...this.values, [msg.id]: msg.value };
+        break;
+
+      case 'modeChanged':
+        this.currentMode = msg.mode;
+        break;
+
+      case 'presetChanged':
+        this.currentPreset = msg.presetId;
+        break;
+
+      default:
+        break;
+    }
+
+    this._notify();
+  }
+
+  private _notify(): void {
+    this.listeners.forEach((l) => l(this));
+  }
+}
+
+export const globalStore = new OFControlStore();
