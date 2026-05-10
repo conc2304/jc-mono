@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "mcpServers": {
+    "nx": {
+      "command": "npx",
+      "args": ["-y", "@nx/mcp@latest"],
+      "cwd": "/Users/joseconchello/Desktop/My Documents/code/JoseConchello"
+    }
+  }
+}

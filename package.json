@@ -132,7 +132,8 @@
   "workspaces": [
     "apps/*",
     "libs/shared/*",
-    "libs/features/*"
+    "libs/features/*",
+    "libs/*"
   ],
   "nx": {
     "includedScripts": [],
