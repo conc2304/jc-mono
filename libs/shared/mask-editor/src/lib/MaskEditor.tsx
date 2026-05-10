@@ -120,7 +120,7 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
       canvas.height = overlay.height = Math.round(canvas.width / aspect);
       drawSourceImage();
       const octx = overlay.getContext('2d')!;
-      octx.fillStyle = 'black';
+      octx.fillStyle = '#ffffff';
       octx.fillRect(0, 0, overlay.width, overlay.height);
       revalidate();
     };
@@ -147,8 +147,8 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
   const paintAt = (x: number, y: number) => {
     const ctx = getOverlay();
     if (!ctx) return;
-    ctx.globalCompositeOperation = tool === 'brush' ? 'source-over' : 'destination-out';
-    ctx.fillStyle = tool === 'brush' ? 'black' : 'rgba(0,0,0,1)';
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = tool === 'brush' ? '#000000' : '#ffffff';
     ctx.beginPath();
     ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
     ctx.fill();
@@ -204,9 +204,10 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
     if (!ctx || !c) return;
     const data = ctx.getImageData(0, 0, c.width, c.height);
     for (let i = 0; i < data.data.length; i += 4) {
-      data.data[i] = 255 - data.data[i];
+      data.data[i]     = 255 - data.data[i];
       data.data[i + 1] = 255 - data.data[i + 1];
       data.data[i + 2] = 255 - data.data[i + 2];
+      data.data[i + 3] = 255;
     }
     ctx.putImageData(data, 0, 0);
     revalidate();
@@ -227,10 +228,10 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'mask.png';
+      a.download = 'mask.jpg';
       a.click();
       URL.revokeObjectURL(url);
-    }, 'image/png');
+    }, 'image/jpeg', 0.92);
   };
 
   const handleUpload = async () => {
@@ -248,7 +249,7 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
 
     off.toBlob(async (blob) => {
       if (!blob) { setUploading(false); return; }
-      const file = new File([blob], 'mask.png', { type: 'image/png' });
+      const file = new File([blob], 'mask.jpg', { type: 'image/jpeg' });
       try {
         await uploadMask(file, baseUrl);
         setUploadSuccess(true);
@@ -258,7 +259,7 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
       } finally {
         setUploading(false);
       }
-    }, 'image/png');
+    }, 'image/jpeg', 0.92);
   };
 
   const overlayStyle: React.CSSProperties = {
@@ -349,7 +350,7 @@ export const MaskEditor: React.FC<Props> = ({ sourceFile, baseUrl = '', onUpload
 
       <Stack direction="row" spacing={1}>
         <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownload} fullWidth>
-          Download PNG
+          Download JPEG
         </Button>
         <Button
           size="small"
