@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import type { ControlParam } from '@jc/of-control-protocol';
 import { useOFStore, useSetParam } from '@jc/shared/of-control-client';
-import { ModeSelector } from './ModeSelector';
 import { ParamGroup } from './ParamGroup';
 
 export const SceneController: React.FC = () => {
@@ -17,27 +16,17 @@ export const SceneController: React.FC = () => {
   const isConnected = connection.status === 'connected';
   const isConnecting = connection.status === 'connecting' || connection.status === 'reconnecting';
 
-  const { globalParams, modeParams } = useMemo(() => {
-    if (!schema) return { globalParams: [], modeParams: [] };
-
-    const editable = schema.params.filter((p) => !p.readOnly);
-    const global = editable.filter((p) => !p.mode);
-    const forMode = currentMode
-      ? editable.filter((p) => p.mode === currentMode)
-      : [];
-
-    return { globalParams: global, modeParams: forMode };
+  const visibleParams = useMemo(() => {
+    if (!schema) return [];
+    return schema.params.filter(
+      (p) => !p.readOnly && (p.modes.length === 0 || (currentMode !== null && p.modes.includes(currentMode)))
+    );
   }, [schema, currentMode]);
 
-  const groupedGlobal = useMemo(() => groupByGroup(globalParams), [globalParams]);
-  const groupedMode = useMemo(() => groupByGroup(modeParams), [modeParams]);
+  const grouped = useMemo(() => groupByGroup(visibleParams), [visibleParams]);
 
   const handleCommit = (id: string, value: unknown, immediate = false) => {
     setParam(id, value, immediate);
-  };
-
-  const handleModeChange = (mode: string) => {
-    setParam('experienceMode', mode, true);
   };
 
   if (isConnecting && !schema) {
@@ -69,55 +58,14 @@ export const SceneController: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-      {schema.modes.length > 0 && (
-        <ModeSelector
-          modes={schema.modes}
-          currentMode={currentMode}
-          onChange={handleModeChange}
-        />
-      )}
-
-      {currentMode && groupedMode.size > 0 && (
-        <Box sx={{ mb: 1 }}>
-          <Typography variant="overline" color="text.secondary" sx={{ letterSpacing: 1, display: 'block', mb: 0.5 }}>
-            {currentMode} parameters
-          </Typography>
-          {Array.from(groupedMode.entries()).map(([group, params]) => (
-            <ParamGroup
-              key={group}
-              group={group}
-              params={params.normal}
-              values={values}
-              onCommit={handleCommit}
-            />
-          ))}
-          {Array.from(groupedMode.entries()).some(([, { advanced }]) => advanced.length > 0) && (
-            Array.from(groupedMode.entries()).map(([group, { advanced }]) =>
-              advanced.length > 0 ? (
-                <ParamGroup key={`${group}-adv`} group={group} params={advanced} values={values} advanced onCommit={handleCommit} />
-              ) : null
-            )
+      {Array.from(grouped.entries()).map(([group, { normal, advanced }]) => (
+        <React.Fragment key={group}>
+          <ParamGroup group={group} params={normal} values={values} onCommit={handleCommit} />
+          {advanced.length > 0 && (
+            <ParamGroup group={group} params={advanced} values={values} advanced onCommit={handleCommit} />
           )}
-        </Box>
-      )}
-
-      {groupedGlobal.size > 0 && (
-        <Box>
-          {groupedGlobal.size > 0 && (
-            <Typography variant="overline" color="text.secondary" sx={{ letterSpacing: 1, display: 'block', mb: 0.5 }}>
-              Global
-            </Typography>
-          )}
-          {Array.from(groupedGlobal.entries()).map(([group, { normal, advanced }]) => (
-            <React.Fragment key={group}>
-              <ParamGroup group={group} params={normal} values={values} onCommit={handleCommit} />
-              {advanced.length > 0 && (
-                <ParamGroup group={group} params={advanced} values={values} advanced onCommit={handleCommit} />
-              )}
-            </React.Fragment>
-          ))}
-        </Box>
-      )}
+        </React.Fragment>
+      ))}
     </Box>
   );
 };

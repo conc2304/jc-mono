@@ -75,6 +75,7 @@ export class OFControlStore {
 
       case 'fullState':
         this.values = { ...this.values, ...msg.values };
+        if (msg.values['experienceMode'] !== undefined) this.currentMode = msg.values['experienceMode'] as string;
         if (msg.preset !== undefined) this.currentPreset = msg.preset;
         if (msg.presets !== undefined && this.schema) {
           this.schema = {
@@ -108,6 +109,7 @@ export class OFControlStore {
 
       case 'paramChanged':
         this.values = { ...this.values, [msg.id]: msg.value };
+        if (msg.id === 'experienceMode') this.currentMode = msg.value as string;
         break;
 
       case 'modeChanged':
@@ -148,11 +150,12 @@ export class OFControlStore {
 
 export const globalStore = new OFControlStore();
 
-// OF sends options as either string[] or {label,value}[] — normalise to {label,value}[].
+// Normalise a raw param from the wire format into a typed ControlParam.
 function normalizeParam(p: Record<string, unknown>): Record<string, unknown> {
-  if (!Array.isArray(p.options)) return p;
+  const modes = Array.isArray(p.modes) ? p.modes : [];
+  if (!Array.isArray(p.options)) return { ...p, modes };
   const options = (p.options as unknown[]).map((o) =>
     typeof o === 'string' ? { label: o, value: o } : o
   );
-  return { ...p, options };
+  return { ...p, modes, options };
 }

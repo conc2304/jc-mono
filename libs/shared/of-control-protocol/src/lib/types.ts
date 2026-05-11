@@ -29,13 +29,13 @@ export interface ControlParam {
   label: string;
   type: ControlParamType;
   group: string;
-  mode?: string; // e.g., "water", "fire", or undefined for global
   value: unknown;
   defaultValue?: unknown;
   min?: number;
   max?: number;
   step?: number;
   options?: Array<{ label: string; value: string | number | boolean }>;
+  modes: string[];
   description?: string;
   advanced?: boolean;
   readOnly?: boolean;
