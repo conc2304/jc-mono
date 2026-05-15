@@ -36,6 +36,13 @@ const CORNER_LABELS: Record<CornerKey, string> = {
   3: 'BL',
 };
 
+const PANEL_SX = {
+  border: '1px solid',
+  borderColor: 'divider',
+  borderRadius: 1,
+  p: 1,
+} as const;
+
 interface Props {
   projection?: ProjectionState;
 }
@@ -85,7 +92,7 @@ export const ProjectionMappingController: React.FC<Props> = ({
   );
 
   const handleMove = useCallback(
-    (corner: CornerKey, updated: ProjectionCorners) => {
+    (_corner: CornerKey, updated: ProjectionCorners) => {
       setCorners(updated);
       setDirty(true);
       sendCorners(updated);
@@ -128,33 +135,30 @@ export const ProjectionMappingController: React.FC<Props> = ({
     });
   };
 
+  const selectedCoords = selectedCornerIndex !== null ? corners[selectedCornerIndex] : null;
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 1 }}>
+
+      {/* Header */}
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ flexShrink: 0 }}>
         <Typography variant="overline" sx={{ letterSpacing: 1 }}>
           Projection Mapping
         </Typography>
         {dirty && (
-          <Chip
-            label="Unsaved"
-            size="small"
-            color="warning"
-            variant="outlined"
-          />
+          <Chip label="Unsaved" size="small" color="warning" variant="outlined" />
         )}
-      </Box>
+      </Stack>
 
+      {/* Canvas — fills remaining height, canvas is centered at natural size */}
       <Box
         sx={{
-          p: 2,
-          borderColor: 'divider',
-          border: '1px solid',
+          flex: 1,
+          minHeight: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          ...PANEL_SX,
         }}
       >
         <ProjectionCanvas
@@ -168,127 +172,127 @@ export const ProjectionMappingController: React.FC<Props> = ({
         />
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        {([0, 1, 2, 3] as CornerKey[]).map((k) => (
-          <Chip
-            key={k}
-            label={CORNER_LABELS[k]}
-            size="small"
-            onClick={() => setSelectedCornerIndex(k)}
-            color={selectedCornerIndex === k ? 'primary' : 'default'}
-            variant={selectedCornerIndex === k ? 'filled' : 'outlined'}
-          />
-        ))}
-        {corners && selectedCornerIndex !== null && (
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ alignSelf: 'center', ml: 'auto' }}
-          >
-            <span>x: {corners[selectedCornerIndex].x.toFixed(4)}</span>
-            <span>y: {corners[selectedCornerIndex].y.toFixed(4)}</span>
-          </Typography>
-        )}
-      </Box>
-
+      {/* Controls row: D-pad panel | Nudge+Grid panel */}
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          gap: 0.5,
-          maxWidth: 180,
-          mx: 'auto',
+          gridTemplateColumns: '1fr auto',
+          gap: 1,
+          flexShrink: 0,
         }}
       >
-        <Box />
-        <IconButton
-          size="small"
-          onClick={() => handleNudge(0, -1)}
-          disabled={selectedCornerIndex === null}
-        >
-          <ArrowUpwardIcon fontSize="small" />
-        </IconButton>
-        <Box />
-        <IconButton
-          size="small"
-          onClick={() => handleNudge(-1, 0)}
-          disabled={selectedCornerIndex === null}
-        >
-          <ArrowBackIcon fontSize="small" />
-        </IconButton>
+        {/* Left panel: compact D-pad + corner selector + coordinates */}
+        <Box sx={{ ...PANEL_SX, display: 'flex', gap: 1.5, alignItems: 'center' }}>
+
+          {/* Compact D-pad — 3×3 grid of 28px cells */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 28px)',
+              gridTemplateRows: 'repeat(3, 28px)',
+              gap: '2px',
+              flexShrink: 0,
+            }}
+          >
+            <Box />
+            <IconButton size="small" sx={{ p: 0 }} onClick={() => handleNudge(0, -1)} disabled={selectedCornerIndex === null}>
+              <ArrowUpwardIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+            <Box />
+            <IconButton size="small" sx={{ p: 0 }} onClick={() => handleNudge(-1, 0)} disabled={selectedCornerIndex === null}>
+              <ArrowBackIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Typography variant="caption" sx={{ fontSize: '0.5rem', color: 'text.disabled', lineHeight: 1 }}>
+                D
+              </Typography>
+            </Box>
+            <IconButton size="small" sx={{ p: 0 }} onClick={() => handleNudge(1, 0)} disabled={selectedCornerIndex === null}>
+              <ArrowForwardIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+            <Box />
+            <IconButton size="small" sx={{ p: 0 }} onClick={() => handleNudge(0, 1)} disabled={selectedCornerIndex === null}>
+              <ArrowDownwardIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+            <Box />
+          </Box>
+
+          {/* Corner selector + coordinate readout */}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Stack direction="row" spacing={0.5} sx={{ mb: 0.5 }}>
+              {([0, 1, 2, 3] as CornerKey[]).map((k) => (
+                <Chip
+                  key={k}
+                  label={CORNER_LABELS[k]}
+                  size="small"
+                  onClick={() => setSelectedCornerIndex(k)}
+                  color={selectedCornerIndex === k ? 'primary' : 'default'}
+                  variant={selectedCornerIndex === k ? 'filled' : 'outlined'}
+                  sx={{ fontSize: '0.65rem', height: 20 }}
+                />
+              ))}
+            </Stack>
+            {selectedCoords ? (
+              <Typography
+                variant="caption"
+                sx={{ fontFamily: 'monospace', fontSize: '0.65rem', color: 'text.secondary' }}
+              >
+                x {selectedCoords.x.toFixed(4)} &nbsp; y {selectedCoords.y.toFixed(4)}
+              </Typography>
+            ) : (
+              <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'text.disabled' }}>
+                — select corner —
+              </Typography>
+            )}
+          </Box>
+        </Box>
+
+        {/* Right panel: Nudge slider + Test Grid toggle — max 200px */}
         <Box
           sx={{
+            ...PANEL_SX,
+            width: 180,
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'center',
+            gap: 0.75,
           }}
         >
-          <Typography
-            variant="caption"
-            color="text.disabled"
-            sx={{ fontSize: '0.6rem' }}
-          >
-            D-PAD
-          </Typography>
+          {/* Header row: nudge value + grid toggle */}
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace', fontSize: '0.65rem' }}>
+              NUDGE &nbsp;{nudgeAmount.toFixed(4)}
+            </Typography>
+            <Stack direction="row" alignItems="center" spacing={0.25}>
+              <GridOnIcon sx={{ fontSize: 13, color: 'action.active' }} />
+              <Switch
+                size="small"
+                checked={testGrid}
+                onChange={(e) => {
+                  const enabled = e.target.checked;
+                  setTestGrid(enabled);
+                  client.send({ type: 'setProjectionGrid', enabled });
+                }}
+                sx={{ ml: 0.25 }}
+              />
+            </Stack>
+          </Stack>
+
+          <Slider
+            size="small"
+            min={0.001}
+            max={0.05}
+            step={0.001}
+            value={nudgeAmount}
+            onChange={(_, v) => setNudgeAmount(v as number)}
+          />
         </Box>
-        <IconButton
-          size="small"
-          onClick={() => handleNudge(1, 0)}
-          disabled={selectedCornerIndex === null}
-        >
-          <ArrowForwardIcon fontSize="small" />
-        </IconButton>
-        <Box />
-        <IconButton
-          size="small"
-          onClick={() => handleNudge(0, 1)}
-          disabled={selectedCornerIndex === null}
-        >
-          <ArrowDownwardIcon fontSize="small" />
-        </IconButton>
-        <Box />
       </Box>
 
-      <Box>
-        <Typography variant="caption" color="text.secondary">
-          Nudge amount: {nudgeAmount.toFixed(4)}
-        </Typography>
-        <Slider
-          size="small"
-          min={0.001}
-          max={0.05}
-          step={0.001}
-          value={nudgeAmount}
-          onChange={(_, v) => setNudgeAmount(v as number)}
-          sx={{ mt: 0.5 }}
-        />
-      </Box>
+      <Divider sx={{ flexShrink: 0 }} />
 
-      <Divider />
-
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <GridOnIcon fontSize="small" color="action" />
-          <Typography variant="caption">Test Grid</Typography>
-        </Box>
-        <Switch
-          size="small"
-          checked={testGrid}
-          onChange={(e) => {
-            const enabled = e.target.checked;
-            setTestGrid(enabled);
-            client.send({ type: 'setProjectionGrid', enabled });
-          }}
-        />
-      </Box>
-
-      <Stack direction="row" spacing={1}>
+      {/* Action buttons */}
+      <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
         <Tooltip title="Save calibration to OF app">
           <Button
             size="small"

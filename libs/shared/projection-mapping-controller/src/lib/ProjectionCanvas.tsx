@@ -79,7 +79,12 @@ export const ProjectionCanvas: React.FC<Props> = ({
 
     const source: HTMLImageElement | HTMLCanvasElement | null =
       testGrid && maskImgRef.current
-        ? compositeGridOntoImage(maskImgRef.current, gridSize, CANVAS_W, CANVAS_H)
+        ? compositeGridOntoImage(
+            maskImgRef.current,
+            gridSize,
+            CANVAS_W,
+            CANVAS_H
+          )
         : maskImgRef.current;
 
     const mesh = buildWarpMesh(cornersRef.current, CANVAS_W, CANVAS_H);
@@ -92,7 +97,13 @@ export const ProjectionCanvas: React.FC<Props> = ({
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
     drawWarpedOutline(ctx, cornersRef.current, CANVAS_W, CANVAS_H);
-    drawCornerHandles(ctx, cornersRef.current, CANVAS_W, CANVAS_H, selectedCorner);
+    drawCornerHandles(
+      ctx,
+      cornersRef.current,
+      CANVAS_W,
+      CANVAS_H,
+      selectedCorner
+    );
   }, [selectedCorner]);
 
   // Re-render WebGL when corners, testGrid, or gridSize change
@@ -105,7 +116,9 @@ export const ProjectionCanvas: React.FC<Props> = ({
     renderOverlay();
   }, [corners, selectedCorner, renderOverlay]);
 
-  const getPos = (e: React.MouseEvent | React.TouchEvent): { x: number; y: number } => {
+  const getPos = (
+    e: React.MouseEvent | React.TouchEvent
+  ): { x: number; y: number } => {
     const canvas = overlayCanvasRef.current!;
     const rect = canvas.getBoundingClientRect();
     const scaleX = CANVAS_W / rect.width;
@@ -124,7 +137,13 @@ export const ProjectionCanvas: React.FC<Props> = ({
 
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     const pos = getPos(e);
-    const hit = hitTestCorner(cornersRef.current, CANVAS_W, CANVAS_H, pos.x, pos.y);
+    const hit = hitTestCorner(
+      cornersRef.current,
+      CANVAS_W,
+      CANVAS_H,
+      pos.x,
+      pos.y
+    );
     if (hit !== null) {
       draggingRef.current = hit;
       onSelectCorner(hit);
@@ -138,8 +157,13 @@ export const ProjectionCanvas: React.FC<Props> = ({
     e.preventDefault();
     const pos = getPos(e);
     const norm = pixelToNormalized(pos.x, pos.y, CANVAS_W, CANVAS_H);
-    const clamped = { x: Math.max(0, Math.min(1, norm.x)), y: Math.max(0, Math.min(1, norm.y)) };
-    const updated: ProjectionCorners = [...cornersRef.current] as unknown as ProjectionCorners;
+    const clamped = {
+      x: Math.max(0, Math.min(1, norm.x)),
+      y: Math.max(0, Math.min(1, norm.y)),
+    };
+    const updated: ProjectionCorners = [
+      ...cornersRef.current,
+    ] as unknown as ProjectionCorners;
     updated[draggingRef.current] = clamped;
     onMoveCorner(draggingRef.current, updated);
   };
@@ -150,7 +174,7 @@ export const ProjectionCanvas: React.FC<Props> = ({
 
   const containerStyle: React.CSSProperties = {
     position: 'relative',
-    width: '100%',
+    height: '100%',
     aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
     display: 'block',
   };

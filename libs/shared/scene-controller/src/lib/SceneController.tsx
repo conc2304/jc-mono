@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
@@ -6,10 +6,14 @@ import Alert from '@mui/material/Alert';
 import type { ControlParam } from '@jc/of-control-protocol';
 import { useOFStore, useSetParam } from '@jc/shared/of-control-client';
 import { ParamGroup } from './ParamGroup';
+import { GlobalSettingsLauncher } from './GlobalSettingsLauncher';
+import { GlobalSettingsDrawer } from './GlobalSettingsDrawer';
+import { isGlobalDrawerParam } from './globalSettingsManifest';
 
 export const SceneController: React.FC = () => {
   const store = useOFStore();
   const setParam = useSetParam();
+  const [globalSettingsOpen, setGlobalSettingsOpen] = useState(false);
 
   const { schema, values, currentMode, connection } = store;
 
@@ -23,7 +27,12 @@ export const SceneController: React.FC = () => {
     );
   }, [schema, currentMode]);
 
-  const grouped = useMemo(() => groupByGroup(visibleParams), [visibleParams]);
+  const { globalParams, mainParams } = useMemo(() => ({
+    globalParams: visibleParams.filter(isGlobalDrawerParam),
+    mainParams: visibleParams.filter((p) => !isGlobalDrawerParam(p)),
+  }), [visibleParams]);
+
+  const grouped = useMemo(() => groupByGroup(mainParams), [mainParams]);
 
   const handleCommit = (id: string, value: unknown, immediate = false) => {
     setParam(id, value, immediate);
@@ -58,6 +67,20 @@ export const SceneController: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      <GlobalSettingsLauncher
+        params={globalParams}
+        values={values}
+        onOpen={() => setGlobalSettingsOpen(true)}
+      />
+
+      <GlobalSettingsDrawer
+        open={globalSettingsOpen}
+        params={globalParams}
+        values={values}
+        onCommit={handleCommit}
+        onClose={() => setGlobalSettingsOpen(false)}
+      />
+
       {Array.from(grouped.entries()).map(([group, { normal, advanced }]) => (
         <React.Fragment key={group}>
           <ParamGroup group={group} params={normal} values={values} onCommit={handleCommit} />

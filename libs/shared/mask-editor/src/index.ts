@@ -1,1 +1,1 @@
-export * from './lib/MaskEditor';
+export * from './lib/index';
