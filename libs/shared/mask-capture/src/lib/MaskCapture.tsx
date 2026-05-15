@@ -2,8 +2,18 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
+import { useMasks } from './hooks/useMasks';
+import { MaskGrid } from './components/MaskGrid';
+import { MaskUploadButton } from './components/MaskUploadButton';
+import type { Mask } from './hooks/useMasks';
 
 interface Props {
   baseUrl?: string;
@@ -11,56 +21,80 @@ interface Props {
   onOpenEditor?: () => void;
 }
 
-export const MaskCapture: React.FC<Props> = ({ baseUrl = '', maskVersion, onOpenEditor }) => {
-  const [maskStatus, setMaskStatus] = useState<'loading' | 'loaded' | 'none'>('loading');
-  const maskUrl = `${baseUrl}/api/mask/current.png?v=${maskVersion ?? Date.now()}`;
+export const MaskCapture: React.FC<Props> = ({ baseUrl = '', onOpenEditor }) => {
+  const { masks, loading, error, uploadMask, activateMask, deleteMask } = useMasks(baseUrl);
+  const [pendingDelete, setPendingDelete] = useState<Mask | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+
+  const handleActivate = async (id: string) => {
+    try {
+      await activateMask(id);
+    } catch {
+      setActionError('Could not activate mask.');
+    }
+  };
+
+  const handleUpload = async (file: File) => {
+    await uploadMask(file);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!pendingDelete) return;
+    const target = pendingDelete;
+    setPendingDelete(null);
+    try {
+      await deleteMask(target);
+    } catch (e) {
+      setActionError(e instanceof Error ? e.message : 'Could not delete mask.');
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="overline" sx={{ letterSpacing: 1 }}>Mask</Typography>
+      <Typography variant="overline" sx={{ letterSpacing: 1 }}>
+        Mask Library
+      </Typography>
 
-      <Box
-        sx={{
-          position: 'relative',
-          backgroundColor: '#111',
-          borderRadius: 2,
-          overflow: 'hidden',
-          minHeight: 120,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Box
-          component="img"
-          src={maskUrl}
-          alt="Current mask"
-          sx={{
-            width: '100%',
-            display: 'block',
-            maxHeight: 240,
-            objectFit: 'contain',
-            visibility: maskStatus === 'loaded' ? 'visible' : 'hidden',
-          }}
-          onLoad={() => setMaskStatus('loaded')}
-          onError={() => setMaskStatus('none')}
-        />
-        {maskStatus === 'loading' && (
-          <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CircularProgress size={32} />
-          </Box>
-        )}
-        {maskStatus === 'none' && (
-          <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-            <Typography variant="body2" color="text.secondary">No mask configured</Typography>
-            <Typography variant="caption" color="text.disabled">Open the editor to create one</Typography>
-          </Box>
-        )}
-      </Box>
+      <MaskGrid
+        masks={masks}
+        loading={loading}
+        error={error}
+        onActivate={handleActivate}
+        onDeleteRequest={setPendingDelete}
+      />
+
+      <MaskUploadButton onUpload={handleUpload} />
 
       <Button variant="contained" startIcon={<EditIcon />} onClick={onOpenEditor} fullWidth>
         Open Mask Editor
       </Button>
+
+      <Dialog open={!!pendingDelete} onClose={() => setPendingDelete(null)}>
+        <DialogTitle>Delete Mask</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete &ldquo;{pendingDelete?.name}&rdquo;? This cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPendingDelete(null)}>Cancel</Button>
+          <Button color="error" onClick={handleDeleteConfirm}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={!!actionError}
+        autoHideDuration={4000}
+        onClose={() => setActionError(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="error" onClose={() => setActionError(null)}>
+          {actionError}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

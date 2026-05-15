@@ -65,7 +65,9 @@ export class SelectionBrushTool extends BaseTool {
     if (!this.selCtx) return;
     const ctx = this.selCtx as CanvasRenderingContext2D;
     ctx.save();
-    ctx.globalCompositeOperation = this.erasing ? 'destination-out' : 'source-over';
+    ctx.globalCompositeOperation = 'source-over';
+    // White marks pixels to add; black marks pixels to subtract.
+    // Both keep alpha=255 so commit can distinguish them from unvisited pixels.
     ctx.fillStyle = this.erasing ? 'rgba(0,0,0,1)' : 'rgba(255,255,255,1)';
     ctx.beginPath();
     ctx.arc(pt.x, pt.y, this.opts.getBrushSize() / 2, 0, Math.PI * 2);
@@ -75,10 +77,6 @@ export class SelectionBrushTool extends BaseTool {
 
   override renderPreview(ctx: CanvasRenderingContext2D, _viewport: CanvasViewport): void {
     if (!this.selCanvas || this.strokes.length === 0) return;
-    ctx.save();
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = '#00aaff';
-    // Draw selection brush overlay
     const sCtx = this.selCtx as CanvasRenderingContext2D;
     const w = this.maskW || ctx.canvas.width;
     const h = this.maskH || ctx.canvas.height;
@@ -86,16 +84,24 @@ export class SelectionBrushTool extends BaseTool {
     for (let i = 0; i < imgData.data.length; i += 4) {
       const alpha = imgData.data[i + 3] / 255;
       if (alpha >= COMMIT_THRESHOLD) {
-        imgData.data[i] = 0;
-        imgData.data[i + 1] = 170;
-        imgData.data[i + 2] = 255;
+        const isPaint = imgData.data[i] > 128;
+        if (isPaint) {
+          // Blue overlay for paint/add strokes
+          imgData.data[i] = 0;
+          imgData.data[i + 1] = 170;
+          imgData.data[i + 2] = 255;
+        } else {
+          // Red overlay for erase/subtract strokes
+          imgData.data[i] = 255;
+          imgData.data[i + 1] = 60;
+          imgData.data[i + 2] = 60;
+        }
         imgData.data[i + 3] = 128;
       } else {
         imgData.data[i + 3] = 0;
       }
     }
     ctx.putImageData(imgData, 0, 0);
-    ctx.restore();
   }
 
   initForMask(maskCtx: CanvasRenderingContext2D): void {
@@ -113,14 +119,17 @@ export class SelectionBrushTool extends BaseTool {
     const sCtx = this.selCtx as CanvasRenderingContext2D;
     const selData = sCtx.getImageData(0, 0, width, height);
     const maskData = maskCtx.getImageData(0, 0, width, height);
-    const target = mode === 'add-black' ? 0 : 255;
+    const addTarget = mode === 'add-black' ? 0 : 255;
+    const subTarget = 255 - addTarget;
 
     for (let i = 0; i < selData.data.length; i += 4) {
       const alpha = selData.data[i + 3] / 255;
       if (alpha >= COMMIT_THRESHOLD) {
-        maskData.data[i] = target;
-        maskData.data[i + 1] = target;
-        maskData.data[i + 2] = target;
+        // White pixels were painted normally (add); black pixels were erased (subtract).
+        const value = selData.data[i] > 128 ? addTarget : subTarget;
+        maskData.data[i] = value;
+        maskData.data[i + 1] = value;
+        maskData.data[i + 2] = value;
         maskData.data[i + 3] = 255;
       }
     }
