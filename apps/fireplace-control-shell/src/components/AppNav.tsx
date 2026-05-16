@@ -7,8 +7,9 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import BrushIcon from '@mui/icons-material/Brush';
 import InfoIcon from '@mui/icons-material/Info';
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 
-export type TabId = 'scene' | 'projection' | 'mask' | 'editor' | 'status';
+export type TabId = 'scene' | 'projection' | 'mask' | 'editor' | 'spawn' | 'status';
 
 interface Props {
   tab: TabId;
@@ -30,6 +31,7 @@ export const AppNav: React.FC<Props> = ({ tab, onChange }) => {
         <BottomNavigationAction label="Projection" value="projection" icon={<GridOnIcon />} />
         <BottomNavigationAction label="Mask" value="mask" icon={<PhotoCameraIcon />} />
         <BottomNavigationAction label="Editor" value="editor" icon={<BrushIcon />} />
+        <BottomNavigationAction label="Spawn" value="spawn" icon={<ScatterPlotIcon />} />
         <BottomNavigationAction label="Status" value="status" icon={<InfoIcon />} />
       </BottomNavigation>
     </Paper>

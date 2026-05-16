@@ -71,6 +71,9 @@
     },
     {
       "path": "./libs/features/boids"
+    },
+    {
+      "path": "./libs/shared/spawn-editor"
     }
   ]
 }

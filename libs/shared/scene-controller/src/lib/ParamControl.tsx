@@ -1,11 +1,12 @@
 import React from 'react';
-import type { ControlParam } from '@jc/of-control-protocol';
+import type { ControlParam, GradientStop } from '@jc/of-control-protocol';
 import {
   ControlSlider,
   ControlToggle,
   ControlSelect,
   ControlNumberInput,
   ControlColorPicker,
+  ControlGradientEditor,
 } from '@jc/fireplace-control-shared-ui';
 
 interface Props {
@@ -85,6 +86,17 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
         />
       );
 
+    case 'gradient':
+      return (
+        <ControlGradientEditor
+          id={id}
+          label={label}
+          value={Array.isArray(value) ? (value as GradientStop[]) : []}
+          description={description}
+          onChange={(id, v) => onCommit(id, v, false)}
+        />
+      );
+
     default:
       return null;
   }
@@ -92,11 +104,12 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
 
 function inferControl(type: ControlParam['type']): string {
   switch (type) {
-    case 'float': return 'slider';
-    case 'int':   return 'number';
-    case 'bool':  return 'toggle';
-    case 'enum':  return 'select';
-    case 'color': return 'color';
-    default:      return 'slider';
+    case 'float':    return 'slider';
+    case 'int':      return 'number';
+    case 'bool':     return 'toggle';
+    case 'enum':     return 'select';
+    case 'color':    return 'color';
+    case 'gradient': return 'gradient';
+    default:         return 'slider';
   }
 }

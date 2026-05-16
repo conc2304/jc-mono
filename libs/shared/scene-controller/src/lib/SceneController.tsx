@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import type { ControlParam } from '@jc/of-control-protocol';
+import type { ControlParam, ShowWhenRule } from '@jc/of-control-protocol';
 import { useOFStore, useSetParam } from '@jc/shared/of-control-client';
 import { ParamGroup } from './ParamGroup';
 import { GlobalSettingsLauncher } from './GlobalSettingsLauncher';
@@ -22,10 +22,13 @@ export const SceneController: React.FC = () => {
 
   const visibleParams = useMemo(() => {
     if (!schema) return [];
-    return schema.params.filter(
-      (p) => !p.readOnly && (p.modes.length === 0 || (currentMode !== null && p.modes.includes(currentMode)))
-    );
-  }, [schema, currentMode]);
+    return schema.params.filter((p) => {
+      if (p.readOnly) return false;
+      if (p.modes.length > 0 && currentMode !== null && !p.modes.includes(currentMode)) return false;
+      if (p.showWhen && !matchesShowWhen(p.showWhen, values)) return false;
+      return true;
+    });
+  }, [schema, currentMode, values]);
 
   const { globalParams, mainParams } = useMemo(() => ({
     globalParams: visibleParams.filter(isGlobalDrawerParam),
@@ -102,4 +105,8 @@ function groupByGroup(params: ControlParam[]): Map<string, { normal: ControlPara
     else map.get(key)!.normal.push(p);
   }
   return map;
+}
+
+function matchesShowWhen(rules: ShowWhenRule[], values: Record<string, unknown>): boolean {
+  return rules.every(rule => values[rule.path] === rule.equals);
 }

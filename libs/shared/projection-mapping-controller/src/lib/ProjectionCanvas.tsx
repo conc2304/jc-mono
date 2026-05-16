@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import type { ProjectionCorners } from '@jc/of-control-protocol';
 import {
   drawWarpedOutline,
@@ -40,6 +40,7 @@ export const ProjectionCanvas: React.FC<Props> = ({
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
   const warpProgramRef = useRef<WarpProgram | null>(null);
   const maskImgRef = useRef<HTMLImageElement | null>(null);
+  const [maskAspect, setMaskAspect] = useState<string>(`${CANVAS_W} / ${CANVAS_H}`);
   const cornersRef = useRef(corners);
   cornersRef.current = corners;
   const draggingRef = useRef<CornerKey | null>(null);
@@ -63,6 +64,7 @@ export const ProjectionCanvas: React.FC<Props> = ({
     img.crossOrigin = 'anonymous';
     img.onload = () => {
       maskImgRef.current = img;
+      setMaskAspect(`${img.naturalWidth} / ${img.naturalHeight}`);
       renderGL();
     };
     img.onerror = () => {
@@ -175,7 +177,7 @@ export const ProjectionCanvas: React.FC<Props> = ({
   const containerStyle: React.CSSProperties = {
     position: 'relative',
     height: '100%',
-    aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
+    aspectRatio: maskAspect,
     display: 'block',
   };
 

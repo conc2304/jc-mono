@@ -40,6 +40,10 @@ export default defineConfig({
         __dirname,
         '../../libs/shared/mask-editor/src/index.ts'
       ),
+      '@jc/shared/spawn-editor': resolve(
+        __dirname,
+        '../../libs/shared/spawn-editor/src/index.ts'
+      ),
     },
   },
   server: {

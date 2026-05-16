@@ -7,6 +7,7 @@ import { SceneController } from '@jc/shared/scene-controller';
 import { ProjectionMappingController } from '@jc/shared/projection-mapping-controller';
 import { MaskCapture } from '@jc/shared/mask-capture';
 import { MaskEditor } from '@jc/shared/mask-editor';
+import { SpawnEditor } from '@jc/shared/spawn-editor';
 import { StatusView } from './StatusView';
 import { useOFStore } from '@jc/shared/of-control-client';
 
@@ -31,6 +32,8 @@ export const AppShell: React.FC = () => {
         return <MaskCapture onOpenEditor={() => setTab('editor')} />;
       case 'editor':
         return <MaskEditor onUploadSuccess={() => setTab('mask')} onCancel={() => setTab('mask')} />;
+      case 'spawn':
+        return <SpawnEditor />;
       case 'status':
         return <StatusView />;
       default:
@@ -38,7 +41,7 @@ export const AppShell: React.FC = () => {
     }
   };
 
-  const isEditor = tab === 'editor' || tab === 'projection';
+  const isEditor = tab === 'editor' || tab === 'projection' || tab === 'spawn';
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100dvh', backgroundColor: 'background.default' }}>

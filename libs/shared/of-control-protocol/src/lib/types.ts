@@ -10,13 +10,34 @@ export interface NormalizedPoint {
 /**
  * Parameter type for control schema
  */
-export type ControlParamType = 'float' | 'int' | 'bool' | 'enum' | 'color';
+export type ControlParamType = 'float' | 'int' | 'bool' | 'enum' | 'color' | 'gradient';
+
+/**
+ * A single stop in a gradient — position t in [0,1], linear RGB channels in [0,1].
+ * The backend stores and transmits gradients in linear RGB, not sRGB.
+ */
+export interface GradientStop {
+  t: number;
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+}
+
+/**
+ * A single showWhen visibility rule.
+ * A param is visible only when ALL rules match (AND semantics).
+ */
+export interface ShowWhenRule {
+  path: string;
+  equals: unknown;
+}
 
 /**
  * UI hint for rendering a control
  */
 export interface ControlParamUI {
-  control?: 'slider' | 'toggle' | 'select' | 'number' | 'color';
+  control?: 'slider' | 'toggle' | 'select' | 'number' | 'color' | 'gradient';
   precision?: number;
   unit?: string;
 }
@@ -40,6 +61,7 @@ export interface ControlParam {
   advanced?: boolean;
   readOnly?: boolean;
   ui?: ControlParamUI;
+  showWhen?: ShowWhenRule[];
 }
 
 /**
