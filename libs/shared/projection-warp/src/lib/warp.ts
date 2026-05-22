@@ -1,4 +1,4 @@
-import type { NormalizedPoint, ProjectionCorners } from '@jc/of-control-protocol';
+import type { NormalizedPoint, ProjectionCorners } from '@jc/shared/of-control-protocol';
 
 // index 0=topLeft, 1=topRight, 2=bottomRight, 3=bottomLeft
 export type CornerKey = 0 | 1 | 2 | 3;

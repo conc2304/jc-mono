@@ -6,3 +6,4 @@ export * from './gradient-pattern-picker';
 export * from './media-gallery';
 export * from './notification-center';
 export * from './swatch-picker';
+export * from './unsaved-changes-dialog';

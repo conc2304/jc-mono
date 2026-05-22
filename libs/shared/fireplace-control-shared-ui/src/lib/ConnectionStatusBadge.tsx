@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import type { ConnectionStatus } from '@jc/of-control-protocol';
+import type { ConnectionStatus } from '@jc/shared/of-control-protocol';
 
 interface Props {
   status: ConnectionStatus;

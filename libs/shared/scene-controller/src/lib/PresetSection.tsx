@@ -13,8 +13,8 @@ import Typography from '@mui/material/Typography';
 import CheckIcon from '@mui/icons-material/Check';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import type { PresetSummary } from '@jc/of-control-protocol';
-import { usePresets } from '@jc/of-control-client';
+import type { PresetSummary } from '@jc/shared/of-control-protocol';
+import { usePresets } from '@jc/shared/of-control-client';
 
 type BrowseMode = 'current' | 'all';
 

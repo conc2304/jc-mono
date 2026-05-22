@@ -3,7 +3,7 @@ import type {
   ServerMessage,
   ConnectionState,
   ConnectionStatus,
-} from '@jc/of-control-protocol';
+} from '@jc/shared/of-control-protocol';
 
 export type MessageListener = (msg: ServerMessage) => void;
 export type ConnectionListener = (state: ConnectionState) => void;

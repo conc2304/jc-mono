@@ -7,7 +7,7 @@ import type {
   ProjectionState,
   SettingsManifestEntry,
   PresetSummary,
-} from '@jc/of-control-protocol';
+} from '@jc/shared/of-control-protocol';
 import type { OFControlClient } from './OFControlClient';
 
 export type StoreListener = (store: OFControlStore) => void;

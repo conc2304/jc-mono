@@ -20,13 +20,13 @@ import type {
   ProjectionCorners,
   ProjectionCornersWire,
   ProjectionState,
-} from '@jc/of-control-protocol';
+} from '@jc/shared/of-control-protocol';
 import {
   defaultCorners,
   nudgeCorner,
   type CornerKey,
 } from '@jc/projection-warp';
-import { useOFClient, useOFStore } from '@jc/of-control-client';
+import { useOFClient, useOFStore } from '@jc/shared/of-control-client';
 import { ProjectionCanvas } from './ProjectionCanvas';
 
 const CORNER_LABELS: Record<CornerKey, string> = {

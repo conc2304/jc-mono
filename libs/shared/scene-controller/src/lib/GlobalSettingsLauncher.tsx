@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
-import type { ControlParam } from '@jc/of-control-protocol';
+import type { ControlParam } from '@jc/shared/of-control-protocol';
 import { getSummaryFields } from './globalSettingsManifest';
 
 interface Props {

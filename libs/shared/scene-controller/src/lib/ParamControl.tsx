@@ -4,7 +4,7 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import type { ControlParam, GradientStop } from '@jc/of-control-protocol';
+import type { ControlParam, GradientStop } from '@jc/shared/of-control-protocol';
 import {
   ControlSlider,
   ControlToggle,
@@ -12,7 +12,7 @@ import {
   ControlNumberInput,
   ControlColorPicker,
   ControlGradientEditor,
-} from '@jc/fireplace-control-shared-ui';
+} from '@jc/shared/fireplace-control-shared-ui';
 import { normalizeControlKind, precisionFromStep } from './globalSettingsManifest';
 
 interface Props {

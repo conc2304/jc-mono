@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { PresetSummary } from '@jc/of-control-protocol';
+import type { PresetSummary } from '@jc/shared/of-control-protocol';
 import { useOFClient } from './OFClientContext';
 import { useOFStore } from './useOFStore';
 import { v4 as uuidv4 } from 'uuid';

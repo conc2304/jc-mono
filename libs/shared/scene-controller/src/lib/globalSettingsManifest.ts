@@ -1,4 +1,4 @@
-import type { ControlParam, SettingsManifestEntry, ShowWhenRule } from '@jc/of-control-protocol';
+import type { ControlParam, SettingsManifestEntry, ShowWhenRule } from '@jc/shared/of-control-protocol';
 
 // ---------------------------------------------------------------------------
 // Legacy group-based helpers (kept for GlobalSettingsLauncher backward compat)

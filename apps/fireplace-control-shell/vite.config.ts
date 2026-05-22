@@ -7,19 +7,15 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@jc/of-control-protocol': resolve(
+      '@jc/shared/of-control-protocol': resolve(
         __dirname,
         '../../libs/shared/of-control-protocol/src/index.ts'
-      ),
-      '@jc/of-control-client': resolve(
-        __dirname,
-        '../../libs/shared/of-control-client/src/index.ts'
       ),
       '@jc/shared/of-control-client': resolve(
         __dirname,
         '../../libs/shared/of-control-client/src/index.ts'
       ),
-      '@jc/fireplace-control-shared-ui': resolve(
+      '@jc/shared/fireplace-control-shared-ui': resolve(
         __dirname,
         '../../libs/shared/fireplace-control-shared-ui/src/index.ts'
       ),
@@ -27,7 +23,6 @@ export default defineConfig({
         __dirname,
         '../../libs/shared/scene-controller/src/index.ts'
       ),
-      '@jc/themes': resolve(__dirname, '../../libs/shared/themes/src/index.ts'),
       '@jc/shared/projection-warp': resolve(
         __dirname,
         '../../libs/shared/projection-warp/src/index.ts'
@@ -48,6 +43,11 @@ export default defineConfig({
         __dirname,
         '../../libs/shared/spawn-editor/src/index.ts'
       ),
+      '@jc/ui-components': resolve(
+        __dirname,
+        '../../libs/shared/components/src/index.ts'
+      ),
+      '@jc/themes': resolve(__dirname, '../../libs/shared/themes/src/index.ts'),
     },
   },
   server: {

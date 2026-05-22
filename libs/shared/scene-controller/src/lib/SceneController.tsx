@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import { useOFStore, useSetParam } from '@jc/of-control-client';
+import { useOFStore, useSetParam } from '@jc/shared/of-control-client';
 import { ParamGroup } from './ParamGroup';
 import { PresetSection } from './PresetSection';
 import { GlobalSettingsLauncher } from './GlobalSettingsLauncher';

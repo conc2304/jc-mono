@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import type { ProjectionCorners } from '@jc/of-control-protocol';
+import type { ProjectionCorners } from '@jc/shared/of-control-protocol';
 import {
   drawWarpedOutline,
   drawCornerHandles,

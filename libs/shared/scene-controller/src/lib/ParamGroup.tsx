@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import type { ControlParam } from '@jc/of-control-protocol';
+import type { ControlParam } from '@jc/shared/of-control-protocol';
 import { paramMatchesShowWhen } from './globalSettingsManifest';
 import { ParamControl } from './ParamControl';
 

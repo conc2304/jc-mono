@@ -19,11 +19,13 @@ interface Props {
   baseUrl?: string;
   maskVersion?: number;
   onOpenEditor?: () => void;
+  onOpenEditorWithReference?: (file: File) => void;
 }
 
-export const MaskCapture: React.FC<Props> = ({ baseUrl = '', onOpenEditor }) => {
+export const MaskCapture: React.FC<Props> = ({ baseUrl = '', onOpenEditor, onOpenEditorWithReference }) => {
   const { masks, loading, error, uploadMask, activateMask, deleteMask } = useMasks(baseUrl);
   const [pendingDelete, setPendingDelete] = useState<Mask | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const handleActivate = async (id: string) => {
@@ -36,6 +38,27 @@ export const MaskCapture: React.FC<Props> = ({ baseUrl = '', onOpenEditor }) => 
 
   const handleUpload = async (file: File) => {
     await uploadMask(file);
+  };
+
+  const handleFileSelect = (file: File) => {
+    setPendingFile(file);
+  };
+
+  const handleUploadAsMask = async () => {
+    if (!pendingFile) return;
+    try {
+      await uploadMask(pendingFile);
+    } catch {
+      setActionError('Could not upload mask.');
+    } finally {
+      setPendingFile(null);
+    }
+  };
+
+  const handleTraceAsReference = () => {
+    if (!pendingFile) return;
+    onOpenEditorWithReference?.(pendingFile);
+    setPendingFile(null);
   };
 
   const handleDeleteConfirm = async () => {
@@ -63,11 +86,29 @@ export const MaskCapture: React.FC<Props> = ({ baseUrl = '', onOpenEditor }) => 
         onDeleteRequest={setPendingDelete}
       />
 
-      <MaskUploadButton onUpload={handleUpload} />
+      <MaskUploadButton onFileSelect={handleFileSelect} />
 
       <Button variant="contained" startIcon={<EditIcon />} onClick={onOpenEditor} fullWidth>
         Open Mask Editor
       </Button>
+
+      <Dialog open={!!pendingFile} onClose={() => setPendingFile(null)}>
+        <DialogTitle>How should this file be used?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Choose whether to upload the image directly as a mask, or use it as a tracing reference in the editor.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPendingFile(null)}>Cancel</Button>
+          <Button onClick={handleTraceAsReference}>
+            Trace in Editor
+          </Button>
+          <Button variant="contained" onClick={handleUploadAsMask}>
+            Upload as Mask
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={!!pendingDelete} onClose={() => setPendingDelete(null)}>
         <DialogTitle>Delete Mask</DialogTitle>

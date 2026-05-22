@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import type { GradientStop } from '@jc/of-control-protocol';
+import type { GradientStop } from '@jc/shared/of-control-protocol';
 
 // ── Color space conversions ──────────────────────────────────────────────────
 

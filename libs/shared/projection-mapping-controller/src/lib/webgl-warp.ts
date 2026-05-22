@@ -1,4 +1,4 @@
-import type { ProjectionCorners } from '@jc/of-control-protocol';
+import type { ProjectionCorners } from '@jc/shared/of-control-protocol';
 
 const GRID = 16; // 16×16 vertex grid → 15×15 quads → 450 triangles
 
