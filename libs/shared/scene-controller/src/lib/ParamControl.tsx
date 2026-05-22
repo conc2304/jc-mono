@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import type { ControlParam, GradientStop } from '@jc/of-control-protocol';
 import {
   ControlSlider,
@@ -8,6 +13,7 @@ import {
   ControlColorPicker,
   ControlGradientEditor,
 } from '@jc/fireplace-control-shared-ui';
+import { normalizeControlKind, precisionFromStep } from './globalSettingsManifest';
 
 interface Props {
   param: ControlParam;
@@ -17,10 +23,68 @@ interface Props {
 
 export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
   const { id, label, type, min, max, step, options, description, ui } = param;
+  const [descOpen, setDescOpen] = useState(false);
 
-  const controlHint = ui?.control ?? inferControl(type);
+  const controlKind = normalizeControlKind(ui?.control, type);
+  const precision = ui?.precision ?? precisionFromStep(step);
 
-  switch (controlHint) {
+  const control = renderControl({ id, label, type, min, max, step, options, ui, controlKind, precision, value, onCommit });
+
+  if (!description) return control;
+
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>{control}</Box>
+        <IconButton
+          size="small"
+          aria-label={`About ${label}`}
+          aria-expanded={descOpen}
+          onClick={() => setDescOpen((v) => !v)}
+          sx={{
+            flexShrink: 0,
+            mt: 0.25,
+            color: descOpen ? 'text.secondary' : 'text.disabled',
+            '&:hover': { color: 'text.secondary' },
+            width: 28,
+            height: 28,
+          }}
+        >
+          <InfoOutlinedIcon sx={{ fontSize: '0.95rem' }} />
+        </IconButton>
+      </Box>
+      <Collapse in={descOpen}>
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ display: 'block', mt: 0.5, lineHeight: 1.4, pl: 0.5 }}
+        >
+          {description}
+        </Typography>
+      </Collapse>
+    </Box>
+  );
+};
+
+interface RenderControlArgs {
+  id: string;
+  label: string;
+  type: ControlParam['type'];
+  min?: number;
+  max?: number;
+  step?: number;
+  options?: Array<{ label: string; value: string | number | boolean }>;
+  ui?: ControlParam['ui'];
+  controlKind: ReturnType<typeof normalizeControlKind>;
+  precision: number;
+  value: unknown;
+  onCommit: (id: string, value: unknown, immediate?: boolean) => void;
+}
+
+function renderControl({
+  id, label, type, min, max, step, options, ui, controlKind, precision, value, onCommit,
+}: RenderControlArgs): React.ReactElement | null {
+  switch (controlKind) {
     case 'slider':
       return (
         <ControlSlider
@@ -31,7 +95,7 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
           max={max}
           step={step}
           unit={ui?.unit}
-          description={description}
+          precision={precision}
           onChange={(id, v) => onCommit(id, v, false)}
           onChangeCommitted={(id, v) => onCommit(id, v, true)}
         />
@@ -43,7 +107,6 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
           id={id}
           label={label}
           value={!!value}
-          description={description}
           onChange={(id, v) => onCommit(id, v, true)}
         />
       );
@@ -55,7 +118,6 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
           label={label}
           value={value as string | number | boolean}
           options={options ?? []}
-          description={description}
           onChange={(id, v) => onCommit(id, v, true)}
         />
       );
@@ -68,9 +130,8 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
           value={typeof value === 'number' ? value : (min ?? 0)}
           min={min}
           max={max}
-          step={step}
+          step={step ?? (type === 'int' ? 1 : undefined)}
           unit={ui?.unit}
-          description={description}
           onChange={(id, v) => onCommit(id, v, true)}
         />
       );
@@ -81,7 +142,6 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
           id={id}
           label={label}
           value={typeof value === 'string' ? value : '#ffffff'}
-          description={description}
           onChange={(id, v) => onCommit(id, v, true)}
         />
       );
@@ -92,7 +152,6 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
           id={id}
           label={label}
           value={Array.isArray(value) ? (value as GradientStop[]) : []}
-          description={description}
           onChange={(id, v) => onCommit(id, v, false)}
         />
       );
@@ -100,16 +159,7 @@ export const ParamControl: React.FC<Props> = ({ param, value, onCommit }) => {
     default:
       return null;
   }
-};
-
-function inferControl(type: ControlParam['type']): string {
-  switch (type) {
-    case 'float':    return 'slider';
-    case 'int':      return 'number';
-    case 'bool':     return 'toggle';
-    case 'enum':     return 'select';
-    case 'color':    return 'color';
-    case 'gradient': return 'gradient';
-    default:         return 'slider';
-  }
 }
+
+// Re-export for use in other components that need precision formatting
+export { precisionFromStep };

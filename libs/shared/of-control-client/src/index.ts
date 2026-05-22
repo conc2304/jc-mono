@@ -3,4 +3,5 @@ export * from './lib/OFControlStore';
 export * from './lib/OFClientContext';
 export * from './lib/useOFStore';
 export * from './lib/useSetParam';
+export * from './lib/usePresets';
 export * from './lib/uploadMask';

@@ -43,11 +43,20 @@ export interface SetModeMessage extends BaseClientMessage {
 }
 
 /**
- * Load a preset
+ * Request the current preset list from OF
+ */
+export interface GetPresetsMessage extends BaseClientMessage {
+  type: 'getPresets';
+}
+
+/**
+ * Load a preset. Pass switchMode: true to allow backend to switch
+ * simulation mode if the preset belongs to a different mode.
  */
 export interface LoadPresetMessage extends BaseClientMessage {
   type: 'loadPreset';
   presetId: string;
+  switchMode?: boolean;
 }
 
 /**
@@ -106,6 +115,7 @@ export type ClientMessage =
   | GetStateMessage
   | SetParamMessage
   | SetModeMessage
+  | GetPresetsMessage
   | LoadPresetMessage
   | SetProjectionCornerMessage
   | SetProjectionCornersMessage

@@ -5,6 +5,8 @@ import type {
   ProjectionCornersWire,
   ProjectionCorners,
   ProjectionState,
+  SettingsManifestEntry,
+  PresetSummary,
 } from '@jc/of-control-protocol';
 import type { OFControlClient } from './OFControlClient';
 
@@ -16,9 +18,15 @@ function normalizeCorners(wire: ProjectionCornersWire): ProjectionCorners {
 
 export class OFControlStore {
   schema: ControlSchema | null = null;
+  settingsManifest: SettingsManifestEntry[] = [];
+  uiVersion: number = 1;
   values: Record<string, unknown> = {};
   currentMode: string | null = null;
+  optimisticMode: string | undefined = undefined;
   currentPreset: string | null = null;
+  presets: PresetSummary[] = [];
+  presetLoadingId: string | undefined = undefined;
+  presetError: string | undefined = undefined;
   fps: number | null = null;
   projection: ProjectionState | null = null;
   maskVersion = 0;
@@ -63,8 +71,41 @@ export class OFControlStore {
     this._notify();
   }
 
+  setOptimisticMode(mode: string): void {
+    this.optimisticMode = mode;
+    this._notify();
+  }
+
+  clearOptimisticMode(): void {
+    if (this.optimisticMode === undefined) return;
+    this.optimisticMode = undefined;
+    this._notify();
+  }
+
+  setPresetLoading(presetId: string): void {
+    this.presetLoadingId = presetId;
+    this.presetError = undefined;
+    this._notify();
+  }
+
+  setPresetError(error: string): void {
+    this.presetLoadingId = undefined;
+    this.presetError = error;
+    this._notify();
+  }
+
+  clearPresetError(): void {
+    this.presetError = undefined;
+    this._notify();
+  }
+
   private _handleMessage(msg: ServerMessage): void {
     switch (msg.type) {
+      case 'settingsManifest':
+        this.settingsManifest = msg.manifest ?? [];
+        this.uiVersion = msg.uiVersion ?? 1;
+        break;
+
       case 'paramSchema':
         this.schema = {
           modes: [],
@@ -77,16 +118,11 @@ export class OFControlStore {
         this.values = { ...this.values, ...msg.values };
         if (msg.values['experienceMode'] !== undefined) this.currentMode = msg.values['experienceMode'] as string;
         if (msg.preset !== undefined) this.currentPreset = msg.preset;
-        if (msg.presets !== undefined && this.schema) {
-          this.schema = {
-            ...this.schema,
-            presets: msg.presets.map((p) => ({
-              id: p.id,
-              label: p.label,
-              description: p.description,
-              mode: '',
-            })),
-          };
+        if (msg.presets !== undefined) {
+          this.presets = msg.presets;
+          if (this.schema) {
+            this.schema = { ...this.schema, presets: msg.presets };
+          }
         }
         if (msg.projection !== undefined) {
           const p = msg.projection;
@@ -109,15 +145,33 @@ export class OFControlStore {
 
       case 'paramChanged':
         this.values = { ...this.values, [msg.id]: msg.value };
-        if (msg.id === 'experienceMode') this.currentMode = msg.value as string;
+        if (msg.id === 'experienceMode') {
+          this.currentMode = msg.value as string;
+          // Canonical mode arrived — clear optimistic hint regardless of match
+          this.optimisticMode = undefined;
+        }
         break;
 
       case 'modeChanged':
         this.currentMode = msg.mode;
+        this.optimisticMode = undefined;
         break;
 
       case 'presetChanged':
         this.currentPreset = msg.presetId;
+        break;
+
+      case 'presets':
+        this.presets = msg.presets;
+        this.currentPreset = msg.current;
+        break;
+
+      case 'presetLoaded':
+        this.currentPreset = msg.presetId;
+        this.presetLoadingId = undefined;
+        if (msg.switchedMode && msg.mode) {
+          this.optimisticMode = msg.mode;
+        }
         break;
 
       case 'projectionChanged': {

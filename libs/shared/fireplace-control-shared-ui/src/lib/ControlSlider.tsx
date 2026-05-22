@@ -14,6 +14,7 @@ export interface ControlSliderProps {
   unit?: string;
   description?: string;
   disabled?: boolean;
+  precision?: number;
   onChange: (id: string, value: number) => void;
   onChangeCommitted?: (id: string, value: number) => void;
 }
@@ -28,6 +29,7 @@ export const ControlSlider: React.FC<ControlSliderProps> = ({
   unit,
   description,
   disabled = false,
+  precision,
   onChange,
   onChangeCommitted,
 }) => {
@@ -45,10 +47,9 @@ export const ControlSlider: React.FC<ControlSliderProps> = ({
     onChangeCommitted?.(id, newValue as number);
   };
 
-  const formatted =
-    Number.isInteger(computedStep)
-      ? displayValue.toFixed(0)
-      : displayValue.toFixed(2);
+  const effectivePrecision =
+    precision ?? (Number.isInteger(computedStep) ? 0 : 2);
+  const formatted = displayValue.toFixed(effectivePrecision);
 
   return (
     <Box sx={{ width: '100%', px: 0.5 }}>

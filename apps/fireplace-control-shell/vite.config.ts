@@ -11,6 +11,10 @@ export default defineConfig({
         __dirname,
         '../../libs/shared/of-control-protocol/src/index.ts'
       ),
+      '@jc/of-control-client': resolve(
+        __dirname,
+        '../../libs/shared/of-control-client/src/index.ts'
+      ),
       '@jc/shared/of-control-client': resolve(
         __dirname,
         '../../libs/shared/of-control-client/src/index.ts'

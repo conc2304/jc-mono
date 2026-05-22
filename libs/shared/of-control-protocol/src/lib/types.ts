@@ -81,7 +81,7 @@ export interface PresetSummary {
   id: string;
   label: string;
   description?: string;
-  mode: string;
+  mode?: string;
   tags?: string[];
   piSafe?: boolean;
 }
@@ -120,6 +120,28 @@ export interface ProjectionState {
   testGridEnabled: boolean;
   gridSize: number;
   dirty: boolean;
+}
+
+/**
+ * UI enrichment entry from the settingsManifest server message.
+ * Drives manifest-based rendering: category order, placement, control hints, descriptions.
+ */
+export interface SettingsManifestEntry {
+  id?: string;
+  path?: string;
+  label?: string;
+  category?: string;
+  categoryLabel?: string;
+  categoryDescription?: string;
+  categoryOrder?: number;
+  order?: number;
+  placement?: 'globalDrawer' | 'modeDrawer' | 'hidden';
+  layout?: 'full' | 'compact';
+  control?: string;
+  description?: string;
+  advanced?: boolean;
+  showWhen?: ShowWhenRule[];
+  defaultValue?: unknown;
 }
 
 /**

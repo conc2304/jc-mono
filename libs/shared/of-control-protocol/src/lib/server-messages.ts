@@ -5,6 +5,8 @@
 import type {
   ProjectionCornersWire,
   MaskAssetState,
+  SettingsManifestEntry,
+  PresetSummary,
 } from './types';
 
 /**
@@ -29,7 +31,7 @@ export interface FullStateMessage {
     dirty: boolean;
   };
   preset?: string;
-  presets?: Array<{ id: string; label: string; description?: string }>;
+  presets?: PresetSummary[];
 }
 
 /**
@@ -96,12 +98,42 @@ export interface MaskChangedMessage {
 }
 
 /**
+ * UI enrichment metadata for manifest-driven rendering, sent once on connect
+ */
+export interface SettingsManifestMessage {
+  type: 'settingsManifest';
+  uiVersion?: number;
+  manifest: SettingsManifestEntry[];
+}
+
+/**
+ * Response to getPresets — full preset list with current active preset
+ */
+export interface PresetsMessage {
+  type: 'presets';
+  requestId?: string;
+  current: string;
+  presets: PresetSummary[];
+}
+
+/**
+ * Broadcast when a preset is successfully loaded.
+ * mode/switchedMode are present only when the backend switched modes.
+ */
+export interface PresetLoadedMessage {
+  type: 'presetLoaded';
+  presetId: string;
+  mode?: string;
+  switchedMode?: boolean;
+}
+
+/**
  * Acknowledgment of a client request (when requestId is provided)
  */
 export interface AckMessage {
   type: 'ack';
   requestId: string;
-  success: boolean;
+  ok: boolean;
   error?: string;
 }
 
@@ -125,7 +157,10 @@ export type ServerMessage =
   | ParamChangedMessage
   | ModeChangedMessage
   | PresetChangedMessage
+  | PresetsMessage
+  | PresetLoadedMessage
   | ProjectionChangedMessage
   | MaskChangedMessage
+  | SettingsManifestMessage
   | AckMessage
   | ErrorMessage;

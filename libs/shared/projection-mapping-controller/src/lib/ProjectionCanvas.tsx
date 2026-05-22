@@ -40,7 +40,9 @@ export const ProjectionCanvas: React.FC<Props> = ({
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
   const warpProgramRef = useRef<WarpProgram | null>(null);
   const maskImgRef = useRef<HTMLImageElement | null>(null);
-  const [maskAspect, setMaskAspect] = useState<string>(`${CANVAS_W} / ${CANVAS_H}`);
+  const [maskAspect, setMaskAspect] = useState<string>(
+    `${CANVAS_W} / ${CANVAS_H}`
+  );
   const cornersRef = useRef(corners);
   cornersRef.current = corners;
   const draggingRef = useRef<CornerKey | null>(null);
@@ -176,7 +178,9 @@ export const ProjectionCanvas: React.FC<Props> = ({
 
   const containerStyle: React.CSSProperties = {
     position: 'relative',
-    height: '100%',
+    width: '100%',
+    maxWidth: '100%',
+    maxHeight: '100%',
     aspectRatio: maskAspect,
     display: 'block',
   };
@@ -190,7 +194,7 @@ export const ProjectionCanvas: React.FC<Props> = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className="Projection-cp-container">
       {/* WebGL layer — warped image + pre-warp grid */}
       <canvas
         ref={glCanvasRef}

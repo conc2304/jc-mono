@@ -3,39 +3,46 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import type { ControlParam, ShowWhenRule } from '@jc/of-control-protocol';
-import { useOFStore, useSetParam } from '@jc/shared/of-control-client';
+import { useOFStore, useSetParam } from '@jc/of-control-client';
 import { ParamGroup } from './ParamGroup';
+import { PresetSection } from './PresetSection';
 import { GlobalSettingsLauncher } from './GlobalSettingsLauncher';
 import { GlobalSettingsDrawer } from './GlobalSettingsDrawer';
-import { isGlobalDrawerParam } from './globalSettingsManifest';
+import { buildUiParams, groupIntoCategories } from './globalSettingsManifest';
 
 export const SceneController: React.FC = () => {
   const store = useOFStore();
   const setParam = useSetParam();
   const [globalSettingsOpen, setGlobalSettingsOpen] = useState(false);
 
-  const { schema, values, currentMode, connection } = store;
+  const { schema, values, currentMode, connection, settingsManifest } = store;
 
   const isConnected = connection.status === 'connected';
   const isConnecting = connection.status === 'connecting' || connection.status === 'reconnecting';
 
-  const visibleParams = useMemo(() => {
+  // showWhen filtering is intentionally omitted here — it happens at render time
+  // in ParamGroup so that conditional controls animate in/out smoothly.
+  const uiParams = useMemo(() => {
     if (!schema) return [];
-    return schema.params.filter((p) => {
+    const merged = buildUiParams(schema.params, settingsManifest ?? []);
+    return merged.filter((p) => {
       if (p.readOnly) return false;
+      if (p.placement === 'hidden') return false;
       if (p.modes.length > 0 && currentMode !== null && !p.modes.includes(currentMode)) return false;
-      if (p.showWhen && !matchesShowWhen(p.showWhen, values)) return false;
       return true;
     });
-  }, [schema, currentMode, values]);
+  }, [schema, settingsManifest, currentMode]);
 
-  const { globalParams, mainParams } = useMemo(() => ({
-    globalParams: visibleParams.filter(isGlobalDrawerParam),
-    mainParams: visibleParams.filter((p) => !isGlobalDrawerParam(p)),
-  }), [visibleParams]);
+  const globalParams = useMemo(
+    () => uiParams.filter((p) => p.placement === 'globalDrawer'),
+    [uiParams]
+  );
+  const mainParams = useMemo(
+    () => uiParams.filter((p) => p.placement === 'modeDrawer'),
+    [uiParams]
+  );
 
-  const grouped = useMemo(() => groupByGroup(mainParams), [mainParams]);
+  const categoryGroups = useMemo(() => groupIntoCategories(mainParams), [mainParams]);
 
   const handleCommit = (id: string, value: unknown, immediate = false) => {
     setParam(id, value, immediate);
@@ -84,29 +91,19 @@ export const SceneController: React.FC = () => {
         onClose={() => setGlobalSettingsOpen(false)}
       />
 
-      {Array.from(grouped.entries()).map(([group, { normal, advanced }]) => (
-        <React.Fragment key={group}>
-          <ParamGroup group={group} params={normal} values={values} onCommit={handleCommit} />
-          {advanced.length > 0 && (
-            <ParamGroup group={group} params={advanced} values={values} advanced onCommit={handleCommit} />
-          )}
-        </React.Fragment>
+      <PresetSection activeMode={currentMode} />
+
+      {categoryGroups.map((group) => (
+        <ParamGroup
+          key={group.category}
+          categoryLabel={group.categoryLabel}
+          categoryDescription={group.categoryDescription}
+          normal={group.normal}
+          advanced={group.advanced}
+          values={values}
+          onCommit={handleCommit}
+        />
       ))}
     </Box>
   );
 };
-
-function groupByGroup(params: ControlParam[]): Map<string, { normal: ControlParam[]; advanced: ControlParam[] }> {
-  const map = new Map<string, { normal: ControlParam[]; advanced: ControlParam[] }>();
-  for (const p of params) {
-    const key = p.group || 'General';
-    if (!map.has(key)) map.set(key, { normal: [], advanced: [] });
-    if (p.advanced) map.get(key)!.advanced.push(p);
-    else map.get(key)!.normal.push(p);
-  }
-  return map;
-}
-
-function matchesShowWhen(rules: ShowWhenRule[], values: Record<string, unknown>): boolean {
-  return rules.every(rule => values[rule.path] === rule.equals);
-}
