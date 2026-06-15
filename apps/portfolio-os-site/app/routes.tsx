@@ -4,5 +4,6 @@ export default [
   index('./app.tsx'),
   route('home/*', './routes/home.tsx'),
   route('led-controller', './routes/led-controller.tsx'),
+  // route('nope', './routes/not-found.tsx'),
   route('*', './routes/404.tsx'),
 ] satisfies RouteConfig;
