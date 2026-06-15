@@ -12,6 +12,12 @@
       "types": "./dist/index.esm.d.ts",
       "import": "./dist/index.esm.js",
       "default": "./dist/index.esm.js"
+    },
+    "./components": {
+      "development": "./src/connect-four/components/index.ts",
+      "types": "./dist/index.esm.d.ts",
+      "import": "./dist/index.esm.js",
+      "default": "./dist/index.esm.js"
     }
   },
   "nx": {

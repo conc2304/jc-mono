@@ -65,6 +65,9 @@
     },
     {
       "path": "../../libs/features/boot-loader/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/features/games-lib/tsconfig.lib.json"
     }
   ]
 }

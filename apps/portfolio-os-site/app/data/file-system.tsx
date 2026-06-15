@@ -10,6 +10,7 @@ import { VJSetsPortfolioFileSystemItem } from './vj-sets/vj-sets-file-item';
 import { NotFound404FileSystemItem } from './404-file-item';
 import { LEDControllerFileItem } from './led-controller-file-item';
 import { RebootFileSystemItem } from './reboot-file-item';
+import { GamesFileSystemItem } from './games/games-file-item';
 
 const unMappedFileSystem: BaseFileSystemItem[] = [
   ProjectsFileSystemItem,
@@ -18,6 +19,7 @@ const unMappedFileSystem: BaseFileSystemItem[] = [
   SettingsFileSystemItem,
   SculpturePortfolioFileSystemItem,
   VJSetsPortfolioFileSystemItem,
+  GamesFileSystemItem,
   LEDControllerFileItem,
   RebootFileSystemItem,
   NotFound404FileSystemItem,

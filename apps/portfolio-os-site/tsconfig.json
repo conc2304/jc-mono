@@ -30,6 +30,9 @@
       "path": "../../libs/features/boot-loader"
     },
     {
+      "path": "../../libs/features/games-lib"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
   ],
