@@ -8,9 +8,11 @@ export const fragmentShaderSource = `
     uniform float u_time;
     uniform float u_scrollSpeed;
     uniform float u_scale;
-    uniform vec2 u_mouse;
+    uniform vec2 u_pointerPoints[4];
+    uniform int u_numPointerPoints;
     uniform vec2 u_resolution;
     uniform bool u_mouseInteraction;
+    uniform float u_brightness;
     varying vec2 v_uv;
 
     // Noise functions for displacement
@@ -61,67 +63,56 @@ export const fragmentShaderSource = `
       return v;
     }
 
+    vec2 pointerDisplacement(vec2 uv, vec2 mouseUV) {
+      float dist = length(mouseUV - uv);
+      float distExp = 1.0 + exp(dist * -8.0) * 40.0;
+      float n1 = fbm(vec3(uv * 6.0, u_time * 0.0002)) * 0.5;
+      float displace = n1 * 0.08 * distExp;
+      vec2 mouseDir = uv - mouseUV;
+      float mouseAngle = atan(mouseDir.y, mouseDir.x);
+      return vec2(
+        cos(mouseAngle + displace * 3.0),
+        sin(mouseAngle + displace * 3.0)
+      ) * displace * 0.5;
+    }
+
     void main() {
       vec2 uv = v_uv;
 
-      // Mouse interaction displacement
-      if (u_mouseInteraction) {
-        // Convert mouse to UV coordinates (flip Y for WebGL)
-        vec2 mouse = vec2(u_mouse.x / u_resolution.x, 1.0 - u_mouse.y / u_resolution.y);
+      if (u_mouseInteraction && u_numPointerPoints > 0) {
+        vec2 totalDisplace = vec2(0.0);
 
-        // Calculate distance from mouse
-        float dist = length(mouse - uv);
+        for (int i = 0; i < 4; i++) {
+          if (i >= u_numPointerPoints) break;
 
-        // Create exponential falloff around mouse
-        float distExp = 1.0 + exp(dist * -8.0) * 40.0;
+          vec2 mouse = vec2(
+            u_pointerPoints[i].x / u_resolution.x,
+            1.0 - u_pointerPoints[i].y / u_resolution.y
+          );
+          totalDisplace += pointerDisplacement(uv, mouse);
+        }
 
-        // Generate noise for displacement
-        float n1 = fbm(vec3(uv * 6.0, u_time * 0.0002));
-        n1 *= 0.5;
-
-        // Apply displacement based on distance from mouse
-        float displace = n1 * 0.08 * distExp;
-
-        // Create swirl effect around mouse
-        vec2 mouseDir = uv - mouse;
-        float mouseAngle = atan(mouseDir.y, mouseDir.x);
-        vec2 swirl = vec2(cos(mouseAngle + displace * 3.0), sin(mouseAngle + displace * 3.0)) * displace * 0.5;
-
-        uv += swirl;
+        uv += totalDisplace;
       }
 
-      // Convert angle from degrees to radians
       float angleRad = radians(u_angle);
-
-      // Calculate gradient direction vector
       vec2 direction = vec2(cos(angleRad), sin(angleRad));
-
-      // Project UV coordinates onto the gradient direction
       float t = dot(uv - 0.5, direction) + 0.5;
-
-      // Apply scale to zoom into the gradient (higher scale = thicker bands)
       t *= u_scale;
-
-      // Add scrolling based on time
-      t += u_time * u_scrollSpeed * 0.001; // Scale time for reasonable speed
-
-      // Use fract to make the gradient repeat/tile
+      t += u_time * u_scrollSpeed * 0.001;
       t = fract(t);
 
-      // Calculate which color segment we're in
       float numColorsFloat = float(u_numColors);
-      float scaledT = t * numColorsFloat; // Scale to full color range for seamless wrapping
+      float scaledT = t * numColorsFloat;
       float colorIndexFloat = floor(scaledT);
       float localT = scaledT - colorIndexFloat;
       int targetIndex = int(colorIndexFloat);
 
-      // Handle wraparound - if we're at the last color, next color is the first
       int nextIndex = targetIndex + 1;
       if (nextIndex >= u_numColors) {
-        nextIndex = 0; // Wrap to first color
+        nextIndex = 0;
       }
 
-      // Find colors using a loop (WebGL 1.0 compatible)
       vec3 color1 = vec3(0.0);
       vec3 color2 = vec3(0.0);
 
@@ -135,7 +126,7 @@ export const fragmentShaderSource = `
         if (i >= u_numColors) break;
       }
 
-      vec3 finalColor = mix(color1, color2, localT);
+      vec3 finalColor = mix(color1, color2, localT) * u_brightness;
 
       gl_FragColor = vec4(finalColor, 1.0);
     }

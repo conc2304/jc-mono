@@ -1,5 +1,6 @@
-import React, { CSSProperties, useCallback, useEffect, useRef } from 'react';
+import React, { CSSProperties, MutableRefObject, useCallback, useEffect, useRef } from 'react';
 
+import { MAX_POINTER_POINTS, PointerPosition } from './expand-mirrored-positions';
 import { fragmentShaderSource } from './fragment-shader';
 import { vertexShaderSource } from './vertex-shader';
 
@@ -10,10 +11,15 @@ interface GradientShaderProps {
   height?: number;
   scrollSpeed?: number; // Speed of scrolling (default: 1.0)
   scale?: number; // Scale/zoom factor (default: 1.0, higher = thicker bands)
+  brightness?: number; // Output brightness multiplier (default: 1.0)
   mouseInteraction?: boolean; // Enable mouse displacement effects (default: true)
   resolution?: number; // Resolution multiplier (default: 1.0, 0.5 = half resolution)
   isBackground?: boolean; // Optimizes for background use (uses document mouse events)
   autoResize?: boolean; // Automatically resize to window dimensions when isBackground is true
+  /** When set, skips internal mouse tracking and reads positions from this ref each frame. */
+  pointerPositionsRef?: MutableRefObject<PointerPosition[] | null>;
+  /** Called when internal render dimensions change (e.g. autoResize). */
+  onInternalDimensionsChange?: (width: number, height: number) => void;
   style?: CSSProperties;
   className?: string;
 }
@@ -25,10 +31,13 @@ export const GradientShader = ({
   height = 400,
   scrollSpeed = 1.0,
   scale = 1.0,
+  brightness = 1.0,
   mouseInteraction = true,
   resolution = 1.0,
   isBackground = false,
   autoResize = false,
+  pointerPositionsRef,
+  onInternalDimensionsChange,
   style = {},
   className = 'Canvas--GradientShader',
 }: GradientShaderProps) => {
@@ -48,16 +57,23 @@ export const GradientShader = ({
   const timeLocationRef = useRef<WebGLUniformLocation | null>(null);
   const scrollSpeedLocationRef = useRef<WebGLUniformLocation | null>(null);
   const scaleLocationRef = useRef<WebGLUniformLocation | null>(null);
-  const mouseLocationRef = useRef<WebGLUniformLocation | null>(null);
+  const brightnessLocationRef = useRef<WebGLUniformLocation | null>(null);
+  const pointerPointsLocationRef = useRef<WebGLUniformLocation | null>(null);
+  const numPointerPointsLocationRef = useRef<WebGLUniformLocation | null>(null);
   const resolutionLocationRef = useRef<WebGLUniformLocation | null>(null);
   const mouseInteractionLocationRef = useRef<WebGLUniformLocation | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
-  const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
+  const mousePositionRef = useRef<PointerPosition>({ x: 0.5, y: 0.5 });
+  const isControlledPointer = pointerPositionsRef != null;
 
   // Calculate internal resolution
   const internalWidth = Math.max(1, Math.floor(actualWidth * resolution));
   const internalHeight = Math.max(1, Math.floor(actualHeight * resolution));
+
+  useEffect(() => {
+    onInternalDimensionsChange?.(internalWidth, internalHeight);
+  }, [internalWidth, internalHeight, onInternalDimensionsChange]);
 
   // TODO - accept all colors formats and convert
   // Convert hex color to RGB values
@@ -147,7 +163,7 @@ export const GradientShader = ({
   // Mouse event handlers
   const handleMouseMove = React.useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>) => {
-      if (!mouseInteraction) return;
+      if (!mouseInteraction || isControlledPointer) return;
 
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -162,13 +178,43 @@ export const GradientShader = ({
 
       mousePositionRef.current = { x: scaledX, y: scaledY };
     },
-    [mouseInteraction, actualWidth, actualHeight, internalWidth, internalHeight]
+    [
+      mouseInteraction,
+      isControlledPointer,
+      actualWidth,
+      actualHeight,
+      internalWidth,
+      internalHeight,
+    ]
   );
 
   const handleMouseLeave = React.useCallback(() => {
-    // Reset mouse position to offscreen when mouse leaves
+    if (isControlledPointer) return;
     mousePositionRef.current = { x: -1000, y: -1000 };
-  }, []);
+  }, [isControlledPointer]);
+
+  const setPointerUniforms = useCallback(
+    (gl: WebGLRenderingContext) => {
+      const pointerPointsLocation = pointerPointsLocationRef.current;
+      const numPointerPointsLocation = numPointerPointsLocationRef.current;
+      if (!pointerPointsLocation || !numPointerPointsLocation) return;
+
+      const controlled = pointerPositionsRef?.current;
+      const positions = controlled ?? [mousePositionRef.current];
+      const count = Math.min(positions.length, MAX_POINTER_POINTS);
+      const data = new Float32Array(MAX_POINTER_POINTS * 2);
+
+      for (let i = 0; i < MAX_POINTER_POINTS; i++) {
+        const point = i < count ? positions[i] : { x: -1000, y: -1000 };
+        data[i * 2] = point.x;
+        data[i * 2 + 1] = point.y;
+      }
+
+      gl.uniform2fv(pointerPointsLocation, data);
+      gl.uniform1i(numPointerPointsLocation, count);
+    },
+    [pointerPositionsRef]
+  );
 
   // Initialize WebGL
   useEffect(() => {
@@ -217,7 +263,15 @@ export const GradientShader = ({
       'u_scrollSpeed'
     );
     scaleLocationRef.current = gl.getUniformLocation(program, 'u_scale');
-    mouseLocationRef.current = gl.getUniformLocation(program, 'u_mouse');
+    brightnessLocationRef.current = gl.getUniformLocation(program, 'u_brightness');
+    pointerPointsLocationRef.current = gl.getUniformLocation(
+      program,
+      'u_pointerPoints'
+    );
+    numPointerPointsLocationRef.current = gl.getUniformLocation(
+      program,
+      'u_numPointerPoints'
+    );
     resolutionLocationRef.current = gl.getUniformLocation(
       program,
       'u_resolution'
@@ -311,7 +365,8 @@ export const GradientShader = ({
       const program = programRef.current;
       const timeLocation = timeLocationRef.current;
       const scrollSpeedLocation = scrollSpeedLocationRef.current;
-      const mouseLocation = mouseLocationRef.current;
+      const scaleLocation = scaleLocationRef.current;
+      const brightnessLocation = brightnessLocationRef.current;
       const resolutionLocation = resolutionLocationRef.current;
       const mouseInteractionLocation = mouseInteractionLocationRef.current;
 
@@ -320,7 +375,8 @@ export const GradientShader = ({
         !program ||
         !timeLocation ||
         !scrollSpeedLocation ||
-        !mouseLocation ||
+        !scaleLocation ||
+        !brightnessLocation ||
         !resolutionLocation ||
         !mouseInteractionLocation
       ) {
@@ -333,11 +389,9 @@ export const GradientShader = ({
       gl.useProgram(program);
       gl.uniform1f(timeLocation, elapsedTime);
       gl.uniform1f(scrollSpeedLocation, scrollSpeed);
-      gl.uniform2f(
-        mouseLocation,
-        mousePositionRef.current.x,
-        mousePositionRef.current.y
-      );
+      gl.uniform1f(scaleLocation, scale);
+      gl.uniform1f(brightnessLocation, brightness);
+      setPointerUniforms(gl);
       gl.uniform2f(resolutionLocation, internalWidth, internalHeight);
       gl.uniform1i(mouseInteractionLocation, mouseInteraction ? 1 : 0);
 
@@ -346,7 +400,15 @@ export const GradientShader = ({
 
       animationFrameRef.current = requestAnimationFrame(animate);
     },
-    [scrollSpeed, internalWidth, internalHeight, mouseInteraction]
+    [
+      scrollSpeed,
+      scale,
+      brightness,
+      internalWidth,
+      internalHeight,
+      mouseInteraction,
+      setPointerUniforms,
+    ]
   );
 
   // Start animation loop
@@ -395,7 +457,7 @@ export const GradientShader = ({
 
   // Alternative mouse tracking using document events for background use
   useEffect(() => {
-    if (!mouseInteraction || !isBackground) return;
+    if (!mouseInteraction || !isBackground || isControlledPointer) return;
 
     const handleDocumentMouseMove = (event: MouseEvent) => {
       const canvas = canvasRef.current;
@@ -424,6 +486,7 @@ export const GradientShader = ({
   }, [
     mouseInteraction,
     isBackground,
+    isControlledPointer,
     actualWidth,
     actualHeight,
     internalWidth,
