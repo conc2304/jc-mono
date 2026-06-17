@@ -1,9 +1,13 @@
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
   Checkbox,
+  Collapse,
   FormControlLabel,
+  IconButton,
   Slider,
   Stack,
   ToggleButton,
@@ -122,6 +126,7 @@ export const GradientShaderScreenSaver = ({
     scrollSpeedProp ?? defaultScrollSpeed
   );
   const [scale, setScale] = useState(scaleProp ?? defaultScale);
+  const [settingsExpanded, setSettingsExpanded] = useState(true);
   const [internalDimensions, setInternalDimensions] = useState({
     width: Math.max(1, Math.floor(width * resolution)),
     height: Math.max(1, Math.floor(height * resolution)),
@@ -181,21 +186,27 @@ export const GradientShaderScreenSaver = ({
           zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
-          gap: 1,
-          p: 1.5,
           borderRadius: 1,
           bgcolor: 'rgba(0, 0, 0, 0.72)',
           color: 'common.white',
           minWidth: 240,
           maxHeight: 'calc(100vh - 32px)',
-          overflowY: 'auto',
           pointerEvents: 'auto',
         }}
       >
-        <Typography variant="caption" sx={{ opacity: 0.8 }}>
-          Screen Saver
-        </Typography>
-
+        <Collapse in={settingsExpanded}>
+          <Box
+            data-screen-saver-control
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              p: 1.5,
+              pb: 0.5,
+              maxHeight: 'calc(100vh - 80px)',
+              overflowY: 'auto',
+            }}
+          >
         <Button
           data-screen-saver-control
           variant="contained"
@@ -372,6 +383,39 @@ export const GradientShaderScreenSaver = ({
           }
           label={<Typography variant="body2">Mirror Y</Typography>}
         />
+          </Box>
+        </Collapse>
+
+        <Box
+          data-screen-saver-control
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 0.5,
+            px: 1.5,
+            py: settingsExpanded ? 0.5 : 1,
+            pb: settingsExpanded ? 0.5 : 1.5,
+          }}
+        >
+          <Typography variant="caption" sx={{ opacity: 0.8 }}>
+            Screen Saver
+          </Typography>
+          <IconButton
+            data-screen-saver-control
+            size="small"
+            aria-label={settingsExpanded ? 'Collapse settings' : 'Expand settings'}
+            aria-expanded={settingsExpanded}
+            onClick={() => setSettingsExpanded((prev) => !prev)}
+            sx={{ color: 'common.white', p: 0.25 }}
+          >
+            {settingsExpanded ? (
+              <RemoveIcon fontSize="small" />
+            ) : (
+              <AddIcon fontSize="small" />
+            )}
+          </IconButton>
+        </Box>
       </Box>
     ),
     [
@@ -389,6 +433,7 @@ export const GradientShaderScreenSaver = ({
       pointerSpeed,
       scale,
       scrollSpeed,
+      settingsExpanded,
       themeColorOptions,
       useThemeColors,
     ]

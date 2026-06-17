@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 
+import { useBoardCellSize } from '../hooks/use-board-cell-size';
 import { BoardState, Color, MovePosition } from '../types';
 
 interface BoardProps {
@@ -17,6 +18,9 @@ export const Board = ({
   playerTwoColor,
 }: BoardProps) => {
   const debugBoard = false;
+  const columns = boardState[0]?.length ?? 7;
+  const rows = boardState.length;
+  const { containerRef, cellSize } = useBoardCellSize(columns, rows, 80);
 
   const playerColorMap = {
     1: playerOneColor,
@@ -25,50 +29,61 @@ export const Board = ({
 
   return (
     <div
-      id="board"
-      className="border-slate-500 border-2 bg-white rounded-md overflow-hidden"
+      ref={containerRef}
+      className="flex flex-1 min-w-0 min-h-0 items-center justify-center self-stretch"
+      style={{
+        minWidth: columns * cellSize,
+        minHeight: rows * cellSize,
+      }}
     >
-      {boardState.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex" data-row={rowIndex}>
-          {row.map((_, colIndex) => (
-            // Cell Slot
-            <div
-              key={colIndex}
-              className="w-20 h-20 bg-blue-200  p-2 cursor-pointer"
-              onClick={() => onPieceDrop(rowIndex, colIndex)}
-              data-value={boardState[rowIndex][colIndex]}
-              data-col={colIndex}
-            >
-              {/* Game Piece Slot */}
+      <div
+        id="board"
+        className="border-slate-500 border-2 bg-white rounded-md overflow-hidden"
+        style={{
+          width: columns * cellSize,
+          height: rows * cellSize,
+        }}
+      >
+        {boardState.map((row, rowIndex) => (
+          <div key={rowIndex} className="flex" data-row={rowIndex}>
+            {row.map((_, colIndex) => (
               <div
-                className={clsx(
-                  'rounded-full size-full relative flex justify-center items-center',
-                  winningMatch !== null &&
-                    winningMatch.some(
-                      (piece) =>
-                        piece.row === rowIndex && piece.col === colIndex
-                    )
-                    ? 'border-4 bor border-green-400'
-                    : ''
-                )}
-                style={{
-                  backgroundColor:
-                    boardState[rowIndex][colIndex] !== null
-                      ? playerColorMap[boardState[rowIndex][colIndex]]
-                      : 'white',
-                }}
+                key={colIndex}
+                className="bg-blue-200 p-2 cursor-pointer"
+                style={{ width: cellSize, height: cellSize }}
+                onClick={() => onPieceDrop(rowIndex, colIndex)}
+                data-value={boardState[rowIndex][colIndex]}
+                data-col={colIndex}
               >
-                {debugBoard && (
-                  <p className="text-xs text-slate-300 text-center">
-                    R: {rowIndex}, C: {colIndex}
-                    {/* {boardState[rowIndex][colIndex]} */}
-                  </p>
-                )}
+                <div
+                  className={clsx(
+                    'rounded-full size-full relative flex justify-center items-center',
+                    winningMatch !== null &&
+                      winningMatch.some(
+                        (piece) =>
+                          piece.row === rowIndex && piece.col === colIndex
+                      )
+                      ? 'border-4 bor border-green-400'
+                      : ''
+                  )}
+                  style={{
+                    backgroundColor:
+                      boardState[rowIndex][colIndex] !== null
+                        ? playerColorMap[boardState[rowIndex][colIndex]]
+                        : 'white',
+                  }}
+                >
+                  {debugBoard && (
+                    <p className="text-xs text-slate-300 text-center">
+                      R: {rowIndex}, C: {colIndex}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ))}
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -196,26 +196,28 @@ export const ConnectFour = ({
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <img
         src={connectFourLogo}
         alt="Connect Four Logo"
-        className="w-1/2 mx-auto max-w-sm m-4"
+        className="w-1/2 mx-auto max-w-sm m-4 shrink-0"
       />
-      <div id="game-container" className="flex flex-col items-center">
+      <div id="game-container" className="flex flex-col items-center flex-1 min-h-0">
         <div
           id="game-wrapper"
-          className="flex justify-around items-center w-full"
+          className="flex justify-around items-stretch w-full flex-1 min-h-0"
         >
-          <PlayerConfig
-            playerNumber={1}
-            color={playerOneColor}
-            onColorChange={handlePlayerOneColorChange}
-            playerType={playerOneType}
-            onPlayerTypeChange={handlePlayerOneTypeChange}
-            onAiConfigChange={handlePlayerOneConfigChange}
-            onPauseChange={handlePauseChange}
-          />
+          <div className="shrink-0 self-center">
+            <PlayerConfig
+              playerNumber={1}
+              color={playerOneColor}
+              onColorChange={handlePlayerOneColorChange}
+              playerType={playerOneType}
+              onPlayerTypeChange={handlePlayerOneTypeChange}
+              onAiConfigChange={handlePlayerOneConfigChange}
+              onPauseChange={handlePauseChange}
+            />
+          </div>
 
           <Board
             boardState={boardState}
@@ -225,17 +227,19 @@ export const ConnectFour = ({
             playerTwoColor={playerTwoColor}
           />
 
-          <PlayerConfig
-            playerNumber={2}
-            color={playerTwoColor}
-            onColorChange={handlePlayerTwoColorChange}
-            playerType={playerTwoType}
-            onPlayerTypeChange={handlePlayerTwoTypeChange}
-            onAiConfigChange={handlePlayerTwoConfigChange}
-            onPauseChange={handlePauseChange}
-          />
+          <div className="shrink-0 self-center">
+            <PlayerConfig
+              playerNumber={2}
+              color={playerTwoColor}
+              onColorChange={handlePlayerTwoColorChange}
+              playerType={playerTwoType}
+              onPlayerTypeChange={handlePlayerTwoTypeChange}
+              onAiConfigChange={handlePlayerTwoConfigChange}
+              onPauseChange={handlePauseChange}
+            />
+          </div>
         </div>
-        <div id="game-info" className="flex flex-col items-center m-4">
+        <div id="game-info" className="flex flex-col items-center m-4 shrink-0">
           <h3>
             {isGameOver
               ? winningMatch == null

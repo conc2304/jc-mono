@@ -9,6 +9,10 @@ import { resolvePathSlugs } from '../data/routing-utils';
 // onOpenWindow in useWindowUrlSync can skip re-navigating.
 export const urlDrivenOpenRef = { current: false };
 
+// Set when in-window navigation (next/prev) updates the URL after
+// replaceWindowContent already swapped content — skip opening a duplicate window.
+export const navigationUrlSyncRef = { current: false };
+
 export function useRouteWindows() {
   const params = useParams();
   const { openWindow } = useWindowActions();
@@ -23,6 +27,11 @@ export function useRouteWindows() {
 
     const slugs = splat.split('/').filter(Boolean);
     if (slugs.length === 0) return;
+
+    if (navigationUrlSyncRef.current) {
+      navigationUrlSyncRef.current = false;
+      return;
+    }
 
     const items = resolvePathSlugs(slugs, FileSystem);
     urlDrivenOpenRef.current = true;

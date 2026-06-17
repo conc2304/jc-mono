@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 import { FileSystem } from '../data/file-system';
 import { buildFlatIndex, itemToPathSlugs } from '../data/routing-utils';
-import { urlDrivenOpenRef } from './use-route-windows';
+import { navigationUrlSyncRef, urlDrivenOpenRef } from './use-route-windows';
 
 const flatIndex = buildFlatIndex(FileSystem);
 
@@ -32,7 +32,10 @@ export function useWindowUrlSync() {
       const itemId = metadata?.['itemId'];
       if (typeof itemId !== 'string') return;
       const path = fsIdToPath(itemId);
-      if (path) navigate(path, { replace: true });
+      if (path) {
+        navigationUrlSyncRef.current = true;
+        navigate(path, { replace: true });
+      }
     },
     [navigate]
   );

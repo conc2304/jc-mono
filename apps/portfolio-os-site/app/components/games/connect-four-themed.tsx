@@ -55,22 +55,30 @@ export const ConnectFourThemed = () => {
     <Box
       sx={{
         height: '100%',
-        overflow: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
         p: 2,
       }}
     >
-      <Stack spacing={3} alignItems="center">
-        <Typography variant="h5" color="text.primary" fontWeight={700}>
-          Connect Four
-        </Typography>
+      <Typography
+        variant="h5"
+        color="text.primary"
+        fontWeight={700}
+        textAlign="center"
+        sx={{ flexShrink: 0 }}
+      >
+        Connect Four
+      </Typography>
 
-        <Stack
-          direction={isMobileLayout ? 'column' : 'row'}
-          spacing={isMobileLayout ? 3 : 4}
-          alignItems="center"
-          justifyContent="center"
-          sx={{ width: '100%' }}
-        >
+      <Stack
+        direction={isMobileLayout ? 'column' : 'row'}
+        spacing={isMobileLayout ? 2 : 3}
+        alignItems={isMobileLayout ? 'center' : 'stretch'}
+        justifyContent="center"
+        sx={{ flex: 1, minHeight: 0, width: '100%', mt: 2, overflow: 'auto' }}
+      >
+        <Box sx={{ flexShrink: 0, alignSelf: isMobileLayout ? 'center' : 'center' }}>
           <ConnectFourPlayerConfig
             playerNumber={1}
             color={playerOneColor}
@@ -80,15 +88,17 @@ export const ConnectFourThemed = () => {
             onAiConfigChange={handlePlayerOneConfigChange}
             onPauseChange={handlePauseChange}
           />
+        </Box>
 
-          <ConnectFourBoard
-            boardState={boardState}
-            winningMatch={winningMatch}
-            onPieceDrop={handlePieceDrop}
-            playerOneColor={playerOneColor}
-            playerTwoColor={playerTwoColor}
-          />
+        <ConnectFourBoard
+          boardState={boardState}
+          winningMatch={winningMatch}
+          onPieceDrop={handlePieceDrop}
+          playerOneColor={playerOneColor}
+          playerTwoColor={playerTwoColor}
+        />
 
+        <Box sx={{ flexShrink: 0, alignSelf: isMobileLayout ? 'center' : 'center' }}>
           <ConnectFourPlayerConfig
             playerNumber={2}
             color={playerTwoColor}
@@ -98,13 +108,15 @@ export const ConnectFourThemed = () => {
             onAiConfigChange={handlePlayerTwoConfigChange}
             onPauseChange={handlePauseChange}
           />
-        </Stack>
+        </Box>
+      </Stack>
 
+      <Box sx={{ flexShrink: 0, textAlign: 'center', mt: 2 }}>
         <Typography variant="h6" color="text.primary">
           {statusText}
         </Typography>
 
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 }}>
           <Button variant="contained" color="primary" onClick={resetBoard}>
             Restart Game
           </Button>
@@ -119,7 +131,7 @@ export const ConnectFourThemed = () => {
             </Button>
           )}
         </Stack>
-      </Stack>
+      </Box>
     </Box>
   );
 };
