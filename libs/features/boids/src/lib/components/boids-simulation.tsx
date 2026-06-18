@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { BoidsApp } from '../core/boids-app';
 import type { BoidsSimulationProps } from '../types';
@@ -8,12 +8,26 @@ export function BoidsSimulation({
   debug = false,
   boidCount = 250,
   attractorCount = 15,
+  gridColors,
+  obstacles = 'none',
+  obstacleCount = 8,
+  enableViewControls = false,
   className,
   style,
 }: BoidsSimulationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const debugRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const appRef = useRef<BoidsApp | null>(null);
+
+  const resolvedGridColors = useMemo(
+    () =>
+      gridColors ?? {
+        gridColor: '#00ffff',
+        centerColor: '#ff00ff',
+      },
+    [gridColors?.gridColor, gridColors?.centerColor]
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -24,16 +38,34 @@ export function BoidsSimulation({
       debug,
       boidCount,
       attractorCount,
+      gridColors: resolvedGridColors,
+      obstacles,
+      obstacleCount,
+      enableViewControls,
       debugContainer: debug ? debugRef.current : null,
       statsContainer: debug ? statsRef.current : null,
     });
 
+    appRef.current = app;
     void app.init();
 
     return () => {
       app.destroy();
+      appRef.current = null;
     };
-  }, [physics, debug, boidCount, attractorCount]);
+  }, [
+    physics,
+    debug,
+    boidCount,
+    attractorCount,
+    obstacles,
+    obstacleCount,
+    enableViewControls,
+  ]);
+
+  useEffect(() => {
+    appRef.current?.setGridColors(resolvedGridColors);
+  }, [resolvedGridColors]);
 
   return (
     <div

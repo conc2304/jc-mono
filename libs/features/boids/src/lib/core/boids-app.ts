@@ -1,20 +1,34 @@
 import {
   Clock,
+  FogExp2,
+  Group,
   Mesh,
-  MeshBasicMaterial,
   PerspectiveCamera,
   PointLight,
   Scene,
-  TorusGeometry,
   Vector2,
   Vector3,
   WebGLRenderer,
 } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import { Attractor } from './attractor';
+import {
+  createAquariumObstacles,
+  disposeObstacleGroup,
+  updateAquariumObstacles,
+} from './aquarium-obstacles';
 import { Boid } from './boid';
-import type { BoidsAppOptions } from '../types';
+import { BoidsViewControls } from './boids-view-controls';
+import {
+  computeViewportBoxHalfExtents,
+  VaporwaveGridBox,
+} from './vaporwave-grid-box';
+import type { BoxHalfExtents } from './vaporwave-grid-box';
+import type {
+  BoidsAppOptions,
+  GridThemeColors,
+  ObstaclePreset,
+} from '../types';
 
 type WallMesh = Mesh & { repulsion?: number };
 
@@ -23,6 +37,8 @@ type StatsPanel = {
   begin: () => void;
   end: () => void;
 };
+
+const CAMERA_DISTANCE = 800;
 
 export class BoidsApp {
   container: HTMLElement;
@@ -37,7 +53,6 @@ export class BoidsApp {
   scene!: Scene;
   camera!: PerspectiveCamera;
   renderer!: WebGLRenderer;
-  controls!: OrbitControls;
   clock!: Clock;
   pointLight!: PointLight;
   stats: StatsPanel | null = null;
@@ -52,11 +67,19 @@ export class BoidsApp {
   #boids: Boid[] = [];
   #walls: WallMesh[] = [];
   #obstacles: Mesh[] = [];
+  #obstacleGroup: Group | null = null;
+  #obstaclePreset: ObstaclePreset;
+  #obstacleCount: number;
   #attractors: Attractor[] = [];
-  #planesGroup = new Mesh();
+  #gridBox = new VaporwaveGridBox();
+  #boidsGroup = new Group();
+  #viewControls: BoidsViewControls | null = null;
+  #gridColors: GridThemeColors;
+  #boxExtents = { halfWidth: 400, halfHeight: 300, halfDepth: 288 };
   #resizeObserver: ResizeObserver | null = null;
   #disposed = false;
   #togglePhysicsDebugHandler: (() => void) | null = null;
+  #enableViewControls: boolean;
 
   constructor(container: HTMLElement, opts: BoidsAppOptions = {}) {
     this.container = container;
@@ -67,6 +90,13 @@ export class BoidsApp {
     this.attractorCount = opts.attractorCount ?? 15;
     this.debugContainer = opts.debugContainer ?? null;
     this.statsContainer = opts.statsContainer ?? null;
+    this.#gridColors = opts.gridColors ?? {
+      gridColor: '#00ffff',
+      centerColor: '#ff00ff',
+    };
+    this.#obstaclePreset = opts.obstacles ?? 'none';
+    this.#obstacleCount = opts.obstacleCount ?? 8;
+    this.#enableViewControls = opts.enableViewControls ?? false;
   }
 
   async init(): Promise<void> {
@@ -87,14 +117,15 @@ export class BoidsApp {
       this.PhysicsFloor = PhysicsFloor;
     }
 
+    this.scene.add(this.#boidsGroup);
     this.#createLight();
     this.#createClock();
-    this.#createControls();
+    this.#createViewControls();
     this.#setupResizeObserver();
+    this.#updateGridBox();
 
-    const boundingBoxSize = 1000;
-    this.#createBoids(boundingBoxSize / 2);
-    this.#createAttractors(this.attractorCount, boundingBoxSize);
+    this.#createBoids(this.#boxExtents);
+    this.#createAttractors(this.attractorCount, this.#boxExtents);
 
     if (this.hasDebug) {
       const { DebugPanel } = await import('../debug/debug-panel');
@@ -130,12 +161,16 @@ export class BoidsApp {
     this.#resizeObserver?.disconnect();
     this.#resizeObserver = null;
 
+    this.#viewControls?.dispose();
+    this.#viewControls = null;
+
     if (this.#togglePhysicsDebugHandler) {
-      window.removeEventListener('togglePhysicsDebug', this.#togglePhysicsDebugHandler);
+      window.removeEventListener(
+        'togglePhysicsDebug',
+        this.#togglePhysicsDebugHandler
+      );
       this.#togglePhysicsDebugHandler = null;
     }
-
-    this.controls?.dispose();
 
     for (const boid of this.#boids) {
       boid.dispose();
@@ -144,7 +179,9 @@ export class BoidsApp {
       attractor.dispose();
     }
 
-    this.#disposeObject3D(this.#planesGroup);
+    this.#gridBox.dispose();
+    this.scene?.remove(this.#gridBox.group);
+    this.#clearObstacles();
     this.#disposeScene(this.scene);
 
     if (this.stats?.dom.parentElement) {
@@ -154,7 +191,9 @@ export class BoidsApp {
 
     if (this.renderer) {
       if (this.renderer.domElement.parentElement) {
-        this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
+        this.renderer.domElement.parentElement.removeChild(
+          this.renderer.domElement
+        );
       }
       this.renderer.dispose();
     }
@@ -162,60 +201,120 @@ export class BoidsApp {
 
   #update(): void {
     const elapsed = this.clock.getElapsedTime();
+    updateAquariumObstacles(this.#obstacles, elapsed);
+    this.#obstacleGroup?.updateMatrixWorld(true);
     this.#updateSimulation(elapsed);
     this.simulation?.update();
   }
 
   #updateSimulation(elapsedTime: number): void {
     for (const boid of this.#boids) {
-      boid.update(this.#boids, this.#walls, this.#obstacles, this.#attractors, elapsedTime);
+      boid.update(
+        this.#boids,
+        this.#walls,
+        this.#obstacles,
+        this.#attractors,
+        elapsedTime
+      );
     }
 
     for (const attractor of this.#attractors) {
       attractor.update(elapsedTime);
     }
-
-    this.#planesGroup.rotation.z = elapsedTime * 0.06;
-    this.#planesGroup.rotation.x = elapsedTime * 0.06;
   }
 
-  #createBoids(maxRange = 200): void {
-    for (let i = 0; i < this.boidCount; i++) {
-      const boid = new Boid();
-      const boidMesh = boid.createBoid(maxRange);
-      this.#boids[i] = boid;
-      this.scene.add(boidMesh);
+  #updateGridBox(): void {
+    this.#boxExtents = computeViewportBoxHalfExtents(
+      this.camera,
+      CAMERA_DISTANCE
+    );
+    this.#gridBox.rebuild(this.#boxExtents, this.#gridColors);
+    this.#walls = this.#gridBox.walls;
+
+    if (!this.scene.children.includes(this.#gridBox.group)) {
+      this.scene.add(this.#gridBox.group);
+    }
+
+    for (const boid of this.#boids) {
+      boid.setBoxBounds(this.#boxExtents);
+    }
+
+    this.#syncAttractorBounds(this.#boxExtents);
+    this.#rebuildObstacles();
+  }
+
+  #clearObstacles(): void {
+    if (this.#obstacleGroup) {
+      this.scene?.remove(this.#obstacleGroup);
+      disposeObstacleGroup(this.#obstacleGroup);
+      this.#obstacleGroup = null;
+    }
+    this.#obstacles = [];
+  }
+
+  #rebuildObstacles(): void {
+    this.#clearObstacles();
+
+    if (this.#obstaclePreset !== 'aquarium' || !this.scene) return;
+
+    const { group, obstacles } = createAquariumObstacles({
+      extents: this.#boxExtents,
+      colors: this.#gridColors,
+      count: this.#obstacleCount,
+    });
+
+    this.#obstacleGroup = group;
+    this.#obstacles = obstacles;
+    this.scene.add(group);
+  }
+
+  #syncAttractorBounds(extents: BoxHalfExtents): void {
+    const maxReach = Math.max(
+      extents.halfWidth,
+      extents.halfHeight,
+      extents.halfDepth
+    );
+    for (const attractor of this.#attractors) {
+      attractor.bounds = {
+        x: [-extents.halfWidth, extents.halfWidth],
+        y: [-extents.halfHeight, extents.halfHeight],
+        z: [-extents.halfDepth, extents.halfDepth],
+      };
+      attractor.range = maxReach * 0.85;
     }
   }
 
-  #createAttractors(attractorsQty = 0, boundingRange = 100): void {
+  #createBoids(bounds: BoxHalfExtents): void {
+    for (let i = 0; i < this.boidCount; i++) {
+      const boid = new Boid();
+      const boidMesh = boid.createBoid(bounds);
+      this.#boids[i] = boid;
+      this.#boidsGroup.add(boidMesh);
+    }
+  }
+
+  #createAttractors(attractorsQty = 0, bounds: BoxHalfExtents): void {
+    const maxReach = Math.max(
+      bounds.halfWidth,
+      bounds.halfHeight,
+      bounds.halfDepth
+    );
     for (let i = 0; i < attractorsQty; i++) {
       const attractor = new Attractor({
         position: new Vector3(),
         strength: 0.5,
-        range: 600,
+        range: maxReach * 0.85,
         speed: 0.12,
-        boundingSize: boundingRange * 0.57,
         isVisible: false,
       });
+      attractor.bounds = {
+        x: [-bounds.halfWidth, bounds.halfWidth],
+        y: [-bounds.halfHeight, bounds.halfHeight],
+        z: [-bounds.halfDepth, bounds.halfDepth],
+      };
       this.#attractors.push(attractor);
-      this.scene.add(attractor.mesh);
+      this.#boidsGroup.add(attractor.mesh);
     }
-  }
-
-  #createObstacles(): void {
-    const tMesh = new Mesh(
-      new TorusGeometry(80, 10, 22, 22),
-      new MeshBasicMaterial({ color: 0x02aacd, opacity: 0.05 })
-    );
-    tMesh.name = 'basicObstacle';
-    this.scene.add(tMesh);
-    this.#obstacles.push(tMesh);
-  }
-
-  /** Reserved for optional obstacle setup in future configs. */
-  enableObstacles(): void {
-    this.#createObstacles();
   }
 
   #render(): void {
@@ -224,12 +323,14 @@ export class BoidsApp {
 
   #createScene(): void {
     this.scene = new Scene();
+    this.scene.fog = new FogExp2(0x1a0533, 0.00045);
   }
 
   #createCamera(): void {
     const aspect = this.#safeAspect();
     this.camera = new PerspectiveCamera(75, aspect, 0.1, 10000);
-    this.camera.position.set(0, 0, 800);
+    this.camera.position.set(0, 0, CAMERA_DISTANCE);
+    this.camera.lookAt(0, 0, 0);
   }
 
   #createRenderer(): void {
@@ -240,17 +341,31 @@ export class BoidsApp {
 
     this.container.appendChild(this.renderer.domElement);
     this.#applyRendererSize();
-    this.renderer.setClearColor(0x121212);
+    this.renderer.setClearColor(0x12001f);
   }
 
   #createLight(): void {
-    this.pointLight = new PointLight(0xff0055, 500, 100, 2);
-    this.pointLight.position.set(0, 10, 13);
-    this.scene.add(this.pointLight);
+    this.pointLight = new PointLight(0xff00aa, 400, 2000, 2);
+    this.pointLight.position.set(0, 120, 280);
+    this.#boidsGroup.add(this.pointLight);
+
+    const accent = new PointLight(0x00ffff, 280, 2000, 2);
+    accent.position.set(-180, -80, -120);
+    this.#boidsGroup.add(accent);
   }
 
-  #createControls(): void {
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+  #createViewControls(): void {
+    if (!this.#enableViewControls) return;
+
+    this.#viewControls = new BoidsViewControls({
+      element: this.renderer.domElement,
+      target: this.#boidsGroup,
+      onDragChange: (isDragging) => {
+        this.renderer.domElement.style.cursor = isDragging
+          ? 'grabbing'
+          : 'grab';
+      },
+    });
   }
 
   #createClock(): void {
@@ -276,6 +391,10 @@ export class BoidsApp {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio));
+
+    if (this.scene && this.camera) {
+      this.#updateGridBox();
+    }
   }
 
   #safeAspect(): number {
@@ -314,5 +433,12 @@ export class BoidsApp {
     if (this.#togglePhysicsDebugHandler) return;
     this.#togglePhysicsDebugHandler = handler;
     window.addEventListener('togglePhysicsDebug', handler);
+  }
+
+  setGridColors(colors: GridThemeColors): void {
+    this.#gridColors = colors;
+    if (this.camera) {
+      this.#updateGridBox();
+    }
   }
 }

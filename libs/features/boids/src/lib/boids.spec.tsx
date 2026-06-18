@@ -7,6 +7,7 @@ jest.mock('./core/boids-app', () => ({
   BoidsApp: jest.fn().mockImplementation(() => ({
     init: jest.fn().mockResolvedValue(undefined),
     destroy: jest.fn(),
+    setGridColors: jest.fn(),
   })),
 }));
 
@@ -34,6 +35,7 @@ describe('BoidsSimulation', () => {
         ({
           init: jest.fn().mockResolvedValue(undefined),
           destroy,
+          setGridColors: jest.fn(),
         }) as unknown as BoidsApp
     );
 

@@ -18,8 +18,12 @@ import { MathUtils } from 'three';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 
 import { getRandomInRange } from './utils';
+import type { BoxHalfExtents } from './vaporwave-grid-box';
 
 type WallMesh = Mesh & { repulsion?: number };
+
+const BOID_MARGIN = 12;
+const REFERENCE_BOX_MIN = 300;
 
 export class Boid {
   boidMesh!: Mesh;
@@ -27,7 +31,7 @@ export class Boid {
   neighborhoodAngle = 20;
   crowdingRadius = 30;
   collisionRadius = 60;
-  maxRange = 200;
+  boxBounds: BoxHalfExtents = { halfWidth: 200, halfHeight: 200, halfDepth: 200 };
   updateAngle = -Math.PI / 2;
   startAngle: number;
   endAngle: number;
@@ -48,15 +52,23 @@ export class Boid {
     this.simplex = new SimplexNoise();
   }
 
-  createBoid(maxRange = 200): Mesh {
+  createBoid(bounds: BoxHalfExtents): Mesh {
+    this.setBoxBounds(bounds);
+
     const boidHeight = 15;
     const boidWidth = 5;
     const geometry = new ConeGeometry(boidWidth, boidHeight, 6);
     const material = new MeshBasicMaterial({ color: 0xffff00 });
     const boid = new Mesh(geometry, material);
-    this.maxRange = maxRange;
 
-    boid.position.set(0, 0, 0);
+    const spawnX = bounds.halfWidth - BOID_MARGIN;
+    const spawnY = bounds.halfHeight - BOID_MARGIN;
+    const spawnZ = bounds.halfDepth - BOID_MARGIN;
+    boid.position.set(
+      getRandomInRange(-spawnX, spawnX),
+      getRandomInRange(-spawnY, spawnY),
+      getRandomInRange(-spawnZ, spawnZ)
+    );
     boid.rotation.set(
       getRandomInRange(-Math.PI, Math.PI),
       getRandomInRange(-Math.PI, Math.PI),
@@ -65,6 +77,15 @@ export class Boid {
 
     this.boidMesh = boid;
     return boid;
+  }
+
+  setBoxBounds(bounds: BoxHalfExtents): void {
+    this.boxBounds = { ...bounds };
+    const scale =
+      Math.min(bounds.halfWidth, bounds.halfHeight, bounds.halfDepth) / REFERENCE_BOX_MIN;
+    this.neighborhoodRadius = 150 * scale;
+    this.crowdingRadius = 30 * scale;
+    this.collisionRadius = 60 * scale;
   }
 
   update(
@@ -104,11 +125,30 @@ export class Boid {
 
     this.boidMesh.position.add(heading.multiplyScalar(this.boidSpeed));
 
-    if (this.boidMesh.position.distanceTo(new Vector3()) > this.maxRange * 1.75) {
-      this.boidMesh.position.set(0, 0, 0);
-    }
+    this.#enforceWorldBoxBounds();
+    this.updateBoidColor(this.boidMesh, this.boxBounds);
+  }
 
-    this.updateBoidColor(this.boidMesh, this.maxRange * 1.7);
+  #enforceWorldBoxBounds(): void {
+    const { halfWidth: w, halfHeight: h, halfDepth: d } = this.boxBounds;
+    const margin = BOID_MARGIN;
+
+    const world = new Vector3();
+    this.boidMesh.getWorldPosition(world);
+
+    const clamped = new Vector3(
+      Math.max(-w + margin, Math.min(w - margin, world.x)),
+      Math.max(-h + margin, Math.min(h - margin, world.y)),
+      Math.max(-d + margin, Math.min(d - margin, world.z))
+    );
+
+    if (clamped.equals(world)) return;
+
+    const parent = this.boidMesh.parent;
+    if (parent) {
+      parent.worldToLocal(clamped);
+    }
+    this.boidMesh.position.copy(clamped);
   }
 
   getAlignmentHeading(boidsList: Boid[]): Vector3 {
@@ -173,7 +213,8 @@ export class Boid {
   }
 
   getDistanceToObstacle(obstacle: Mesh): { distance: number; closestPoint: Vector3 | null } {
-    const boidPos = this.boidMesh.position.clone();
+    const boidPos = new Vector3();
+    this.boidMesh.getWorldPosition(boidPos);
 
     if (!obstacle.geometry?.attributes?.position) {
       return { distance: Infinity, closestPoint: null };
@@ -253,21 +294,24 @@ export class Boid {
     return Math.abs(theta) < Math.abs(startAngle);
   }
 
-  getAvoidanceHeading(walls: WallMesh[], _obstacles: Mesh[], currentHeading: Vector3): Vector3 {
+  getAvoidanceHeading(walls: WallMesh[], obstacles: Mesh[], currentHeading: Vector3): Vector3 {
     let newHeading = currentHeading;
     let totalRepulsion = new Vector3();
     let obstaclePushCount = 0;
 
-    walls.forEach((wall) => {
-      const { distance, closestPoint } = this.getDistanceToObstacle(wall);
+    const boidWorld = new Vector3();
+    this.boidMesh.getWorldPosition(boidWorld);
+
+    const avoidables: WallMesh[] = [...walls, ...(obstacles as WallMesh[])];
+
+    avoidables.forEach((mesh) => {
+      const { distance, closestPoint } = this.getDistanceToObstacle(mesh);
 
       if (distance < this.collisionRadius && closestPoint) {
         obstaclePushCount++;
-        const rayDirection = new Vector3()
-          .subVectors(closestPoint, this.boidMesh.position)
-          .normalize();
-        this.raycaster.set(this.boidMesh.position, rayDirection);
-        const intersects = this.raycaster.intersectObjects(walls);
+        const rayDirection = new Vector3().subVectors(closestPoint, boidWorld).normalize();
+        this.raycaster.set(boidWorld, rayDirection);
+        const intersects = this.raycaster.intersectObjects(avoidables);
 
         let worldNormal = new Vector3();
         if (intersects.length > 0) {
@@ -283,7 +327,7 @@ export class Boid {
         const repulsionScale = 1 - distance / this.collisionRadius;
         const repulsionVector = new Vector3()
           .add(worldNormal)
-          .multiplyScalar((wall.repulsion ?? 5) * repulsionScale);
+          .multiplyScalar((mesh.repulsion ?? 5) * repulsionScale);
         totalRepulsion = totalRepulsion.add(repulsionVector);
       }
     });
@@ -323,13 +367,14 @@ export class Boid {
     return forward.normalize();
   }
 
-  updateBoidColor(boidMesh: Mesh, range: number, saturation = 1): void {
-    const pos = boidMesh.position;
+  updateBoidColor(boidMesh: Mesh, bounds: BoxHalfExtents, saturation = 1): void {
+    const world = new Vector3();
+    boidMesh.getWorldPosition(world);
     const rot = boidMesh.rotation;
 
-    const normX = (pos.x - range) / range;
-    const normY = (pos.y - range) / range;
-    const normZ = (pos.z - range) / range;
+    const normX = world.x / bounds.halfWidth;
+    const normY = world.y / bounds.halfHeight;
+    const normZ = world.z / bounds.halfDepth;
     const normRotX = (rot.x % (2 * Math.PI)) / (2 * Math.PI);
     const normRotY = (rot.y % (2 * Math.PI)) / (2 * Math.PI);
     const normRotZ = (rot.z % (2 * Math.PI)) / (2 * Math.PI);

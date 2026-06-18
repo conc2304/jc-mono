@@ -1,8 +1,10 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import { BoidsSimulation } from '@jc/boids';
 
 export const BoidsThemed = () => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -13,7 +15,15 @@ export const BoidsThemed = () => {
         overflow: 'hidden',
       }}
     >
-      <BoidsSimulation physics={false} debug={false} />
+      <BoidsSimulation
+        physics={false}
+        debug={false}
+        obstacles="aquarium"
+        gridColors={{
+          gridColor: theme.palette.primary.main,
+          centerColor: theme.palette.secondary.main,
+        }}
+      />
     </Box>
   );
 };

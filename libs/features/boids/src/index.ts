@@ -1,2 +1,2 @@
 export { BoidsSimulation } from './lib/components/boids-simulation';
-export type { BoidsSimulationProps, BoidsAppOptions } from './lib/types';
+export type { BoidsAppOptions, BoidsSimulationProps, GridThemeColors, ObstaclePreset } from './lib/types';
