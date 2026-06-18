@@ -23,14 +23,12 @@ import {
   computeViewportBoxHalfExtents,
   VaporwaveGridBox,
 } from './vaporwave-grid-box';
-import type { BoxHalfExtents } from './vaporwave-grid-box';
+import type { BoxHalfExtents, WallMesh } from './vaporwave-grid-box';
 import type {
   BoidsAppOptions,
   GridThemeColors,
   ObstaclePreset,
 } from '../types';
-
-type WallMesh = Mesh & { repulsion?: number };
 
 type StatsPanel = {
   dom: HTMLElement;
@@ -67,9 +65,12 @@ export class BoidsApp {
   #boids: Boid[] = [];
   #walls: WallMesh[] = [];
   #obstacles: Mesh[] = [];
+  #avoidables: WallMesh[] = [];
   #obstacleGroup: Group | null = null;
   #obstaclePreset: ObstaclePreset;
   #obstacleCount: number;
+  #obstaclesEnabled: boolean;
+  #obstacleLayoutSeed = Math.random() * 1_000_000;
   #attractors: Attractor[] = [];
   #gridBox = new VaporwaveGridBox();
   #boidsGroup = new Group();
@@ -96,6 +97,7 @@ export class BoidsApp {
     };
     this.#obstaclePreset = opts.obstacles ?? 'none';
     this.#obstacleCount = opts.obstacleCount ?? 8;
+    this.#obstaclesEnabled = opts.obstaclesEnabled ?? false;
     this.#enableViewControls = opts.enableViewControls ?? false;
   }
 
@@ -201,25 +203,29 @@ export class BoidsApp {
 
   #update(): void {
     const elapsed = this.clock.getElapsedTime();
-    updateAquariumObstacles(this.#obstacles, elapsed);
-    this.#obstacleGroup?.updateMatrixWorld(true);
+    if (this.#obstaclesEnabled && this.#obstacles.length > 0) {
+      updateAquariumObstacles(this.#obstacles, elapsed);
+      this.#obstacleGroup?.updateMatrixWorld(true);
+    }
     this.#updateSimulation(elapsed);
     this.simulation?.update();
   }
 
   #updateSimulation(elapsedTime: number): void {
     for (const boid of this.#boids) {
-      boid.update(
-        this.#boids,
-        this.#walls,
-        this.#obstacles,
-        this.#attractors,
-        elapsedTime
-      );
+      boid.update(this.#boids, this.#avoidables, this.#attractors, elapsedTime);
     }
 
     for (const attractor of this.#attractors) {
       attractor.update(elapsedTime);
+    }
+  }
+
+  #rebuildAvoidables(): void {
+    this.#avoidables.length = 0;
+    this.#avoidables.push(...this.#walls);
+    if (this.#obstaclesEnabled) {
+      this.#avoidables.push(...(this.#obstacles as WallMesh[]));
     }
   }
 
@@ -241,6 +247,7 @@ export class BoidsApp {
 
     this.#syncAttractorBounds(this.#boxExtents);
     this.#rebuildObstacles();
+    this.#rebuildAvoidables();
   }
 
   #clearObstacles(): void {
@@ -250,6 +257,7 @@ export class BoidsApp {
       this.#obstacleGroup = null;
     }
     this.#obstacles = [];
+    this.#rebuildAvoidables();
   }
 
   #rebuildObstacles(): void {
@@ -261,11 +269,24 @@ export class BoidsApp {
       extents: this.#boxExtents,
       colors: this.#gridColors,
       count: this.#obstacleCount,
+      layoutSeed: this.#obstacleLayoutSeed,
     });
 
     this.#obstacleGroup = group;
     this.#obstacles = obstacles;
+    group.visible = this.#obstaclesEnabled;
     this.scene.add(group);
+    this.#rebuildAvoidables();
+  }
+
+  setObstaclesEnabled(enabled: boolean): void {
+    if (this.#obstaclesEnabled === enabled) return;
+    this.#obstaclesEnabled = enabled;
+
+    if (this.#obstaclePreset !== 'aquarium') return;
+
+    this.#obstacleLayoutSeed = Math.random() * 1_000_000;
+    this.#rebuildObstacles();
   }
 
   #syncAttractorBounds(extents: BoxHalfExtents): void {

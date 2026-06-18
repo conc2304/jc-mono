@@ -1,4 +1,5 @@
 import {
+  Box3,
   BoxGeometry,
   ConeGeometry,
   CylinderGeometry,
@@ -17,12 +18,25 @@ type BobConfig = {
   phase: number;
 };
 
-export type ObstacleMesh = Mesh & { repulsion?: number; bob?: BobConfig };
+export type ObstacleMesh = Mesh & {
+  repulsion?: number;
+  bob?: BobConfig;
+  bounds?: Box3;
+};
+
+function syncObstacleBounds(mesh: ObstacleMesh): void {
+  if (!mesh.bounds) {
+    mesh.bounds = new Box3();
+  }
+  mesh.updateMatrixWorld(true);
+  mesh.bounds.setFromObject(mesh);
+}
 
 export type AquariumObstaclesOptions = {
   extents: BoxHalfExtents;
   colors: GridThemeColors;
   count?: number;
+  layoutSeed?: number;
 };
 
 type ObstacleSpec = {
@@ -49,17 +63,49 @@ function seededRandom(seed: number): number {
 }
 
 const DEFAULT_SPECS: ObstacleSpec[] = [
-  { kind: 'rock', xNorm: -0.55, zNorm: -0.35, scale: 1.3 },
-  { kind: 'rock', xNorm: 0.45, zNorm: 0.25, scale: 1.0 },
-  { kind: 'rock', xNorm: 0.15, zNorm: -0.55, scale: 0.85 },
-  { kind: 'kelp', xNorm: -0.25, zNorm: 0.45, heightRatio: 0.48 },
-  { kind: 'kelp', xNorm: 0.6, zNorm: -0.15, heightRatio: 0.74 },
-  { kind: 'rock', scale: 1.0, floating: true, floatSeed: 1, bobPhase: 0 },
-  { kind: 'coral', scale: 0.95, floating: true, floatSeed: 2, bobPhase: 2.1 },
-  { kind: 'rock', scale: 0.85, floating: true, floatSeed: 3, bobPhase: 4.2 },
-  { kind: 'coral', xNorm: -0.4, zNorm: 0.15, scale: 1.0 },
-  { kind: 'coral', xNorm: 0.35, zNorm: -0.4, scale: 0.8 },
+  { kind: 'rock', scale: 1.3 },
+  { kind: 'rock', scale: 1.0 },
+  { kind: 'rock', scale: 0.85 },
+  { kind: 'kelp', heightRatio: 0.48 },
+  { kind: 'kelp', heightRatio: 0.74 },
+  { kind: 'rock', scale: 1.0, floating: true },
+  { kind: 'coral', scale: 0.95, floating: true },
+  { kind: 'rock', scale: 0.85, floating: true },
+  { kind: 'coral', scale: 1.0 },
+  { kind: 'coral', scale: 0.8 },
 ];
+
+function buildRandomSpecs(count: number, layoutSeed: number): ObstacleSpec[] {
+  const templates = DEFAULT_SPECS.slice(0, Math.max(1, count));
+
+  return templates.map((template, index) => {
+    const seed = layoutSeed + index * 131;
+
+    if (template.floating) {
+      return {
+        ...template,
+        floatSeed: seed,
+        bobPhase: seededRandom(seed + 7) * Math.PI * 2,
+        scale:
+          (template.scale ?? 1) * (0.85 + seededRandom(seed + 11) * 0.3),
+      };
+    }
+
+    return {
+      ...template,
+      xNorm: (seededRandom(seed) * 2 - 1) * 0.75,
+      zNorm: (seededRandom(seed + 13) * 2 - 1) * 0.75,
+      scale:
+        (template.scale ?? 1) * (0.85 + seededRandom(seed + 17) * 0.3),
+      heightRatio:
+        template.kind === 'kelp'
+          ? KELP_MIN_HEIGHT_RATIO +
+            seededRandom(seed + 23) *
+              (KELP_MAX_HEIGHT_RATIO - KELP_MIN_HEIGHT_RATIO)
+          : template.heightRatio,
+    };
+  });
+}
 
 const OBSTACLE_REPULSION = 9;
 
@@ -201,15 +247,21 @@ function createFromSpec(
 export function createAquariumObstacles(
   options: AquariumObstaclesOptions
 ): { group: Group; obstacles: ObstacleMesh[] } {
-  const { extents, colors, count = DEFAULT_SPECS.length } = options;
+  const {
+    extents,
+    colors,
+    count = DEFAULT_SPECS.length,
+    layoutSeed = Math.random() * 1_000_000,
+  } = options;
   const group = new Group();
   group.name = 'aquariumObstacles';
 
-  const specs = DEFAULT_SPECS.slice(0, Math.max(1, count));
+  const specs = buildRandomSpecs(count, layoutSeed);
   const obstacles: ObstacleMesh[] = [];
 
   for (const spec of specs) {
     const mesh = createFromSpec(spec, extents, colors);
+    syncObstacleBounds(mesh);
     group.add(mesh);
     obstacles.push(mesh);
   }
@@ -226,6 +278,7 @@ export function updateAquariumObstacles(
 
     const { baseY, amplitude, speed, phase } = obstacle.bob;
     obstacle.position.y = baseY + Math.sin(elapsedTime * speed + phase) * amplitude;
+    syncObstacleBounds(obstacle);
   }
 }
 

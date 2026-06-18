@@ -11,6 +11,7 @@ export function BoidsSimulation({
   gridColors,
   obstacles = 'none',
   obstacleCount = 8,
+  obstaclesEnabled = false,
   enableViewControls = false,
   className,
   style,
@@ -41,6 +42,7 @@ export function BoidsSimulation({
       gridColors: resolvedGridColors,
       obstacles,
       obstacleCount,
+      obstaclesEnabled,
       enableViewControls,
       debugContainer: debug ? debugRef.current : null,
       statsContainer: debug ? statsRef.current : null,
@@ -66,6 +68,10 @@ export function BoidsSimulation({
   useEffect(() => {
     appRef.current?.setGridColors(resolvedGridColors);
   }, [resolvedGridColors]);
+
+  useEffect(() => {
+    appRef.current?.setObstaclesEnabled(obstaclesEnabled);
+  }, [obstaclesEnabled]);
 
   return (
     <div

@@ -3,6 +3,7 @@ import {
   BufferGeometry,
   Color,
   DoubleSide,
+  Euler,
   Group,
   LineBasicMaterial,
   LineSegments,
@@ -15,7 +16,11 @@ import {
 
 import type { GridThemeColors } from '../types';
 
-export type WallMesh = Mesh & { repulsion?: number };
+export type WallMesh = Mesh & {
+  repulsion?: number;
+  inwardNormal?: Vector3;
+  planePoint?: Vector3;
+};
 
 export type BoxHalfExtents = {
   halfWidth: number;
@@ -29,7 +34,7 @@ const DEFAULT_GRID_COLORS: GridThemeColors = {
 };
 
 const GRID_OPACITY = 0.25;
-const COLLISION_SUBDIVISIONS = 12;
+const COLLISION_SUBDIVISIONS = 1;
 
 function hexToVector3(hex: string): Vector3 {
   const color = new Color(hex);
@@ -259,6 +264,10 @@ export class VaporwaveGridBox {
       collisionPlane.position.set(...face.position);
       collisionPlane.rotation.set(...face.collisionRotation);
       collisionPlane.repulsion = 5;
+      collisionPlane.inwardNormal = new Vector3(0, 0, 1).applyEuler(
+        new Euler(...face.collisionRotation)
+      );
+      collisionPlane.planePoint = new Vector3(...face.position);
       this.group.add(collisionPlane);
       this.walls.push(collisionPlane);
     }

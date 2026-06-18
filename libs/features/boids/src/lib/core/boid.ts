@@ -8,7 +8,6 @@ import {
   Mesh,
   MeshBasicMaterial,
   Quaternion,
-  Raycaster,
   Shape,
   ShapeGeometry,
   Spherical,
@@ -17,10 +16,11 @@ import {
 import { MathUtils } from 'three';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 
+import type { ObstacleMesh } from './aquarium-obstacles';
 import { getRandomInRange } from './utils';
-import type { BoxHalfExtents } from './vaporwave-grid-box';
+import type { BoxHalfExtents, WallMesh } from './vaporwave-grid-box';
 
-type WallMesh = Mesh & { repulsion?: number };
+type AvoidableMesh = WallMesh | ObstacleMesh;
 
 const BOID_MARGIN = 12;
 const REFERENCE_BOX_MIN = 300;
@@ -39,10 +39,34 @@ export class Boid {
   rotationSpeed = 0.35;
   weightOld = 0.5;
   weightAvg = 0.5;
-  raycaster = new Raycaster();
   id: string;
   noiseSeed: number;
   simplex: SimplexNoise;
+
+  #heading = new Vector3();
+  #headingCurrent = new Vector3();
+  #headingFlockAvg = new Vector3();
+  #headingBlend = new Vector3();
+  #currentQuat = new Quaternion();
+  #targetQuat = new Quaternion();
+  #noiseQuat = new Quaternion();
+  #noiseEuler = new Euler();
+  #forward = new Vector3(0, 1, 0);
+  #boidWorld = new Vector3();
+  #worldClamped = new Vector3();
+  #separationForce = new Vector3();
+  #distanceVector = new Vector3();
+  #relativePos = new Vector3();
+  #repulsionTotal = new Vector3();
+  #repulsionAvg = new Vector3();
+  #repulsionVector = new Vector3();
+  #repulsionNormal = new Vector3();
+  #closestPoint = new Vector3();
+  #toBoid = new Vector3();
+  #attractorDelta = new Vector3();
+  #attractorForce = new Vector3();
+  #headingSum = new Vector3();
+  #colorWorld = new Vector3();
 
   constructor() {
     this.startAngle = this.neighborhoodAngle + this.updateAngle;
@@ -90,19 +114,17 @@ export class Boid {
 
   update(
     boidsList: Boid[],
-    walls: WallMesh[],
-    obstacles: Mesh[],
-    attractors: { mesh: Mesh; calculateAttraction: (boid: Mesh) => Vector3 }[],
+    avoidables: AvoidableMesh[],
+    attractors: { mesh: Mesh; position: Vector3; strength: number; range: number }[],
     elapsedTime: number
   ): void {
-    let heading = this.getAlignmentHeading(boidsList);
-    heading = this.getAvoidanceHeading(walls, obstacles, heading);
-    heading = this.getSeparationHeading(boidsList, heading);
-    heading = this.addAttractorForce(attractors, heading);
+    this.getAlignmentHeading(boidsList, this.#heading);
+    this.getAvoidanceHeading(avoidables, this.#heading, this.#heading);
+    this.getSeparationHeading(boidsList, this.#heading, this.#heading);
+    this.addAttractorForce(attractors, this.#heading, this.#heading);
 
-    const currentQuaternion = this.boidMesh.quaternion.clone();
-    const targetQuaternion = new Quaternion();
-    targetQuaternion.setFromUnitVectors(new Vector3(0, 1, 0), heading);
+    this.#currentQuat.copy(this.boidMesh.quaternion);
+    this.#targetQuat.setFromUnitVectors(this.#forward, this.#heading);
 
     const noiseScale = 0.05;
     const noiseStrength = 0.01;
@@ -112,18 +134,17 @@ export class Boid {
       this.simplex.noise(Math.pow(this.noiseSeed, 2), elapsedTime * noiseScale) *
       noiseStrength;
 
-    const noiseQuaternion = new Quaternion();
-    const noiseEuler = new Euler(noiseX, 0, noiseY, 'XYZ');
-    noiseQuaternion.setFromEuler(noiseEuler);
-    targetQuaternion.multiply(noiseQuaternion);
+    this.#noiseEuler.set(noiseX, 0, noiseY);
+    this.#noiseQuat.setFromEuler(this.#noiseEuler);
+    this.#targetQuat.multiply(this.#noiseQuat);
 
     this.boidMesh.quaternion.slerpQuaternions(
-      currentQuaternion,
-      targetQuaternion,
+      this.#currentQuat,
+      this.#targetQuat,
       this.rotationSpeed
     );
 
-    this.boidMesh.position.add(heading.multiplyScalar(this.boidSpeed));
+    this.boidMesh.position.addScaledVector(this.#heading, this.boidSpeed);
 
     this.#enforceWorldBoxBounds();
     this.updateBoidColor(this.boidMesh, this.boxBounds);
@@ -133,39 +154,44 @@ export class Boid {
     const { halfWidth: w, halfHeight: h, halfDepth: d } = this.boxBounds;
     const margin = BOID_MARGIN;
 
-    const world = new Vector3();
-    this.boidMesh.getWorldPosition(world);
+    this.boidMesh.getWorldPosition(this.#boidWorld);
 
-    const clamped = new Vector3(
-      Math.max(-w + margin, Math.min(w - margin, world.x)),
-      Math.max(-h + margin, Math.min(h - margin, world.y)),
-      Math.max(-d + margin, Math.min(d - margin, world.z))
+    this.#worldClamped.set(
+      Math.max(-w + margin, Math.min(w - margin, this.#boidWorld.x)),
+      Math.max(-h + margin, Math.min(h - margin, this.#boidWorld.y)),
+      Math.max(-d + margin, Math.min(d - margin, this.#boidWorld.z))
     );
 
-    if (clamped.equals(world)) return;
+    if (this.#worldClamped.equals(this.#boidWorld)) return;
 
     const parent = this.boidMesh.parent;
     if (parent) {
-      parent.worldToLocal(clamped);
+      parent.worldToLocal(this.#worldClamped);
     }
-    this.boidMesh.position.copy(clamped);
+    this.boidMesh.position.copy(this.#worldClamped);
   }
 
-  getAlignmentHeading(boidsList: Boid[]): Vector3 {
-    const headingCurrent = this.getHeadingVector(this.boidMesh);
-    const headingFlockAvg = this.getAverageHeading(boidsList);
-    const WaHa = headingFlockAvg.clone().multiplyScalar(this.weightAvg);
-    const WoHc = headingCurrent.clone().multiplyScalar(this.weightOld);
-    const WoWa = this.weightOld + this.weightAvg;
+  getAlignmentHeading(boidsList: Boid[], out: Vector3): Vector3 {
+    this.getHeadingInto(this.boidMesh, this.#headingCurrent);
+    this.getAverageHeading(boidsList, this.#headingFlockAvg);
 
-    const numerator = new Vector3().addVectors(WoHc, WaHa);
-    return numerator.clone().divideScalar(WoWa).normalize();
+    out
+      .copy(this.#headingCurrent)
+      .multiplyScalar(this.weightOld)
+      .add(this.#headingBlend.copy(this.#headingFlockAvg).multiplyScalar(this.weightAvg))
+      .divideScalar(this.weightOld + this.weightAvg)
+      .normalize();
+
+    return out;
   }
 
   addAttractorForce(
-    attractors: { mesh: Mesh; calculateAttraction: (boid: Mesh) => Vector3 }[],
-    heading: Vector3
+    attractors: { mesh: Mesh; position: Vector3; strength: number; range: number }[],
+    heading: Vector3,
+    out: Vector3
   ): Vector3 {
+    out.copy(heading);
+
     let nearestDistance = Infinity;
     let nearestAttractor: (typeof attractors)[number] | null = null;
 
@@ -176,70 +202,137 @@ export class Boid {
         nearestDistance = distance;
       }
     }
-    if (!nearestAttractor) return heading;
 
-    const attractionForce = nearestAttractor.calculateAttraction(this.boidMesh);
-    return heading.add(attractionForce);
+    if (!nearestAttractor || nearestDistance >= nearestAttractor.range) {
+      return out;
+    }
+
+    this.#attractorDelta.subVectors(nearestAttractor.position, this.boidMesh.position);
+    this.#attractorForce.copy(this.#attractorDelta).normalize().multiplyScalar(nearestAttractor.strength);
+    return out.add(this.#attractorForce);
   }
 
-  getSeparationHeading(boidsList: Boid[], heading: Vector3): Vector3 {
+  getSeparationHeading(boidsList: Boid[], heading: Vector3, out: Vector3): Vector3 {
     const position = this.boidMesh.position;
-    const separationHeading = new Vector3().add(heading);
+    out.copy(heading);
+    this.#separationForce.set(0, 0, 0);
     const repulsionPower = 4;
-    const forceVector = new Vector3(0, 0, 0);
 
-    boidsList.forEach((otherBoid) => {
-      if (otherBoid.id === this.id) return;
+    for (const otherBoid of boidsList) {
+      if (otherBoid.id === this.id) continue;
 
-      const boidInCrowdingArea = this.isBoidInSector(
-        otherBoid.boidMesh,
-        this.crowdingRadius,
-        this.startAngle
-      );
-      if (!boidInCrowdingArea) return;
+      if (
+        !this.isBoidInSector(otherBoid.boidMesh, this.crowdingRadius, this.startAngle)
+      ) {
+        continue;
+      }
 
       const positionOther = otherBoid.boidMesh.position;
-      const distanceVector = new Vector3().subVectors(position, positionOther);
-      const distance = distanceVector.length();
+      this.#distanceVector.subVectors(position, positionOther);
+      const distance = this.#distanceVector.length();
 
       if (distance > 0) {
-        const repulsionStrength = 1 / Math.pow(distance / this.crowdingRadius, repulsionPower);
-        distanceVector.normalize().multiplyScalar(repulsionStrength);
-        forceVector.add(distanceVector);
+        const repulsionStrength =
+          1 / Math.pow(distance / this.crowdingRadius, repulsionPower);
+        this.#separationForce.add(
+          this.#distanceVector.normalize().multiplyScalar(repulsionStrength)
+        );
       }
-    });
+    }
 
-    return separationHeading.clone().add(forceVector).normalize();
+    return out.add(this.#separationForce).normalize();
   }
 
-  getDistanceToObstacle(obstacle: Mesh): { distance: number; closestPoint: Vector3 | null } {
-    const boidPos = new Vector3();
-    this.boidMesh.getWorldPosition(boidPos);
+  #distanceToAvoidable(
+    mesh: AvoidableMesh,
+    boidWorld: Vector3,
+    outClosest: Vector3
+  ): number {
+    if (mesh.inwardNormal && mesh.planePoint) {
+      this.#toBoid.subVectors(boidWorld, mesh.planePoint);
+      const signedDist = this.#toBoid.dot(mesh.inwardNormal);
+      if (signedDist < 0) return Infinity;
 
-    if (!obstacle.geometry?.attributes?.position) {
-      return { distance: Infinity, closestPoint: null };
+      outClosest.copy(boidWorld).addScaledVector(mesh.inwardNormal, -signedDist);
+      return signedDist;
     }
 
-    const positionAttribute = obstacle.geometry.attributes.position;
-    const matrixWorld = obstacle.matrixWorld;
-    let closestPoint: Vector3 | null = null;
-    let minDistance = Infinity;
+    const bounds = (mesh as ObstacleMesh).bounds;
+    if (bounds) {
+      bounds.clampPoint(boidWorld, outClosest);
+      return boidWorld.distanceTo(outClosest);
+    }
 
-    for (let i = 0; i < positionAttribute.count; i++) {
-      const vertex = new Vector3(
-        positionAttribute.getX(i),
-        positionAttribute.getY(i),
-        positionAttribute.getZ(i)
-      );
-      vertex.applyMatrix4(matrixWorld);
-      const distance = boidPos.distanceTo(vertex);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestPoint = vertex.clone();
+    return Infinity;
+  }
+
+  getAvoidanceHeading(
+    avoidables: AvoidableMesh[],
+    currentHeading: Vector3,
+    out: Vector3
+  ): Vector3 {
+    out.copy(currentHeading);
+    this.boidMesh.getWorldPosition(this.#boidWorld);
+
+    this.#repulsionTotal.set(0, 0, 0);
+    let pushCount = 0;
+
+    for (const mesh of avoidables) {
+      const distance = this.#distanceToAvoidable(mesh, this.#boidWorld, this.#closestPoint);
+      if (distance >= this.collisionRadius) continue;
+
+      pushCount++;
+
+      if (mesh.inwardNormal) {
+        this.#repulsionNormal.copy(mesh.inwardNormal);
+      } else {
+        this.#repulsionNormal.subVectors(this.#boidWorld, this.#closestPoint);
+        if (this.#repulsionNormal.lengthSq() === 0) {
+          this.#repulsionNormal.set(0, 1, 0);
+        } else {
+          this.#repulsionNormal.normalize();
+        }
       }
+
+      const repulsionScale = 1 - distance / this.collisionRadius;
+      this.#repulsionTotal.add(
+        this.#repulsionVector
+          .copy(this.#repulsionNormal)
+          .multiplyScalar((mesh.repulsion ?? 5) * repulsionScale)
+      );
     }
 
-    return { distance: minDistance, closestPoint };
+    if (pushCount === 0) return out;
+
+    return out.add(
+      this.#repulsionAvg.copy(this.#repulsionTotal).divideScalar(pushCount)
+    );
+  }
+
+  getAverageHeading(boids: Boid[], out: Vector3): Vector3 {
+    this.#headingSum.set(0, 0, 0);
+    let count = 0;
+
+    for (const boid of boids) {
+      if (boid.id === this.id) continue;
+      if (!this.isBoidInSector(boid.boidMesh, this.neighborhoodRadius, this.startAngle)) {
+        continue;
+      }
+
+      this.getHeadingInto(boid.boidMesh, this.#headingCurrent);
+      this.#headingSum.add(this.#headingCurrent);
+      count++;
+    }
+
+    if (count === 0) {
+      return this.getHeadingInto(this.boidMesh, out);
+    }
+
+    return out.copy(this.#headingSum).divideScalar(count);
+  }
+
+  getHeadingInto(meshObject: Mesh, out: Vector3): Vector3 {
+    return out.copy(this.#forward).applyQuaternion(meshObject.quaternion).normalize();
   }
 
   createAngleLine(): Line {
@@ -282,99 +375,25 @@ export class Boid {
     const distanceToBoid = boidOther.position.distanceTo(this.boidMesh.position);
     if (distanceToBoid >= radius) return false;
 
-    const relativePos = new Vector3().subVectors(this.boidMesh.position, boidOther.position);
+    this.#relativePos.subVectors(this.boidMesh.position, boidOther.position);
     const axis = new Vector3(0, 0, 1);
     const angle = -this.boidMesh.rotation.z;
 
     const tempSpherical = new Spherical();
-    tempSpherical.setFromVector3(relativePos);
+    tempSpherical.setFromVector3(this.#relativePos);
     const { theta } = tempSpherical;
 
-    relativePos.applyAxisAngle(axis, angle);
+    this.#relativePos.applyAxisAngle(axis, angle);
     return Math.abs(theta) < Math.abs(startAngle);
   }
 
-  getAvoidanceHeading(walls: WallMesh[], obstacles: Mesh[], currentHeading: Vector3): Vector3 {
-    let newHeading = currentHeading;
-    let totalRepulsion = new Vector3();
-    let obstaclePushCount = 0;
-
-    const boidWorld = new Vector3();
-    this.boidMesh.getWorldPosition(boidWorld);
-
-    const avoidables: WallMesh[] = [...walls, ...(obstacles as WallMesh[])];
-
-    avoidables.forEach((mesh) => {
-      const { distance, closestPoint } = this.getDistanceToObstacle(mesh);
-
-      if (distance < this.collisionRadius && closestPoint) {
-        obstaclePushCount++;
-        const rayDirection = new Vector3().subVectors(closestPoint, boidWorld).normalize();
-        this.raycaster.set(boidWorld, rayDirection);
-        const intersects = this.raycaster.intersectObjects(avoidables);
-
-        let worldNormal = new Vector3();
-        if (intersects.length > 0) {
-          const closestIntersection = intersects[0];
-          const normal = closestIntersection.face?.normal;
-          if (normal) {
-            worldNormal = normal
-              .clone()
-              .transformDirection(closestIntersection.object.matrixWorld)
-              .normalize();
-          }
-        }
-        const repulsionScale = 1 - distance / this.collisionRadius;
-        const repulsionVector = new Vector3()
-          .add(worldNormal)
-          .multiplyScalar((mesh.repulsion ?? 5) * repulsionScale);
-        totalRepulsion = totalRepulsion.add(repulsionVector);
-      }
-    });
-
-    if (obstaclePushCount > 0) {
-      const avgRepulsion = totalRepulsion.divideScalar(obstaclePushCount);
-      newHeading = newHeading.add(avgRepulsion);
-    }
-
-    return newHeading;
-  }
-
-  getAverageHeading(boids: Boid[]): Vector3 {
-    const headingSum = new Vector3(0, 0, 0);
-    let count = 0;
-
-    boids.forEach((boid) => {
-      if (boid.id === this.id) return;
-      if (!this.isBoidInSector(boid.boidMesh, this.neighborhoodRadius, this.startAngle)) {
-        return;
-      }
-
-      const headingVector = this.getHeadingVector(boid.boidMesh);
-      headingSum.add(headingVector);
-      count++;
-    });
-
-    if (count === 0) return this.getHeadingVector(this.boidMesh);
-
-    return headingSum.clone().divideScalar(count);
-  }
-
-  getHeadingVector(meshObject: Mesh): Vector3 {
-    const forward = new Vector3(0, 1, 0);
-    forward.normalize();
-    forward.applyQuaternion(meshObject.quaternion);
-    return forward.normalize();
-  }
-
   updateBoidColor(boidMesh: Mesh, bounds: BoxHalfExtents, saturation = 1): void {
-    const world = new Vector3();
-    boidMesh.getWorldPosition(world);
+    boidMesh.getWorldPosition(this.#colorWorld);
     const rot = boidMesh.rotation;
 
-    const normX = world.x / bounds.halfWidth;
-    const normY = world.y / bounds.halfHeight;
-    const normZ = world.z / bounds.halfDepth;
+    const normX = this.#colorWorld.x / bounds.halfWidth;
+    const normY = this.#colorWorld.y / bounds.halfHeight;
+    const normZ = this.#colorWorld.z / bounds.halfDepth;
     const normRotX = (rot.x % (2 * Math.PI)) / (2 * Math.PI);
     const normRotY = (rot.y % (2 * Math.PI)) / (2 * Math.PI);
     const normRotZ = (rot.z % (2 * Math.PI)) / (2 * Math.PI);

@@ -17,6 +17,7 @@ export type BoidsAppOptions = {
   gridColors?: GridThemeColors;
   obstacles?: ObstaclePreset;
   obstacleCount?: number;
+  obstaclesEnabled?: boolean;
   enableViewControls?: boolean;
 };
 
@@ -28,6 +29,7 @@ export type BoidsSimulationProps = {
   gridColors?: GridThemeColors;
   obstacles?: ObstaclePreset;
   obstacleCount?: number;
+  obstaclesEnabled?: boolean;
   enableViewControls?: boolean;
   className?: string;
   style?: CSSProperties;
