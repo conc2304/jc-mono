@@ -33,6 +33,9 @@
       "path": "../../libs/features/games-lib"
     },
     {
+      "path": "../../libs/features/boids"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
   ],

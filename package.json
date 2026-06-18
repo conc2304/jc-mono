@@ -27,6 +27,8 @@
     "@vanilla-extract/dynamic": "^2.1.5",
     "augmented-ui": "^2.0.0",
     "axios": "^1.12.2",
+    "cannon-es": "^0.20.0",
+    "cannon-es-debugger": "^1.0.0",
     "cheerio": "^1.1.2",
     "clsx": "^2.1.1",
     "d3": "^7.9.0",
@@ -45,7 +47,9 @@
     "react-router": "^7.2.0",
     "react-router-dom": "^7.7.0",
     "resize-observer-polyfill": "^1.5.1",
+    "stats.js": "^0.17.0",
     "three": "^0.178.0",
+    "tweakpane": "^3.1.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

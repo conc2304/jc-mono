@@ -5,6 +5,7 @@ import { DefaultTileContent, FileSystemItem } from '@jc/file-system';
 
 import { ConnectFourFileSystemItem } from './connect-four-file-item';
 import { GradientShaderScreenSaverFileSystemItem } from './gradient-shader-screen-saver-file-item';
+import { BoidsFileSystemItem } from './boids-file-item';
 
 export const MiscFileSystemItem: FileSystemItem = {
   id: uuidv4(),
@@ -19,7 +20,7 @@ export const MiscFileSystemItem: FileSystemItem = {
     favorite: false,
     description: 'Miscellaneous interactive experiences.',
   },
-  children: [ConnectFourFileSystemItem, GradientShaderScreenSaverFileSystemItem],
+  children: [ConnectFourFileSystemItem, GradientShaderScreenSaverFileSystemItem, BoidsFileSystemItem],
   tileRenderer: {
     component: DefaultTileContent,
     config: {

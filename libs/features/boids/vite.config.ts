@@ -38,7 +38,18 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'three',
+        'three/examples/jsm/controls/OrbitControls.js',
+        'three/examples/jsm/math/SimplexNoise.js',
+        'cannon-es',
+        'cannon-es-debugger',
+        'tweakpane',
+        'stats.js',
+      ],
     },
   },
 }));

@@ -68,6 +68,9 @@
     },
     {
       "path": "../../libs/features/games-lib/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/features/boids/tsconfig.lib.json"
     }
   ]
 }
