@@ -114,8 +114,7 @@ export const GradientShaderScreenSaver = ({
   const [pattern, setPattern] = useState<PointerPattern>(defaultPattern);
   const [mirrorX, setMirrorX] = useState(defaultMirrorX);
   const [mirrorY, setMirrorY] = useState(defaultMirrorY);
-  const [activeColorStop, setActiveColorStop] =
-    useState<ActiveColorStop>('a');
+  const [activeColorStop, setActiveColorStop] = useState<ActiveColorStop>('a');
   const [colorKeyA, setColorKeyA] = useState(defaultColorKeys[0]);
   const [colorKeyB, setColorKeyB] = useState(defaultColorKeys[1]);
   const [pointerSpeed, setPointerSpeed] = useState(defaultPointerSpeed);
@@ -190,7 +189,7 @@ export const GradientShaderScreenSaver = ({
           bgcolor: 'rgba(0, 0, 0, 0.72)',
           color: 'common.white',
           minWidth: 240,
-          maxHeight: 'calc(100vh - 32px)',
+          maxHeight: 'calc(100% - 32px)',
           pointerEvents: 'auto',
         }}
       >
@@ -203,186 +202,186 @@ export const GradientShaderScreenSaver = ({
               gap: 1,
               p: 1.5,
               pb: 0.5,
-              maxHeight: 'calc(100vh - 80px)',
+              maxHeight: 'calc(100% - 80px)',
               overflowY: 'auto',
             }}
           >
-        <Button
-          data-screen-saver-control
-          variant="contained"
-          size="small"
-          color={isActive ? 'warning' : 'primary'}
-          onClick={isActive ? exit : enter}
-        >
-          {isActive ? 'Exit Screen Saver' : 'Enter Screen Saver'}
-        </Button>
+            <Button
+              data-screen-saver-control
+              variant="contained"
+              size="small"
+              color={isActive ? 'warning' : 'primary'}
+              onClick={isActive ? exit : enter}
+            >
+              {isActive ? 'Exit Screen Saver' : 'Enter Screen Saver'}
+            </Button>
 
-        <ToggleButtonGroup
-          data-screen-saver-control
-          exclusive
-          size="small"
-          value={pattern}
-          onChange={(_, value: PointerPattern | null) => {
-            if (value) setPattern(value);
-          }}
-          fullWidth
-          sx={{
-            '& .MuiToggleButton-root': {
-              color: 'common.white',
-              borderColor: 'rgba(255,255,255,0.3)',
-              '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'common.white',
-              },
-            },
-          }}
-        >
-          <ToggleButton data-screen-saver-control value="perlin">
-            Perlin
-          </ToggleButton>
-          <ToggleButton data-screen-saver-control value="dvd-bounce">
-            DVD
-          </ToggleButton>
-        </ToggleButtonGroup>
-
-        <ScreenSaverSlider
-          label="Pointer speed"
-          value={pointerSpeed}
-          min={0.25}
-          max={3}
-          step={0.05}
-          onChange={setPointerSpeed}
-        />
-
-        <ScreenSaverSlider
-          label="Brightness"
-          value={brightness}
-          min={0.2}
-          max={1.5}
-          step={0.05}
-          onChange={setBrightness}
-        />
-
-        <ScreenSaverSlider
-          label="Band speed"
-          value={scrollSpeed}
-          min={0.01}
-          max={0.2}
-          step={0.005}
-          onChange={setScrollSpeed}
-        />
-
-        <ScreenSaverSlider
-          label="Band width"
-          value={scale}
-          min={0.25}
-          max={2}
-          step={0.05}
-          onChange={setScale}
-        />
-
-        {useThemeColors && (
-          <Box data-screen-saver-control>
-            <Typography variant="caption" sx={{ opacity: 0.8 }}>
-              Gradient colors
-            </Typography>
-            <Stack direction="row" spacing={0.5} sx={{ mt: 0.5, mb: 0.5 }}>
-              <ToggleButton
-                data-screen-saver-control
-                value="a"
-                selected={activeColorStop === 'a'}
-                onChange={() => setActiveColorStop('a')}
-                size="small"
-                sx={{
-                  flex: 1,
-                  color: 'common.white',
-                  borderColor: 'rgba(255,255,255,0.3)',
-                  '&.Mui-selected': { bgcolor: 'primary.main' },
-                }}
-              >
-                A
-              </ToggleButton>
-              <ToggleButton
-                data-screen-saver-control
-                value="b"
-                selected={activeColorStop === 'b'}
-                onChange={() => setActiveColorStop('b')}
-                size="small"
-                sx={{
-                  flex: 1,
-                  color: 'common.white',
-                  borderColor: 'rgba(255,255,255,0.3)',
-                  '&.Mui-selected': { bgcolor: 'primary.main' },
-                }}
-              >
-                B
-              </ToggleButton>
-            </Stack>
-            <Box
+            <ToggleButtonGroup
+              data-screen-saver-control
+              exclusive
+              size="small"
+              value={pattern}
+              onChange={(_, value: PointerPattern | null) => {
+                if (value) setPattern(value);
+              }}
+              fullWidth
               sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: 0.5,
+                '& .MuiToggleButton-root': {
+                  color: 'common.white',
+                  borderColor: 'rgba(255,255,255,0.3)',
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.main',
+                    color: 'common.white',
+                  },
+                },
               }}
             >
-              {themeColorOptions.map((option) => {
-                const isSelected =
-                  (activeColorStop === 'a' && colorKeyA === option.key) ||
-                  (activeColorStop === 'b' && colorKeyB === option.key);
+              <ToggleButton data-screen-saver-control value="perlin">
+                Perlin
+              </ToggleButton>
+              <ToggleButton data-screen-saver-control value="dvd-bounce">
+                DVD
+              </ToggleButton>
+            </ToggleButtonGroup>
 
-                return (
-                  <Box
-                    key={option.key}
+            <ScreenSaverSlider
+              label="Pointer speed"
+              value={pointerSpeed}
+              min={0.25}
+              max={3}
+              step={0.05}
+              onChange={setPointerSpeed}
+            />
+
+            <ScreenSaverSlider
+              label="Brightness"
+              value={brightness}
+              min={0.2}
+              max={1.5}
+              step={0.05}
+              onChange={setBrightness}
+            />
+
+            <ScreenSaverSlider
+              label="Band speed"
+              value={scrollSpeed}
+              min={0.01}
+              max={0.2}
+              step={0.005}
+              onChange={setScrollSpeed}
+            />
+
+            <ScreenSaverSlider
+              label="Band width"
+              value={scale}
+              min={0.25}
+              max={2}
+              step={0.05}
+              onChange={setScale}
+            />
+
+            {useThemeColors && (
+              <Box data-screen-saver-control>
+                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  Gradient colors
+                </Typography>
+                <Stack direction="row" spacing={0.5} sx={{ mt: 0.5, mb: 0.5 }}>
+                  <ToggleButton
                     data-screen-saver-control
-                    component="button"
-                    type="button"
-                    aria-label={option.label}
-                    onClick={() => handleThemeColorSelect(option.key)}
+                    value="a"
+                    selected={activeColorStop === 'a'}
+                    onChange={() => setActiveColorStop('a')}
+                    size="small"
                     sx={{
-                      width: '100%',
-                      aspectRatio: '1',
-                      borderRadius: 0.5,
-                      border: '2px solid',
-                      borderColor: isSelected
-                        ? 'primary.main'
-                        : 'rgba(255,255,255,0.25)',
-                      bgcolor: option.value,
-                      cursor: 'pointer',
-                      p: 0,
+                      flex: 1,
+                      color: 'common.white',
+                      borderColor: 'rgba(255,255,255,0.3)',
+                      '&.Mui-selected': { bgcolor: 'primary.main' },
                     }}
-                  />
-                );
-              })}
-            </Box>
-          </Box>
-        )}
+                  >
+                    A
+                  </ToggleButton>
+                  <ToggleButton
+                    data-screen-saver-control
+                    value="b"
+                    selected={activeColorStop === 'b'}
+                    onChange={() => setActiveColorStop('b')}
+                    size="small"
+                    sx={{
+                      flex: 1,
+                      color: 'common.white',
+                      borderColor: 'rgba(255,255,255,0.3)',
+                      '&.Mui-selected': { bgcolor: 'primary.main' },
+                    }}
+                  >
+                    B
+                  </ToggleButton>
+                </Stack>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: 0.5,
+                  }}
+                >
+                  {themeColorOptions.map((option) => {
+                    const isSelected =
+                      (activeColorStop === 'a' && colorKeyA === option.key) ||
+                      (activeColorStop === 'b' && colorKeyB === option.key);
 
-        <FormControlLabel
-          data-screen-saver-control
-          control={
-            <Checkbox
+                    return (
+                      <Box
+                        key={option.key}
+                        data-screen-saver-control
+                        component="button"
+                        type="button"
+                        aria-label={option.label}
+                        onClick={() => handleThemeColorSelect(option.key)}
+                        sx={{
+                          width: '100%',
+                          aspectRatio: '1',
+                          borderRadius: 0.5,
+                          border: '2px solid',
+                          borderColor: isSelected
+                            ? 'primary.main'
+                            : 'rgba(255,255,255,0.25)',
+                          bgcolor: option.value,
+                          cursor: 'pointer',
+                          p: 0,
+                        }}
+                      />
+                    );
+                  })}
+                </Box>
+              </Box>
+            )}
+
+            <FormControlLabel
               data-screen-saver-control
-              size="small"
-              checked={mirrorX}
-              onChange={(e) => setMirrorX(e.target.checked)}
-              sx={{ color: 'common.white' }}
+              control={
+                <Checkbox
+                  data-screen-saver-control
+                  size="small"
+                  checked={mirrorX}
+                  onChange={(e) => setMirrorX(e.target.checked)}
+                  sx={{ color: 'common.white' }}
+                />
+              }
+              label={<Typography variant="body2">Mirror X</Typography>}
             />
-          }
-          label={<Typography variant="body2">Mirror X</Typography>}
-        />
-        <FormControlLabel
-          data-screen-saver-control
-          control={
-            <Checkbox
+            <FormControlLabel
               data-screen-saver-control
-              size="small"
-              checked={mirrorY}
-              onChange={(e) => setMirrorY(e.target.checked)}
-              sx={{ color: 'common.white' }}
+              control={
+                <Checkbox
+                  data-screen-saver-control
+                  size="small"
+                  checked={mirrorY}
+                  onChange={(e) => setMirrorY(e.target.checked)}
+                  sx={{ color: 'common.white' }}
+                />
+              }
+              label={<Typography variant="body2">Mirror Y</Typography>}
             />
-          }
-          label={<Typography variant="body2">Mirror Y</Typography>}
-        />
           </Box>
         </Collapse>
 
@@ -404,7 +403,9 @@ export const GradientShaderScreenSaver = ({
           <IconButton
             data-screen-saver-control
             size="small"
-            aria-label={settingsExpanded ? 'Collapse settings' : 'Expand settings'}
+            aria-label={
+              settingsExpanded ? 'Collapse settings' : 'Expand settings'
+            }
             aria-expanded={settingsExpanded}
             onClick={() => setSettingsExpanded((prev) => !prev)}
             sx={{ color: 'common.white', p: 0.25 }}

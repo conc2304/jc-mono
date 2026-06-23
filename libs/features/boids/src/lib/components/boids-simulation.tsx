@@ -3,6 +3,10 @@ import { useEffect, useMemo, useRef } from 'react';
 import { BoidsApp } from '../core/boids-app';
 import type { BoidsSimulationProps } from '../types';
 
+export type BoidsSimulationComponentProps = BoidsSimulationProps & {
+  onAppReady?: (app: BoidsApp) => void;
+};
+
 export function BoidsSimulation({
   physics = false,
   debug = false,
@@ -13,13 +17,21 @@ export function BoidsSimulation({
   obstacleCount = 8,
   obstaclesEnabled = false,
   enableViewControls = false,
+  attractorMotion,
+  fieldMode,
+  flowFieldPreset,
+  boidMix,
+  scenePreset,
+  onAppReady,
   className,
   style,
-}: BoidsSimulationProps) {
+}: BoidsSimulationComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const debugRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<BoidsApp | null>(null);
+  const onAppReadyRef = useRef(onAppReady);
+  onAppReadyRef.current = onAppReady;
 
   const resolvedGridColors = useMemo(
     () =>
@@ -44,12 +56,19 @@ export function BoidsSimulation({
       obstacleCount,
       obstaclesEnabled,
       enableViewControls,
+      attractorMotion,
+      fieldMode,
+      flowFieldPreset,
+      boidMix,
+      scenePreset,
       debugContainer: debug ? debugRef.current : null,
       statsContainer: debug ? statsRef.current : null,
     });
 
     appRef.current = app;
-    void app.init();
+    void app.init().then(() => {
+      onAppReadyRef.current?.(app);
+    });
 
     return () => {
       app.destroy();
@@ -63,6 +82,10 @@ export function BoidsSimulation({
     obstacles,
     obstacleCount,
     enableViewControls,
+    attractorMotion,
+    fieldMode,
+    flowFieldPreset,
+    scenePreset,
   ]);
 
   useEffect(() => {

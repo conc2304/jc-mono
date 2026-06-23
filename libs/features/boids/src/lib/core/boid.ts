@@ -16,21 +16,33 @@ import {
 import { MathUtils } from 'three';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 
+import { getBoidPresetConfig } from '../presets/boid-presets';
+import type { BoidBehaviorConfig, BoidBehaviorPreset } from '../presets/types';
+import type { FlowField } from './flow/flow-field';
 import type { ObstacleMesh } from './aquarium-obstacles';
 import { getRandomInRange } from './utils';
 import type { BoxHalfExtents, WallMesh } from './vaporwave-grid-box';
 
 type AvoidableMesh = WallMesh | ObstacleMesh;
 
+export type BoidUpdateContext = {
+  flowField: FlowField | null;
+  flowWeight: number;
+  pointAttractorWeight: number;
+};
+
 const BOID_MARGIN = 12;
 const REFERENCE_BOX_MIN = 300;
+const BASE_NEIGHBORHOOD_RADIUS = 150;
+const BASE_CROWDING_RADIUS = 30;
+const BASE_COLLISION_RADIUS = 60;
 
 export class Boid {
   boidMesh!: Mesh;
-  neighborhoodRadius = 150;
+  neighborhoodRadius = BASE_NEIGHBORHOOD_RADIUS;
   neighborhoodAngle = 20;
-  crowdingRadius = 30;
-  collisionRadius = 60;
+  crowdingRadius = BASE_CROWDING_RADIUS;
+  collisionRadius = BASE_COLLISION_RADIUS;
   boxBounds: BoxHalfExtents = { halfWidth: 200, halfHeight: 200, halfDepth: 200 };
   updateAngle = -Math.PI / 2;
   startAngle: number;
@@ -39,6 +51,17 @@ export class Boid {
   rotationSpeed = 0.35;
   weightOld = 0.5;
   weightAvg = 0.5;
+  cohesionWeight = 0;
+  separationPower = 4;
+  noiseStrength = 0.01;
+  noiseScale = 0.05;
+  attractorStrengthMultiplier = 1;
+  flowFollowStrength = 0.5;
+  colorSaturation = 1;
+  behaviorPresetId: BoidBehaviorPreset = 'default';
+  behaviorConfig: BoidBehaviorConfig;
+  targetBehaviorConfig: BoidBehaviorConfig;
+  #radiusScale = 1;
   id: string;
   noiseSeed: number;
   simplex: SimplexNoise;
@@ -47,6 +70,9 @@ export class Boid {
   #headingCurrent = new Vector3();
   #headingFlockAvg = new Vector3();
   #headingBlend = new Vector3();
+  #cohesionForce = new Vector3();
+  #centroid = new Vector3();
+  #flowDir = new Vector3();
   #currentQuat = new Quaternion();
   #targetQuat = new Quaternion();
   #noiseQuat = new Quaternion();
@@ -69,11 +95,36 @@ export class Boid {
   #colorWorld = new Vector3();
 
   constructor() {
+    const defaultConfig = getBoidPresetConfig('default');
+    this.behaviorConfig = { ...defaultConfig };
+    this.targetBehaviorConfig = { ...defaultConfig };
+    this.neighborhoodAngle = defaultConfig.neighborhoodAngle;
     this.startAngle = this.neighborhoodAngle + this.updateAngle;
     this.endAngle = -this.neighborhoodAngle + this.updateAngle;
+    this.applyBehaviorConfig(defaultConfig);
     this.id = MathUtils.generateUUID();
     this.noiseSeed = Math.round(Math.random() * Math.pow(5, 10));
     this.simplex = new SimplexNoise();
+  }
+
+  applyBehaviorConfig(config: BoidBehaviorConfig): void {
+    this.neighborhoodAngle = config.neighborhoodAngle;
+    this.startAngle = this.neighborhoodAngle + this.updateAngle;
+    this.endAngle = -this.neighborhoodAngle + this.updateAngle;
+    this.weightOld = config.weightOld;
+    this.weightAvg = config.weightAvg;
+    this.cohesionWeight = config.cohesionWeight;
+    this.separationPower = config.separationPower;
+    this.boidSpeed = config.boidSpeed;
+    this.rotationSpeed = config.rotationSpeed;
+    this.noiseStrength = config.noiseStrength;
+    this.noiseScale = config.noiseScale;
+    this.attractorStrengthMultiplier = config.attractorStrengthMultiplier;
+    this.flowFollowStrength = config.flowFollowStrength;
+    this.colorSaturation = config.colorSaturation;
+    this.neighborhoodRadius = BASE_NEIGHBORHOOD_RADIUS * this.#radiusScale * config.neighborhoodRadiusScale;
+    this.crowdingRadius = BASE_CROWDING_RADIUS * this.#radiusScale * config.crowdingRadiusScale;
+    this.collisionRadius = BASE_COLLISION_RADIUS * this.#radiusScale * config.collisionRadiusScale;
   }
 
   createBoid(bounds: BoxHalfExtents): Mesh {
@@ -105,34 +156,50 @@ export class Boid {
 
   setBoxBounds(bounds: BoxHalfExtents): void {
     this.boxBounds = { ...bounds };
-    const scale =
+    this.#radiusScale =
       Math.min(bounds.halfWidth, bounds.halfHeight, bounds.halfDepth) / REFERENCE_BOX_MIN;
-    this.neighborhoodRadius = 150 * scale;
-    this.crowdingRadius = 30 * scale;
-    this.collisionRadius = 60 * scale;
+    this.applyBehaviorConfig(this.behaviorConfig);
   }
 
   update(
     boidsList: Boid[],
     avoidables: AvoidableMesh[],
     attractors: { mesh: Mesh; position: Vector3; strength: number; range: number }[],
-    elapsedTime: number
+    elapsedTime: number,
+    context: BoidUpdateContext = {
+      flowField: null,
+      flowWeight: 0,
+      pointAttractorWeight: 1,
+    }
   ): void {
     this.getAlignmentHeading(boidsList, this.#heading);
+    this.getCohesionHeading(boidsList, this.#heading, this.#heading);
     this.getAvoidanceHeading(avoidables, this.#heading, this.#heading);
     this.getSeparationHeading(boidsList, this.#heading, this.#heading);
-    this.addAttractorForce(attractors, this.#heading, this.#heading);
+
+    if (context.pointAttractorWeight > 0) {
+      this.addAttractorForce(attractors, this.#heading, this.#heading);
+    }
+
+    if (context.flowWeight > 0 && context.flowField) {
+      this.boidMesh.getWorldPosition(this.#boidWorld);
+      context.flowField.sample(this.#boidWorld, elapsedTime, this.#flowDir);
+      this.#heading.lerp(
+        this.#flowDir,
+        context.flowWeight * this.flowFollowStrength
+      );
+      this.#heading.normalize();
+    }
 
     this.#currentQuat.copy(this.boidMesh.quaternion);
     this.#targetQuat.setFromUnitVectors(this.#forward, this.#heading);
 
-    const noiseScale = 0.05;
-    const noiseStrength = 0.01;
     const noiseX =
-      this.simplex.noise(this.noiseSeed, elapsedTime * noiseScale) * noiseStrength;
+      this.simplex.noise(this.noiseSeed, elapsedTime * this.noiseScale) *
+      this.noiseStrength;
     const noiseY =
-      this.simplex.noise(Math.pow(this.noiseSeed, 2), elapsedTime * noiseScale) *
-      noiseStrength;
+      this.simplex.noise(Math.pow(this.noiseSeed, 2), elapsedTime * this.noiseScale) *
+      this.noiseStrength;
 
     this.#noiseEuler.set(noiseX, 0, noiseY);
     this.#noiseQuat.setFromEuler(this.#noiseEuler);
@@ -147,7 +214,7 @@ export class Boid {
     this.boidMesh.position.addScaledVector(this.#heading, this.boidSpeed);
 
     this.#enforceWorldBoxBounds();
-    this.updateBoidColor(this.boidMesh, this.boxBounds);
+    this.updateBoidColor(this.boidMesh, this.boxBounds, this.colorSaturation);
   }
 
   #enforceWorldBoxBounds(): void {
@@ -185,6 +252,29 @@ export class Boid {
     return out;
   }
 
+  getCohesionHeading(boidsList: Boid[], heading: Vector3, out: Vector3): Vector3 {
+    out.copy(heading);
+    if (this.cohesionWeight <= 0) return out;
+
+    this.#centroid.set(0, 0, 0);
+    let count = 0;
+
+    for (const boid of boidsList) {
+      if (boid.id === this.id) continue;
+      if (!this.isBoidInSector(boid.boidMesh, this.neighborhoodRadius, this.startAngle)) {
+        continue;
+      }
+      this.#centroid.add(boid.boidMesh.position);
+      count++;
+    }
+
+    if (count === 0) return out;
+
+    this.#centroid.divideScalar(count);
+    this.#cohesionForce.subVectors(this.#centroid, this.boidMesh.position).normalize();
+    return out.add(this.#cohesionForce.multiplyScalar(this.cohesionWeight)).normalize();
+  }
+
   addAttractorForce(
     attractors: { mesh: Mesh; position: Vector3; strength: number; range: number }[],
     heading: Vector3,
@@ -208,7 +298,12 @@ export class Boid {
     }
 
     this.#attractorDelta.subVectors(nearestAttractor.position, this.boidMesh.position);
-    this.#attractorForce.copy(this.#attractorDelta).normalize().multiplyScalar(nearestAttractor.strength);
+    this.#attractorForce
+      .copy(this.#attractorDelta)
+      .normalize()
+      .multiplyScalar(
+        nearestAttractor.strength * this.attractorStrengthMultiplier
+      );
     return out.add(this.#attractorForce);
   }
 
@@ -216,7 +311,6 @@ export class Boid {
     const position = this.boidMesh.position;
     out.copy(heading);
     this.#separationForce.set(0, 0, 0);
-    const repulsionPower = 4;
 
     for (const otherBoid of boidsList) {
       if (otherBoid.id === this.id) continue;
@@ -233,7 +327,7 @@ export class Boid {
 
       if (distance > 0) {
         const repulsionStrength =
-          1 / Math.pow(distance / this.crowdingRadius, repulsionPower);
+          1 / Math.pow(distance / this.crowdingRadius, this.separationPower);
         this.#separationForce.add(
           this.#distanceVector.normalize().multiplyScalar(repulsionStrength)
         );
@@ -248,12 +342,13 @@ export class Boid {
     boidWorld: Vector3,
     outClosest: Vector3
   ): number {
-    if (mesh.inwardNormal && mesh.planePoint) {
-      this.#toBoid.subVectors(boidWorld, mesh.planePoint);
-      const signedDist = this.#toBoid.dot(mesh.inwardNormal);
+    const wall = mesh as WallMesh;
+    if (wall.inwardNormal && wall.planePoint) {
+      this.#toBoid.subVectors(boidWorld, wall.planePoint);
+      const signedDist = this.#toBoid.dot(wall.inwardNormal);
       if (signedDist < 0) return Infinity;
 
-      outClosest.copy(boidWorld).addScaledVector(mesh.inwardNormal, -signedDist);
+      outClosest.copy(boidWorld).addScaledVector(wall.inwardNormal, -signedDist);
       return signedDist;
     }
 
@@ -283,8 +378,9 @@ export class Boid {
 
       pushCount++;
 
-      if (mesh.inwardNormal) {
-        this.#repulsionNormal.copy(mesh.inwardNormal);
+      const wall = mesh as WallMesh;
+      if (wall.inwardNormal) {
+        this.#repulsionNormal.copy(wall.inwardNormal);
       } else {
         this.#repulsionNormal.subVectors(this.#boidWorld, this.#closestPoint);
         if (this.#repulsionNormal.lengthSq() === 0) {

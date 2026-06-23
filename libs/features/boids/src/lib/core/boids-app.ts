@@ -24,6 +24,16 @@ import {
   VaporwaveGridBox,
 } from './vaporwave-grid-box';
 import type { BoxHalfExtents, WallMesh } from './vaporwave-grid-box';
+import { PresetController } from '../presets/preset-controller';
+import type {
+  AttractorFieldMode,
+  AttractorMotionPreset,
+  BoidMix,
+  FlowFieldPreset,
+  PresetState,
+  ScenePresetId,
+} from '../presets/types';
+import { DEFAULT_BOID_MIX } from '../presets/types';
 import type {
   BoidsAppOptions,
   GridThemeColors,
@@ -62,6 +72,8 @@ export class BoidsApp {
   PhysicsBox?: new (mesh: Mesh, scene: Scene) => unknown;
   PhysicsFloor?: new (mesh: Mesh, scene: Scene) => unknown;
 
+  readonly presetController: PresetController;
+
   #boids: Boid[] = [];
   #walls: WallMesh[] = [];
   #obstacles: Mesh[] = [];
@@ -72,6 +84,8 @@ export class BoidsApp {
   #obstaclesEnabled: boolean;
   #obstacleLayoutSeed = Math.random() * 1_000_000;
   #attractors: Attractor[] = [];
+  #activeAttractorCount: number;
+  #attractorVisibilityIntent = false;
   #gridBox = new VaporwaveGridBox();
   #boidsGroup = new Group();
   #viewControls: BoidsViewControls | null = null;
@@ -81,6 +95,9 @@ export class BoidsApp {
   #disposed = false;
   #togglePhysicsDebugHandler: (() => void) | null = null;
   #enableViewControls: boolean;
+  #lastTickTime = 0;
+  #initialBoidMix: BoidMix;
+  #initialScenePreset?: ScenePresetId;
 
   constructor(container: HTMLElement, opts: BoidsAppOptions = {}) {
     this.container = container;
@@ -89,6 +106,7 @@ export class BoidsApp {
     this.hasDebug = opts.debug ?? false;
     this.boidCount = opts.boidCount ?? 250;
     this.attractorCount = opts.attractorCount ?? 15;
+    this.#activeAttractorCount = this.attractorCount;
     this.debugContainer = opts.debugContainer ?? null;
     this.statsContainer = opts.statsContainer ?? null;
     this.#gridColors = opts.gridColors ?? {
@@ -99,6 +117,28 @@ export class BoidsApp {
     this.#obstacleCount = opts.obstacleCount ?? 8;
     this.#obstaclesEnabled = opts.obstaclesEnabled ?? false;
     this.#enableViewControls = opts.enableViewControls ?? false;
+    this.#initialBoidMix = opts.boidMix ?? DEFAULT_BOID_MIX;
+    this.#initialScenePreset = opts.scenePreset;
+
+    this.presetController = new PresetController({
+      onAttractorCountChange: (count) => this.#setActiveAttractorCount(count),
+      onAttractorVisibilityChange: (visible) =>
+        this.setAttractorVisibilityIntent(visible),
+      onSceneObstaclesChange: (preset, enabled) => {
+        this.setObstaclePreset(preset);
+        this.setObstaclesEnabled(enabled);
+      },
+    });
+
+    if (opts.attractorMotion) {
+      this.presetController.setAttractorMotion(opts.attractorMotion);
+    }
+    if (opts.flowFieldPreset) {
+      this.presetController.setFlowFieldPreset(opts.flowFieldPreset);
+    }
+    if (opts.fieldMode) {
+      this.presetController.setFieldMode(opts.fieldMode);
+    }
   }
 
   async init(): Promise<void> {
@@ -129,6 +169,13 @@ export class BoidsApp {
     this.#createBoids(this.#boxExtents);
     this.#createAttractors(this.attractorCount, this.#boxExtents);
 
+    this.presetController.bind(this.#boids, this.#attractors);
+    this.presetController.initializeBoids(this.#initialBoidMix);
+
+    if (this.#initialScenePreset) {
+      this.presetController.applyScenePreset(this.#initialScenePreset);
+    }
+
     if (this.hasDebug) {
       const { DebugPanel } = await import('../debug/debug-panel');
       new DebugPanel(this);
@@ -143,6 +190,8 @@ export class BoidsApp {
       this.destroy();
       return;
     }
+
+    this.#lastTickTime = this.clock.getElapsedTime();
 
     this.renderer.setAnimationLoop(() => {
       if (this.#disposed) return;
@@ -201,23 +250,73 @@ export class BoidsApp {
     }
   }
 
+  getPresetState(): PresetState {
+    return this.presetController.getPresetState();
+  }
+
+  setBoidMix(mix: BoidMix): void {
+    this.presetController.setBoidMix(mix);
+  }
+
+  setAttractorMotion(preset: AttractorMotionPreset): void {
+    this.presetController.setAttractorMotion(preset);
+  }
+
+  setFieldMode(mode: AttractorFieldMode): void {
+    this.presetController.setFieldMode(mode);
+  }
+
+  setFlowFieldPreset(preset: FlowFieldPreset): void {
+    this.presetController.setFlowFieldPreset(preset);
+  }
+
+  setFlowWeight(weight: number): void {
+    this.presetController.setFlowWeight(weight);
+  }
+
+  setAttractorStrength(strength: number): void {
+    this.presetController.setAttractorStrength(strength);
+  }
+
+  setAttractorSpeed(speed: number): void {
+    this.presetController.setAttractorSpeed(speed);
+  }
+
+  applyScenePreset(id: ScenePresetId): void {
+    this.presetController.applyScenePreset(id);
+  }
+
   #update(): void {
     const elapsed = this.clock.getElapsedTime();
+    const dt = Math.min(0.05, elapsed - this.#lastTickTime);
+    this.#lastTickTime = elapsed;
+
     if (this.#obstaclesEnabled && this.#obstacles.length > 0) {
       updateAquariumObstacles(this.#obstacles, elapsed);
       this.#obstacleGroup?.updateMatrixWorld(true);
     }
+    this.presetController.tick(dt);
     this.#updateSimulation(elapsed);
     this.simulation?.update();
   }
 
   #updateSimulation(elapsedTime: number): void {
+    const flowField = this.presetController.getFlowField();
+    const flowWeight = this.presetController.getFlowWeight();
+    const pointAttractorWeight = this.presetController.getPointAttractorWeight();
+
+    const context = {
+      flowField,
+      flowWeight,
+      pointAttractorWeight,
+    };
+
     for (const boid of this.#boids) {
-      boid.update(this.#boids, this.#avoidables, this.#attractors, elapsedTime);
+      boid.update(this.#boids, this.#avoidables, this.#attractors, elapsedTime, context);
     }
 
-    for (const attractor of this.#attractors) {
-      attractor.update(elapsedTime);
+    for (let i = 0; i < this.#activeAttractorCount; i++) {
+      this.#attractors[i]?.update(elapsedTime);
     }
   }
 
@@ -280,13 +379,31 @@ export class BoidsApp {
   }
 
   setObstaclesEnabled(enabled: boolean): void {
-    if (this.#obstaclesEnabled === enabled) return;
+    if (this.#obstaclesEnabled === enabled && this.#obstacleGroup) {
+      this.#obstacleGroup.visible = enabled;
+      this.#rebuildAvoidables();
+      return;
+    }
     this.#obstaclesEnabled = enabled;
 
     if (this.#obstaclePreset !== 'aquarium') return;
 
     this.#obstacleLayoutSeed = Math.random() * 1_000_000;
     this.#rebuildObstacles();
+  }
+
+  setObstaclePreset(preset: ObstaclePreset): void {
+    if (this.#obstaclePreset === preset) return;
+    this.#obstaclePreset = preset;
+    this.#rebuildObstacles();
+  }
+
+  getObstaclesEnabled(): boolean {
+    return this.#obstaclesEnabled;
+  }
+
+  getObstaclePreset(): ObstaclePreset {
+    return this.#obstaclePreset;
   }
 
   #syncAttractorBounds(extents: BoxHalfExtents): void {
@@ -305,6 +422,33 @@ export class BoidsApp {
     }
   }
 
+  #setActiveAttractorCount(count: number): void {
+    this.#activeAttractorCount = Math.max(1, Math.min(count, this.#attractors.length));
+    for (let i = 0; i < this.#attractors.length; i++) {
+      const active = i < this.#activeAttractorCount;
+      this.#attractors[i].mesh.visible =
+        active && this.#attractorVisibilityIntent && this.#attractors[i].isVisible;
+    }
+  }
+
+  getAttractorsVisible(): boolean {
+    return this.#attractorVisibilityIntent;
+  }
+
+  setAttractorsVisible(visible: boolean): void {
+    this.setAttractorVisibilityIntent(visible);
+  }
+
+  setAttractorVisibilityIntent(visible: boolean): void {
+    this.#attractorVisibilityIntent = visible;
+    for (const attractor of this.#attractors) {
+      attractor.motionConfig.isVisible = visible;
+      attractor.isVisible = visible;
+      attractor.mesh.visible = visible;
+    }
+    this.#setActiveAttractorCount(this.#activeAttractorCount);
+  }
+
   #createBoids(bounds: BoxHalfExtents): void {
     for (let i = 0; i < this.boidCount; i++) {
       const boid = new Boid();
@@ -321,12 +465,16 @@ export class BoidsApp {
       bounds.halfDepth
     );
     for (let i = 0; i < attractorsQty; i++) {
+      const phase =
+        attractorsQty > 1 ? (i / attractorsQty) * Math.PI * 2 : 0;
       const attractor = new Attractor({
         position: new Vector3(),
         strength: 0.5,
         range: maxReach * 0.85,
         speed: 0.12,
         isVisible: false,
+        motionPreset: 'noise',
+        phase,
       });
       attractor.bounds = {
         x: [-bounds.halfWidth, bounds.halfWidth],
