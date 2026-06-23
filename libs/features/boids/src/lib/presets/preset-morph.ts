@@ -53,6 +53,11 @@ export function morphGlobalStateInPlace(
     alpha
   );
   current.attractorSpeed = lerpScalar(current.attractorSpeed, target.attractorSpeed, alpha);
+  current.boidSpeedMultiplier = lerpScalar(
+    current.boidSpeedMultiplier,
+    target.boidSpeedMultiplier,
+    alpha
+  );
 }
 
 export function isBoidConfigNearTarget(
@@ -73,7 +78,8 @@ export function isGlobalStateNearTarget(
     Math.abs(current.flowWeight - target.flowWeight) < epsilon &&
     Math.abs(current.pointAttractorWeight - target.pointAttractorWeight) < epsilon &&
     Math.abs(current.attractorStrength - target.attractorStrength) < epsilon &&
-    Math.abs(current.attractorSpeed - target.attractorSpeed) < epsilon
+    Math.abs(current.attractorSpeed - target.attractorSpeed) < epsilon &&
+    Math.abs(current.boidSpeedMultiplier - target.boidSpeedMultiplier) < epsilon
   );
 }
 

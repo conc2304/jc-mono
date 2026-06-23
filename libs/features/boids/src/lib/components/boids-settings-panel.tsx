@@ -50,6 +50,7 @@ const SETTINGS_HELP = [
   'Attractor strength / speed — pull intensity and path speed.',
   'Show attractors — reveal the red target spheres.',
   'Flock mix — ratio of flock personalities (values are normalized).',
+  'Boid speed — global multiplier applied on top of each personality preset.',
   'Obstacles — enable aquarium-style collision objects.',
 ];
 
@@ -67,6 +68,7 @@ export function BoidsSettingsPanel({ app }: BoidsSettingsPanelProps) {
   const [flowWeight, setFlowWeight] = useState(0);
   const [attractorStrength, setAttractorStrength] = useState(0.5);
   const [attractorSpeed, setAttractorSpeed] = useState(0.12);
+  const [boidSpeedMultiplier, setBoidSpeedMultiplier] = useState(1);
   const [obstaclesEnabled, setObstaclesEnabled] = useState(false);
   const [attractorsVisible, setAttractorsVisible] = useState(false);
 
@@ -81,6 +83,7 @@ export function BoidsSettingsPanel({ app }: BoidsSettingsPanelProps) {
     setFlowWeight(state.flowWeight);
     setAttractorStrength(state.attractorStrength);
     setAttractorSpeed(state.attractorSpeed);
+    setBoidSpeedMultiplier(state.boidSpeedMultiplier);
     setObstaclesEnabled(app.getObstaclesEnabled());
     setAttractorsVisible(app.getAttractorsVisible());
   }, [app]);
@@ -350,6 +353,19 @@ export function BoidsSettingsPanel({ app }: BoidsSettingsPanelProps) {
               setScenePreset('');
               setAttractorSpeed(value);
               app?.setAttractorSpeed(value);
+            }}
+          />
+
+          <BoidsSettingsSlider
+            label="Boid speed"
+            value={boidSpeedMultiplier}
+            min={0.25}
+            max={3}
+            step={0.05}
+            onChange={(value) => {
+              setScenePreset('');
+              setBoidSpeedMultiplier(value);
+              app?.setBoidSpeedMultiplier(value);
             }}
           />
 

@@ -282,6 +282,10 @@ export class BoidsApp {
     this.presetController.setAttractorSpeed(speed);
   }
 
+  setBoidSpeedMultiplier(multiplier: number): void {
+    this.presetController.setBoidSpeedMultiplier(multiplier);
+  }
+
   applyScenePreset(id: ScenePresetId): void {
     this.presetController.applyScenePreset(id);
   }

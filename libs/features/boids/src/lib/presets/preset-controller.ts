@@ -65,6 +65,7 @@ export class PresetController {
     pointAttractorWeight: 1,
     attractorStrength: 0.5,
     attractorSpeed: 0.12,
+    boidSpeedMultiplier: 1,
   };
   #globalTarget: GlobalMorphState = { ...this.#globalCurrent };
 
@@ -94,7 +95,7 @@ export class PresetController {
       boid.behaviorPresetId = preset;
       boid.behaviorConfig = cloneBoidConfig(config);
       boid.targetBehaviorConfig = cloneBoidConfig(config);
-      boid.applyBehaviorConfig(boid.behaviorConfig);
+      boid.applyBehaviorConfig(boid.behaviorConfig, this.#globalCurrent.boidSpeedMultiplier);
     }
   }
 
@@ -112,7 +113,7 @@ export class PresetController {
         boid.targetBehaviorConfig,
         alpha
       );
-      boid.applyBehaviorConfig(boid.behaviorConfig);
+      boid.applyBehaviorConfig(boid.behaviorConfig, this.#globalCurrent.boidSpeedMultiplier);
     }
 
     if (this.#attractorMotion !== this.#attractorMotionTarget) {
@@ -149,6 +150,7 @@ export class PresetController {
       pointAttractorWeight: this.#globalTarget.pointAttractorWeight,
       attractorStrength: this.#globalTarget.attractorStrength,
       attractorSpeed: this.#globalTarget.attractorSpeed,
+      boidSpeedMultiplier: this.#globalTarget.boidSpeedMultiplier,
     };
   }
 
@@ -213,6 +215,11 @@ export class PresetController {
     this.#globalTarget.attractorSpeed = speed;
   }
 
+  setBoidSpeedMultiplier(multiplier: number): void {
+    this.#scenePresetId = null;
+    this.#globalTarget.boidSpeedMultiplier = Math.max(0.25, Math.min(3, multiplier));
+  }
+
   setBoidMix(mix: BoidMix): void {
     this.#scenePresetId = null;
     this.#boidMixTarget = { ...mix };
@@ -249,6 +256,10 @@ export class PresetController {
     this.#globalTarget.flowWeight = scene.flowWeight;
     this.#globalTarget.pointAttractorWeight = 1 - scene.flowWeight;
     this.setBoidMix(scene.boidMix);
+
+    if (id === 'default') {
+      this.#globalTarget.boidSpeedMultiplier = 1;
+    }
 
     if (scene.attractorVisible !== undefined) {
       this.#callbacks.onAttractorVisibilityChange?.(scene.attractorVisible);

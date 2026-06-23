@@ -14,6 +14,7 @@ const mockApp = {
     pointAttractorWeight: 1,
     attractorStrength: 0.5,
     attractorSpeed: 0.12,
+    boidSpeedMultiplier: 1,
   }),
   getObstaclesEnabled: jest.fn().mockReturnValue(false),
   getAttractorsVisible: jest.fn().mockReturnValue(false),

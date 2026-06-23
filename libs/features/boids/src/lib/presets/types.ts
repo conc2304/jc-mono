@@ -88,6 +88,7 @@ export type PresetState = {
   pointAttractorWeight: number;
   attractorStrength: number;
   attractorSpeed: number;
+  boidSpeedMultiplier: number;
 };
 
 export type GlobalMorphState = {
@@ -95,6 +96,7 @@ export type GlobalMorphState = {
   pointAttractorWeight: number;
   attractorStrength: number;
   attractorSpeed: number;
+  boidSpeedMultiplier: number;
 };
 
 export const DEFAULT_BOID_MIX: BoidMix = { default: 1 };

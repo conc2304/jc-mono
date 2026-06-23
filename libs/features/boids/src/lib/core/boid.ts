@@ -107,7 +107,7 @@ export class Boid {
     this.simplex = new SimplexNoise();
   }
 
-  applyBehaviorConfig(config: BoidBehaviorConfig): void {
+  applyBehaviorConfig(config: BoidBehaviorConfig, speedMultiplier = 1): void {
     this.neighborhoodAngle = config.neighborhoodAngle;
     this.startAngle = this.neighborhoodAngle + this.updateAngle;
     this.endAngle = -this.neighborhoodAngle + this.updateAngle;
@@ -115,7 +115,7 @@ export class Boid {
     this.weightAvg = config.weightAvg;
     this.cohesionWeight = config.cohesionWeight;
     this.separationPower = config.separationPower;
-    this.boidSpeed = config.boidSpeed;
+    this.boidSpeed = config.boidSpeed * speedMultiplier;
     this.rotationSpeed = config.rotationSpeed;
     this.noiseStrength = config.noiseStrength;
     this.noiseScale = config.noiseScale;
