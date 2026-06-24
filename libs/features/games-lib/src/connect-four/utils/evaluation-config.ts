@@ -60,25 +60,25 @@ export const DEFAULT_EVAL_CONFIG: EvaluationConfig = {
   },
 
   immediate: {
-    canWin: 1000, // AI can win on next move
-    mustBlock: 900, // Block opponent's immediate win
+    canWin: 2000, // AI can win on next move
+    mustBlock: 1800, // Block opponent's immediate win
     createMultipleThreats: 800, // Create multiple winning opportunities
     forkOpportunity: 750, // Set up unavoidable win scenario
   },
 
   threeInRow: {
-    bothEndsOpen: 300, // 3-in-a-row with both ends available
-    oneEndOpen: 150, // 3-in-a-row with one end blocked
-    blockOpponentBothEnds: 250, // Block opponent's 3-in-a-row (both ends)
-    blockOpponentOneEnd: 125, // Block opponent's 3-in-a-row (one end)
+    bothEndsOpen: 350, // 3-in-a-row with both ends available
+    oneEndOpen: 175, // 3-in-a-row with one end blocked
+    blockOpponentBothEnds: 950, // Block opponent's 3-in-a-row (both ends) — nearly as urgent as mustBlock
+    blockOpponentOneEnd: 500, // Block opponent's 3-in-a-row (one end)
   },
 
   twoInRow: {
     bothEndsOpen: 50, // 2-in-a-row with both ends available
     oneEndOpen: 25, // 2-in-a-row with one end blocked
     centerColumns: 10, // Bonus for 2-in-a-row in center columns
-    blockOpponentBothEnds: 40, // Block opponent's 2-in-a-row (both ends)
-    blockOpponentOneEnd: 20, // Block opponent's 2-in-a-row (one end)
+    blockOpponentBothEnds: 120, // Block opponent's 2-in-a-row (both ends) — lower priority than 3-in-a-row
+    blockOpponentOneEnd: 30, // Block opponent's 2-in-a-row (one end)
   },
 
   positional: {
@@ -115,15 +115,22 @@ export const DIFFICULTY_CONFIGS = {
   easy: createEvalConfig({
     immediate: {
       canWin: 500, // Less likely to see immediate wins
-      mustBlock: 400, // Less likely to block
+      mustBlock: 450, // Less likely to block
       createMultipleThreats: 300,
       forkOpportunity: 250,
     },
     threeInRow: {
-      bothEndsOpen: 100,
-      oneEndOpen: 50,
-      blockOpponentBothEnds: 80,
-      blockOpponentOneEnd: 40,
+      bothEndsOpen: 200,
+      oneEndOpen: 100,
+      blockOpponentBothEnds: 250,
+      blockOpponentOneEnd: 125,
+    },
+    twoInRow: {
+      bothEndsOpen: 50,
+      oneEndOpen: 25,
+      centerColumns: 10,
+      blockOpponentBothEnds: 60,
+      blockOpponentOneEnd: 15,
     },
   }),
 
@@ -131,8 +138,8 @@ export const DIFFICULTY_CONFIGS = {
 
   hard: createEvalConfig({
     immediate: {
-      canWin: 1500, // More aggressive about winning
-      mustBlock: 1400, // Better at blocking
+      canWin: 2200, // More aggressive about winning
+      mustBlock: 2000, // Better at blocking immediate wins
       createMultipleThreats: 1200,
       forkOpportunity: 1000,
     },
@@ -142,6 +149,19 @@ export const DIFFICULTY_CONFIGS = {
       oneInRowCenter: 5,
       oneInRowEdge: 1,
       adjacentToPieces: 4,
+    },
+    threeInRow: {
+      bothEndsOpen: 400,
+      oneEndOpen: 200,
+      blockOpponentBothEnds: 1100, // Strongest 3-in-a-row defense
+      blockOpponentOneEnd: 600,
+    },
+    twoInRow: {
+      bothEndsOpen: 50,
+      oneEndOpen: 25,
+      centerColumns: 10,
+      blockOpponentBothEnds: 150,
+      blockOpponentOneEnd: 40,
     },
   }),
 };

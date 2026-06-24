@@ -4,22 +4,26 @@ import { PLAYER_TYPE } from '../constants';
 import {
   BoardState,
   Color,
+  Difficulty,
   GameState,
   MovePosition,
   Player,
   PlayerType,
 } from '../types';
 import { calculateAiMove } from '../utils/ai-player';
-import {
-  DEFAULT_EVAL_CONFIG,
-  EvaluationConfig,
-} from '../utils/evaluation-config';
+import { EvaluationConfig } from '../utils/evaluation-config';
 import {
   getDropPosition,
   isGameTied,
   isMoveValid,
   validateGameState,
 } from '../utils/game-logic';
+import {
+  ConnectFourPersistedSettings,
+  createDefaultPlayerSettings,
+  readPlayerSettings,
+  writePlayerSettings,
+} from '../utils/player-settings-storage';
 
 export interface UseConnectFourGameOptions {
   boardDimensions?: [number, number];
@@ -27,6 +31,7 @@ export interface UseConnectFourGameOptions {
   dropInterval?: number;
   defaultPlayerOneColor?: string;
   defaultPlayerTwoColor?: string;
+  settingsStorageKey?: string;
 }
 
 export interface UseConnectFourGameReturn {
@@ -39,6 +44,10 @@ export interface UseConnectFourGameReturn {
   playerTwoColor: Color;
   playerOneType: PlayerType;
   playerTwoType: PlayerType;
+  playerOneConfig: EvaluationConfig;
+  playerTwoConfig: EvaluationConfig;
+  playerOneDifficulty: Difficulty;
+  playerTwoDifficulty: Difficulty;
   handlePieceDrop: (row: number, col: number) => void;
   resetBoard: () => void;
   setGameIsPaused: (value: boolean) => void;
@@ -46,8 +55,14 @@ export interface UseConnectFourGameReturn {
   handlePlayerTwoTypeChange: (value: PlayerType) => void;
   handlePlayerOneColorChange: (color: Color) => void;
   handlePlayerTwoColorChange: (color: Color) => void;
-  handlePlayerOneConfigChange: (config: EvaluationConfig) => void;
-  handlePlayerTwoConfigChange: (config: EvaluationConfig) => void;
+  handlePlayerOneConfigChange: (
+    config: EvaluationConfig,
+    difficulty: Difficulty
+  ) => void;
+  handlePlayerTwoConfigChange: (
+    config: EvaluationConfig,
+    difficulty: Difficulty
+  ) => void;
   handlePauseChange: (value: boolean) => void;
 }
 
@@ -64,38 +79,55 @@ export const useConnectFourGame = ({
   dropInterval = 300,
   defaultPlayerOneColor = '#ff0000',
   defaultPlayerTwoColor = '#ffea00',
+  settingsStorageKey,
 }: UseConnectFourGameOptions = {}): UseConnectFourGameReturn => {
   const initialBoardState = createInitialBoard(boardDimensions);
 
-  const defaultPlayerOneColorRef = useRef(defaultPlayerOneColor);
-  const defaultPlayerTwoColorRef = useRef(defaultPlayerTwoColor);
+  const defaultPlayerSettings = createDefaultPlayerSettings({
+    playerOneColor: defaultPlayerOneColor,
+    playerTwoColor: defaultPlayerTwoColor,
+  });
 
-  useEffect(() => {
-    defaultPlayerOneColorRef.current = defaultPlayerOneColor;
-    defaultPlayerTwoColorRef.current = defaultPlayerTwoColor;
-  }, [defaultPlayerOneColor, defaultPlayerTwoColor]);
+  const initialPlayerSettings = (() => {
+    if (!settingsStorageKey) {
+      return defaultPlayerSettings;
+    }
+
+    return (
+      readPlayerSettings(settingsStorageKey, defaultPlayerSettings) ??
+      defaultPlayerSettings
+    );
+  })();
 
   const [playerTurn, setPlayerTurn] = useState<Player>(1);
   const [playerOneColor, setPlayerOneColor] = useState<Color>(
-    defaultPlayerOneColor
+    initialPlayerSettings.playerOneColor
   );
   const [playerTwoColor, setPlayerTwoColor] = useState<Color>(
-    defaultPlayerTwoColor
+    initialPlayerSettings.playerTwoColor
   );
   const [isGameOver, setIsGameOver] = useState(false);
   const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
   const [winningMatch, setWinningMatch] = useState<MovePosition[] | null>(null);
   const [gameIsPaused, setGameIsPaused] = useState(false);
   const [playerOneType, setPlayerOneType] = useState<PlayerType>(
-    PLAYER_TYPE.HUMAN
+    initialPlayerSettings.playerOneType
   );
   const [playerTwoType, setPlayerTwoType] = useState<PlayerType>(
-    PLAYER_TYPE.HUMAN
+    initialPlayerSettings.playerTwoType
   );
-  const [playerOneConfig, setPlayerOneConfig] =
-    useState<EvaluationConfig>(DEFAULT_EVAL_CONFIG);
-  const [playerTwoConfig, setPlayerTwoConfig] =
-    useState<EvaluationConfig>(DEFAULT_EVAL_CONFIG);
+  const [playerOneConfig, setPlayerOneConfig] = useState<EvaluationConfig>(
+    initialPlayerSettings.playerOneConfig
+  );
+  const [playerTwoConfig, setPlayerTwoConfig] = useState<EvaluationConfig>(
+    initialPlayerSettings.playerTwoConfig
+  );
+  const [playerOneDifficulty, setPlayerOneDifficulty] = useState<Difficulty>(
+    initialPlayerSettings.playerOneDifficulty
+  );
+  const [playerTwoDifficulty, setPlayerTwoDifficulty] = useState<Difficulty>(
+    initialPlayerSettings.playerTwoDifficulty
+  );
 
   const pieceIsDropping = useRef(false);
   const lastMove = useRef<MovePosition>({ row: -1, col: -1 });
@@ -109,6 +141,35 @@ export const useConnectFourGame = ({
   useEffect(() => {
     playerTurnRef.current = playerTurn;
   }, [playerTurn]);
+
+  useEffect(() => {
+    if (!settingsStorageKey) {
+      return;
+    }
+
+    const settings: ConnectFourPersistedSettings = {
+      playerOneColor,
+      playerTwoColor,
+      playerOneType,
+      playerTwoType,
+      playerOneConfig,
+      playerTwoConfig,
+      playerOneDifficulty,
+      playerTwoDifficulty,
+    };
+
+    writePlayerSettings(settingsStorageKey, settings);
+  }, [
+    settingsStorageKey,
+    playerOneColor,
+    playerTwoColor,
+    playerOneType,
+    playerTwoType,
+    playerOneConfig,
+    playerTwoConfig,
+    playerOneDifficulty,
+    playerTwoDifficulty,
+  ]);
 
   const animateDrop = useCallback(
     async (dropPos: MovePosition, currentPlayer: Player) => {
@@ -212,8 +273,9 @@ export const useConnectFourGame = ({
   }, []);
 
   const handlePlayerOneConfigChange = useCallback(
-    (config: EvaluationConfig) => {
+    (config: EvaluationConfig, difficulty: Difficulty) => {
       setPlayerOneConfig(config);
+      setPlayerOneDifficulty(difficulty);
     },
     []
   );
@@ -227,8 +289,9 @@ export const useConnectFourGame = ({
   }, []);
 
   const handlePlayerTwoConfigChange = useCallback(
-    (config: EvaluationConfig) => {
+    (config: EvaluationConfig, difficulty: Difficulty) => {
       setPlayerTwoConfig(config);
+      setPlayerTwoDifficulty(difficulty);
     },
     []
   );
@@ -246,12 +309,6 @@ export const useConnectFourGame = ({
     setPlayerTurn(1);
     setWinningMatch(null);
     setIsGameOver(false);
-    setPlayerOneConfig(DEFAULT_EVAL_CONFIG);
-    setPlayerTwoConfig(DEFAULT_EVAL_CONFIG);
-    setPlayerOneType(PLAYER_TYPE.HUMAN);
-    setPlayerTwoType(PLAYER_TYPE.HUMAN);
-    setPlayerOneColor(defaultPlayerOneColorRef.current);
-    setPlayerTwoColor(defaultPlayerTwoColorRef.current);
     pieceIsDropping.current = false;
   }, [boardDimensions]);
 
@@ -265,6 +322,10 @@ export const useConnectFourGame = ({
     playerTwoColor,
     playerOneType,
     playerTwoType,
+    playerOneConfig,
+    playerTwoConfig,
+    playerOneDifficulty,
+    playerTwoDifficulty,
     handlePieceDrop,
     resetBoard,
     setGameIsPaused,

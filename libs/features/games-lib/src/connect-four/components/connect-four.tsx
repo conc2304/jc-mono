@@ -5,6 +5,7 @@ import { PLAYER_TYPE } from '../constants';
 import {
   BoardState,
   Color,
+  Difficulty,
   Player,
   MovePosition,
   GameState,
@@ -154,7 +155,7 @@ export const ConnectFour = ({
   }, []);
 
   const handlePlayerOneConfigChange = useCallback(
-    (config: EvaluationConfig) => {
+    (config: EvaluationConfig, _difficulty: Difficulty) => {
       setPlayerOneConfig(config);
     },
     []
@@ -169,7 +170,7 @@ export const ConnectFour = ({
   }, []);
 
   const handlePlayerTwoConfigChange = useCallback(
-    (config: EvaluationConfig) => {
+    (config: EvaluationConfig, _difficulty: Difficulty) => {
       setPlayerTwoConfig(config);
     },
     []

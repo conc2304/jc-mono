@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -22,26 +22,44 @@ import {
 } from '@jc/games-lib';
 
 interface ConnectFourAiPanelProps {
-  onConfigChange?: (config: EvaluationConfig) => void;
+  config?: EvaluationConfig;
+  difficulty?: Difficulty;
+  onConfigChange?: (config: EvaluationConfig, difficulty: Difficulty) => void;
 }
 
 export const ConnectFourAiPanel = ({
+  config: configProp,
+  difficulty: difficultyProp,
   onConfigChange,
 }: ConnectFourAiPanelProps) => {
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [difficulty, setDifficulty] = useState<Difficulty>(
+    difficultyProp ?? 'medium'
+  );
   const [config, setConfig] = useState<EvaluationConfig>(
-    DIFFICULTY_CONFIGS.medium
+    configProp ?? DIFFICULTY_CONFIGS.medium
   );
   const [expandedSection, setExpandedSection] = useState<string | false>(
     'terminal'
   );
+
+  useEffect(() => {
+    if (configProp) {
+      setConfig(configProp);
+    }
+  }, [configProp]);
+
+  useEffect(() => {
+    if (difficultyProp) {
+      setDifficulty(difficultyProp);
+    }
+  }, [difficultyProp]);
 
   const handleDifficultyChange = (newDifficulty: Difficulty) => {
     setDifficulty(newDifficulty);
     if (newDifficulty !== 'custom') {
       const newConfig = DIFFICULTY_CONFIGS[newDifficulty];
       setConfig(newConfig);
-      onConfigChange?.(newConfig);
+      onConfigChange?.(newConfig, newDifficulty);
     }
   };
 
@@ -59,13 +77,13 @@ export const ConnectFourAiPanel = ({
     if (difficulty !== 'custom') {
       setDifficulty('custom');
     }
-    onConfigChange?.(newConfig);
+    onConfigChange?.(newConfig, 'custom');
   };
 
   const resetToDefault = () => {
     setConfig(DIFFICULTY_CONFIGS.medium);
     setDifficulty('medium');
-    onConfigChange?.(DIFFICULTY_CONFIGS.medium);
+    onConfigChange?.(DIFFICULTY_CONFIGS.medium, 'medium');
   };
 
   return (

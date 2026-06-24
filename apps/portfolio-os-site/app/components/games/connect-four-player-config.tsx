@@ -15,6 +15,7 @@ import { Settings } from '@mui/icons-material';
 
 import {
   Color,
+  Difficulty,
   EvaluationConfig,
   PLAYER_TYPE,
   PlayerType,
@@ -28,7 +29,9 @@ interface ConnectFourPlayerConfigProps {
   onColorChange: (color: Color) => void;
   playerType: PlayerType;
   onPlayerTypeChange: (value: PlayerType) => void;
-  onAiConfigChange?: (config: EvaluationConfig) => void;
+  aiConfig?: EvaluationConfig;
+  aiDifficulty?: Difficulty;
+  onAiConfigChange?: (config: EvaluationConfig, difficulty: Difficulty) => void;
   onPauseChange: (value: boolean) => void;
 }
 
@@ -38,6 +41,8 @@ export const ConnectFourPlayerConfig = ({
   onColorChange,
   playerType,
   onPlayerTypeChange,
+  aiConfig,
+  aiDifficulty,
   onAiConfigChange,
   onPauseChange,
 }: ConnectFourPlayerConfigProps) => {
@@ -122,7 +127,9 @@ export const ConnectFourPlayerConfig = ({
         <DialogTitle>Player {playerNumber} AI Configuration</DialogTitle>
         <DialogContent>
           <ConnectFourAiPanel
-            onConfigChange={(config) => onAiConfigChange?.(config)}
+            config={aiConfig}
+            difficulty={aiDifficulty}
+            onConfigChange={onAiConfigChange}
           />
         </DialogContent>
       </Dialog>
