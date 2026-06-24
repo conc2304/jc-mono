@@ -11,19 +11,16 @@ import {
   PlayerType,
 } from '../types';
 import { calculateAiMove } from '../utils/ai-player';
-import { EvaluationConfig } from '../utils/evaluation-config';
+import {
+  DEFAULT_EVAL_CONFIG,
+  EvaluationConfig,
+} from '../utils/evaluation-config';
 import {
   getDropPosition,
   isGameTied,
   isMoveValid,
   validateGameState,
 } from '../utils/game-logic';
-import {
-  ConnectFourPersistedSettings,
-  createDefaultPlayerSettings,
-  readPlayerSettings,
-  writePlayerSettings,
-} from '../utils/player-settings-storage';
 
 export interface UseConnectFourGameOptions {
   boardDimensions?: [number, number];
@@ -31,7 +28,6 @@ export interface UseConnectFourGameOptions {
   dropInterval?: number;
   defaultPlayerOneColor?: string;
   defaultPlayerTwoColor?: string;
-  settingsStorageKey?: string;
 }
 
 export interface UseConnectFourGameReturn {
@@ -79,55 +75,34 @@ export const useConnectFourGame = ({
   dropInterval = 300,
   defaultPlayerOneColor = '#ff0000',
   defaultPlayerTwoColor = '#ffea00',
-  settingsStorageKey,
 }: UseConnectFourGameOptions = {}): UseConnectFourGameReturn => {
   const initialBoardState = createInitialBoard(boardDimensions);
 
-  const defaultPlayerSettings = createDefaultPlayerSettings({
-    playerOneColor: defaultPlayerOneColor,
-    playerTwoColor: defaultPlayerTwoColor,
-  });
-
-  const initialPlayerSettings = (() => {
-    if (!settingsStorageKey) {
-      return defaultPlayerSettings;
-    }
-
-    return (
-      readPlayerSettings(settingsStorageKey, defaultPlayerSettings) ??
-      defaultPlayerSettings
-    );
-  })();
-
   const [playerTurn, setPlayerTurn] = useState<Player>(1);
   const [playerOneColor, setPlayerOneColor] = useState<Color>(
-    initialPlayerSettings.playerOneColor
+    defaultPlayerOneColor
   );
   const [playerTwoColor, setPlayerTwoColor] = useState<Color>(
-    initialPlayerSettings.playerTwoColor
+    defaultPlayerTwoColor
   );
   const [isGameOver, setIsGameOver] = useState(false);
   const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
   const [winningMatch, setWinningMatch] = useState<MovePosition[] | null>(null);
   const [gameIsPaused, setGameIsPaused] = useState(false);
   const [playerOneType, setPlayerOneType] = useState<PlayerType>(
-    initialPlayerSettings.playerOneType
+    PLAYER_TYPE.HUMAN
   );
   const [playerTwoType, setPlayerTwoType] = useState<PlayerType>(
-    initialPlayerSettings.playerTwoType
+    PLAYER_TYPE.HUMAN
   );
-  const [playerOneConfig, setPlayerOneConfig] = useState<EvaluationConfig>(
-    initialPlayerSettings.playerOneConfig
-  );
-  const [playerTwoConfig, setPlayerTwoConfig] = useState<EvaluationConfig>(
-    initialPlayerSettings.playerTwoConfig
-  );
-  const [playerOneDifficulty, setPlayerOneDifficulty] = useState<Difficulty>(
-    initialPlayerSettings.playerOneDifficulty
-  );
-  const [playerTwoDifficulty, setPlayerTwoDifficulty] = useState<Difficulty>(
-    initialPlayerSettings.playerTwoDifficulty
-  );
+  const [playerOneConfig, setPlayerOneConfig] =
+    useState<EvaluationConfig>(DEFAULT_EVAL_CONFIG);
+  const [playerTwoConfig, setPlayerTwoConfig] =
+    useState<EvaluationConfig>(DEFAULT_EVAL_CONFIG);
+  const [playerOneDifficulty, setPlayerOneDifficulty] =
+    useState<Difficulty>('medium');
+  const [playerTwoDifficulty, setPlayerTwoDifficulty] =
+    useState<Difficulty>('medium');
 
   const pieceIsDropping = useRef(false);
   const lastMove = useRef<MovePosition>({ row: -1, col: -1 });
@@ -141,35 +116,6 @@ export const useConnectFourGame = ({
   useEffect(() => {
     playerTurnRef.current = playerTurn;
   }, [playerTurn]);
-
-  useEffect(() => {
-    if (!settingsStorageKey) {
-      return;
-    }
-
-    const settings: ConnectFourPersistedSettings = {
-      playerOneColor,
-      playerTwoColor,
-      playerOneType,
-      playerTwoType,
-      playerOneConfig,
-      playerTwoConfig,
-      playerOneDifficulty,
-      playerTwoDifficulty,
-    };
-
-    writePlayerSettings(settingsStorageKey, settings);
-  }, [
-    settingsStorageKey,
-    playerOneColor,
-    playerTwoColor,
-    playerOneType,
-    playerTwoType,
-    playerOneConfig,
-    playerTwoConfig,
-    playerOneDifficulty,
-    playerTwoDifficulty,
-  ]);
 
   const animateDrop = useCallback(
     async (dropPos: MovePosition, currentPlayer: Player) => {

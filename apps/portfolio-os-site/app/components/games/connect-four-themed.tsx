@@ -12,8 +12,6 @@ import { PLAYER_TYPE, useConnectFourGame } from '@jc/games-lib';
 import { ConnectFourBoard } from './connect-four-board';
 import { ConnectFourPlayerConfig } from './connect-four-player-config';
 
-const CONNECT_FOUR_SETTINGS_KEY = 'connect-four-player-settings';
-
 export const ConnectFourThemed = () => {
   const theme = useTheme();
   const isMobileLayout = useMediaQuery(theme.breakpoints.down('md'));
@@ -45,7 +43,6 @@ export const ConnectFourThemed = () => {
   } = useConnectFourGame({
     defaultPlayerOneColor: theme.palette.primary.main,
     defaultPlayerTwoColor: theme.palette.secondary.main,
-    settingsStorageKey: CONNECT_FOUR_SETTINGS_KEY,
   });
 
   const statusText = isGameOver
