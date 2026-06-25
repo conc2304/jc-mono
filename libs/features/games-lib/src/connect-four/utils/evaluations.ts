@@ -50,11 +50,19 @@ export const evaluateBoard = ({
   // 1. IMMEDIATE THREATS (highest priority after terminal states)
 
   // Check if AI can win immediately
-  const aiThreats = findImmediateThreats(boardState, playerTurn);
+  const aiThreats = findImmediateThreats(
+    boardState,
+    playerTurn,
+    matchesNeeded
+  );
   totalScore += aiThreats.length * immediate.canWin;
 
   // Check if AI must block opponent's immediate win
-  const opponentThreats = findImmediateThreats(boardState, opponent);
+  const opponentThreats = findImmediateThreats(
+    boardState,
+    opponent,
+    matchesNeeded
+  );
   totalScore -= opponentThreats.length * immediate.mustBlock;
 
   // Check for multiple threats (fork opportunities)
@@ -108,6 +116,22 @@ export const evaluateBoard = ({
       }
     }
   }
+
+  // Split-gap 3-in-a-row (XX_X / X_XX inside a win-length window)
+  const aiSplitGapWindows = findWinLineWindows(
+    boardState,
+    playerTurn,
+    matchesNeeded
+  ).filter((window) => window.isSplitGap);
+  const opponentSplitGapWindows = findWinLineWindows(
+    boardState,
+    opponent,
+    matchesNeeded
+  ).filter((window) => window.isSplitGap);
+
+  totalScore += aiSplitGapWindows.length * threeInRow.splitGap;
+  totalScore -=
+    opponentSplitGapWindows.length * threeInRow.blockOpponentSplitGap;
 
   // 3. TWO-IN-A-ROW ANALYSIS (medium priority)
 
@@ -477,6 +501,160 @@ export const hasOpenEnds = (
   return { leftOpen, rightOpen, totalOpenEnds };
 };
 
+type SequenceDirection =
+  | 'horizontal'
+  | 'vertical'
+  | 'diagonalLTR'
+  | 'diagonalRTL';
+
+const moveKey = (position: MovePosition): string =>
+  `${position.row},${position.col}`;
+
+export const canPlacePieceAt = (
+  boardState: BoardState,
+  row: number,
+  col: number
+): boolean => {
+  const boardHeight = boardState.length;
+  const boardWidth = boardState[0].length;
+
+  if (row < 0 || row >= boardHeight || col < 0 || col >= boardWidth) {
+    return false;
+  }
+
+  if (boardState[row][col] !== null) {
+    return false;
+  }
+
+  if (row === boardHeight - 1) {
+    return true;
+  }
+
+  return boardState[row + 1][col] !== null;
+};
+
+export interface WinLineWindow {
+  direction: SequenceDirection;
+  window: MovePosition[];
+  piecePositions: MovePosition[];
+  gapPositions: MovePosition[];
+  isSplitGap: boolean;
+}
+
+const getNextWindowPosition = (
+  position: MovePosition,
+  direction: SequenceDirection
+): MovePosition => {
+  switch (direction) {
+    case 'horizontal':
+      return { row: position.row, col: position.col + 1 };
+    case 'vertical':
+      return { row: position.row + 1, col: position.col };
+    case 'diagonalLTR':
+      return { row: position.row + 1, col: position.col + 1 };
+    case 'diagonalRTL':
+      return { row: position.row + 1, col: position.col - 1 };
+  }
+};
+
+const buildWindow = (
+  start: MovePosition,
+  direction: SequenceDirection,
+  windowSize: number
+): MovePosition[] => {
+  const window: MovePosition[] = [start];
+  let current = start;
+
+  for (let i = 1; i < windowSize; i++) {
+    current = getNextWindowPosition(current, direction);
+    window.push(current);
+  }
+
+  return window;
+};
+
+const isWindowInBounds = (
+  boardState: BoardState,
+  window: MovePosition[]
+): boolean => {
+  const boardHeight = boardState.length;
+  const boardWidth = boardState[0].length;
+
+  return window.every(
+    ({ row, col }) =>
+      row >= 0 && row < boardHeight && col >= 0 && col < boardWidth
+  );
+};
+
+export const findWinLineWindows = (
+  boardState: BoardState,
+  player: Player,
+  matchesNeeded: number
+): WinLineWindow[] => {
+  const windows: WinLineWindow[] = [];
+  const boardHeight = boardState.length;
+  const boardWidth = boardState[0].length;
+  const directions: SequenceDirection[] = [
+    'horizontal',
+    'vertical',
+    'diagonalLTR',
+    'diagonalRTL',
+  ];
+
+  for (const direction of directions) {
+    for (let row = 0; row < boardHeight; row++) {
+      for (let col = 0; col < boardWidth; col++) {
+        const window = buildWindow({ row, col }, direction, matchesNeeded);
+
+        if (!isWindowInBounds(boardState, window)) {
+          continue;
+        }
+
+        const piecePositions: MovePosition[] = [];
+        const gapPositions: MovePosition[] = [];
+        let opponentCount = 0;
+
+        window.forEach((position) => {
+          const cell = boardState[position.row][position.col];
+
+          if (cell === player) {
+            piecePositions.push(position);
+          } else if (cell === null) {
+            gapPositions.push(position);
+          } else {
+            opponentCount++;
+          }
+        });
+
+        if (
+          opponentCount > 0 ||
+          piecePositions.length !== matchesNeeded - 1 ||
+          gapPositions.length !== 1
+        ) {
+          continue;
+        }
+
+        const gapIndex = window.findIndex(
+          (position) =>
+            position.row === gapPositions[0].row &&
+            position.col === gapPositions[0].col
+        );
+        const isSplitGap = gapIndex > 0 && gapIndex < matchesNeeded - 1;
+
+        windows.push({
+          direction,
+          window,
+          piecePositions,
+          gapPositions,
+          isSplitGap,
+        });
+      }
+    }
+  }
+
+  return windows;
+};
+
 export interface ImmediateThreat {
   sequence: MovePosition[];
   winningMoves: MovePosition[];
@@ -485,239 +663,36 @@ export interface ImmediateThreat {
 
 export const findImmediateThreats = (
   boardState: BoardState,
-  player: Player
+  player: Player,
+  matchesNeeded = 4
 ): ImmediateThreat[] => {
-  // Find all immediate threats for a given player
-  // An immediate threat is a 3-in-a-row sequence where the player can win on the next move
+  const windows = findWinLineWindows(boardState, player, matchesNeeded);
+  const seenWinningMoves = new Set<string>();
   const threats: ImmediateThreat[] = [];
 
-  // Helper function to check if a position is valid for placing a piece
-  const canPlacePiece = (row: number, col: number): boolean => {
-    const boardHeight = boardState.length;
-    const boardWidth = boardState[0].length;
-
-    if (row < 0 || row >= boardHeight || col < 0 || col >= boardWidth) {
-      return false;
-    }
-
-    // Position must be empty
-    if (boardState[row][col] !== null) {
-      return false;
-    }
-
-    // If it's the bottom row, piece can be placed
-    if (row === boardHeight - 1) {
-      return true;
-    }
-
-    // Otherwise, there must be a piece below it
-    return boardState[row + 1][col] !== null;
-  };
-
-  // Helper function to get winning moves for a sequence
-  const getWinningMoves = (
-    sequence: MovePosition[],
-    direction: 'horizontal' | 'vertical' | 'diagonalLTR' | 'diagonalRTL'
-  ): MovePosition[] => {
-    const winningMoves: MovePosition[] = [];
-
-    if (sequence.length === 0) return winningMoves;
-
-    const firstPos = sequence[0];
-    const lastPos = sequence[sequence.length - 1];
-
-    switch (direction) {
-      case 'horizontal': {
-        // Check left end
-        const leftMove = { row: firstPos.row, col: firstPos.col - 1 };
-        if (canPlacePiece(leftMove.row, leftMove.col)) {
-          winningMoves.push(leftMove);
-        }
-
-        // Check right end
-        const rightMove = { row: lastPos.row, col: lastPos.col + 1 };
-        if (canPlacePiece(rightMove.row, rightMove.col)) {
-          winningMoves.push(rightMove);
-        }
-        break;
-      }
-
-      case 'vertical': {
-        // For vertical, only top end matters
-        const topMove = { row: firstPos.row - 1, col: firstPos.col };
-        if (canPlacePiece(topMove.row, topMove.col)) {
-          winningMoves.push(topMove);
-        }
-        break;
-      }
-
-      case 'diagonalLTR': {
-        // Check upper-left end
-        const upperLeftMove = { row: firstPos.row - 1, col: firstPos.col - 1 };
-        if (canPlacePiece(upperLeftMove.row, upperLeftMove.col)) {
-          winningMoves.push(upperLeftMove);
-        }
-
-        // Check lower-right end
-        const lowerRightMove = { row: lastPos.row + 1, col: lastPos.col + 1 };
-        if (canPlacePiece(lowerRightMove.row, lowerRightMove.col)) {
-          winningMoves.push(lowerRightMove);
-        }
-        break;
-      }
-
-      case 'diagonalRTL': {
-        // Check upper-right end
-        const upperRightMove = { row: firstPos.row - 1, col: firstPos.col + 1 };
-        if (canPlacePiece(upperRightMove.row, upperRightMove.col)) {
-          winningMoves.push(upperRightMove);
-        }
-
-        // Check lower-left end
-        const lowerLeftMove = { row: lastPos.row + 1, col: lastPos.col - 1 };
-        if (canPlacePiece(lowerLeftMove.row, lowerLeftMove.col)) {
-          winningMoves.push(lowerLeftMove);
-        }
-        break;
-      }
-    }
-
-    return winningMoves;
-  };
-
-  // Find all 3-in-a-row sequences and check for immediate threats
-  const directions: Array<
-    'horizontal' | 'vertical' | 'diagonalLTR' | 'diagonalRTL'
-  > = ['horizontal', 'vertical', 'diagonalLTR', 'diagonalRTL'];
-
-  for (const direction of directions) {
-    // Get sequences for this direction by analyzing the board
-    const sequences = findSequencesInDirection(
-      boardState,
-      player,
-      3,
-      direction
+  for (const window of windows) {
+    const winningMoves = window.gapPositions.filter((position) =>
+      canPlacePieceAt(boardState, position.row, position.col)
     );
 
-    for (const sequence of sequences) {
-      const winningMoves = getWinningMoves(sequence, direction);
-
-      // If there are any winning moves, this is an immediate threat
-      if (winningMoves.length > 0) {
-        threats.push({
-          sequence,
-          winningMoves,
-          direction,
-        });
-      }
+    if (winningMoves.length === 0) {
+      continue;
     }
+
+    const winningMoveKey = winningMoves.map(moveKey).sort().join('|');
+    if (seenWinningMoves.has(winningMoveKey)) {
+      continue;
+    }
+    seenWinningMoves.add(winningMoveKey);
+
+    threats.push({
+      sequence: window.piecePositions,
+      winningMoves,
+      direction: window.direction,
+    });
   }
 
   return threats;
-};
-
-// Helper function to find sequences in a specific direction
-const findSequencesInDirection = (
-  boardState: BoardState,
-  player: Player,
-  length: number,
-  direction: 'horizontal' | 'vertical' | 'diagonalLTR' | 'diagonalRTL'
-): MovePosition[][] => {
-  const sequences: MovePosition[][] = [];
-  const boardHeight = boardState.length;
-  const boardWidth = boardState[0].length;
-
-  switch (direction) {
-    case 'horizontal': {
-      for (let row = 0; row < boardHeight; row++) {
-        for (let col = 0; col <= boardWidth - length; col++) {
-          const sequence: MovePosition[] = [];
-          let isValidSequence = true;
-
-          for (let i = 0; i < length; i++) {
-            if (boardState[row][col + i] !== player) {
-              isValidSequence = false;
-              break;
-            }
-            sequence.push({ row, col: col + i });
-          }
-
-          if (isValidSequence) {
-            sequences.push(sequence);
-          }
-        }
-      }
-      break;
-    }
-
-    case 'vertical': {
-      for (let col = 0; col < boardWidth; col++) {
-        for (let row = 0; row <= boardHeight - length; row++) {
-          const sequence: MovePosition[] = [];
-          let isValidSequence = true;
-
-          for (let i = 0; i < length; i++) {
-            if (boardState[row + i][col] !== player) {
-              isValidSequence = false;
-              break;
-            }
-            sequence.push({ row: row + i, col });
-          }
-
-          if (isValidSequence) {
-            sequences.push(sequence);
-          }
-        }
-      }
-      break;
-    }
-
-    case 'diagonalLTR': {
-      for (let row = 0; row <= boardHeight - length; row++) {
-        for (let col = 0; col <= boardWidth - length; col++) {
-          const sequence: MovePosition[] = [];
-          let isValidSequence = true;
-
-          for (let i = 0; i < length; i++) {
-            if (boardState[row + i][col + i] !== player) {
-              isValidSequence = false;
-              break;
-            }
-            sequence.push({ row: row + i, col: col + i });
-          }
-
-          if (isValidSequence) {
-            sequences.push(sequence);
-          }
-        }
-      }
-      break;
-    }
-
-    case 'diagonalRTL': {
-      for (let row = 0; row <= boardHeight - length; row++) {
-        for (let col = length - 1; col < boardWidth; col++) {
-          const sequence: MovePosition[] = [];
-          let isValidSequence = true;
-
-          for (let i = 0; i < length; i++) {
-            if (boardState[row + i][col - i] !== player) {
-              isValidSequence = false;
-              break;
-            }
-            sequence.push({ row: row + i, col: col - i });
-          }
-
-          if (isValidSequence) {
-            sequences.push(sequence);
-          }
-        }
-      }
-      break;
-    }
-  }
-
-  return sequences;
 };
 
 export const getPositionalValue = (

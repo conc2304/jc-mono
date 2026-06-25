@@ -21,8 +21,10 @@ export interface EvaluationConfig {
   threeInRow: {
     bothEndsOpen: number;
     oneEndOpen: number;
+    splitGap: number; // XX_X / X_XX — three pieces with an internal gap
     blockOpponentBothEnds: number;
     blockOpponentOneEnd: number;
+    blockOpponentSplitGap: number;
   };
 
   // 2-in-a-row scenarios (medium priority)
@@ -69,8 +71,10 @@ export const DEFAULT_EVAL_CONFIG: EvaluationConfig = {
   threeInRow: {
     bothEndsOpen: 350, // 3-in-a-row with both ends available
     oneEndOpen: 175, // 3-in-a-row with one end blocked
+    splitGap: 325, // XX_X / X_XX offensive threat
     blockOpponentBothEnds: 950, // Block opponent's 3-in-a-row (both ends) — nearly as urgent as mustBlock
     blockOpponentOneEnd: 500, // Block opponent's 3-in-a-row (one end)
+    blockOpponentSplitGap: 900, // Block opponent's split-gap 3-in-a-row
   },
 
   twoInRow: {
@@ -122,8 +126,10 @@ export const DIFFICULTY_CONFIGS = {
     threeInRow: {
       bothEndsOpen: 200,
       oneEndOpen: 100,
+      splitGap: 150,
       blockOpponentBothEnds: 250,
       blockOpponentOneEnd: 125,
+      blockOpponentSplitGap: 200,
     },
     twoInRow: {
       bothEndsOpen: 50,
@@ -153,8 +159,10 @@ export const DIFFICULTY_CONFIGS = {
     threeInRow: {
       bothEndsOpen: 400,
       oneEndOpen: 200,
+      splitGap: 375,
       blockOpponentBothEnds: 1100, // Strongest 3-in-a-row defense
       blockOpponentOneEnd: 600,
+      blockOpponentSplitGap: 1050,
     },
     twoInRow: {
       bothEndsOpen: 50,
