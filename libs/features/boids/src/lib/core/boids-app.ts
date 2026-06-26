@@ -169,7 +169,11 @@ export class BoidsApp {
     this.#createBoids(this.#boxExtents);
     this.#createAttractors(this.attractorCount, this.#boxExtents);
 
-    this.presetController.bind(this.#boids, this.#attractors);
+    this.presetController.bind(
+      this.#boids,
+      this.#attractors,
+      this.#activeAttractorCount
+    );
     this.presetController.initializeBoids(this.#initialBoidMix);
 
     if (this.#initialScenePreset) {
@@ -286,6 +290,18 @@ export class BoidsApp {
     this.presetController.setBoidSpeedMultiplier(multiplier);
   }
 
+  getAttractorCount(): number {
+    return this.#activeAttractorCount;
+  }
+
+  getMaxAttractorCount(): number {
+    return this.#attractors.length;
+  }
+
+  setAttractorCount(count: number): void {
+    this.presetController.setAttractorCount(count);
+  }
+
   applyScenePreset(id: ScenePresetId): void {
     this.presetController.applyScenePreset(id);
   }
@@ -315,8 +331,10 @@ export class BoidsApp {
       pointAttractorWeight,
     };
 
+    const activeAttractors = this.#attractors.slice(0, this.#activeAttractorCount);
+
     for (const boid of this.#boids) {
-      boid.update(this.#boids, this.#avoidables, this.#attractors, elapsedTime, context);
+      boid.update(this.#boids, this.#avoidables, activeAttractors, elapsedTime, context);
     }
 
     for (let i = 0; i < this.#activeAttractorCount; i++) {

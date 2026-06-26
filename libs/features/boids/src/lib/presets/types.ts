@@ -89,6 +89,7 @@ export type PresetState = {
   attractorStrength: number;
   attractorSpeed: number;
   boidSpeedMultiplier: number;
+  attractorCount: number;
 };
 
 export type GlobalMorphState = {

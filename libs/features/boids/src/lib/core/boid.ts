@@ -25,6 +25,13 @@ import type { BoxHalfExtents, WallMesh } from './vaporwave-grid-box';
 
 type AvoidableMesh = WallMesh | ObstacleMesh;
 
+export type AttractorInfluence = {
+  mesh: Mesh;
+  position: Vector3;
+  strength: number;
+  range: number;
+};
+
 export type BoidUpdateContext = {
   flowField: FlowField | null;
   flowWeight: number;
@@ -164,7 +171,7 @@ export class Boid {
   update(
     boidsList: Boid[],
     avoidables: AvoidableMesh[],
-    attractors: { mesh: Mesh; position: Vector3; strength: number; range: number }[],
+    attractors: AttractorInfluence[],
     elapsedTime: number,
     context: BoidUpdateContext = {
       flowField: null,
@@ -276,17 +283,21 @@ export class Boid {
   }
 
   addAttractorForce(
-    attractors: { mesh: Mesh; position: Vector3; strength: number; range: number }[],
+    attractors: AttractorInfluence[],
     heading: Vector3,
     out: Vector3
   ): Vector3 {
     out.copy(heading);
 
+    if (attractors.length === 0) {
+      return out;
+    }
+
     let nearestDistance = Infinity;
-    let nearestAttractor: (typeof attractors)[number] | null = null;
+    let nearestAttractor: AttractorInfluence | null = null;
 
     for (const attractor of attractors) {
-      const distance = this.boidMesh.position.distanceTo(attractor.mesh.position);
+      const distance = this.boidMesh.position.distanceTo(attractor.position);
       if (distance < nearestDistance) {
         nearestAttractor = attractor;
         nearestDistance = distance;

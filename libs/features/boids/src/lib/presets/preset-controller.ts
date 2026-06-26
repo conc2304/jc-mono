@@ -18,7 +18,10 @@ import {
   morphBoidConfigInPlace,
   morphGlobalStateInPlace,
 } from './preset-morph';
-import { getScenePreset } from './scene-presets';
+import {
+  getScenePreset,
+  DEFAULT_SCENE_ATTRACTOR_COUNT,
+} from './scene-presets';
 import type {
   AttractorFieldMode,
   AttractorMotionPreset,
@@ -59,6 +62,7 @@ export class PresetController {
 
   #boidMixTarget: BoidMix = { ...DEFAULT_BOID_MIX };
   #scenePresetId: ScenePresetId | null = null;
+  #attractorCountTarget = DEFAULT_SCENE_ATTRACTOR_COUNT;
 
   #globalCurrent: GlobalMorphState = {
     flowWeight: 0,
@@ -79,9 +83,12 @@ export class PresetController {
     this.#flowField.setConfig(this.#flowConfig);
   }
 
-  bind(boids: Boid[], attractors: Attractor[]): void {
+  bind(boids: Boid[], attractors: Attractor[], activeAttractorCount?: number): void {
     this.#boids = boids;
     this.#attractors = attractors;
+    if (activeAttractorCount !== undefined) {
+      this.#attractorCountTarget = activeAttractorCount;
+    }
   }
 
   initializeBoids(mix: BoidMix = DEFAULT_BOID_MIX): void {
@@ -151,6 +158,7 @@ export class PresetController {
       attractorStrength: this.#globalTarget.attractorStrength,
       attractorSpeed: this.#globalTarget.attractorSpeed,
       boidSpeedMultiplier: this.#globalTarget.boidSpeedMultiplier,
+      attractorCount: this.#attractorCountTarget,
     };
   }
 
@@ -220,6 +228,13 @@ export class PresetController {
     this.#globalTarget.boidSpeedMultiplier = Math.max(0.25, Math.min(3, multiplier));
   }
 
+  setAttractorCount(count: number): void {
+    this.#scenePresetId = null;
+    const maxCount = Math.max(1, this.#attractors.length);
+    this.#attractorCountTarget = Math.max(1, Math.min(count, maxCount));
+    this.#callbacks.onAttractorCountChange?.(this.#attractorCountTarget);
+  }
+
   setBoidMix(mix: BoidMix): void {
     this.#scenePresetId = null;
     this.#boidMixTarget = { ...mix };
@@ -266,6 +281,7 @@ export class PresetController {
     }
 
     if (scene.attractorCount !== undefined) {
+      this.#attractorCountTarget = scene.attractorCount;
       this.#callbacks.onAttractorCountChange?.(scene.attractorCount);
     }
 

@@ -15,10 +15,13 @@ const mockApp = {
     attractorStrength: 0.5,
     attractorSpeed: 0.12,
     boidSpeedMultiplier: 1,
+    attractorCount: 15,
   }),
   getObstaclesEnabled: jest.fn().mockReturnValue(false),
   getAttractorsVisible: jest.fn().mockReturnValue(false),
+  getMaxAttractorCount: jest.fn().mockReturnValue(15),
   setAttractorsVisible: jest.fn(),
+  setAttractorCount: jest.fn(),
 } as unknown as BoidsApp;
 
 describe('BoidsSettingsPanel', () => {
@@ -40,6 +43,13 @@ describe('BoidsSettingsPanel', () => {
     render(<BoidsSettingsPanel app={mockApp} />);
     fireEvent.click(screen.getByRole('checkbox', { name: 'Show attractors' }));
     expect(mockApp.setAttractorsVisible).toHaveBeenCalledWith(true);
+  });
+
+  it('updates attractor count via app API', () => {
+    render(<BoidsSettingsPanel app={mockApp} />);
+    const slider = screen.getByRole('slider', { name: 'Attractor count' });
+    fireEvent.change(slider, { target: { value: '3' } });
+    expect(mockApp.setAttractorCount).toHaveBeenCalledWith(3);
   });
 
   it('opens help on info click and closes on click away', () => {

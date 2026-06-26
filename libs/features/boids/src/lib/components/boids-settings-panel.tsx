@@ -34,13 +34,23 @@ type BoidsSettingsPanelProps = {
 };
 
 const BOID_PRESET_LABELS: Record<BoidBehaviorPreset, string> = {
-  default: 'Default',
-  tight: 'Tight',
-  murmuration: 'Murmuration',
-  loose: 'Loose',
-  scatter: 'Scatter',
-  orbiter: 'Orbiter',
+  default: 'Balanced flock',
+  tight: 'Compact flock',
+  murmuration: 'Wave murmuration',
+  loose: 'Independent drift',
+  scatter: 'Fast scatter',
+  orbiter: 'Attractor chaser',
 };
+
+const FLOCK_MIX_HELP = [
+  'Flock mix — blend personalities (weights normalize to 100%).',
+  'Balanced flock — standard alignment and separation.',
+  'Compact flock — sticky, dense groups with strong cohesion.',
+  'Wave murmuration — wide turns, fluid swarm waves.',
+  'Independent drift — low cohesion; boids wander on their own.',
+  'Fast scatter — high speed, strong separation, avoids clustering.',
+  'Attractor chaser — strongly pulled toward red target points.',
+];
 
 const SETTINGS_HELP = [
   'Scene preset — load a bundled setup. Choose Default to reset.',
@@ -48,8 +58,9 @@ const SETTINGS_HELP = [
   'Field mode — Points pulls boids to attractors; Flow uses an ambient field.',
   'Flow weight — blend toward the flow field when Flow mode is active.',
   'Attractor strength / speed — pull intensity and path speed.',
+  'Attractor count — number of active target points (1 to pool max).',
   'Show attractors — reveal the red target spheres.',
-  'Flock mix — ratio of flock personalities (values are normalized).',
+  ...FLOCK_MIX_HELP,
   'Boid speed — global multiplier applied on top of each personality preset.',
   'Obstacles — enable aquarium-style collision objects.',
 ];
@@ -68,6 +79,8 @@ export function BoidsSettingsPanel({ app }: BoidsSettingsPanelProps) {
   const [flowWeight, setFlowWeight] = useState(0);
   const [attractorStrength, setAttractorStrength] = useState(0.5);
   const [attractorSpeed, setAttractorSpeed] = useState(0.12);
+  const [attractorCount, setAttractorCount] = useState(15);
+  const [maxAttractorCount, setMaxAttractorCount] = useState(15);
   const [boidSpeedMultiplier, setBoidSpeedMultiplier] = useState(1);
   const [obstaclesEnabled, setObstaclesEnabled] = useState(false);
   const [attractorsVisible, setAttractorsVisible] = useState(false);
@@ -83,6 +96,8 @@ export function BoidsSettingsPanel({ app }: BoidsSettingsPanelProps) {
     setFlowWeight(state.flowWeight);
     setAttractorStrength(state.attractorStrength);
     setAttractorSpeed(state.attractorSpeed);
+    setAttractorCount(state.attractorCount);
+    setMaxAttractorCount(app.getMaxAttractorCount());
     setBoidSpeedMultiplier(state.boidSpeedMultiplier);
     setObstaclesEnabled(app.getObstaclesEnabled());
     setAttractorsVisible(app.getAttractorsVisible());
@@ -353,6 +368,19 @@ export function BoidsSettingsPanel({ app }: BoidsSettingsPanelProps) {
               setScenePreset('');
               setAttractorSpeed(value);
               app?.setAttractorSpeed(value);
+            }}
+          />
+
+          <BoidsSettingsSlider
+            label="Attractor count"
+            value={attractorCount}
+            min={1}
+            max={maxAttractorCount}
+            step={1}
+            onChange={(value) => {
+              setScenePreset('');
+              setAttractorCount(value);
+              app?.setAttractorCount(value);
             }}
           />
 

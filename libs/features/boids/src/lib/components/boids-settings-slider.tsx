@@ -42,6 +42,7 @@ export function BoidsSettingsSlider({
         min={min}
         max={max}
         step={step}
+        aria-label={label}
         onChange={(_, next) => onChange(next as number)}
         sx={{ ...controlSliderSx, width: '100%', boxSizing: 'border-box' }}
       />
