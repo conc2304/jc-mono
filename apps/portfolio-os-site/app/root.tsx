@@ -11,6 +11,7 @@ import {
 } from '@jc/ui-components';
 import { Box } from '@mui/material';
 import { metaDescriptors, structuredData, linkDescriptors } from './config/seo';
+import { usePageViewTracking } from './analytics/use-page-view-tracking';
 import type { MetaFunction, LinksFunction } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -105,5 +106,6 @@ export function HydrateFallback() {
 }
 
 export default function App() {
+  usePageViewTracking();
   return <Outlet />;
 }

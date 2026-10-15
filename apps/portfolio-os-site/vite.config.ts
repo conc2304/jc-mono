@@ -89,4 +89,8 @@ export default defineConfig(() => ({
   define: {
     'import.meta.vitest': undefined,
   },
+  test: {
+    environment: 'jsdom',
+    include: ['app/**/*.spec.{ts,tsx}'],
+  },
 }));

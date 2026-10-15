@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { useWindowState } from '@jc/file-system';
 
+import { UI_ONLY_NAVIGATION_STATE } from '../analytics/page-view-tracker';
 import { FileSystem } from '../data/file-system';
 import { buildFlatIndex, itemToPathSlugs } from '../data/routing-utils';
 import { urlDrivenOpenRef } from './use-route-windows';
@@ -27,7 +28,7 @@ export function useWindowCloseUrlSync() {
     const visible = windows.filter((w) => !w.isClosing && !w.minimized);
 
     if (visible.length === 0) {
-      navigate('/home', { replace: true });
+      navigate('/home', { replace: true, state: UI_ONLY_NAVIGATION_STATE });
       return;
     }
 
@@ -37,6 +38,9 @@ export function useWindowCloseUrlSync() {
     if (!item) return;
 
     const slugs = itemToPathSlugs(item, FileSystem);
-    navigate('/home/' + slugs.join('/'), { replace: true });
+    navigate('/home/' + slugs.join('/'), {
+      replace: true,
+      state: UI_ONLY_NAVIGATION_STATE,
+    });
   }, [windows, navigate]);
 }

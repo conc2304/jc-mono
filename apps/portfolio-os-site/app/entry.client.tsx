@@ -8,6 +8,11 @@ import { HydratedRouter } from 'react-router/dom';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 
+import { initAnalytics } from './analytics/ga4';
+
+// Before hydration so gtag config is queued ahead of the first page_view.
+initAnalytics();
+
 startTransition(() => {
   hydrateRoot(
     document,
