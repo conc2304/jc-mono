@@ -1,3 +1,14 @@
+import { useState } from 'react';
+import {
+  Alert,
+  Box,
+  Dialog,
+  DialogTitle,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
+
 import {
   LEDAppBar,
   LedControllerDashboard,
@@ -11,16 +22,6 @@ import {
 } from '@jc/led-controls';
 import { AugmentedButton, AugmentedIconButton } from '@jc/ui-components';
 import { GradientPatternType, InterpolationMode } from '@jc/utils';
-import { Close } from '@mui/icons-material';
-import {
-  Alert,
-  Box,
-  Dialog,
-  DialogTitle,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { useState } from 'react';
 
 const LedController = () => {
   const tdServerApi = 'https://192.168.4.44:9980';

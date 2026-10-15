@@ -1,7 +1,8 @@
+import { lazy, Suspense } from 'react';
 import { Box, ThemeProvider, useTheme } from '@mui/material';
+
 import { LoadingFallback } from '@jc/ui-components';
 
-import { lazy, Suspense } from 'react';
 
 const LedControllerPage = lazy(() => import('../components/LedControllerPage'));
 

@@ -1,12 +1,13 @@
+import { Terrain } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem } from '@jc/file-system';
 import {
   terrainifyProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
   ProjectData,
 } from '@jc/portfolio';
-import { Terrain } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
-import { FileSystemItem } from '@jc/file-system';
 
 export const terrainifyFileSystemItem: FileSystemItem<
   ProjectData,

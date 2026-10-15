@@ -1,12 +1,13 @@
+import { MovieFilter } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem } from '@jc/file-system';
 import {
   lightformWebControllerProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
   ProjectData,
 } from '@jc/portfolio';
-import { MovieFilter } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
-import { FileSystemItem } from '@jc/file-system';
 
 export const lightformWebControllerFileSystemItem: FileSystemItem<
   ProjectData,

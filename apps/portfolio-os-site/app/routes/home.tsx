@@ -1,11 +1,12 @@
+import { lazy, Suspense } from 'react';
 import { Box } from '@mui/material';
+
 import { LoadingFallback } from '@jc/ui-components';
 
-import { lazy, Suspense } from 'react';
 
 import { useRouteWindows } from '../hooks/use-route-windows';
-import { useWindowUrlSync } from '../hooks/use-window-url-sync';
 import { useWindowCloseUrlSync } from '../hooks/use-window-close-url-sync';
+import { useWindowUrlSync } from '../hooks/use-window-url-sync';
 
 const DesktopOS = lazy(() => import('../components/desktop-system'));
 

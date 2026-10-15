@@ -10,5 +10,10 @@
     "types": ["node"]
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../components/tsconfig.lib.json"
+    }
+  ]
 }

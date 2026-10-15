@@ -13,13 +13,14 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { RotateCcw } from 'lucide-react';
-import { formatLabel } from '@jc/utils';
 
 import {
   DIFFICULTY_CONFIGS,
   Difficulty,
   EvaluationConfig,
 } from '@jc/games-lib';
+import { formatLabel } from '@jc/utils';
+
 
 interface ConnectFourAiPanelProps {
   config?: EvaluationConfig;

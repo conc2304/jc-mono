@@ -21,6 +21,27 @@
   "include": ["src"],
   "references": [
     {
+      "path": "../../libs/shared/components"
+    },
+    {
+      "path": "../../libs/shared/spawn-editor"
+    },
+    {
+      "path": "../../libs/shared/mask-editor"
+    },
+    {
+      "path": "../../libs/shared/mask-capture"
+    },
+    {
+      "path": "../../libs/shared/projection-mapping-controller"
+    },
+    {
+      "path": "../../libs/shared/scene-controller"
+    },
+    {
+      "path": "../../libs/shared/of-control-client"
+    },
+    {
       "path": "../../libs/shared/fireplace-control-shared-ui"
     }
   ]

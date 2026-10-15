@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
+
 import { useWindowState } from '@jc/file-system';
 
+import { urlDrivenOpenRef } from './use-route-windows';
 import { UI_ONLY_NAVIGATION_STATE } from '../analytics/page-view-tracker';
 import { FileSystem } from '../data/file-system';
 import { buildFlatIndex, itemToPathSlugs } from '../data/routing-utils';
-import { urlDrivenOpenRef } from './use-route-windows';
 
 const flatIndex = buildFlatIndex(FileSystem);
 

@@ -1,5 +1,6 @@
-import { BoidsSimulationWithSettings } from '@jc/boids';
 import { useTheme } from '@mui/material';
+
+import { BoidsSimulationWithSettings } from '@jc/boids';
 
 export const BoidsThemed = () => {
   const theme = useTheme();

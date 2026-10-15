@@ -1,12 +1,13 @@
+import { MusicNote } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem } from '@jc/file-system';
 import {
   tunecraftProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
   ProjectData,
 } from '@jc/portfolio';
-import { MusicNote } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
-import { FileSystemItem } from '@jc/file-system';
 
 export const tunecraftFileSystemItem: FileSystemItem<
   ProjectData,

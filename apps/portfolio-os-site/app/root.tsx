@@ -1,7 +1,14 @@
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
-import 'augmented-ui/augmented-ui.min.css';
 
+import { usePageViewTracking } from './analytics/use-page-view-tracking';
+import { metaDescriptors, structuredData, linkDescriptors } from './config/seo';
+
+import type { MetaFunction, LinksFunction } from 'react-router';
+import 'augmented-ui/augmented-ui.min.css';
 import { EnhancedThemeProvider, enhancedThemes } from '@jc/themes';
+
 import { ThemedBgContainer } from './components/themed-bg-container';
 import {
   CloudflareMediaProvider,
@@ -10,11 +17,6 @@ import {
   ErrorBoundary,
 } from '@jc/ui-components';
 import { Box } from '@mui/material';
-import { metaDescriptors, structuredData, linkDescriptors } from './config/seo';
-import { usePageViewTracking } from './analytics/use-page-view-tracking';
-import type { MetaFunction, LinksFunction } from 'react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
 
 export const meta: MetaFunction = () => metaDescriptors;
 export const links: LinksFunction = () => linkDescriptors;

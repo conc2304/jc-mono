@@ -1,8 +1,8 @@
+import { ErrorOutline } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
 
-import { ErrorOutline } from '@mui/icons-material';
 
 export const NotFound404FileSystemItem: FileSystemItem = {
   id: uuidv4(),

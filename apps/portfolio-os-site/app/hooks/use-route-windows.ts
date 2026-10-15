@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
+
 import { useWindowActions } from '@jc/file-system';
 
 import { FileSystem } from '../data/file-system';

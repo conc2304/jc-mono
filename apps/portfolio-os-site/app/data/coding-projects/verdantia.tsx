@@ -1,12 +1,13 @@
+import { Compost } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem } from '@jc/file-system';
 import {
   verdantiaProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
   ProjectData,
 } from '@jc/portfolio';
-import { Compost } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
-import { FileSystemItem } from '@jc/file-system';
 
 export const verdantiaFileSystemItem: FileSystemItem<
   ProjectData,

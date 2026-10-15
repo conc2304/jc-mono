@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
+import { navigationUrlSyncRef, urlDrivenOpenRef } from './use-route-windows';
 import { FileSystem } from '../data/file-system';
 import { buildFlatIndex, itemToPathSlugs } from '../data/routing-utils';
-import { navigationUrlSyncRef, urlDrivenOpenRef } from './use-route-windows';
 
 const flatIndex = buildFlatIndex(FileSystem);
 

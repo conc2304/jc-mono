@@ -40,7 +40,7 @@ export const ThemedScrambleCharacters: Record<string, string> = {
 };
 
 // Default fallback character set
-export const DefaultScrambleCharacters: string =
+export const DefaultScrambleCharacters =
   '█▓▒░■□▪▫●○0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}[]|\\/<>?';
 
 // Helper function to get themed characters

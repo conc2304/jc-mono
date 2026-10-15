@@ -1,12 +1,13 @@
+import { Security } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
+
+import { FileSystemItem } from '@jc/file-system';
 import {
   simplisafeJawaProject,
   BrutalistTemplate,
   BrutalistTemplateProps,
   ProjectData,
 } from '@jc/portfolio';
-import { Security } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
-import { FileSystemItem } from '@jc/file-system';
 
 export const simplisafeJawaFileSystemItem: FileSystemItem<
   ProjectData,

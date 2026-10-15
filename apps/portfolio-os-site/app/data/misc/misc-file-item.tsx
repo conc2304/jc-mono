@@ -1,11 +1,11 @@
-import { v4 as uuidv4 } from 'uuid';
 import { SportsEsports } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
 
 import { DefaultTileContent, FileSystemItem } from '@jc/file-system';
 
+import { BoidsFileSystemItem } from './boids-file-item';
 import { ConnectFourFileSystemItem } from './connect-four-file-item';
 import { GradientShaderScreenSaverFileSystemItem } from './gradient-shader-screen-saver-file-item';
-import { BoidsFileSystemItem } from './boids-file-item';
 
 export const MiscFileSystemItem: FileSystemItem = {
   id: uuidv4(),

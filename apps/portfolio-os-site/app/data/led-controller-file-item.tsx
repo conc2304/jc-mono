@@ -1,8 +1,8 @@
+import { LightbulbCircle } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FileSystemItem, DefaultTileContent } from '@jc/file-system';
 
-import { LightbulbCircle } from '@mui/icons-material';
 
 export const LEDControllerFileItem: FileSystemItem = {
   id: uuidv4(),

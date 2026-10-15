@@ -2,7 +2,7 @@ import { FileSystemItem } from '@jc/file-system';
 
 export function setFileSystemHierarchy<T = any, P = any>(
   items: FileSystemItem<T, P>[],
-  parentPath: string = '',
+  parentPath = '',
   parentId: string | null = null
 ): FileSystemItem<T, P>[] {
   return items.map((item) => {
