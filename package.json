@@ -3,7 +3,15 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "knip": "knip"
+    "knip": "knip",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "eslint --fix --no-warn-ignored --flag v10_config_lookup_from_file",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss,html,yml,yaml}": "prettier --write"
   },
   "private": true,
   "dependencies": {
@@ -109,6 +117,7 @@
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "5.0.0",
     "globals": "^16.3.0",
+    "husky": "^9.1.7",
     "jest": "30.0.5",
     "jest-environment-jsdom": "30.0.5",
     "jest-environment-node": "^29.7.0",
@@ -116,6 +125,7 @@
     "jsdom": "~22.1.0",
     "jsonc-eslint-parser": "^2.1.0",
     "knip": "^5.62.0",
+    "lint-staged": "^16.4.0",
     "nx": "21.3.4",
     "postcss": "8.4.38",
     "prettier": "^2.6.2",
